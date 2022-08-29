@@ -1250,6 +1250,9 @@
 "@screens/notifications@file:./screens/notifications":
   version "1.0.0"
 
+"@screens/payment-subscription@file:./screens/payment-subscription/":
+  version "1.0.0"
+
 "@screens/privacy-policy@file:./screens/privacy-policy":
   version "1.0.0"
 
@@ -1259,7 +1262,7 @@
 "@screens/settings@file:./screens/settings":
   version "1.0.0"
 
-"@screens/support-send-feedback@file:./screens/support-send-feedback/":
+"@screens/support-send-feedback@file:./screens/support-send-feedback":
   version "1.0.0"
 
 "@sideway/address@^4.1.3":
