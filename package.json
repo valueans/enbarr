@@ -21,6 +21,7 @@
     "@screens/notifications": "file:./screens/notifications/",
     "@screens/privacy-policy": "file:./screens/privacy-policy/",
     "@screens/profile": "file:./screens/profile/",
+    "@screens/settings": "file:./screens/settings/",
     "axios": "^0.21.1",
     "react": "17.0.1",
     "react-dom": "^18.2.0",
