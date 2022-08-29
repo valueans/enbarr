@@ -1250,13 +1250,16 @@
 "@screens/notifications@file:./screens/notifications":
   version "1.0.0"
 
-"@screens/payment-subscription@file:./screens/payment-subscription/":
+"@screens/payment-subscription@file:./screens/payment-subscription":
   version "1.0.0"
 
 "@screens/privacy-policy@file:./screens/privacy-policy":
   version "1.0.0"
 
 "@screens/profile@file:./screens/profile":
+  version "1.0.0"
+
+"@screens/report@file:./screens/report/":
   version "1.0.0"
 
 "@screens/settings@file:./screens/settings":

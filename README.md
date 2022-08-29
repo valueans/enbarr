@@ -68,6 +68,7 @@ This section will show any installed modules you add from the Storyboard Modules
 - [screen-messages-listing](screens/messages-listing)
 - [screen-support-send-feedback](screens/support-send-feedback)
 - [screen-payment-subscriptions](screens/payment-subscription)
+- [screen-report](screens/report)
 
 # Getting started: Frontend
 
