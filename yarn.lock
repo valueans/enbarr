@@ -1241,7 +1241,10 @@
     redux-thunk "^2.4.1"
     reselect "^4.1.5"
 
-"@screens/direct-messages@file:./screens/direct-messages/":
+"@screens/direct-messages@file:./screens/direct-messages":
+  version "1.0.0"
+
+"@screens/messages-listing@file:./screens/messages-listing/":
   version "1.0.0"
 
 "@screens/notifications@file:./screens/notifications":
