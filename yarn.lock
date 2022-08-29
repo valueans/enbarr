@@ -1244,7 +1244,7 @@
 "@screens/direct-messages@file:./screens/direct-messages":
   version "1.0.0"
 
-"@screens/messages-listing@file:./screens/messages-listing/":
+"@screens/messages-listing@file:./screens/messages-listing":
   version "1.0.0"
 
 "@screens/notifications@file:./screens/notifications":
@@ -1257,6 +1257,9 @@
   version "1.0.0"
 
 "@screens/settings@file:./screens/settings":
+  version "1.0.0"
+
+"@screens/support-send-feedback@file:./screens/support-send-feedback/":
   version "1.0.0"
 
 "@sideway/address@^4.1.3":
