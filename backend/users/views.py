@@ -12,16 +12,11 @@ from allauth.socialaccount.providers.apple.client import AppleOAuth2Client
 
 User = get_user_model()
 
-
 class UserDetailView(LoginRequiredMixin, DetailView):
 
     model = User
     slug_field = "username"
     slug_url_kwarg = "username"
-
-
-user_detail_view = UserDetailView.as_view()
-
 
 class UserUpdateView(LoginRequiredMixin, UpdateView):
 
@@ -35,19 +30,12 @@ class UserUpdateView(LoginRequiredMixin, UpdateView):
         return User.objects.get(username=self.request.user.username)
 
 
-user_update_view = UserUpdateView.as_view()
-
-
 class UserRedirectView(LoginRequiredMixin, RedirectView):
 
     permanent = False
 
     def get_redirect_url(self):
         return reverse("users:detail", kwargs={"username": self.request.user.username})
-
-
-user_redirect_view = UserRedirectView.as_view()
-
 
 
 class FacebookLogin(SocialLoginView):
@@ -61,9 +49,6 @@ class FacebookLogin(SocialLoginView):
         kwargs["context"] = self.get_serializer_context()
         return serializer_class(*args, **kwargs)
 
-
-user_facebook_social_view = FacebookLogin.as_view()
-
 class GoogleLogin(SocialLoginView):
     adapter_class = GoogleOAuth2Adapter
     serializer_class = SocialLoginSerializer
@@ -74,9 +59,6 @@ class GoogleLogin(SocialLoginView):
         serializer_class = self.get_serializer_class()
         kwargs["context"] = self.get_serializer_context()
         return serializer_class(*args, **kwargs)
-    
-user_google_social_view = GoogleLogin.as_view()
-
 
 class AppleLogin(SocialLoginView):
     adapter_class = AppleOAuth2Adapter
@@ -84,5 +66,3 @@ class AppleLogin(SocialLoginView):
     client_class = AppleOAuth2Client
     serializer_class = SocialLoginSerializer
     
-    
-user_apple_social_view = AppleLogin.as_view()
