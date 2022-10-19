@@ -12,11 +12,13 @@ from allauth.socialaccount.providers.apple.client import AppleOAuth2Client
 
 User = get_user_model()
 
+
 class UserDetailView(LoginRequiredMixin, DetailView):
 
     model = User
     slug_field = "username"
     slug_url_kwarg = "username"
+
 
 class UserUpdateView(LoginRequiredMixin, UpdateView):
 
@@ -49,6 +51,7 @@ class FacebookLogin(SocialLoginView):
         kwargs["context"] = self.get_serializer_context()
         return serializer_class(*args, **kwargs)
 
+
 class GoogleLogin(SocialLoginView):
     adapter_class = GoogleOAuth2Adapter
     serializer_class = SocialLoginSerializer
@@ -60,9 +63,9 @@ class GoogleLogin(SocialLoginView):
         kwargs["context"] = self.get_serializer_context()
         return serializer_class(*args, **kwargs)
 
+
 class AppleLogin(SocialLoginView):
     adapter_class = AppleOAuth2Adapter
     callback_url = "http://localhost:8000/"
     client_class = AppleOAuth2Client
     serializer_class = SocialLoginSerializer
-    

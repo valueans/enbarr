@@ -1,3 +1,4 @@
+from email.policy import default
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.urls import reverse
@@ -5,9 +6,10 @@ from django.utils.translation import ugettext_lazy as _
 
 
 USER_TYPE = (
-    ('1','BUYER'),
-    ('2','SELLER'),
+    ("1", "BUYER"),
+    ("2", "SELLER"),
 )
+
 
 class User(AbstractUser):
     # WARNING!
@@ -32,19 +34,36 @@ class User(AbstractUser):
 
 
 class Plans(models.Model):
-    price = models.FloatField(null=True,blank=True)
-    description = models.CharField(max_length=100,null=True,blank=True)
+    price = models.FloatField(null=True, blank=True)
+    description = models.CharField(max_length=100, null=True, blank=True)
 
-class UserInfo(models.Model):
-    user = models.ForeignKey(User,on_delete=models.CASCADE,null=True,blank=True)
-    type = models.CharField(max_length=1,choices=USER_TYPE,default=1)
-    phone_number = models.CharField(max_length=15,null=True,blank=True)
-    profile_photo = models.ImageField(null=True,blank=True)
-    bio = models.TextField(max_length=1500,null=True,blank=True)
-    address = models.CharField(max_length=1000,null=True,blank=True)
-    city  = models.CharField(max_length=100,null=True,blank=True)
-    zipcode  = models.CharField(max_length=100,null=True,blank=True)
-    state  = models.CharField(max_length=100,null=True,blank=True)
-    country  = models.CharField(max_length=100,null=True,blank=True)
-    plan = models.ForeignKey(Plans,on_delete=models.CASCADE,null=True,blank=True)
-    
+
+class UserProfile(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    type = models.CharField(max_length=1, choices=USER_TYPE, default=1)
+    phone_number = models.CharField(max_length=15, null=True, blank=True)
+    profile_photo = models.ImageField(null=True, blank=True)
+    bio = models.TextField(max_length=1500, null=True, blank=True)
+    address = models.CharField(max_length=1000, null=True, blank=True)
+    city = models.CharField(max_length=100, null=True, blank=True)
+    zipcode = models.CharField(max_length=100, null=True, blank=True)
+    state = models.CharField(max_length=100, null=True, blank=True)
+    country = models.CharField(max_length=100, null=True, blank=True)
+    plan = models.ForeignKey(Plans, on_delete=models.CASCADE, null=True, blank=True)
+
+    def __str__(self):
+        return self.user.email
+
+
+class Notifications(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    description = models.TextField(max_length=1000, null=True, blank=True)
+    read_status = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"user:{self.user.email} status:{self.read_status}"
+
+
+class UserSearchSave(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    title = models.CharField(max_length=100, null=True, blank=True)

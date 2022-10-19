@@ -8,19 +8,27 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('home', '0001_load_initial_data'),
+        ("home", "0001_load_initial_data"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='ContactUs',
+            name="ContactUs",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('first_name', models.CharField(blank=True, max_length=100, null=True)),
-                ('last_name', models.CharField(blank=True, max_length=100, null=True)),
-                ('email', models.EmailField(blank=True, max_length=254, null=True)),
-                ('query', models.TextField(blank=True, max_length=1000, null=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("first_name", models.CharField(blank=True, max_length=100, null=True)),
+                ("last_name", models.CharField(blank=True, max_length=100, null=True)),
+                ("email", models.EmailField(blank=True, max_length=254, null=True)),
+                ("query", models.TextField(blank=True, max_length=1000, null=True)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
             ],
         ),
     ]
