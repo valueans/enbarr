@@ -10,7 +10,15 @@ from pyparsing import Keyword
 from rest_framework import serializers
 from rest_auth.serializers import PasswordResetSerializer
 from users.models import Plans, UserProfile, Notifications, UserSearchSave
-from home.models import ContactUs, HorseImages, Keywords, Horses, Favourite
+from home.models import (
+    ContactUs,
+    HorseImages,
+    Keywords,
+    Horses,
+    Favourite,
+    Likes,
+    DisLikes,
+)
 
 
 User = get_user_model()
@@ -127,6 +135,10 @@ class HorsesSerializer(serializers.ModelSerializer):
     keywords = KeywordsSerializer(read_only=True, many=True)
     images_id = serializers.ListField(write_only=True, required=False)
     keywords_id = serializers.ListField(write_only=True, required=False)
+    likes = serializers.SerializerMethodField(read_only=True)
+    dislikes = serializers.SerializerMethodField(read_only=True)
+    isliked = serializers.SerializerMethodField(read_only=True)
+    isdisliked = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Horses
@@ -167,6 +179,28 @@ class HorsesSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
+    def get_likes(self, obj):
+        return obj.likes.all().count()
+
+    def get_dislikes(self, obj):
+        return obj.dislikes.all().count()
+
+    def get_isliked(self, obj):
+        user = self.context["request"].user
+        try:
+            obj.likes.get(user=user)
+        except:
+            return False
+        return True
+
+    def get_isdisliked(self, obj):
+        user = self.context["request"].user
+        try:
+            obj.dislikes.get(user=user)
+        except:
+            return False
+        return True
+
 
 class FavouriteSerializer(serializers.ModelSerializer):
     horses = HorsesSerializer(read_only=True)
@@ -202,3 +236,15 @@ class UserSearchSaveSerializer(serializers.ModelSerializer):
         model = UserSearchSave
         fields = "__all__"
         read_only_fields = ["id"]
+
+
+class LikesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Likes
+        fields = "__all__"
+
+
+class DislikesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DisLikes
+        fields = "__all__"

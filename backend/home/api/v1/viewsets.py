@@ -16,7 +16,13 @@ from modules.terms_and_conditions.terms_and_conditions.serializers import (
     TermAndConditionSerializer,
 )
 from drf_yasg.utils import swagger_auto_schema
-from .swaggerParams import createParam, customDeleteResponse, createParamList
+from .swaggerParams import (
+    createParam,
+    customDeleteResponse,
+    createParamList,
+    customLikeResponse,
+    customDisLikeResponse,
+)
 
 from home.api.v1.serializers import (
     SignupSerializer,
@@ -30,8 +36,18 @@ from home.api.v1.serializers import (
     PlansSerializer,
     NotificationsSerializer,
     UserSearchSaveSerializer,
+    LikesSerializer,
+    DislikesSerializer,
 )
-from home.models import ContactUs, Keywords, HorseImages, Horses, Favourite
+from home.models import (
+    ContactUs,
+    Keywords,
+    HorseImages,
+    Horses,
+    Favourite,
+    Likes,
+    DisLikes,
+)
 
 from users.models import UserProfile, Plans, Notifications, UserSearchSave
 
@@ -362,7 +378,9 @@ def HorseView(request):
                 Horses.objects.filter(uploaded_by=request.user).order_by("id").reverse()
             )
 
-            serializer = HorsesSerializer(horses, many=True)
+            serializer = HorsesSerializer(
+                horses, many=True, context={"request": request}
+            )
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         try:
             horse = Horses.objects.get(id=horse_id)
@@ -717,3 +735,81 @@ def userSearchView(request):
         instance.delete()
         data = {"status": "ok", "message": deleted_message}
         return Response(data=data, status=status.HTTP_200_OK)
+
+
+@swagger_auto_schema(
+    method="GET",
+    manual_parameters=[
+        createParam(paramName="horse-id", description="to like a specific horse"),
+    ],
+    responses=customLikeResponse(),
+)
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+@authentication_classes([TokenAuthentication])
+def likeHorseView(request):
+    horse_id = request.GET.get("horse-id", None)
+    if horse_id is None:
+        data = {"status": "ERROR", "message": "horse-id is required"}
+        return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+
+    try:
+        horse = Horses.objects.get(id=horse_id)
+    except:
+        data = {"status": "ERROR", "message": "Invalid horse id"}
+        return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+
+    instance, created = Likes.objects.get_or_create(user=request.user)
+
+    horse.likes.add(instance)
+
+    try:
+        get_dislike = horse.dislikes.get(user=request.user)
+        horse.dislikes.remove(get_dislike)
+    except:
+        pass
+
+    horse.save()
+
+    likes = horse.likes.all().count()
+
+    data = {"status": "OK", "message": "Successfull", "likes": likes}
+    return Response(data=data, status=status.HTTP_200_OK)
+
+
+@swagger_auto_schema(
+    method="GET",
+    manual_parameters=[
+        createParam(paramName="horse-id", description="to dislike a specific horse"),
+    ],
+    responses=customDisLikeResponse(),
+)
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+@authentication_classes([TokenAuthentication])
+def dislikeHorseView(request):
+    horse_id = request.GET.get("horse-id", None)
+    if horse_id is None:
+        data = {"status": "ERROR", "message": "horse-id is required"}
+        return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+    try:
+        horse = Horses.objects.get(id=horse_id)
+    except:
+        data = {"status": "ERROR", "message": "Invalid horse id"}
+        return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+
+    instance, created = DisLikes.objects.get_or_create(user=request.user)
+    horse.dislikes.add(instance)
+
+    try:
+        get_like = horse.likes.get(user=request.user)
+        horse.likes.remove(get_like)
+    except:
+        pass
+
+    horse.save()
+
+    dislikes = horse.dislikes.all().count()
+
+    data = {"status": "OK", "message": "Successfull", "dislikes": dislikes}
+    return Response(data=data, status=status.HTTP_200_OK)

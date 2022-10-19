@@ -1,3 +1,4 @@
+from email.policy import default
 from django.db import models
 from django.contrib.auth import get_user_model
 
@@ -34,6 +35,8 @@ class Horses(models.Model):
     temprament = models.CharField(max_length=500, null=True, blank=True)
     discipline = models.CharField(max_length=500, null=True, blank=True)
     keywords = models.ManyToManyField(Keywords, related_name="keywords")
+    likes = models.ManyToManyField("Likes", related_name="likes")
+    dislikes = models.ManyToManyField("DisLikes", related_name="dislikes")
     uploaded_by = models.ForeignKey(
         User, on_delete=models.CASCADE, null=True, blank=True
     )
@@ -41,4 +44,12 @@ class Horses(models.Model):
 
 class Favourite(models.Model):
     horses = models.ForeignKey(Horses, on_delete=models.CASCADE, null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+
+
+class Likes(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+
+
+class DisLikes(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)

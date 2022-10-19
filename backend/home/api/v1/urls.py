@@ -19,6 +19,8 @@ from .viewsets import (
     notificationsView,
     searchHorseView,
     userSearchView,
+    likeHorseView,
+    dislikeHorseView,
 )
 
 
@@ -41,5 +43,7 @@ urlpatterns = [
     path("notifications/", notificationsView, name="notifications"),
     path("search-horse/", searchHorseView, name="search-horse"),
     path("user-saved-search/", userSearchView, name="user-saved-search"),
+    path("like-horse/", likeHorseView, name="like-horse"),
+    path("dislike-horse/", dislikeHorseView, name="dislike-horse"),
     path("", include(router.urls)),
 ]

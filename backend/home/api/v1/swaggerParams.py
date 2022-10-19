@@ -50,3 +50,49 @@ def customDeleteResponse():
         )
     }
     return responses
+
+
+def customLikeResponse():
+    responses = {
+        status.HTTP_200_OK: Schema(
+            type=TYPE_OBJECT,
+            properties={
+                "status": openapi.Schema(
+                    title="OK",
+                    type=openapi.TYPE_STRING,
+                ),
+                "message": openapi.Schema(
+                    title="Successfull",
+                    type=openapi.TYPE_STRING,
+                ),
+                "likes": openapi.Schema(
+                    title="likes-count",
+                    type=openapi.TYPE_INTEGER,
+                ),
+            },
+        )
+    }
+    return responses
+
+
+def customDisLikeResponse():
+    responses = {
+        status.HTTP_200_OK: Schema(
+            type=TYPE_OBJECT,
+            properties={
+                "status": openapi.Schema(
+                    title="OK",
+                    type=openapi.TYPE_STRING,
+                ),
+                "message": openapi.Schema(
+                    title="Successfull",
+                    type=openapi.TYPE_STRING,
+                ),
+                "dislikes": openapi.Schema(
+                    title="dislikes-count",
+                    type=openapi.TYPE_INTEGER,
+                ),
+            },
+        )
+    }
+    return responses
