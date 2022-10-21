@@ -10,6 +10,7 @@ from users.views import FacebookLogin, GoogleLogin, AppleLogin
 from .viewsets import (
     ContactUsView,
     favouriteView,
+    messagesView,
     termAndConditionView,
     HorseImagesView,
     KeywordsView,
@@ -21,6 +22,7 @@ from .viewsets import (
     userSearchView,
     likeHorseView,
     dislikeHorseView,
+    conversationView,
 )
 
 
@@ -45,5 +47,7 @@ urlpatterns = [
     path("user-saved-search/", userSearchView, name="user-saved-search"),
     path("like-horse/", likeHorseView, name="like-horse"),
     path("dislike-horse/", dislikeHorseView, name="dislike-horse"),
+    path("messages/", messagesView, name="messages"),
+    path("conversation/", conversationView, name="conversation"),
     path("", include(router.urls)),
 ]

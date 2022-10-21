@@ -18,6 +18,8 @@ from home.models import (
     Favourite,
     Likes,
     DisLikes,
+    Messages,
+    Conversation,
 )
 
 
@@ -103,9 +105,12 @@ class UserProfileSerializer(serializers.ModelSerializer):
         read_only_fields = ["id"]
 
     def create(self, validated_data):
-        plan_id = validated_data.pop("plan_id")
-        plan_instance = Plans.objects.get(id=plan_id)
-        instance = UserProfile.objects.create(plan=plan_instance, **validated_data)
+        try:
+            plan_id = validated_data.pop("plan_id")
+            plan_instance = Plans.objects.get(id=plan_id)
+            instance = UserProfile.objects.create(plan=plan_instance, **validated_data)
+        except:
+            instance = UserProfile.objects.create(**validated_data)
         return instance
 
 
@@ -248,3 +253,36 @@ class DislikesSerializer(serializers.ModelSerializer):
     class Meta:
         model = DisLikes
         fields = "__all__"
+
+
+class MessagesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Messages
+        fields = "__all__"
+
+
+class ConversationSerializer(serializers.ModelSerializer):
+    user_one_profile = serializers.SerializerMethodField(read_only=True)
+    user_two_profile = serializers.SerializerMethodField(read_only=True)
+    message = MessagesSerializer(read_only=True, many=True)
+
+    class Meta:
+        model = Conversation
+        fields = (
+            "id",
+            "user_one_profile",
+            "user_two_profile",
+            "message",
+            "created_at",
+            "updated_at",
+        )
+
+    def get_user_one_profile(self, obj):
+        profile = UserProfile.objects.get(user=obj.user_one)
+        serializer = UserProfileSerializer(profile)
+        return serializer.data
+
+    def get_user_two_profile(self, obj):
+        profile = UserProfile.objects.get(user=obj.user_two)
+        serializer = UserProfileSerializer(profile)
+        return serializer.data
