@@ -1,4 +1,3 @@
-from email.message import Message
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.viewsets import ModelViewSet, ViewSet
 from rest_framework.authtoken.models import Token
@@ -11,6 +10,7 @@ from django.db.models import Q
 from drf_yasg.utils import swagger_auto_schema
 from datetime import datetime
 from django.contrib.auth import get_user_model
+from users.models import UserProfile, Plans, Notifications, UserSearchSave
 
 User = get_user_model()
 
@@ -45,6 +45,7 @@ from home.api.v1.serializers import (
     UserSearchSaveSerializer,
     MessagesSerializer,
     ConversationSerializer,
+    ReportSerializer,
 )
 from home.models import (
     ContactUs,
@@ -56,8 +57,8 @@ from home.models import (
     DisLikes,
     Messages,
     Conversation,
+    Report,
 )
-from users.models import UserProfile, Plans, Notifications, UserSearchSave
 
 deleted_message = "Successfully Deleted"
 
@@ -400,7 +401,7 @@ def HorseView(request):
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     if request.method == "POST":
-        serializer = HorsesSerializer(data=request.data)
+        serializer = HorsesSerializer(data=request.data, context={"request": request})
         if serializer.is_valid():
             serializer.save(uploaded_by=request.user)
             return Response(data=serializer.data, status=status.HTTP_200_OK)
@@ -929,5 +930,56 @@ def conversationView(request):
             data = {"status": "ERROR", "message": "Invalid conversation-id"}
             return Response(data=data, status=status.HTTP_404_NOT_FOUND)
         instance.delete()
+        data = {"status": "OK", "message": deleted_message}
+        return Response(data=data, status=status.HTTP_200_OK)
+
+
+@swagger_auto_schema(
+    method="GET",
+    manual_parameters=[
+        createParam(
+            paramName="horse-id",
+            description="to get all the reports on a specific horse",
+        )
+    ],
+    responses={200: ReportSerializer(many=True)},
+)
+@swagger_auto_schema(method="POST", request_body=ReportSerializer)
+@swagger_auto_schema(
+    method="DELETE",
+    manual_parameters=[
+        createParam(paramName="report-id", description="to delete specific report")
+    ],
+    responses=customDeleteResponse(),
+)
+@api_view(["GET", "POST", "DELETE"])
+@permission_classes([IsAuthenticated])
+@authentication_classes([TokenAuthentication])
+def ReportView(request):
+    if request.method == "GET":
+        horse_id = request.GET.get("horse-id", None)
+        if horse_id is None:
+            data = {"status": "ERROR", "message": "horse-id is required"}
+            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+
+        reports = Report.objects.filter(horse__id=horse_id)
+        serializer = ReportSerializer(reports, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    if request.method == "POST":
+        serializer = ReportSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    if request.method == "DELETE":
+        report_id = request.GET.get("report-id", None)
+        if report_id is None:
+            data = {"status": "ERROR", "message": "report-id is required"}
+            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+
+        report = Report.objects.get(id=report_id)
+        report.delete()
         data = {"status": "OK", "message": deleted_message}
         return Response(data=data, status=status.HTTP_200_OK)

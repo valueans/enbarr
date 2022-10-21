@@ -9,6 +9,7 @@ from home.api.v1.viewsets import (
 from users.views import FacebookLogin, GoogleLogin, AppleLogin
 from .viewsets import (
     ContactUsView,
+    ReportView,
     favouriteView,
     messagesView,
     termAndConditionView,
@@ -49,5 +50,6 @@ urlpatterns = [
     path("dislike-horse/", dislikeHorseView, name="dislike-horse"),
     path("messages/", messagesView, name="messages"),
     path("conversation/", conversationView, name="conversation"),
+    path("report/", ReportView, name="report"),
     path("", include(router.urls)),
 ]

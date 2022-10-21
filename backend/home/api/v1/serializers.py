@@ -20,6 +20,7 @@ from home.models import (
     DisLikes,
     Messages,
     Conversation,
+    Report,
 )
 
 
@@ -286,3 +287,9 @@ class ConversationSerializer(serializers.ModelSerializer):
         profile = UserProfile.objects.get(user=obj.user_two)
         serializer = UserProfileSerializer(profile)
         return serializer.data
+
+
+class ReportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Report
+        fields = "__all__"

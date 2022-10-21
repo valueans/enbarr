@@ -7,6 +7,7 @@ from .models import (
     Horses,
     Favourite,
     Messages,
+    Report,
 )
 
 
@@ -17,3 +18,4 @@ admin.site.register(Horses)
 admin.site.register(Favourite)
 admin.site.register(Messages)
 admin.site.register(Conversation)
+admin.site.register(Report)

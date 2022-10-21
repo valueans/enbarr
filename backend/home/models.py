@@ -5,6 +5,19 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
+REPORT_REASON = (
+    ("Spam", "Spam"),
+    ("Pornography", "Pornography"),
+    ("Self-harm", "Self-harm"),
+    ("Not for children", "Not for children"),
+    (
+        "Illegal activities (e.g. drug selling)",
+        "Illegal activities (e.g. drug selling)",
+    ),
+    ("Deceptive content", "Deceptive content"),
+)
+
+
 class ContactUs(models.Model):
     first_name = models.CharField(max_length=100, null=True, blank=True)
     last_name = models.CharField(max_length=100, null=True, blank=True)
@@ -77,3 +90,11 @@ class Conversation(models.Model):
     message = models.ManyToManyField(Messages, related_name="messages")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+
+class Report(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    horse = models.ForeignKey(Horses, on_delete=models.CASCADE, null=True, blank=True)
+    reason = models.CharField(
+        max_length=1000, choices=REPORT_REASON, null=True, blank=True
+    )
