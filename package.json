@@ -7,73 +7,50 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint .",
-    "web": "./node_modules/.bin/webpack-dev-server --config ./webpack.config.js --live-reload --color --mode development",
-    "web:build": "./node_modules/.bin/webpack --config ./webpack.config.js --color --mode production"
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
-    "@modules/splash": "file:./modules/splash/",
-    "@modules/terms-and-conditions": "file:./modules/terms-and-conditions",
-    "@react-native-community/masked-view": "^0.1.10",
-    "@react-navigation/native": "^5.9.3",
-    "@react-navigation/stack": "^5.14.3",
-    "@reduxjs/toolkit": "^1.5.0",
-    "@screens/direct-messages": "file:./screens/direct-messages/",
-    "@screens/messages-listing": "file:./screens/messages-listing/",
-    "@screens/notifications": "file:./screens/notifications/",
-    "@screens/payment-subscription": "file:./screens/payment-subscription/",
-    "@screens/privacy-policy": "file:./screens/privacy-policy/",
-    "@screens/profile": "file:./screens/profile/",
-    "@screens/report": "file:./screens/report/",
-    "@screens/settings": "file:./screens/settings/",
-    "@screens/support-send-feedback": "file:./screens/support-send-feedback/",
-    "axios": "^0.21.1",
-    "react": "17.0.1",
-    "react-dom": "^18.2.0",
-    "react-native": "0.64.0",
-    "react-native-dotenv": "^2.5.3",
-    "react-native-elements": "^3.3.1",
-    "react-native-gesture-handler": "^1.10.3",
-    "react-native-radio-buttons-group": "^2.2.11",
-    "react-native-reanimated": "~2.4.1",
-    "react-native-responsive-screen": "^1.4.2",
-    "react-native-safe-area-context": "^3.2.0",
-    "react-native-screens": "^2.18.1",
-    "react-native-vector-icons": "^8.1.0",
-    "react-native-web": "^0.18.2",
-    "react-redux": "^7.2.2",
-    "redux": "^4.0.5"
+    "@react-native-async-storage/async-storage": "^1.17.10",
+    "@react-native-community/blur": "^4.2.0",
+    "@react-navigation/native": "^6.0.13",
+    "@react-navigation/native-stack": "^6.9.1",
+    "@tanstack/react-query": "^4.12.0",
+    "react": "18.1.0",
+    "react-native": "0.70.3",
+    "react-native-linear-gradient": "^2.6.2",
+    "react-native-logs": "^5.0.1",
+    "react-native-safe-area-context": "^4.4.1",
+    "react-native-screens": "^3.18.2",
+    "tailwind-rn": "^4.2.0",
+    "zustand": "^4.1.2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
     "@babel/runtime": "^7.12.5",
     "@react-native-community/eslint-config": "^2.0.0",
+    "@tsconfig/react-native": "^2.0.2",
+    "@types/jest": "^26.0.23",
+    "@types/react": "^18.0.21",
+    "@types/react-native": "^0.70.4",
+    "@types/react-test-renderer": "^18.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.37.0",
+    "@typescript-eslint/parser": "^5.37.0",
     "babel-jest": "^26.6.3",
-    "babel-loader": "^8.2.5",
-    "babel-plugin-import-glob-meta": "github:crowdbotics/babel-plugin-import-glob-meta",
-    "babel-plugin-react-native-web": "^0.18.2",
-    "eslint": "7.14.0",
+    "eslint": "^7.32.0",
     "jest": "^26.6.3",
-    "metro-react-native-babel-preset": "^0.64.0",
-    "react-test-renderer": "17.0.1",
-    "url-loader": "^4.1.1",
-    "webpack": "^5.73.0",
-    "webpack-cli": "^4.10.0",
-    "webpack-dev-server": "^4.9.3"
+    "metro-react-native-babel-preset": "0.72.3",
+    "react-test-renderer": "18.1.0",
+    "typescript": "^4.8.3"
   },
   "jest": {
-    "preset": "react-native"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
+    "preset": "react-native",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
     ]
   }
 }
