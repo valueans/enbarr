@@ -53,6 +53,7 @@ class Horses(models.Model):
     uploaded_by = models.ForeignKey(
         User, on_delete=models.CASCADE, null=True, blank=True
     )
+    approved = models.BooleanField(default=False)
 
 
 class Favourite(models.Model):

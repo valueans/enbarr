@@ -640,7 +640,9 @@ def plansView(request):
 @authentication_classes([TokenAuthentication])
 def notificationsView(request):
     if request.method == "GET":
-        instance = Notifications.objects.filter(user=request.user)
+        instance = (
+            Notifications.objects.filter(user=request.user).order_by("id").reverse()
+        )
         serializer = NotificationsSerializer(instance, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
     if request.method == "POST":
