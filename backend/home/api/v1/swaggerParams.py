@@ -52,6 +52,52 @@ def customDeleteResponse():
     return responses
 
 
+def customOtpResponse():
+    responses = {
+        status.HTTP_200_OK: Schema(
+            type=TYPE_OBJECT,
+            properties={
+                "status": openapi.Schema(
+                    title="OK",
+                    type=openapi.TYPE_STRING,
+                ),
+                "token": openapi.Schema(
+                    title="authorized token",
+                    type=openapi.TYPE_STRING,
+                ),
+                "message": openapi.Schema(
+                    title="email verified",
+                    type=openapi.TYPE_STRING,
+                ),
+            },
+        )
+    }
+    return responses
+
+
+def customSendOtpResponse():
+    responses = {
+        status.HTTP_200_OK: Schema(
+            type=TYPE_OBJECT,
+            properties={
+                "status": openapi.Schema(
+                    title="OK",
+                    type=openapi.TYPE_STRING,
+                ),
+                "token": openapi.Schema(
+                    title="token",
+                    type=openapi.TYPE_STRING,
+                ),
+                "message": openapi.Schema(
+                    title="OTP is sended to registered email",
+                    type=openapi.TYPE_STRING,
+                ),
+            },
+        )
+    }
+    return responses
+
+
 def customLikeResponse():
     responses = {
         status.HTTP_200_OK: Schema(
@@ -91,6 +137,90 @@ def customDisLikeResponse():
                 "dislikes": openapi.Schema(
                     title="dislikes-count",
                     type=openapi.TYPE_INTEGER,
+                ),
+            },
+        )
+    }
+    return responses
+
+
+def customPassowrdResetResponse():
+    responses = {
+        status.HTTP_200_OK: Schema(
+            type=TYPE_OBJECT,
+            properties={
+                "status": openapi.Schema(
+                    title="OK",
+                    type=openapi.TYPE_STRING,
+                ),
+                "message": openapi.Schema(
+                    title="OTP is sended to registered email",
+                    type=openapi.TYPE_STRING,
+                ),
+            },
+        )
+    }
+    return responses
+
+
+def customLikeResponse():
+    responses = {
+        status.HTTP_200_OK: Schema(
+            type=TYPE_OBJECT,
+            properties={
+                "status": openapi.Schema(
+                    title="OK",
+                    type=openapi.TYPE_STRING,
+                ),
+                "message": openapi.Schema(
+                    title="Successfull",
+                    type=openapi.TYPE_STRING,
+                ),
+                "likes": openapi.Schema(
+                    title="likes-count",
+                    type=openapi.TYPE_INTEGER,
+                ),
+            },
+        )
+    }
+    return responses
+
+
+def customDisLikeResponse():
+    responses = {
+        status.HTTP_200_OK: Schema(
+            type=TYPE_OBJECT,
+            properties={
+                "status": openapi.Schema(
+                    title="OK",
+                    type=openapi.TYPE_STRING,
+                ),
+                "message": openapi.Schema(
+                    title="Successfull",
+                    type=openapi.TYPE_STRING,
+                ),
+                "dislikes": openapi.Schema(
+                    title="dislikes-count",
+                    type=openapi.TYPE_INTEGER,
+                ),
+            },
+        )
+    }
+    return responses
+
+
+def customPasswordResetResponse():
+    responses = {
+        status.HTTP_200_OK: Schema(
+            type=TYPE_OBJECT,
+            properties={
+                "status": openapi.Schema(
+                    title="OK",
+                    type=openapi.TYPE_STRING,
+                ),
+                "message": openapi.Schema(
+                    title="Password Reset Successfullly!",
+                    type=openapi.TYPE_STRING,
                 ),
             },
         )

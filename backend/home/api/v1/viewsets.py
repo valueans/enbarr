@@ -11,6 +11,7 @@ from drf_yasg.utils import swagger_auto_schema
 from datetime import datetime
 from django.contrib.auth import get_user_model
 from users.models import UserProfile, Plans, Notifications, UserSearchSave
+from users.helpers import sendOtpEmail, verifyOtp
 
 User = get_user_model()
 
@@ -29,6 +30,9 @@ from .swaggerParams import (
     createParamList,
     customLikeResponse,
     customDisLikeResponse,
+    customOtpResponse,
+    customPasswordResetResponse,
+    customSendOtpResponse,
 )
 
 from home.api.v1.serializers import (
@@ -46,6 +50,7 @@ from home.api.v1.serializers import (
     MessagesSerializer,
     ConversationSerializer,
     ReportSerializer,
+    PasswordSerializer,
 )
 from home.models import (
     ContactUs,
@@ -80,8 +85,125 @@ class LoginViewSet(ViewSet):
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data["user"]
         token, created = Token.objects.get_or_create(user=user)
-        user_serializer = UserSerializer(user)
-        return Response({"token": token.key, "user": user_serializer.data})
+        if user.is_verified == True:
+            user_serializer = UserSerializer(user)
+            return Response({"token": token.key, "user": user_serializer.data})
+
+        sendOtpEmail(user)
+        data = {
+            "status": "ERROR",
+            "token": token.key,
+            "message": "you are not verified your email please verify your email first to login,Verification OTP is sended on registered email",
+        }
+        return Response(data=data, status=status.HTTP_200_OK)
+
+
+@swagger_auto_schema(method="get", responses=customOtpResponse())
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+@authentication_classes([TokenAuthentication])
+def verifyOtpView(request):
+    if request.method == "GET":
+        otp = request.GET.get("otp", None)
+        if otp is None:
+            data = {"status": "ERROR", "message": "otp is required for verification"}
+            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+
+        user = request.user
+        verify = verifyOtp(user, otp)
+        print(verify)
+
+        if verify == True:
+            token = Token.objects.get(user=user)
+            data = {"status": "OK", "token": token.key, "message": "email verified"}
+            return Response(data=data, status=status.HTTP_200_OK)
+
+        data = {"status": "ERROR", "message": "Invalid OTP"}
+        return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+
+
+@swagger_auto_schema(method="get", responses=customSendOtpResponse())
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+@authentication_classes([TokenAuthentication])
+def sendOtpView(request):
+    if request.method == "GET":
+        user = request.user
+        sendOtpEmail(user)
+        data = {"status": "OK", "message": "OTP is sended to registered email"}
+        return Response(data=data, status=status.HTTP_200_OK)
+
+
+@swagger_auto_schema(
+    method="get",
+    manual_parameters=[
+        createParam(
+            paramName="email",
+            description="to check that user is register with this email and send the otp",
+        )
+    ],
+    responses=customSendOtpResponse(),
+)
+@api_view(["GET"])
+def resetEmailView(request):
+    if request.method == "GET":
+        email = request.GET.get("email", None)
+        if email is None:
+            data = {"status": "ERROR", "message": "email is required"}
+            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+        try:
+            user = User.objects.get(email=email)
+        except:
+            data = {"status": "ERROR", "message": "invalid email address"}
+            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+
+        sendOtpEmail(user)
+        token = Token.objects.get(user=user)
+        data = {
+            "status": "OK",
+            "token": token.key,
+            "message": "OTP is sended to registered email",
+        }
+        return Response(data=data, status=status.HTTP_200_OK)
+
+
+@swagger_auto_schema(
+    method="post",
+    operation_description="you need to pass password1 and password2 along with the token in the header.",
+    responses=customPasswordResetResponse(),
+)
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+@authentication_classes([TokenAuthentication])
+def resetPasswordView(request):
+    if request.method == "POST":
+        password1 = request.POST.get("password1", None)
+        password2 = request.POST.get("password2", None)
+
+        if password1 is None or password2 is None:
+            data = {"status": "ERROR", "message": "password1 and password2 is required"}
+            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+
+        if password1 != password2:
+            data = {
+                "status": "ERROR",
+                "message": "password1 and password2 should be same",
+            }
+            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+
+        if len(password1) < 8:
+            data = {
+                "status": "ERROR",
+                "message": "password should be minimum of 8 characters.",
+            }
+            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+
+        user = request.user
+        user.set_password(password1)
+        user.save()
+
+        data = {"status": "OK", "message": "Password Reset Successfullly!"}
+        return Response(data=data, status=status.HTTP_200_OK)
 
 
 @swagger_auto_schema(method="get", responses={200: ContactUsSerializer(many=True)})

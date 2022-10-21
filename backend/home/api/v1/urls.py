@@ -1,6 +1,5 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-
 from home.api.v1.viewsets import (
     SignupViewSet,
     LoginViewSet,
@@ -12,6 +11,10 @@ from .viewsets import (
     ReportView,
     favouriteView,
     messagesView,
+    resetEmailView,
+    resetEmailView,
+    resetPasswordView,
+    sendOtpView,
     termAndConditionView,
     HorseImagesView,
     KeywordsView,
@@ -24,6 +27,7 @@ from .viewsets import (
     likeHorseView,
     dislikeHorseView,
     conversationView,
+    verifyOtpView,
 )
 
 
@@ -51,5 +55,9 @@ urlpatterns = [
     path("messages/", messagesView, name="messages"),
     path("conversation/", conversationView, name="conversation"),
     path("report/", ReportView, name="report"),
+    path("verifyotp/", verifyOtpView, name="verify-otp"),
+    path("sendotp/", sendOtpView, name="send-otp"),
+    path("reset-password/", resetPasswordView, name="reset-password"),
+    path("reset-email/", resetEmailView, name="reset-email"),
     path("", include(router.urls)),
 ]
