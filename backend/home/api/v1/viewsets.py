@@ -158,7 +158,7 @@ def resetEmailView(request):
             return Response(data=data, status=status.HTTP_404_NOT_FOUND)
 
         sendOtpEmail(user)
-        token = Token.objects.get(user=user)
+        token, status = Token.objects.get_or_create(user=user)
         data = {
             "status": "OK",
             "token": token.key,
