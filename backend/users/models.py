@@ -4,10 +4,10 @@ from django.db import models
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 
-
-USER_TYPE = (
-    ("1", "BUYER"),
-    ("2", "SELLER"),
+SUBSCRIPTION_PLAN = (
+    ("Basic", "Basic"),
+    ("Premium", "Premium"),
+    ("Platinum", "Platinum"),
 )
 
 
@@ -35,14 +35,15 @@ class User(AbstractUser):
         return reverse("users:detail", kwargs={"username": self.username})
 
 
-class Plans(models.Model):
+class SubscriptionPlans(models.Model):
     price = models.FloatField(null=True, blank=True)
-    description = models.CharField(max_length=100, null=True, blank=True)
+    description = models.CharField(
+        choices=SUBSCRIPTION_PLAN, max_length=100, null=True, blank=True
+    )
 
 
 class UserProfile(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
-    type = models.CharField(max_length=1, choices=USER_TYPE, default=1)
     phone_number = models.CharField(max_length=15, null=True, blank=True)
     profile_photo = models.ImageField(null=True, blank=True)
     bio = models.TextField(max_length=1500, null=True, blank=True)
@@ -51,7 +52,11 @@ class UserProfile(models.Model):
     zipcode = models.CharField(max_length=100, null=True, blank=True)
     state = models.CharField(max_length=100, null=True, blank=True)
     country = models.CharField(max_length=100, null=True, blank=True)
-    plan = models.ForeignKey(Plans, on_delete=models.CASCADE, null=True, blank=True)
+    subscription_plan = models.ForeignKey(
+        SubscriptionPlans, on_delete=models.CASCADE, null=True, blank=True
+    )
+    subscription_date = models.DateTimeField(null=True, blank=True)
+    promotion_adds = models.IntegerField(default=100)
 
     def __str__(self):
         return self.user.email
@@ -69,3 +74,7 @@ class Notifications(models.Model):
 class UserSearchSave(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     title = models.CharField(max_length=100, null=True, blank=True)
+
+
+class DeletedUsers(models.Model):
+    email = models.EmailField(null=True, blank=True)

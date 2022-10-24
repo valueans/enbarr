@@ -99,3 +99,8 @@ class Report(models.Model):
     reason = models.CharField(
         max_length=1000, choices=REPORT_REASON, null=True, blank=True
     )
+
+
+class FeedBack(models.Model):
+    email = models.EmailField(null=False, blank=False)
+    message = models.TextField(null=False, blank=False)

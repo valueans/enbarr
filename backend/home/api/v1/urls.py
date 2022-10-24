@@ -9,7 +9,9 @@ from users.views import FacebookLogin, GoogleLogin, AppleLogin
 from .viewsets import (
     ContactUsView,
     ReportView,
+    deleteUserView,
     favouriteView,
+    feedBackView,
     messagesView,
     resetEmailView,
     resetEmailView,
@@ -28,6 +30,8 @@ from .viewsets import (
     dislikeHorseView,
     conversationView,
     verifyOtpView,
+    deleteUserView,
+    feedBackView,
 )
 
 
@@ -59,5 +63,7 @@ urlpatterns = [
     path("sendotp/", sendOtpView, name="send-otp"),
     path("reset-password/", resetPasswordView, name="reset-password"),
     path("reset-email/", resetEmailView, name="reset-email"),
+    path("delete-user/", deleteUserView, name="delete-user"),
+    path("feedback/", feedBackView, name="feedback"),
     path("", include(router.urls)),
 ]

@@ -9,7 +9,7 @@ from allauth.account.utils import setup_user_email
 from pyparsing import Keyword
 from rest_framework import serializers
 from rest_auth.serializers import PasswordResetSerializer
-from users.models import Plans, UserProfile, Notifications, UserSearchSave
+from users.models import SubscriptionPlans, UserProfile, Notifications, UserSearchSave
 from home.models import (
     ContactUs,
     HorseImages,
@@ -21,6 +21,7 @@ from home.models import (
     Messages,
     Conversation,
     Report,
+    FeedBack,
 )
 
 
@@ -89,15 +90,15 @@ class PasswordSerializer(PasswordResetSerializer):
     password_reset_form_class = ResetPasswordForm
 
 
-class PlansSerializer(serializers.ModelSerializer):
+class SubscriptionPlansSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Plans
+        model = SubscriptionPlans
         fields = "__all__"
         read_only_fields = ["id"]
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
-    plan = PlansSerializer(read_only=True)
+    plan = SubscriptionPlansSerializer(read_only=True)
     plan_id = serializers.IntegerField(write_only=True, required=False)
 
     class Meta:
@@ -108,7 +109,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         try:
             plan_id = validated_data.pop("plan_id")
-            plan_instance = Plans.objects.get(id=plan_id)
+            plan_instance = SubscriptionPlans.objects.get(id=plan_id)
             instance = UserProfile.objects.create(plan=plan_instance, **validated_data)
         except:
             instance = UserProfile.objects.create(**validated_data)
@@ -292,4 +293,10 @@ class ConversationSerializer(serializers.ModelSerializer):
 class ReportSerializer(serializers.ModelSerializer):
     class Meta:
         model = Report
+        fields = "__all__"
+
+
+class FeedBackSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FeedBack
         fields = "__all__"

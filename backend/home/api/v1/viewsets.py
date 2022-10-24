@@ -10,7 +10,13 @@ from django.db.models import Q
 from drf_yasg.utils import swagger_auto_schema
 from datetime import datetime
 from django.contrib.auth import get_user_model
-from users.models import UserProfile, Plans, Notifications, UserSearchSave
+from users.models import (
+    UserProfile,
+    SubscriptionPlans,
+    Notifications,
+    UserSearchSave,
+    DeletedUsers,
+)
 from users.helpers import sendOtpEmail, verifyOtp
 
 User = get_user_model()
@@ -44,13 +50,14 @@ from home.api.v1.serializers import (
     KeywordsSerializer,
     FavouriteSerializer,
     UserProfileSerializer,
-    PlansSerializer,
+    SubscriptionPlansSerializer,
     NotificationsSerializer,
     UserSearchSaveSerializer,
     MessagesSerializer,
     ConversationSerializer,
     ReportSerializer,
     PasswordSerializer,
+    FeedBackSerializer,
 )
 from home.models import (
     ContactUs,
@@ -63,6 +70,7 @@ from home.models import (
     Messages,
     Conversation,
     Report,
+    FeedBack,
 )
 
 deleted_message = "Successfully Deleted"
@@ -524,10 +532,20 @@ def HorseView(request):
 
     if request.method == "POST":
         serializer = HorsesSerializer(data=request.data, context={"request": request})
-        if serializer.is_valid():
-            serializer.save(uploaded_by=request.user)
-            return Response(data=serializer.data, status=status.HTTP_200_OK)
-        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        user_profile = UserProfile.objects.get(user=request.user)
+        if user_profile.promotion_adds > 0:
+            if serializer.is_valid():
+                serializer.save(uploaded_by=request.user)
+                user_profile.promotion_adds -= 1
+                user_profile.save()
+                return Response(data=serializer.data, status=status.HTTP_200_OK)
+            return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            data = {
+                "status": "error",
+                "message": "your promotion add are finished subscribe to a plan to post a new add.",
+            }
+            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
     if request.method == "PUT":
         horse_id = request.GET.get("horse-id", None)
@@ -687,20 +705,22 @@ def userProfileView(request):
         return Response(data=data, status=status.HTTP_200_OK)
 
 
-@swagger_auto_schema(method="get", responses={200: PlansSerializer(many=True)})
-@swagger_auto_schema(method="post", request_body=PlansSerializer)
-@swagger_auto_schema(method="put", responses={200: PlansSerializer})
+@swagger_auto_schema(
+    method="get", responses={200: SubscriptionPlansSerializer(many=True)}
+)
+@swagger_auto_schema(method="post", request_body=SubscriptionPlansSerializer)
+@swagger_auto_schema(method="put", responses={200: SubscriptionPlansSerializer})
 @swagger_auto_schema(method="delete", responses=customDeleteResponse())
 @api_view(["GET", "POST", "PUT", "DELETE"])
 @permission_classes([IsAuthenticated])
 @authentication_classes([TokenAuthentication])
 def plansView(request):
     if request.method == "GET":
-        instance = Plans.objects.all()
-        serializer = PlansSerializer(instance, many=True)
+        instance = SubscriptionPlans.objects.all()
+        serializer = SubscriptionPlansSerializer(instance, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
     if request.method == "POST":
-        serializer = PlansSerializer(data=request.data)
+        serializer = SubscriptionPlansSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
@@ -712,12 +732,12 @@ def plansView(request):
             data = {"status": "error", "message": "plan-id is required"}
             return Response(data=data, status=status.HTTP_404_NOT_FOUND)
         try:
-            instance = Plans.objects.get(id=plan_id)
+            instance = SubscriptionPlans.objects.get(id=plan_id)
         except:
             data = {"status": "error", "message": "Invalid plan-id"}
             return Response(data=data, status=status.HTTP_404_NOT_FOUND)
 
-        serializer = PlansSerializer(instance, data=request.data)
+        serializer = SubscriptionPlansSerializer(instance, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(data=serializer.data, status=status.HTTP_200_OK)
@@ -729,7 +749,7 @@ def plansView(request):
             data = {"status": "error", "message": "plan-id is required"}
             return Response(data=data, status=status.HTTP_404_NOT_FOUND)
         try:
-            instance = Plans.objects.get(id=plan_id)
+            instance = SubscriptionPlans.objects.get(id=plan_id)
         except:
             data = {"status": "error", "message": "Invalid plan-id"}
             return Response(data=data, status=status.HTTP_404_NOT_FOUND)
@@ -1105,5 +1125,80 @@ def ReportView(request):
 
         report = Report.objects.get(id=report_id)
         report.delete()
+        data = {"status": "OK", "message": deleted_message}
+        return Response(data=data, status=status.HTTP_200_OK)
+
+
+@swagger_auto_schema(method="GET", responses=customDeleteResponse())
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+@authentication_classes([TokenAuthentication])
+def deleteUserView(request):
+    if request.method == "GET":
+        user = request.user
+        DeletedUsers.objects.create(email=user.email)
+        user.delete()
+        data = {"status": "OK", "message": deleted_message}
+        return Response(data=data, status=status.HTTP_200_OK)
+
+
+@swagger_auto_schema(method="GET", responses={200: FeedBackSerializer(many=True)})
+@swagger_auto_schema(method="POST", request_body=FeedBackSerializer)
+@swagger_auto_schema(
+    method="PUT",
+    manual_parameters=[
+        createParam(paramName="feedback-id", description="to update specific feedback")
+    ],
+    request_body=FeedBackSerializer,
+    responses={200: FeedBackSerializer()},
+)
+@swagger_auto_schema(
+    method="DELETE",
+    manual_parameters=[
+        createParam(paramName="feedback-id", description="to delete specific feedback")
+    ],
+    responses=customDeleteResponse(),
+)
+@api_view(["GET", "POST", "PUT", "DELETE"])
+@permission_classes([IsAuthenticated])
+@authentication_classes([TokenAuthentication])
+def feedBackView(request):
+    if request.method == "GET":
+        feedback = FeedBack.objects.all()
+        serializer = FeedBackSerializer(feedback, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+    if request.method == "POST":
+        serializer = FeedBackSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    if request.method == "PUT":
+        feed_back_id = request.GET.get("feedback-id", None)
+        if feed_back_id is None:
+            data = {"status": "ERROR", "message": "feedback-id is required"}
+            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+        try:
+            feedback = FeedBack.objects.get(id=feed_back_id)
+        except:
+            data = {"status": "ERROR", "message": "invalid feedback-id"}
+            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+        serializer = FeedBackSerializer(feedback, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    if request.method == "DELETE":
+        feed_back_id = request.GET.get("feedback-id", None)
+        if feed_back_id is None:
+            data = {"status": "ERROR", "message": "feedback-id is required"}
+            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+        try:
+            feedback = FeedBack.objects.get(id=feed_back_id)
+        except:
+            data = {"status": "ERROR", "message": "invalid feedback-id"}
+            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+        feedback.delete()
         data = {"status": "OK", "message": deleted_message}
         return Response(data=data, status=status.HTTP_200_OK)
