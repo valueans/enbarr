@@ -123,7 +123,8 @@ class LoginViewSet(ViewSet):
             "user": user_serializer.data,
             "message": "you are not verified your email please verify your email first to login,Verification OTP is sended on registered email",
         }
-        return Response(data=data, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
 
 @swagger_auto_schema(method="get", responses=customOtpResponse())
