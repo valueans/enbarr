@@ -82,7 +82,23 @@ class SignupViewSet(ModelViewSet):
 
 
 class LoginViewSet(ViewSet):
-    """Based on rest_framework.authtoken.views.ObtainAuthToken"""
+    """
+    # Request
+    {
+        "username":"email",
+        "password":"password"
+    }
+    # 203 Response if user not verified{
+        "status":"ERROR",
+        "token": <auth_token>,
+        "user" : user_details,
+        "message": "otp sended"
+    }
+    # 200 Response if user verified{
+        "token": <auth_token>,
+        "user" : user_details
+    }
+    """
 
     serializer_class = AuthTokenSerializer
 
@@ -93,17 +109,21 @@ class LoginViewSet(ViewSet):
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data["user"]
         token, created = Token.objects.get_or_create(user=user)
+        user_serializer = UserSerializer(user)
         if user.is_verified == True:
-            user_serializer = UserSerializer(user)
-            return Response({"token": token.key, "user": user_serializer.data})
+            return Response(
+                {"token": token.key, "user": user_serializer.data},
+                status=status.HTTP_200_OK,
+            )
 
         sendOtpEmail(user)
         data = {
             "status": "ERROR",
             "token": token.key,
+            "user": user_serializer.data,
             "message": "you are not verified your email please verify your email first to login,Verification OTP is sended on registered email",
         }
-        return Response(data=data, status=status.HTTP_200_OK)
+        return Response(data=data, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
 
 
 @swagger_auto_schema(method="get", responses=customOtpResponse())
