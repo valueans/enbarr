@@ -9,7 +9,8 @@ from allauth.account.utils import setup_user_email
 from pyparsing import Keyword
 from rest_framework import serializers
 from rest_auth.serializers import PasswordResetSerializer
-from users.models import SubscriptionPlans, UserProfile, Notifications, UserSearchSave
+from users.models import UserProfile, Notifications, UserSearchSave
+from payments.api.v1.serializers import SubscriptionPlansSerializer
 from home.models import (
     ContactUs,
     HorseImages,
@@ -88,13 +89,6 @@ class PasswordSerializer(PasswordResetSerializer):
     """Custom serializer for rest_auth to solve reset password error"""
 
     password_reset_form_class = ResetPasswordForm
-
-
-class SubscriptionPlansSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = SubscriptionPlans
-        fields = "__all__"
-        read_only_fields = ["id"]
 
 
 class UserProfileSerializer(serializers.ModelSerializer):

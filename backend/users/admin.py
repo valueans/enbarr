@@ -1,14 +1,13 @@
 from django.contrib import admin
 from django.contrib.auth import admin as auth_admin
 from django.contrib.auth import get_user_model
-from .models import SubscriptionPlans, UserProfile, DeletedUsers
+from .models import UserProfile, DeletedUsers
 from users.forms import UserChangeForm, UserCreationForm
 
 User = get_user_model()
 
 
 admin.site.register(UserProfile)
-admin.site.register(SubscriptionPlans)
 admin.site.register(DeletedUsers)
 
 

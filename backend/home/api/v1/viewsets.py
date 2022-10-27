@@ -12,7 +12,6 @@ from datetime import datetime
 from django.contrib.auth import get_user_model
 from users.models import (
     UserProfile,
-    SubscriptionPlans,
     Notifications,
     UserSearchSave,
     DeletedUsers,
@@ -50,7 +49,6 @@ from home.api.v1.serializers import (
     KeywordsSerializer,
     FavouriteSerializer,
     UserProfileSerializer,
-    SubscriptionPlansSerializer,
     NotificationsSerializer,
     UserSearchSaveSerializer,
     MessagesSerializer,
@@ -746,59 +744,6 @@ def userProfileView(request):
             instance = UserProfile.objects.get(user=request.user)
         except:
             data = {"status": "error", "message": "Invalid favourite-id"}
-            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
-        instance.delete()
-        data = {"status": "ok", "message": deleted_message}
-        return Response(data=data, status=status.HTTP_200_OK)
-
-
-@swagger_auto_schema(
-    method="get", responses={200: SubscriptionPlansSerializer(many=True)}
-)
-@swagger_auto_schema(method="post", request_body=SubscriptionPlansSerializer)
-@swagger_auto_schema(method="put", responses={200: SubscriptionPlansSerializer})
-@swagger_auto_schema(method="delete", responses=customDeleteResponse())
-@api_view(["GET", "POST", "PUT", "DELETE"])
-@permission_classes([IsAuthenticated])
-@authentication_classes([TokenAuthentication])
-def plansView(request):
-    if request.method == "GET":
-        instance = SubscriptionPlans.objects.all()
-        serializer = SubscriptionPlansSerializer(instance, many=True)
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
-    if request.method == "POST":
-        serializer = SubscriptionPlansSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
-        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    if request.method == "PUT":
-        plan_id = request.GET.get("plan-id", None)
-        if plan_id is None:
-            data = {"status": "error", "message": "plan-id is required"}
-            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
-        try:
-            instance = SubscriptionPlans.objects.get(id=plan_id)
-        except:
-            data = {"status": "error", "message": "Invalid plan-id"}
-            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
-
-        serializer = SubscriptionPlansSerializer(instance, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(data=serializer.data, status=status.HTTP_200_OK)
-        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    if request.method == "DELETE":
-        plan_id = request.GET.get("plan-id", None)
-        if plan_id is None:
-            data = {"status": "error", "message": "plan-id is required"}
-            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
-        try:
-            instance = SubscriptionPlans.objects.get(id=plan_id)
-        except:
-            data = {"status": "error", "message": "Invalid plan-id"}
             return Response(data=data, status=status.HTTP_404_NOT_FOUND)
         instance.delete()
         data = {"status": "ok", "message": deleted_message}

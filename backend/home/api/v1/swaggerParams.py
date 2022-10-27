@@ -22,6 +22,16 @@ def createParam(paramName, description, required=False):
     )
 
 
+def createBoolParam(paramName, description, required=False):
+    return openapi.Parameter(
+        paramName,
+        openapi.IN_QUERY,
+        description=description,
+        type=openapi.TYPE_BOOLEAN,
+        required=required,
+    )
+
+
 def createParamList(paramName, description, required=False):
     return openapi.Parameter(
         paramName,
@@ -220,6 +230,29 @@ def customPasswordResetResponse():
                 ),
                 "message": openapi.Schema(
                     title="Password Reset Successfullly!",
+                    type=openapi.TYPE_STRING,
+                ),
+            },
+        )
+    }
+    return responses
+
+
+def customSetupIntentResponse():
+    responses = {
+        status.HTTP_200_OK: Schema(
+            type=TYPE_OBJECT,
+            properties={
+                "status": openapi.Schema(
+                    title="OK",
+                    type=openapi.TYPE_STRING,
+                ),
+                "setup-intent-id": openapi.Schema(
+                    title="setup-intent-id",
+                    type=openapi.TYPE_STRING,
+                ),
+                "setup-intent-secret": openapi.Schema(
+                    title="setup-intent-secret",
                     type=openapi.TYPE_STRING,
                 ),
             },
