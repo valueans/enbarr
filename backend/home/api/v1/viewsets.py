@@ -77,8 +77,34 @@ deleted_message = "Successfully Deleted"
 
 
 class SignupViewSet(ModelViewSet):
+    """
+    # Request
+    {
+        "username":"email",
+        "password":"password"
+    }
+    # 401 Response{
+        "status":"ERROR",
+        "token": <auth_token>,
+        "user" : user_details,
+        "message": "otp sended"
+    }
+    """
+
     serializer_class = SignupSerializer
     http_method_names = ["post"]
+
+    def create(self, request, *args, **kwargs):
+        response = super().create(request, *args, **kwargs)
+        user = User.objects.get(id=response.data["id"])
+        token, created = Token.objects.get_or_create(user=user)
+        data = {
+            "status": "ERROR",
+            "token": token.key,
+            "user": response.data,
+            "message": "you are not verified your email please verify your email first to login,Verification OTP is sended on registered email",
+        }
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
 
 class LoginViewSet(ViewSet):
@@ -88,7 +114,7 @@ class LoginViewSet(ViewSet):
         "username":"email",
         "password":"password"
     }
-    # 203 Response if user not verified{
+    # 401 Response if user not verified{
         "status":"ERROR",
         "token": <auth_token>,
         "user" : user_details,
