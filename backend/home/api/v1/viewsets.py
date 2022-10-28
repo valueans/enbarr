@@ -54,8 +54,8 @@ from home.api.v1.serializers import (
     MessagesSerializer,
     ConversationSerializer,
     ReportSerializer,
-    PasswordSerializer,
     FeedBackSerializer,
+    PrivacyPolicySerializer,
 )
 from home.models import (
     ContactUs,
@@ -69,6 +69,7 @@ from home.models import (
     Conversation,
     Report,
     FeedBack,
+    PrivacyPolicy,
 )
 
 deleted_message = "Successfully Deleted"
@@ -94,10 +95,7 @@ class SignupViewSet(ModelViewSet):
         response = super().create(request, *args, **kwargs)
         user = User.objects.get(id=response.data["id"])
         token, created = Token.objects.get_or_create(user=user)
-        data = {
-            "token": token.key,
-            "user": response.data
-        }
+        data = {"token": token.key, "user": response.data}
         return Response(data=data, status=status.HTTP_200_OK)
 
 
@@ -358,6 +356,91 @@ def termAndConditionView(request):
                 data = {"status": "error", "message": "Invalid terms-id"}
                 return Response(data=data, status=status.HTTP_404_NOT_FOUND)
             terms_and_condition.delete()
+            data = {"status": "OK", "message": deleted_message}
+            return Response(data=data, status=status.HTTP_200_OK)
+
+        data = {
+            "status": "Error",
+            "message": "Unauthorized",
+        }
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
+
+@swagger_auto_schema(method="GET", responses={200: PrivacyPolicySerializer(many=True)})
+@swagger_auto_schema(method="POST", request_body=PrivacyPolicySerializer)
+@swagger_auto_schema(
+    method="PUT",
+    manual_parameters=[
+        createParam(
+            paramName="privacy-id",
+            description="to update specific privacy policy",
+        )
+    ],
+    request_body=PrivacyPolicySerializer,
+)
+@swagger_auto_schema(
+    method="DELETE",
+    manual_parameters=[
+        createParam(
+            paramName="privacy-id",
+            description="to delete specific privacy policy",
+        )
+    ],
+    responses=customDeleteResponse(),
+)
+@api_view(["GET", "POST", "PUT", "DELETE"])
+@permission_classes([AllowAny])
+@authentication_classes([TokenAuthentication])
+def privacyPolicyView(request):
+    if request.method == "GET":
+        queryset = PrivacyPolicy.objects.filter(is_active=True).order_by("-updated_at")[
+            0:1
+        ]
+        serializer = PrivacyPolicySerializer(queryset, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    if request.method == "POST":
+        if request.user.is_authenticated and request.user.is_superuser:
+            serializer = PrivacyPolicySerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save(author=request.user)
+                return Response(data=serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        data = {
+            "status": "Error",
+            "message": "Unauthorized",
+        }
+        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+
+    if request.method == "PUT":
+        privacy_id = request.GET.get("privacy-id", None)
+        if request.user.is_authenticated and request.user.is_superuser:
+            if privacy_id is None:
+                data = {"status": "error", "message": "privacy-id is required"}
+                return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+            try:
+                privacy_policy = PrivacyPolicy.objects.get(id=privacy_id)
+            except:
+                data = {"status": "error", "message": "Invalid privacy-id"}
+                return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+            serializer = PrivacyPolicySerializer(privacy_policy, data=request.data)
+            if serializer.is_valid():
+                serializer.save(author=request.user)
+                return Response(data=serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    if request.method == "DELETE":
+        privacy_id = request.GET.get("privacy-id", None)
+        if request.user.is_authenticated and request.user.is_superuser:
+            if privacy_id is None:
+                data = {"status": "error", "message": "privacy-id is required"}
+                return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+            try:
+                privacy_policy = PrivacyPolicy.objects.get(id=privacy_id)
+            except:
+                data = {"status": "error", "message": "Invalid privacy-id"}
+                return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+            privacy_policy.delete()
             data = {"status": "OK", "message": deleted_message}
             return Response(data=data, status=status.HTTP_200_OK)
 

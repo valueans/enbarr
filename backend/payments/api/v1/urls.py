@@ -12,5 +12,5 @@ urlpatterns = [
         "customer-intent-stripe/", setupIntentStripeView, name="customer-intent-stripe"
     ),
     path("paymentMethods/", paymentMethods, name="paymentMethods"),
-    path("stripe-webhooks/", stripe_webhook, name="stripe_webhook")
+    path("stripe-webhooks/", stripe_webhook, name="stripe_webhook"),
 ]

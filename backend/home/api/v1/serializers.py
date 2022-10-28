@@ -23,6 +23,7 @@ from home.models import (
     Conversation,
     Report,
     FeedBack,
+    PrivacyPolicy,
 )
 
 
@@ -293,4 +294,16 @@ class ReportSerializer(serializers.ModelSerializer):
 class FeedBackSerializer(serializers.ModelSerializer):
     class Meta:
         model = FeedBack
+        fields = "__all__"
+
+
+class FeedBackSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FeedBack
+        fields = "__all__"
+
+
+class PrivacyPolicySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PrivacyPolicy
         fields = "__all__"

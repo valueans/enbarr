@@ -104,3 +104,15 @@ class Report(models.Model):
 class FeedBack(models.Model):
     email = models.EmailField(null=False, blank=False)
     message = models.TextField(null=False, blank=False)
+
+
+class PrivacyPolicy(models.Model):
+    body = models.TextField()
+    author = models.ForeignKey(User, on_delete=models.PROTECT, null=True, blank=True)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+    )
+    updated_at = models.DateTimeField(
+        auto_now=True,
+    )
