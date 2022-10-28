@@ -918,7 +918,7 @@ def searchHorseView(request):
         if keywords is None and title is None:
             instance = Horses.objects.all()
 
-        serializer = HorsesSerializer(instance, many=True)
+        serializer = HorsesSerializer(instance, many=True, context={"request": request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
