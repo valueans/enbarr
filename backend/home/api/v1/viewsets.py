@@ -82,7 +82,7 @@ class SignupViewSet(ModelViewSet):
         "username":"email",
         "password":"password"
     }
-    # 401 Response{
+    # 200 Response{
         "token": <auth_token>,
         "user" : user_details,
     }
@@ -94,8 +94,9 @@ class SignupViewSet(ModelViewSet):
     def create(self, request, *args, **kwargs):
         response = super().create(request, *args, **kwargs)
         user = User.objects.get(id=response.data["id"])
+        user_serializer = UserSerializer(user)
         token, created = Token.objects.get_or_create(user=user)
-        data = {"token": token.key, "user": response.data}
+        data = {"token": token.key, "user": user_serializer.data}
         return Response(data=data, status=status.HTTP_200_OK)
 
 
