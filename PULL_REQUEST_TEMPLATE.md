@@ -1,3 +1,0 @@
-# <TICKET-ID> <Title>
-
-

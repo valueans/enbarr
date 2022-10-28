@@ -9,7 +9,7 @@ import InputField from '../../components/InputField'
 import log from '../../log'
 import { useMutation } from '@tanstack/react-query'
 import API from '../../api'
-import { useStore } from '../../Store'
+import { useStore } from '../../store'
 import { LoginRequest, LoginResponse, RegisterRequest } from '../../types'
 
 enum Tab {
@@ -113,7 +113,7 @@ export default () => {
             />
           </View>
           <View style={{ alignSelf: 'flex-end', paddingHorizontal: 24 }}>
-            <TextButton text="Forgot Password" onPress={() => {}} />
+            <TextButton text="Forgot Password" onPress={() => { }} />
           </View>
         </View>
       </BlurView>
