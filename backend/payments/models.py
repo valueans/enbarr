@@ -40,6 +40,7 @@ class SubscriptionPlans(models.Model):
     )
     description = models.CharField(max_length=1000, null=True, blank=True)
     price = models.FloatField(null=True, blank=True)
+    status = models.BooleanField(default=True)
 
     def __str__(self):
         return self.title

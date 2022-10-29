@@ -3,6 +3,8 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
+from datetime import datetime
+from django.utils import timezone
 
 
 class User(AbstractUser):
@@ -42,7 +44,14 @@ class UserProfile(models.Model):
     subscription_plan = models.ForeignKey(
         "payments.SubscriptionPlans", on_delete=models.CASCADE, null=True, blank=True
     )
-    subscription_date = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    subscription_start_date = models.DateTimeField(
+        null=True, blank=True, default=timezone.now
+    )
+    subscription_renew_date = models.DateTimeField(
+        null=True, blank=True, default=timezone.now
+    )
     promotion_adds = models.IntegerField(default=100)
 
     def __str__(self):

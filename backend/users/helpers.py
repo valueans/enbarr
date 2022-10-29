@@ -1,5 +1,7 @@
 from datetime import datetime
 import base64
+from string import digits
+from unicodedata import digit
 import pyotp
 from django.conf import settings
 from django.core.mail import send_mail
@@ -14,7 +16,7 @@ def generateRandom(email):
 def sendOtpEmail(user):
     keygen = generateRandom(user.email)
     key = base64.b32encode(keygen.encode())
-    OTP = pyotp.HOTP(key)
+    OTP = pyotp.HOTP(key, digits=4)
     otp = OTP.at(user.otp_counter)
     send_mail(
         "OTP verification",

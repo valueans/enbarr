@@ -6,11 +6,12 @@ from allauth.account.forms import ResetPasswordForm
 from allauth.utils import email_address_exists, generate_unique_username
 from allauth.account.adapter import get_adapter
 from allauth.account.utils import setup_user_email
-from pyparsing import Keyword
 from rest_framework import serializers
 from rest_auth.serializers import PasswordResetSerializer
 from users.models import UserProfile, Notifications, UserSearchSave
 from payments.api.v1.serializers import SubscriptionPlansSerializer
+from payments.models import SubscriptionPlans
+from datetime import datetime
 from home.models import (
     ContactUs,
     HorseImages,
@@ -25,7 +26,6 @@ from home.models import (
     FeedBack,
     PrivacyPolicy,
 )
-
 
 User = get_user_model()
 
@@ -93,22 +93,22 @@ class PasswordSerializer(PasswordResetSerializer):
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
-    plan = SubscriptionPlansSerializer(read_only=True)
-    plan_id = serializers.IntegerField(write_only=True, required=False)
-
     class Meta:
         model = UserProfile
         fields = "__all__"
         read_only_fields = ["id"]
 
-    def create(self, validated_data):
+    def update(self, instance, validated_data):
+        obj = super().update(instance, validated_data)
         try:
-            plan_id = validated_data.pop("plan_id")
-            plan_instance = SubscriptionPlans.objects.get(id=plan_id)
-            instance = UserProfile.objects.create(plan=plan_instance, **validated_data)
+            subscription_plan = validated_data.pop("subscription_plan")
+            if instance.subscription_plan == None:
+                instance.subscription_date = datetime.now()
+            instance.subscription_plan = subscription_plan
+            instance.save()
         except:
-            instance = UserProfile.objects.create(**validated_data)
-        return instance
+            pass
+        return obj
 
 
 class ContactUsSerializer(serializers.ModelSerializer):

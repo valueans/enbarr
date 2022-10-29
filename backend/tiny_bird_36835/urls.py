@@ -21,6 +21,15 @@ from allauth.account.views import confirm_email
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+from allauth.account.models import EmailAddress
+from rest_framework.authtoken.models import TokenProxy
+
+admin.site.site_header = "ENBARR"
+admin.site.site_title = "ENBARR Admin Portal"
+admin.site.index_title = "ENBARR Admin"
+# admin.site.unregister(EmailAddress)
+# admin.site.unregister(TokenProxy)
+
 
 urlpatterns = [
     path("", include("home.urls")),
@@ -28,6 +37,7 @@ urlpatterns = [
     path("accounts/", include("allauth.urls")),
     path("modules/", include("modules.urls")),
     path("api/v1/", include("home.api.v1.urls")),
+    path("grappelli/", include("grappelli.urls")),
     path("admin/", admin.site.urls),
     path("users/", include("users.urls", namespace="users")),
     path("rest-auth/", include("rest_auth.urls")),
@@ -35,10 +45,6 @@ urlpatterns = [
     path("rest-auth/registration/account-confirm-email/<str:key>/", confirm_email),
     path("rest-auth/registration/", include("rest_auth.registration.urls")),
 ]
-
-admin.site.site_header = "Tiny Bird"
-admin.site.site_title = "Tiny Bird Admin Portal"
-admin.site.index_title = "Tiny Bird Admin"
 
 # swagger
 api_info = openapi.Info(

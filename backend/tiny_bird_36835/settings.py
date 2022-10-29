@@ -63,9 +63,10 @@ SECURE_SSL_REDIRECT = env.bool("SECURE_REDIRECT", default=False)
 # Application definition
 
 INSTALLED_APPS = [
+    "grappelli",
     "django.contrib.admin",
-    "django.contrib.auth",
     "django.contrib.contenttypes",
+    "django.contrib.auth",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
@@ -285,3 +286,7 @@ if GS_BUCKET_NAME:
 STRIPE_SECRET_KEY = env.str("STRIPE_SECRET_KEY", "")
 STRIPE_PUBLISHABLE_KEY = env.str("STRIPE_PUBLISHABLE_KEY", "")
 STRIPE_WEBHOOK_SECRET = env.str("STRIPE_WEBHOOK_SECRET", "")
+
+
+# GRAPELLI SETTINGS
+GRAPPELLI_ADMIN_TITLE = "ENBARR"
