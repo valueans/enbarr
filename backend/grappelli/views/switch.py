@@ -30,7 +30,7 @@ def switch_user(request, object_id):
     # check redirect
     redirect_url = request.GET.get("redirect", None)
     if redirect_url is None or not \
-        url_has_allowed_host_and_scheme(
+        is_safe_url(
             url=redirect_url,
             allowed_hosts={request.get_host()},
             require_https=request.is_secure(),
