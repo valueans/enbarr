@@ -1,6 +1,3 @@
-from rest_framework.authtoken.serializers import AuthTokenSerializer
-from rest_framework.viewsets import ModelViewSet, ViewSet
-from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.authentication import TokenAuthentication
@@ -9,16 +6,13 @@ from modules.terms_and_conditions.terms_and_conditions.models import TermAndCond
 from django.db.models import Q
 from drf_yasg.utils import swagger_auto_schema
 from datetime import datetime
+import ast
 from django.contrib.auth import get_user_model
 from users.models import (
     UserProfile,
     Notifications,
     UserSearchSave,
-    DeletedUsers,
 )
-from users.helpers import sendOtpEmail, verifyOtp
-
-User = get_user_model()
 
 from rest_framework.decorators import (
     api_view,
@@ -35,26 +29,20 @@ from .swaggerParams import (
     createParamList,
     customLikeResponse,
     customDisLikeResponse,
-    customOtpResponse,
-    customPasswordResetResponse,
-    customSendOtpResponse,
+    deleted_message,
 )
 
 from home.api.v1.serializers import (
-    SignupSerializer,
-    UserSerializer,
     ContactUsSerializer,
     HorseImagesSerializer,
     HorsesSerializer,
     KeywordsSerializer,
     FavouriteSerializer,
-    UserProfileSerializer,
     NotificationsSerializer,
     UserSearchSaveSerializer,
     MessagesSerializer,
     ConversationSerializer,
     ReportSerializer,
-    FeedBackSerializer,
     PrivacyPolicySerializer,
 )
 from home.models import (
@@ -68,188 +56,11 @@ from home.models import (
     Messages,
     Conversation,
     Report,
-    FeedBack,
     PrivacyPolicy,
 )
 
-deleted_message = "Successfully Deleted"
 
-
-class SignupViewSet(ModelViewSet):
-    """
-    # Request
-    {
-        "username":"email",
-        "password":"password"
-    }
-    # 200 Response{
-        "token": <auth_token>,
-        "user" : user_details,
-    }
-    """
-
-    serializer_class = SignupSerializer
-    http_method_names = ["post"]
-
-    def create(self, request, *args, **kwargs):
-        response = super().create(request, *args, **kwargs)
-        user = User.objects.get(id=response.data["id"])
-        user_serializer = UserSerializer(user)
-        token, created = Token.objects.get_or_create(user=user)
-        data = {"token": token.key, "user": user_serializer.data}
-        return Response(data=data, status=status.HTTP_200_OK)
-
-
-class LoginViewSet(ViewSet):
-    """
-    # Request
-    {
-        "username":"email",
-        "password":"password"
-    }
-    # 200 Response if user not verified{
-        "status":"ERROR",
-        "token": <auth_token>,
-        "user" : user_details,
-        "message": "otp sended"
-    }
-    # 200 Response if user verified{
-        "token": <auth_token>,
-        "user" : user_details
-    }
-    """
-
-    serializer_class = AuthTokenSerializer
-
-    def create(self, request):
-        serializer = self.serializer_class(
-            data=request.data, context={"request": request}
-        )
-        serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data["user"]
-        token, created = Token.objects.get_or_create(user=user)
-        user_serializer = UserSerializer(user)
-        if user.is_verified == True:
-            return Response(
-                {"token": token.key, "user": user_serializer.data},
-                status=status.HTTP_200_OK,
-            )
-
-        sendOtpEmail(user)
-        data = {
-            "token": token.key,
-            "user": user_serializer.data,
-        }
-
-        return Response(data=data, status=status.HTTP_200_OK)
-
-
-@swagger_auto_schema(method="get", responses=customOtpResponse())
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
-@authentication_classes([TokenAuthentication])
-def verifyOtpView(request):
-    if request.method == "GET":
-        otp = request.GET.get("otp", None)
-        if otp is None:
-            data = {"status": "ERROR", "message": "otp is required for verification"}
-            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
-
-        user = request.user
-        verify = verifyOtp(user, otp)
-        print(verify)
-
-        if verify == True:
-            token = Token.objects.get(user=user)
-            data = {"status": "OK", "token": token.key, "message": "email verified"}
-            return Response(data=data, status=status.HTTP_200_OK)
-
-        data = {"status": "ERROR", "message": "Invalid OTP"}
-        return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
-
-
-@swagger_auto_schema(method="get", responses=customSendOtpResponse())
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
-@authentication_classes([TokenAuthentication])
-def sendOtpView(request):
-    if request.method == "GET":
-        user = request.user
-        sendOtpEmail(user)
-        data = {"status": "OK", "message": "OTP is sended to registered email"}
-        return Response(data=data, status=status.HTTP_200_OK)
-
-
-@swagger_auto_schema(
-    method="get",
-    manual_parameters=[
-        createParam(
-            paramName="email",
-            description="to check that user is register with this email and send the otp",
-        )
-    ],
-    responses=customSendOtpResponse(),
-)
-@api_view(["GET"])
-def resetEmailView(request):
-    if request.method == "GET":
-        email = request.GET.get("email", None)
-        if email is None:
-            data = {"status": "ERROR", "message": "email is required"}
-            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
-        try:
-            user = User.objects.get(email=email)
-        except:
-            data = {"status": "ERROR", "message": "invalid email address"}
-            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
-
-        sendOtpEmail(user)
-        token, created = Token.objects.get_or_create(user=user)
-        data = {
-            "status": "OK",
-            "token": token.key,
-            "message": "OTP is sended to registered email",
-        }
-        return Response(data=data, status=status.HTTP_200_OK)
-
-
-@swagger_auto_schema(
-    method="post",
-    operation_description="you need to pass password1 and password2 along with the token in the header.",
-    responses=customPasswordResetResponse(),
-)
-@api_view(["POST"])
-@permission_classes([IsAuthenticated])
-@authentication_classes([TokenAuthentication])
-def resetPasswordView(request):
-    if request.method == "POST":
-        password1 = request.POST.get("password1", None)
-        password2 = request.POST.get("password2", None)
-
-        if password1 is None or password2 is None:
-            data = {"status": "ERROR", "message": "password1 and password2 is required"}
-            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
-
-        if password1 != password2:
-            data = {
-                "status": "ERROR",
-                "message": "password1 and password2 should be same",
-            }
-            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
-
-        if len(password1) < 8:
-            data = {
-                "status": "ERROR",
-                "message": "password should be minimum of 8 characters.",
-            }
-            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
-
-        user = request.user
-        user.set_password(password1)
-        user.save()
-
-        data = {"status": "OK", "message": "Password Reset Successfullly!"}
-        return Response(data=data, status=status.HTTP_200_OK)
+User = get_user_model()
 
 
 @swagger_auto_schema(method="get", responses={200: ContactUsSerializer(many=True)})
@@ -682,7 +493,9 @@ def HorseView(request):
             data = {"status": "ERROR", "message": "Invalid Horse id"}
             return Response(data=data, status=status.HTTP_404_NOT_FOUND)
 
-        serializer = HorsesSerializer(horse, data=request.data)
+        serializer = HorsesSerializer(
+            horse, data=request.data, context={"request": request}
+        )
         if serializer.is_valid():
             serializer.save()
             return Response(data=serializer.data, status=status.HTTP_200_OK)
@@ -778,56 +591,6 @@ def favouriteView(request):
         return Response(data=data, status=status.HTTP_200_OK)
 
 
-@swagger_auto_schema(method="get", responses={200: UserProfileSerializer})
-@swagger_auto_schema(method="post", request_body=UserProfileSerializer)
-@swagger_auto_schema(method="put", responses={200: UserProfileSerializer})
-@swagger_auto_schema(method="delete", responses=customDeleteResponse())
-@api_view(["GET", "POST", "PUT", "DELETE"])
-@permission_classes([IsAuthenticated])
-@authentication_classes([TokenAuthentication])
-def userProfileView(request):
-    if request.method == "GET":
-        try:
-            instance = UserProfile.objects.get(user=request.user)
-        except:
-            return Response(data=[], status=status.HTTP_200_OK)
-
-        serializer = UserProfileSerializer(instance)
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
-
-    if request.method == "POST":
-        try:
-            instance = UserProfile.objects.get(user=request.user)
-            serializer = UserProfileSerializer(instance, data=request.data)
-        except:
-            serializer = UserProfileSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(user=request.user)
-            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
-        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    if request.method == "PUT":
-        try:
-            instance = UserProfile.objects.get(user=request.user)
-            serializer = UserProfileSerializer(instance, data=request.data)
-        except:
-            serializer = UserProfileSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(user=request.user)
-            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
-        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    if request.method == "DELETE":
-        try:
-            instance = UserProfile.objects.get(user=request.user)
-        except:
-            data = {"status": "error", "message": "Invalid favourite-id"}
-            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
-        instance.delete()
-        data = {"status": "ok", "message": deleted_message}
-        return Response(data=data, status=status.HTTP_200_OK)
-
-
 @swagger_auto_schema(method="get", responses={200: NotificationsSerializer(many=True)})
 @swagger_auto_schema(method="post", request_body=NotificationsSerializer)
 @swagger_auto_schema(
@@ -911,7 +674,10 @@ def searchHorseView(request):
     if request.method == "GET":
         keywords = request.GET.get("keywords", None)
         title = request.GET.get("title", None)
+
         if keywords != None:
+            keywords = ast.literal_eval(keywords)
+            print(keywords)
             instance = Horses.objects.filter(keywords__keyword__in=keywords)
         if title != None:
             instance = Horses.objects.filter(title__contains=title)
@@ -1195,80 +961,5 @@ def ReportView(request):
 
         report = Report.objects.get(id=report_id)
         report.delete()
-        data = {"status": "OK", "message": deleted_message}
-        return Response(data=data, status=status.HTTP_200_OK)
-
-
-@swagger_auto_schema(method="GET", responses=customDeleteResponse())
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
-@authentication_classes([TokenAuthentication])
-def deleteUserView(request):
-    if request.method == "GET":
-        user = request.user
-        DeletedUsers.objects.create(email=user.email)
-        user.delete()
-        data = {"status": "OK", "message": deleted_message}
-        return Response(data=data, status=status.HTTP_200_OK)
-
-
-@swagger_auto_schema(method="GET", responses={200: FeedBackSerializer(many=True)})
-@swagger_auto_schema(method="POST", request_body=FeedBackSerializer)
-@swagger_auto_schema(
-    method="PUT",
-    manual_parameters=[
-        createParam(paramName="feedback-id", description="to update specific feedback")
-    ],
-    request_body=FeedBackSerializer,
-    responses={200: FeedBackSerializer()},
-)
-@swagger_auto_schema(
-    method="DELETE",
-    manual_parameters=[
-        createParam(paramName="feedback-id", description="to delete specific feedback")
-    ],
-    responses=customDeleteResponse(),
-)
-@api_view(["GET", "POST", "PUT", "DELETE"])
-@permission_classes([IsAuthenticated])
-@authentication_classes([TokenAuthentication])
-def feedBackView(request):
-    if request.method == "GET":
-        feedback = FeedBack.objects.all()
-        serializer = FeedBackSerializer(feedback, many=True)
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
-    if request.method == "POST":
-        serializer = FeedBackSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(data=serializer.data, status=status.HTTP_200_OK)
-        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    if request.method == "PUT":
-        feed_back_id = request.GET.get("feedback-id", None)
-        if feed_back_id is None:
-            data = {"status": "ERROR", "message": "feedback-id is required"}
-            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
-        try:
-            feedback = FeedBack.objects.get(id=feed_back_id)
-        except:
-            data = {"status": "ERROR", "message": "invalid feedback-id"}
-            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
-        serializer = FeedBackSerializer(feedback, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(data=serializer.data, status=status.HTTP_200_OK)
-        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    if request.method == "DELETE":
-        feed_back_id = request.GET.get("feedback-id", None)
-        if feed_back_id is None:
-            data = {"status": "ERROR", "message": "feedback-id is required"}
-            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
-        try:
-            feedback = FeedBack.objects.get(id=feed_back_id)
-        except:
-            data = {"status": "ERROR", "message": "invalid feedback-id"}
-            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
-        feedback.delete()
         data = {"status": "OK", "message": deleted_message}
         return Response(data=data, status=status.HTTP_200_OK)

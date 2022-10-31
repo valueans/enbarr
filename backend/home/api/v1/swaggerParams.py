@@ -1,7 +1,8 @@
 from drf_yasg import openapi
 from rest_framework import status
 from drf_yasg.openapi import Schema, TYPE_OBJECT, TYPE_STRING, TYPE_ARRAY
-from .serializers import HorseImagesSerializer
+
+deleted_message = "Successfully Deleted"
 
 favourite_put_param = openapi.Parameter(
     "favourite-id",

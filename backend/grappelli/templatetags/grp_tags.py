@@ -11,12 +11,18 @@ from django.utils.safestring import mark_safe
 from django.utils.translation import get_language
 from django.utils.translation import gettext as _
 
-from grappelli.settings import (ADMIN_TITLE, ADMIN_URL, CLEAN_INPUT_TYPES,
-                                SWITCH_USER, SWITCH_USER_ORIGINAL,
-                                SWITCH_USER_TARGET)
+from grappelli.settings import (
+    ADMIN_TITLE,
+    ADMIN_URL,
+    CLEAN_INPUT_TYPES,
+    SWITCH_USER,
+    SWITCH_USER_ORIGINAL,
+    SWITCH_USER_TARGET,
+)
 
 try:
     from django.contrib.auth import get_user_model
+
     User = get_user_model()
 except ImportError:
     from django.contrib.auth.models import User
@@ -31,8 +37,8 @@ class do_get_generic_objects(template.Node):
 
     def render(self, context):
         objects = {}
-        for c in ContentType.objects.all().order_by('id'):
-            objects[c.id] = {'pk': c.id, 'app': c.app_label, 'model': c.model}
+        for c in ContentType.objects.all().order_by("id"):
+            objects[c.id] = {"pk": c.id, "app": c.app_label, "model": c.model}
         return json.dumps(objects)
 
 
@@ -80,17 +86,17 @@ def get_admin_url():
 
 @register.simple_tag
 def get_date_format():
-    return get_format('DATE_INPUT_FORMATS')[0]
+    return get_format("DATE_INPUT_FORMATS")[0]
 
 
 @register.simple_tag
 def get_time_format():
-    return get_format('TIME_INPUT_FORMATS')[0]
+    return get_format("TIME_INPUT_FORMATS")[0]
 
 
 @register.simple_tag
 def get_datetime_format():
-    return get_format('DATETIME_INPUT_FORMATS')[0]
+    return get_format("DATETIME_INPUT_FORMATS")[0]
 
 
 @register.simple_tag
@@ -122,6 +128,7 @@ def classpath(obj):
 
 # FORMSETSORT FOR SORTABLE INLINES
 
+
 @register.filter
 def formsetsort(formset, arg):
     """
@@ -134,7 +141,7 @@ def formsetsort(formset, arg):
             position = item.form[arg].value()
             if isinstance(position, int) and item.original:  # normal view
                 sorted_list.append((position, item))
-            elif position and hasattr(item.form, 'cleaned_data'):  # error validation
+            elif position and hasattr(item.form, "cleaned_data"):  # error validation
                 sorted_list.append((int(position), item))
             else:
                 unsorted_list.append(item)
@@ -147,18 +154,21 @@ def formsetsort(formset, arg):
 
 # RELATED LOOKUPS
 
+
 def safe_json_else_list_tag(f):
     """
     Decorator. Registers function as a simple_tag.
     Try: Return value of the decorated function marked safe and json encoded.
     Except: Return []
     """
+
     @wraps(f)
     def inner(model_admin):
         try:
             return mark_safe(json.dumps(f(model_admin)))
         except:
             return []
+
     return register.simple_tag(inner)
 
 
@@ -178,6 +188,7 @@ def get_related_lookup_fields_generic(model_admin):
 
 
 # AUTOCOMPLETES
+
 
 @safe_json_else_list_tag
 def get_autocomplete_lookup_fields_fk(model_admin):
@@ -219,12 +230,14 @@ def admin_list_filter(cl, spec):
         tpl = get_template(cl.model_admin.change_list_filter_template)
     except:  # noqa
         tpl = get_template(spec.template)
-    return tpl.render({
-        'title': spec.title,
-        'choices': list(spec.choices(cl)),
-        'field_name': field_name,
-        'spec': spec,
-    })
+    return tpl.render(
+        {
+            "title": spec.title,
+            "choices": list(spec.choices(cl)),
+            "field_name": field_name,
+            "spec": spec,
+        }
+    )
 
 
 @register.simple_tag(takes_context=True)
@@ -232,15 +245,21 @@ def switch_user_dropdown(context):
     if SWITCH_USER:
         tpl = get_template("admin/includes_grappelli/switch_user_dropdown.html")
         request = context["request"]
-        session_user = request.session.get("original_user", {"id": request.user.id, "username": request.user.get_username()})
+        session_user = request.session.get(
+            "original_user",
+            {"id": request.user.id, "username": request.user.get_username()},
+        )
         try:
             original_user = User.objects.get(pk=session_user["id"], is_staff=True)
         except User.DoesNotExist:
             return ""
         if SWITCH_USER_ORIGINAL(original_user):
-            object_list = [user for user in User.objects.filter(is_staff=True).exclude(pk=original_user.pk) if SWITCH_USER_TARGET(original_user, user)]
-            return tpl.render({
-                'request': request,
-                'object_list': object_list
-            })
+            object_list = [
+                user
+                for user in User.objects.filter(is_staff=True).exclude(
+                    pk=original_user.pk
+                )
+                if SWITCH_USER_TARGET(original_user, user)
+            ]
+            return tpl.render({"request": request, "object_list": object_list})
     return ""

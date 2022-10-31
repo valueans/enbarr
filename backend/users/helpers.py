@@ -34,7 +34,7 @@ def sendOtpEmail(user):
 def verifyOtp(user, otp):
     keygen = generateRandom(user.email)
     key = base64.b32encode(keygen.encode())
-    OTP = pyotp.HOTP(key)
+    OTP = pyotp.HOTP(key, digits=4)
     if OTP.verify(otp, user.otp_counter - 1):
         user = User.objects.filter(email=user.email).update(is_verified=True)
         return True

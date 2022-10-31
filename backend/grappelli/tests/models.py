@@ -18,7 +18,10 @@ class Category(models.Model):
 
     @staticmethod
     def autocomplete_search_fields():
-        return ("id__iexact", "name__icontains",)
+        return (
+            "id__iexact",
+            "name__icontains",
+        )
 
     def related_label(self):
         return "%s (%s)" % (self.name, self.id)
@@ -26,11 +29,28 @@ class Category(models.Model):
 
 class Entry(models.Model):
     title = models.CharField("Title", max_length=200)
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, related_name="entries", blank=True, null=True)
-    category_alt = models.ForeignKey(Category, on_delete=models.SET_NULL, related_name="entriesalt", to_field="name", blank=True, null=True)
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.SET_NULL,
+        related_name="entries",
+        blank=True,
+        null=True,
+    )
+    category_alt = models.ForeignKey(
+        Category,
+        on_delete=models.SET_NULL,
+        related_name="entriesalt",
+        to_field="name",
+        blank=True,
+        null=True,
+    )
     date = models.DateTimeField("Date")
     body = models.TextField("Body", blank=True)
-    user = models.ForeignKey(getattr(settings, 'AUTH_USER_MODEL', User), on_delete=models.CASCADE, related_name="entries")
+    user = models.ForeignKey(
+        getattr(settings, "AUTH_USER_MODEL", User),
+        on_delete=models.CASCADE,
+        related_name="entries",
+    )
     createdate = models.DateField("Date (Create)", auto_now_add=True)
     updatedate = models.DateField("Date (Update)", auto_now=True)
 
@@ -45,4 +65,7 @@ class Entry(models.Model):
 
     @staticmethod
     def autocomplete_search_fields():
-        return ("id__iexact", "title__icontains",)
+        return (
+            "id__iexact",
+            "title__icontains",
+        )

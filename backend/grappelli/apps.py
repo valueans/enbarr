@@ -5,8 +5,9 @@ from django.apps import AppConfig
 
 
 class GrappelliConfig(AppConfig):
-    name = 'grappelli'
+    name = "grappelli"
 
     def ready(self):
         from .checks import register_checks
+
         register_checks()

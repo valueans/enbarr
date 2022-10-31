@@ -29,7 +29,7 @@ def check_model(model):
 
 
 def _check_autocomplete_search_fields(model):
-    if not hasattr(model, 'autocomplete_search_fields'):
+    if not hasattr(model, "autocomplete_search_fields"):
         return []
 
     # Ensure that autocomplete_search_fields returns a valid list of filters
@@ -39,7 +39,7 @@ def _check_autocomplete_search_fields(model):
         try:
             # This only constructs the QuerySet and doesn't actually query the
             # DB, so it's fine for check phase.
-            model._default_manager.filter(**{lookup: F('pk')})
+            model._default_manager.filter(**{lookup: F("pk")})
         except FieldError:
             failures.append(lookup)
 
@@ -52,11 +52,11 @@ def _check_autocomplete_search_fields(model):
                 "autocomplete_search_fields: {failures}".format(
                     app=model._meta.app_label,
                     model=model._meta.model_name,
-                    failures=",".join(failures)
+                    failures=",".join(failures),
                 ),
                 hint="A QuerySet for {model} could not be constructed. Fix "
-                     "the autocomplete_search_fields on it to return valid "
-                     "lookups.",
-                id='grappelli.E001'
+                "the autocomplete_search_fields on it to return valid "
+                "lookups.",
+                id="grappelli.E001",
             )
         ]
