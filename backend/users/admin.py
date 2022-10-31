@@ -174,8 +174,3 @@ class UserProfile(admin.ModelAdmin):
     get_subscribe_renew_date.short_description = "Renew Subscription Date"
     get_subscribe_date.short_description = "Subscribed On"
     get_promotion_adds.short_description = "Remaining Promotion Adds"
-    # def has_add_permission(self, request):
-    #     return False
-
-    # def has_delete_permission(self, request, obj=None):
-    #     return False
