@@ -1,0 +1,8 @@
+#!/bin/bash
+
+set -o errexit
+set -o pipefail
+set -o nounset
+
+
+exec celery -A tiny_bird_36835.celery_app beat -l INFO
