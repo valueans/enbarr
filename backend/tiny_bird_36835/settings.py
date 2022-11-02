@@ -52,8 +52,7 @@ except (DefaultCredentialsError, PermissionDenied):
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env.str("SECRET_KEY")
 
-# ALLOWED_HOSTS = env.list("HOST", default=["*"])
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = env.list("HOST", default=["*"])
 SITE_ID = 1
 
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
@@ -294,7 +293,8 @@ GRAPPELLI_ADMIN_TITLE = "ENBARR"
 
 
 # CELERY SETTINGS
-CELERY_BROKER_URL = "redis://redis:6379"
+CELERY_BROKER_URL = env.str("REDIS_URL")
+CELERY_RESULT_BACKEND = env.str("REDIS_URL")
 CELERY_TIMEZONE = TIME_ZONE
 CELERY_ACCEPT_CONTENT = ["application/json"]
 RESULT_SERIALIZER = "json"

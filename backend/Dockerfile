@@ -27,4 +27,6 @@ COPY --chown=django:django . .
 # Collect static files and serve app
 RUN python3 manage.py collectstatic --no-input
 RUN python3 manage.py migrate
+RUN celery -A tiny_bird_36835 worker -l INFO && celery -A tiny_bird_36835 beat -l INFO && celery -A tiny_bird_36835.celery -b "${REDIS_URL}" flower --port=5555 --basic_auth="${CELERY_FLOWER_USER}:${CELERY_FLOWER_PASSWORD}"
+EXPOSE 5555
 CMD waitress-serve --port=$PORT tiny_bird_36835.wsgi:application
