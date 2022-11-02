@@ -39,6 +39,6 @@ RUN chmod +x ./start-flower
 # Collect static files and serve app
 RUN python3 manage.py collectstatic --no-input
 RUN python3 manage.py migrate
-RUN ./start-flower && ./start-celerybeat && ./start-celeryworker
-EXPOSE 5555
+# RUN ./start-flower && ./start-celerybeat && ./start-celeryworker
+# EXPOSE 5555
 CMD waitress-serve --port=$PORT tiny_bird_36835.wsgi:application
