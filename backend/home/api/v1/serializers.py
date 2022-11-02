@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
-from users.models import UserProfile, Notifications, UserSearchSave
+from users.models import UserProfile, UserSearchSave
 from users.api.serializers import UserProfileSerializer
 from home.models import (
     ContactUs,
@@ -133,13 +133,6 @@ class FavouriteSerializer(serializers.ModelSerializer):
             instance = Favourite.objects.create(horses=horseInstance, **validated_data)
             return instance
         raise serializers.ValidationError({"status": "OK", "message": "Already Liked"})
-
-
-class NotificationsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Notifications
-        fields = "__all__"
-        read_only_fields = ["id"]
 
 
 class UserSearchSaveSerializer(serializers.ModelSerializer):

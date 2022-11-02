@@ -58,15 +58,6 @@ class UserProfile(models.Model):
         return self.user.email
 
 
-class Notifications(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
-    description = models.TextField(max_length=1000, null=True, blank=True)
-    read_status = models.BooleanField(default=False)
-
-    def __str__(self):
-        return f"user:{self.user.email} status:{self.read_status}"
-
-
 class UserSearchSave(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     title = models.CharField(max_length=100, null=True, blank=True)

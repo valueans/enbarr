@@ -9,6 +9,7 @@ black = "~=22.10.0"
 [requires]
 python_version = "3.8"
 
+
 [packages]
 cryptography = "~=37.0.2"
 django = "~=2.2.26"
@@ -35,3 +36,9 @@ google-cloud-storage = "==2.4.0"
 pyotp = "==2.7.0"
 stripe = "==4.2.0"
 python-dateutil = "==2.8.2"
+django-celery-beat = "==2.4.0"
+celery = "==5.2.7"
+redis = "==4.3.4"
+flower = "==1.2.0"
+"backports.zoneinfo" = "==0.2.1"
+

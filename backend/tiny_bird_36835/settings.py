@@ -72,7 +72,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.sites",
 ]
-LOCAL_APPS = ["home", "users.apps.UsersConfig", "payments", "feedback"]
+LOCAL_APPS = ["home", "users.apps.UsersConfig", "payments", "feedback", "notifications"]
 THIRD_PARTY_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
@@ -87,6 +87,7 @@ THIRD_PARTY_APPS = [
     "django_extensions",
     "drf_yasg",
     "storages",
+    "django_celery_beat",
 ]
 MODULES_APPS = get_modules()
 
@@ -290,3 +291,12 @@ STRIPE_WEBHOOK_SECRET = env.str("STRIPE_WEBHOOK_SECRET", "")
 
 # GRAPELLI SETTINGS
 GRAPPELLI_ADMIN_TITLE = "ENBARR"
+
+
+# CELERY SETTINGS
+CELERY_BROKER_URL = env.str("REDIS_URL")
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_ACCEPT_CONTENT = ["application/json"]
+RESULT_SERIALIZER = "json"
+CELERY_TASK_SERIALIZER = "json"
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
