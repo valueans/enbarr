@@ -6,6 +6,6 @@ set -o nounset
 
 exec celery \
     -A tiny_bird_36835.celery_app \
-    -b "${REDIS_URL}" \
+    -b "redis://redis:6379" \
     flower \
     --port=5555 --basic_auth="${CELERY_FLOWER_USER}:${CELERY_FLOWER_PASSWORD}"
