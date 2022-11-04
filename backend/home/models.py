@@ -1,8 +1,8 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.utils.html import format_html
 
 User = get_user_model()
-
 
 REPORT_REASON = (
     ("Spam", "Spam"),
@@ -28,9 +28,15 @@ class ContactUs(models.Model):
 class HorseImages(models.Model):
     file = models.FileField(null=True, blank=True)
 
+    def __str__(self):
+        return self.file.url
+
 
 class Keywords(models.Model):
     keyword = models.CharField(max_length=100, null=True, blank=True)
+
+    def __str__(self):
+        return self.keyword
 
 
 class Horses(models.Model):
@@ -55,6 +61,22 @@ class Horses(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     approved = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name_plural = "Horses"
+
+    def horse_image(self):
+        return format_html(
+            '<img src="{}" width="100" height=100/>'.format(
+                self.images.all().first().file.url
+            )
+        )
+
+    horse_image.short_description = "Image"
+    horse_image.allow_tags = True
 
 
 class Favourite(models.Model):
@@ -100,6 +122,7 @@ class Report(models.Model):
     reason = models.CharField(
         max_length=1000, choices=REPORT_REASON, null=True, blank=True
     )
+    reviewed = models.BooleanField(default=False)
 
 
 class PrivacyPolicy(models.Model):

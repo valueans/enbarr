@@ -17,6 +17,7 @@ from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.authtoken.models import Token
 from rest_auth.registration.views import SocialLoginView
 from rest_auth.registration.serializers import SocialLoginSerializer
+from datetime import date
 
 
 from rest_framework.decorators import (
@@ -78,6 +79,18 @@ class LoginViewSet(ViewSet):
         )
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data["user"]
+        try:
+            if (
+                user.ban_user_from_app == True
+                and date.today() < user.ban_user_from_app_date
+            ):
+                data = {
+                    "status": "ERROR",
+                    "message": f"you are banned from application till {user.ban_user_from_app_date}",
+                }
+                return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+        except:
+            pass
         token, created = Token.objects.get_or_create(user=user)
         user_serializer = UserSerializer(user)
         if user.is_verified == True:

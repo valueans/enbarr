@@ -5,7 +5,7 @@ from rest_framework import status
 from modules.terms_and_conditions.terms_and_conditions.models import TermAndCondition
 from django.db.models import Q
 from drf_yasg.utils import swagger_auto_schema
-from datetime import datetime
+from datetime import datetime, date
 import ast
 from django.contrib.auth import get_user_model
 from users.models import (
@@ -463,6 +463,19 @@ def HorseView(request):
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     if request.method == "POST":
+        try:
+            if (
+                request.user.ban_user_from_posting == True
+                and date.today() < request.user.ban_user_from_posting_date
+            ):
+                data = {
+                    "status": "ERROR",
+                    "message": f"You cannot post add because you are banned till {request.user.ban_user_from_posting_date}",
+                }
+                return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
+        except:
+            pass
+
         serializer = HorsesSerializer(data=request.data, context={"request": request})
         user_profile = UserProfile.objects.get(user=request.user)
         if user_profile.promotion_adds > 0:

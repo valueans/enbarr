@@ -1,4 +1,4 @@
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from .helpers import sendOtpEmail
 from .models import User, UserProfile, DeletedUsers
@@ -17,6 +17,15 @@ def user_verification_send_otp(sender, instance, created, **kwargs):
     if delete_user > 0:
         UserProfile.objects.get_or_create(user=instance, promotion_adds=0)
     else:
-        UserProfile.objects.get_or_create(user=instance, promotion_adds=100)
+        try:
+            UserProfile.objects.get(user=instance)
+        except:
+            UserProfile.objects.create(user=instance, promotion_adds=100)
     sendOtpEmail(instance)
     createStripeCustomer(instance)
+
+
+@receiver(post_delete, sender=UserProfile)
+def user_delete(sender, instance, **kwargs):
+    user = instance.user
+    user.delete()

@@ -21,6 +21,7 @@ from allauth.account.views import confirm_email
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+from django.conf import settings
 from allauth.account.models import EmailAddress
 from rest_framework.authtoken.models import TokenProxy
 
@@ -28,6 +29,8 @@ admin.site.site_header = "ENBARR"
 admin.site.site_title = "ENBARR Admin Portal"
 admin.site.index_title = "ENBARR Admin"
 
+admin.site.unregister(EmailAddress)
+admin.site.unregister(TokenProxy)
 
 urlpatterns = [
     path("", include("home.urls")),
@@ -64,6 +67,17 @@ urlpatterns += [
     path("api-docs/", schema_view.with_ui("swagger", cache_timeout=0), name="api_docs")
 ]
 
+from django.views.static import serve
+
+urlpatterns += [
+    re_path(
+        r"^mediafiles/(?P<path>.*)$",
+        serve,
+        {
+            "document_root": settings.MEDIA_ROOT,
+        },
+    ),
+]
 
 urlpatterns += [path("", TemplateView.as_view(template_name="index.html"))]
 urlpatterns += [

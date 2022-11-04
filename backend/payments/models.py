@@ -45,6 +45,9 @@ class SubscriptionPlans(models.Model):
     def __str__(self):
         return self.title
 
+    class Meta:
+        verbose_name_plural = "Subscription Plans"
+
 
 class PaymentsHistory(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)

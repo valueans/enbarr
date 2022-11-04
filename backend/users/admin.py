@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from .models import UserProfile
 from datetime import date
 from dateutil.relativedelta import relativedelta
+from django.utils.html import format_html
 
 User = get_user_model()
 

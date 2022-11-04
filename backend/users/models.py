@@ -25,6 +25,10 @@ class User(AbstractUser):
     # around the globe.
     name = models.CharField(_("Name of User"), blank=True, null=True, max_length=255)
     is_verified = models.BooleanField(default=False)
+    ban_user_from_posting = models.BooleanField(default=False)
+    ban_user_from_posting_date = models.DateField(null=True, blank=True)
+    ban_user_from_app = models.BooleanField(default=False)
+    ban_user_from_app_date = models.DateField(null=True, blank=True)
     otp_counter = models.IntegerField(default=0)
 
     def get_absolute_url(self):
@@ -32,7 +36,7 @@ class User(AbstractUser):
 
 
 class UserProfile(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     phone_number = models.CharField(max_length=15, null=True, blank=True)
     profile_photo = models.ImageField(null=True, blank=True)
     bio = models.TextField(max_length=1500, null=True, blank=True)
@@ -56,6 +60,9 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return self.user.email
+
+    class Meta:
+        verbose_name_plural = "User Profile"
 
 
 class UserSearchSave(models.Model):

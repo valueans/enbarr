@@ -62,7 +62,8 @@ SECURE_SSL_REDIRECT = env.bool("SECURE_REDIRECT", default=False)
 # Application definition
 
 INSTALLED_APPS = [
-    "grappelli",
+    # "grappelli",
+    "jazzmin",
     "django.contrib.admin",
     "django.contrib.contenttypes",
     "django.contrib.auth",
@@ -163,7 +164,7 @@ LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
 USE_I18N = True
 USE_L10N = True
-# USE_TZ = True
+USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
@@ -293,8 +294,8 @@ GRAPPELLI_ADMIN_TITLE = "ENBARR"
 
 
 # CELERY SETTINGS
-CELERY_BROKER_URL = env.str("REDIS_URL",default="redis://127.0.0.1:6379")
-CELERY_RESULT_BACKEND = env.str("REDIS_URL",default="redis://127.0.0.1:6379")
+CELERY_BROKER_URL = env.str("REDIS_URL", default="redis://127.0.0.1:6379")
+CELERY_RESULT_BACKEND = env.str("REDIS_URL", default="redis://127.0.0.1:6379")
 CELERY_TIMEZONE = TIME_ZONE
 CELERY_ACCEPT_CONTENT = ["application/json"]
 RESULT_SERIALIZER = "json"
