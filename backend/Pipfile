@@ -41,4 +41,5 @@ celery = "==5.2.7"
 redis = "==4.3.4"
 flower = "==1.2.0"
 "backports.zoneinfo" = "==0.2.1"
+django-jazzmin = "==2.6.0"
 
