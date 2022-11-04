@@ -5,8 +5,11 @@ from .helpers import banUserAppLogin, banUserPosting
 from .models import (
     Horses,
     Report,
+    HorseImages
 )
 
+
+admin.site.register(HorseImages)
 
 @admin.register(Horses)
 class HorsesAdmin(admin.ModelAdmin):
