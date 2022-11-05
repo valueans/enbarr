@@ -2,14 +2,8 @@ from django.contrib import admin
 from django.contrib.auth.models import Group
 from django.utils.html import format_html
 from .helpers import banUserAppLogin, banUserPosting
-from .models import (
-    Horses,
-    Report,
-    HorseImages
-)
+from .models import Horses, Report, HorseImages
 
-
-admin.site.register(HorseImages)
 
 @admin.register(Horses)
 class HorsesAdmin(admin.ModelAdmin):
@@ -43,7 +37,7 @@ class HorsesAdmin(admin.ModelAdmin):
         "approved",
     ]
     list_filter = ("approved", "price")
-    search_fields = ["title", "uploaded_by__email"]
+    search_fields = ["title", "uploaded_by__email", "keywords__keyword"]
     readonly_fields = (
         "horse_image",
         "horse_image_inside",
