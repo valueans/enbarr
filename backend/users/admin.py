@@ -1,14 +1,13 @@
-from datetime import datetime
 from django.contrib import admin
 from django.contrib.auth import get_user_model
 from .models import UserProfile
 from datetime import date
 from dateutil.relativedelta import relativedelta
-from django.utils.html import format_html
+from home.helpers import banUserAppLogin, banUserPosting
 
 User = get_user_model()
 
-
+# list filter by month
 class UserDateFilter(admin.SimpleListFilter):
     title = "Subscription Month"  # a label for our filter
     parameter_name = "subscription_start_date"  # you can put anything here
@@ -139,10 +138,27 @@ class UserProfile(admin.ModelAdmin):
         "get_subscribe_date",
         "get_subscribe_renew_date",
         "get_promotion_adds",
+        "ban_user_from_posting",
+        "ban_user_from_app",
     ]
     list_filter = ("subscription_plan__title", "user__is_superuser", UserDateFilter)
     search_fields = ["user__email", "user__username"]
+    actions = [
+        "unban_user_posting",
+        "unban_user_app_login",
+        "ban_user_for_1_month_posting",
+        "ban_user_from_app_1_month",
+        "ban_user_for_3_month_posting",
+        "ban_user_from_app_3_month",
+        "ban_user_for_6_month_posting",
+        "ban_user_from_app_6_month",
+        "ban_user_for_9_month_posting",
+        "ban_user_from_app_9_month",
+        "ban_user_for_12_month_posting",
+        "ban_user_from_app_12_month",
+    ]
 
+    # custom list display
     def get_email(self, obj):
         return obj.user.email
 
@@ -169,6 +185,84 @@ class UserProfile(admin.ModelAdmin):
         except:
             return None
 
+    # actions
+
+    def ban_user_for_1_month_posting(modeladmin, request, queryset):
+        for query in queryset:
+            banUserPosting(query, 1)
+
+    def ban_user_for_3_month_posting(modeladmin, request, queryset):
+        for query in queryset:
+            banUserPosting(query, 3)
+
+    def ban_user_for_6_month_posting(modeladmin, request, queryset):
+        for query in queryset:
+            banUserPosting(query, 6)
+
+    def ban_user_for_9_month_posting(modeladmin, request, queryset):
+        for query in queryset:
+            banUserPosting(query, 9)
+
+    def ban_user_for_12_month_posting(modeladmin, request, queryset):
+        for query in queryset:
+            banUserPosting(query, 12)
+
+    def ban_user_from_app_1_month(modeladmin, request, queryset):
+        for query in queryset:
+            banUserAppLogin(query, 1)
+
+    def ban_user_from_app_3_month(modeladmin, request, queryset):
+        for query in queryset:
+            banUserAppLogin(query, 3)
+
+    def ban_user_from_app_6_month(modeladmin, request, queryset):
+        for query in queryset:
+            banUserAppLogin(query, 6)
+
+    def ban_user_from_app_9_month(modeladmin, request, queryset):
+        for query in queryset:
+            banUserAppLogin(query, 9)
+
+    def ban_user_from_app_12_month(modeladmin, request, queryset):
+        for query in queryset:
+            banUserAppLogin(query, 12)
+
+    def unban_user_posting(modeladmin, request, queryset):
+        for query in queryset:
+            query.ban_user_from_posting = False
+            query.save()
+
+    def unban_user_app_login(modeladmin, request, queryset):
+        for query in queryset:
+            query.ban_user_from_app = False
+            query.save()
+
+    # actions
+
+    ban_user_for_1_month_posting.short_description = (
+        "Ban User for 1 months from posting adds"
+    )
+    ban_user_for_3_month_posting.short_description = (
+        "Ban User for 3 months from posting adds"
+    )
+    ban_user_for_6_month_posting.short_description = (
+        "Ban User for 6 months from posting adds"
+    )
+    ban_user_for_9_month_posting.short_description = (
+        "Ban User for 9 months from posting adds"
+    )
+    ban_user_for_12_month_posting.short_description = (
+        "Ban User for 12 months from posting adds"
+    )
+    ban_user_from_app_1_month.short_description = "Ban User from Application for 1"
+    ban_user_from_app_3_month.short_description = "Ban User from Application for 3"
+    ban_user_from_app_6_month.short_description = "Ban User from Application for 6"
+    ban_user_from_app_9_month.short_description = "Ban User from Application for 9"
+    ban_user_from_app_12_month.short_description = "Ban User from Application for 12"
+    unban_user_posting.short_description = "Unban User Posting"
+    unban_user_app_login.short_description = "Unban User Login"
+
+    # list display
     get_username.short_description = "Username"
     get_email.short_description = "Email"
     get_is_superuser.short_description = "Super User"

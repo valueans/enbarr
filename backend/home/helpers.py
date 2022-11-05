@@ -2,16 +2,15 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 
 
-def banUserPosting(user, months):
-    print(months)
+def banUserPosting(userprofile, months):
     ban_date = date.today() + relativedelta(months=+months)
-    user.ban_user_from_posting = True
-    user.ban_user_from_posting_date = ban_date
-    user.save()
+    userprofile.ban_user_from_posting = True
+    userprofile.ban_user_from_posting_date = ban_date
+    userprofile.save()
 
 
-def banUserAppLogin(user, months):
+def banUserAppLogin(userprofile, months):
     ban_date = date.today() + relativedelta(months=+months)
-    user.ban_user_from_app = True
-    user.ban_user_from_app_date = ban_date
-    user.save()
+    userprofile.ban_user_from_app = True
+    userprofile.ban_user_from_app_date = ban_date
+    userprofile.save()

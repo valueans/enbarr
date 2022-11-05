@@ -25,10 +25,6 @@ class User(AbstractUser):
     # around the globe.
     name = models.CharField(_("Name of User"), blank=True, null=True, max_length=255)
     is_verified = models.BooleanField(default=False)
-    ban_user_from_posting = models.BooleanField(default=False)
-    ban_user_from_posting_date = models.DateField(null=True, blank=True)
-    ban_user_from_app = models.BooleanField(default=False)
-    ban_user_from_app_date = models.DateField(null=True, blank=True)
     otp_counter = models.IntegerField(default=0)
 
     def get_absolute_url(self):
@@ -60,6 +56,11 @@ class UserProfile(models.Model):
         null=True, blank=True, default=timezone.now
     )
     promotion_adds = models.IntegerField(default=100)
+
+    ban_user_from_posting = models.BooleanField(default=False)
+    ban_user_from_posting_date = models.DateField(null=True, blank=True)
+    ban_user_from_app = models.BooleanField(default=False)
+    ban_user_from_app_date = models.DateField(null=True, blank=True)
 
     def __str__(self):
         return self.user.email

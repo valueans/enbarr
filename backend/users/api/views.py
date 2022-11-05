@@ -81,12 +81,12 @@ class LoginViewSet(ViewSet):
         user = serializer.validated_data["user"]
         try:
             if (
-                user.ban_user_from_app == True
-                and date.today() < user.ban_user_from_app_date
+                user.userprofile.ban_user_from_app == True
+                and date.today() < user.userprofile.ban_user_from_app_date
             ):
                 data = {
                     "status": "ERROR",
-                    "message": f"you are banned from application till {user.ban_user_from_app_date}",
+                    "message": f"you are banned from application till {user.userprofile.ban_user_from_app_date}",
                 }
                 return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
         except:

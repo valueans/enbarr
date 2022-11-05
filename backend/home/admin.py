@@ -25,6 +25,8 @@ class HorsesAdmin(admin.ModelAdmin):
         "created_at",
         "updated_at",
         "approved",
+        "likes",
+        "dislikes",
     )
     list_display = [
         "horse_image",
@@ -35,6 +37,8 @@ class HorsesAdmin(admin.ModelAdmin):
         "created_at",
         "updated_at",
         "approved",
+        "get_likes",
+        "get_dislikes",
     ]
     list_filter = ("approved", "price")
     search_fields = ["title", "uploaded_by__email", "keywords__keyword"]
@@ -51,6 +55,16 @@ class HorsesAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         return qs.all().order_by("-id").order_by("approved")
+
+    def get_likes(self, obj):
+        return obj.likes.all().count()
+
+    get_likes.short_description = "Likes"
+
+    def get_dislikes(self, obj):
+        return obj.dislikes.all().count()
+
+    get_dislikes.short_description = "DisLikes"
 
     def approve_posts(modeladmin, request, queryset):
         queryset.update(approved=True)
@@ -137,43 +151,43 @@ class ReportAdmin(admin.ModelAdmin):
 
     def ban_user_for_1_month_posting(modeladmin, request, queryset):
         for query in queryset:
-            banUserPosting(query.horse.uploaded_by, 1)
+            banUserPosting(query.horse.uploaded_by.userprofile, 1)
 
     def ban_user_for_3_month_posting(modeladmin, request, queryset):
         for query in queryset:
-            banUserPosting(query.horse.uploaded_by, 3)
+            banUserPosting(query.horse.uploaded_by.userprofile, 3)
 
     def ban_user_for_6_month_posting(modeladmin, request, queryset):
         for query in queryset:
-            banUserPosting(query.horse.uploaded_by, 6)
+            banUserPosting(query.horse.uploaded_by.userprofile, 6)
 
     def ban_user_for_9_month_posting(modeladmin, request, queryset):
         for query in queryset:
-            banUserPosting(query.horse.uploaded_by, 9)
+            banUserPosting(query.horse.uploaded_by.userprofile, 9)
 
     def ban_user_for_12_month_posting(modeladmin, request, queryset):
         for query in queryset:
-            banUserPosting(query.horse.uploaded_by, 12)
+            banUserPosting(query.horse.uploaded_by.userprofile, 12)
 
     def ban_user_from_app_1_month(modeladmin, request, queryset):
         for query in queryset:
-            banUserAppLogin(query.horse.uploaded_by, 1)
+            banUserAppLogin(query.horse.uploaded_by.userprofile, 1)
 
     def ban_user_from_app_3_month(modeladmin, request, queryset):
         for query in queryset:
-            banUserAppLogin(query.horse.uploaded_by, 3)
+            banUserAppLogin(query.horse.uploaded_by.userprofile, 3)
 
     def ban_user_from_app_6_month(modeladmin, request, queryset):
         for query in queryset:
-            banUserAppLogin(query.horse.uploaded_by, 6)
+            banUserAppLogin(query.horse.uploaded_by.userprofile, 6)
 
     def ban_user_from_app_9_month(modeladmin, request, queryset):
         for query in queryset:
-            banUserAppLogin(query.horse.uploaded_by, 9)
+            banUserAppLogin(query.horse.uploaded_by.userprofile, 9)
 
     def ban_user_from_app_12_month(modeladmin, request, queryset):
         for query in queryset:
-            banUserAppLogin(query.horse.uploaded_by, 12)
+            banUserAppLogin(query.horse.uploaded_by.userprofile, 12)
 
     get_content_posted_by.short_description = "Content Posted By"
     get_user_reported.short_description = "Reported By"

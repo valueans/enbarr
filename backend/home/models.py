@@ -87,9 +87,15 @@ class Favourite(models.Model):
 class Likes(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
 
+    def __str__(self):
+        return f"{self.user.email}"
+
 
 class DisLikes(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.user.email}"
 
 
 class Messages(models.Model):

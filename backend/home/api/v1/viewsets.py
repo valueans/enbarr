@@ -465,12 +465,12 @@ def HorseView(request):
     if request.method == "POST":
         try:
             if (
-                request.user.ban_user_from_posting == True
-                and date.today() < request.user.ban_user_from_posting_date
+                request.user.userprofile.ban_user_from_posting == True
+                and date.today() < request.user.userprofile.ban_user_from_posting_date
             ):
                 data = {
                     "status": "ERROR",
-                    "message": f"You cannot post add because you are banned till {request.user.ban_user_from_posting_date}",
+                    "message": f"You cannot post add because you are banned till {request.user.userprofile.ban_user_from_posting_date}",
                 }
                 return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
         except:

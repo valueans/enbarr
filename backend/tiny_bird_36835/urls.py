@@ -24,6 +24,9 @@ from drf_yasg import openapi
 from django.conf import settings
 from allauth.account.models import EmailAddress
 from rest_framework.authtoken.models import TokenProxy
+from allauth.socialaccount.models import SocialToken, SocialAccount, SocialApp
+from django_celery_beat.models import ClockedSchedule, SolarSchedule, IntervalSchedule
+from django.contrib.sites.models import Site
 
 admin.site.site_header = "ENBARR"
 admin.site.site_title = "ENBARR Admin Portal"
@@ -31,6 +34,13 @@ admin.site.index_title = "ENBARR Admin"
 
 admin.site.unregister(EmailAddress)
 admin.site.unregister(TokenProxy)
+admin.site.unregister(SocialToken)
+admin.site.unregister(SocialAccount)
+admin.site.unregister(SocialApp)
+admin.site.unregister(ClockedSchedule)
+admin.site.unregister(SolarSchedule)
+admin.site.unregister(IntervalSchedule)
+admin.site.unregister(Site)
 
 urlpatterns = [
     path("", include("home.urls")),
