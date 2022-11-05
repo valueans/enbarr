@@ -29,3 +29,9 @@ class PushNotificationsAdmin(models.Model):
         choices=SEND_PUSH_NOTIFICATION_USER_GROUP, max_length=20, null=True, blank=True
     )
     active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f"{self.name}"
+
+    class Meta:
+        verbose_name_plural = "Push Notifications"
