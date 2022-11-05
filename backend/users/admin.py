@@ -8,7 +8,7 @@ from home.helpers import banUserAppLogin, banUserPosting
 User = get_user_model()
 
 # list filter by month
-class UserDateFilter(admin.SimpleListFilter):
+class UserSubscriptionFilter(admin.SimpleListFilter):
     title = "Subscription Month"  # a label for our filter
     parameter_name = "subscription_start_date"  # you can put anything here
 
@@ -128,6 +128,126 @@ class UserDateFilter(admin.SimpleListFilter):
             )
 
 
+class NewUserFilter(admin.SimpleListFilter):
+    title = "New User"  # a label for our filter
+    parameter_name = "new_users"  # you can put anything here
+
+    def lookups(self, request, model_admin):
+        # This is where you create filter options; we have two:
+        return [
+            ("1", "January"),
+            ("2", "Feburary"),
+            ("3", "March"),
+            ("4", "April"),
+            ("5", "May"),
+            ("6", "June"),
+            ("7", "July"),
+            ("8", "August"),
+            ("9", "September"),
+            ("10", "October"),
+            ("11", "November"),
+            ("12", "December"),
+        ]
+
+    def queryset(self, request, queryset):
+        if self.value() == "1":
+            get_year = date.today().year
+            filter_month = date(get_year, 1, 1)
+            next_month = filter_month + relativedelta(months=+1)
+            return queryset.distinct().filter(
+                created_at__gte=filter_month,
+                created_at__lt=next_month,
+            )
+        if self.value() == "2":
+            get_year = date.today().year
+            filter_month = date(get_year, 2, 1)
+            next_month = filter_month + relativedelta(months=+1)
+            return queryset.distinct().filter(
+                created_at__gte=filter_month,
+                created_at__lt=next_month,
+            )
+        if self.value() == "3":
+            get_year = date.today().year
+            filter_month = date(get_year, 3, 1)
+            next_month = filter_month + relativedelta(months=+1)
+            return queryset.distinct().filter(
+                created_at__gte=filter_month,
+                created_at__lt=next_month,
+            )
+        if self.value() == "4":
+            get_year = date.today().year
+            filter_month = date(get_year, 4, 1)
+            next_month = filter_month + relativedelta(months=+1)
+            return queryset.distinct().filter(
+                created_at__gte=filter_month,
+                created_at__lt=next_month,
+            )
+        if self.value() == "5":
+            get_year = date.today().year
+            filter_month = date(get_year, 5, 1)
+            next_month = filter_month + relativedelta(months=+1)
+            return queryset.distinct().filter(
+                created_at__gte=filter_month,
+                created_at__lt=next_month,
+            )
+        if self.value() == "6":
+            get_year = date.today().year
+            filter_month = date(get_year, 6, 1)
+            next_month = filter_month + relativedelta(months=+1)
+            return queryset.distinct().filter(
+                created_at__gte=filter_month,
+                created_at__lt=next_month,
+            )
+        if self.value() == "7":
+            get_year = date.today().year
+            filter_month = date(get_year, 7, 1)
+            next_month = filter_month + relativedelta(months=+1)
+            return queryset.distinct().filter(
+                created_at__gte=filter_month,
+                created_at__lt=next_month,
+            )
+        if self.value() == "8":
+            get_year = date.today().year
+            filter_month = date(get_year, 8, 1)
+            next_month = filter_month + relativedelta(months=+1)
+            return queryset.distinct().filter(
+                created_at__gte=filter_month,
+                created_at__lt=next_month,
+            )
+        if self.value() == "9":
+            get_year = date.today().year
+            filter_month = date(get_year, 9, 1)
+            next_month = filter_month + relativedelta(months=+1)
+            return queryset.distinct().filter(
+                created_at__gte=filter_month,
+                created_at__lt=next_month,
+            )
+        if self.value() == "10":
+            get_year = date.today().year
+            filter_month = date(get_year, 10, 1)
+            next_month = filter_month + relativedelta(months=+1)
+            return queryset.distinct().filter(
+                created_at__gte=filter_month,
+                created_at__lt=next_month,
+            )
+        if self.value() == "11":
+            get_year = date.today().year
+            filter_month = date(get_year, 11, 1)
+            next_month = filter_month + relativedelta(months=+1)
+            return queryset.distinct().filter(
+                created_at__gte=filter_month,
+                created_at__lt=next_month,
+            )
+        if self.value() == "12":
+            get_year = date.today().year
+            filter_month = date(get_year, 12, 1)
+            next_month = filter_month + relativedelta(months=+1)
+            return queryset.distinct().filter(
+                created_at__gte=filter_month,
+                created_at__lt=next_month,
+            )
+
+
 @admin.register(UserProfile)
 class UserProfile(admin.ModelAdmin):
     list_display = [
@@ -141,7 +261,12 @@ class UserProfile(admin.ModelAdmin):
         "ban_user_from_posting",
         "ban_user_from_app",
     ]
-    list_filter = ("subscription_plan__title", "user__is_superuser", UserDateFilter)
+    list_filter = (
+        "subscription_plan__title",
+        "user__is_superuser",
+        UserSubscriptionFilter,
+        NewUserFilter,
+    )
     search_fields = ["user__email", "user__username"]
     actions = [
         "unban_user_posting",
@@ -157,6 +282,9 @@ class UserProfile(admin.ModelAdmin):
         "ban_user_for_12_month_posting",
         "ban_user_from_app_12_month",
     ]
+
+    def has_add_permission(self, request):
+        return False
 
     # custom list display
     def get_email(self, obj):

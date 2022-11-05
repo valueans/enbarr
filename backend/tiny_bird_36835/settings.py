@@ -62,7 +62,6 @@ SECURE_SSL_REDIRECT = env.bool("SECURE_REDIRECT", default=False)
 # Application definition
 
 INSTALLED_APPS = [
-    # "grappelli",
     "jazzmin",
     "django.contrib.admin",
     "django.contrib.contenttypes",
