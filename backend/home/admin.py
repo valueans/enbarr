@@ -49,6 +49,9 @@ class HorsesAdmin(admin.ModelAdmin):
         "updated_at",
         "keywords",
         "location",
+        "likes",
+        "dislikes",
+        "uploaded_by",
     )
     actions = ["approve_posts", "unapprove_posts"]
 
