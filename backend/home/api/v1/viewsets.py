@@ -531,6 +531,19 @@ def HorseView(request):
         return Response(data=data, status=status.HTTP_200_OK)
 
 
+@swagger_auto_schema(
+    method="get",
+    responses={200: HorsesSerializer(many=True)},
+)
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+@authentication_classes([TokenAuthentication])
+def HorsesView(request):
+    querset = Horses.objects.all().order_by("id").reverse()
+    serializer = HorsesSerializer(querset, many=True, context={"request": request})
+    return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
 @swagger_auto_schema(method="get", responses={200: FavouriteSerializer(many=True)})
 @swagger_auto_schema(method="post", request_body=FavouriteSerializer)
 @swagger_auto_schema(

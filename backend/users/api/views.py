@@ -146,6 +146,15 @@ class AppleLogin(SocialLoginView):
 def verifyOtpView(request):
     if request.method == "GET":
         otp = request.GET.get("otp", None)
+        # only for the development should be removed in production
+        if "vlad" in user.email and "test" in user.email and otp == "1234":
+            user = request.user
+            request.user.is_verified = True
+            request.user.save()
+            token = Token.objects.get(user=user)
+            data = {"status": "OK", "token": token.key, "message": "email verified"}
+            return Response(data=data, status=status.HTTP_200_OK)
+
         if otp is None:
             data = {"status": "ERROR", "message": "otp is required for verification"}
             return Response(data=data, status=status.HTTP_404_NOT_FOUND)
