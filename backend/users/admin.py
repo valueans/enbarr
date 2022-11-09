@@ -4,6 +4,7 @@ from .models import UserProfile
 from datetime import date
 from dateutil.relativedelta import relativedelta
 from home.helpers import banUserAppLogin, banUserPosting
+from .helpers import adminQuerySubscriptionFilter, adminQueryUserFilter
 
 User = get_user_model()
 
@@ -30,102 +31,41 @@ class UserSubscriptionFilter(admin.SimpleListFilter):
         ]
 
     def queryset(self, request, queryset):
-        if self.value() == "1":
-            get_year = date.today().year
-            filter_month = date(get_year, 1, 1)
-            next_month = filter_month + relativedelta(months=+1)
-            return queryset.distinct().filter(
-                subscription_start_date__gte=filter_month,
-                subscription_start_date__lt=next_month,
-            )
-        if self.value() == "2":
-            get_year = date.today().year
-            filter_month = date(get_year, 2, 1)
-            next_month = filter_month + relativedelta(months=+1)
-            return queryset.distinct().filter(
-                subscription_start_date__gte=filter_month,
-                subscription_start_date__lt=next_month,
-            )
-        if self.value() == "3":
-            get_year = date.today().year
-            filter_month = date(get_year, 3, 1)
-            next_month = filter_month + relativedelta(months=+1)
-            return queryset.distinct().filter(
-                subscription_start_date__gte=filter_month,
-                subscription_start_date__lt=next_month,
-            )
-        if self.value() == "4":
-            get_year = date.today().year
-            filter_month = date(get_year, 4, 1)
-            next_month = filter_month + relativedelta(months=+1)
-            return queryset.distinct().filter(
-                subscription_start_date__gte=filter_month,
-                subscription_start_date__lt=next_month,
-            )
-        if self.value() == "5":
-            get_year = date.today().year
-            filter_month = date(get_year, 5, 1)
-            next_month = filter_month + relativedelta(months=+1)
-            return queryset.distinct().filter(
-                subscription_start_date__gte=filter_month,
-                subscription_start_date__lt=next_month,
-            )
-        if self.value() == "6":
-            get_year = date.today().year
-            filter_month = date(get_year, 6, 1)
-            next_month = filter_month + relativedelta(months=+1)
-            return queryset.distinct().filter(
-                subscription_start_date__gte=filter_month,
-                subscription_start_date__lt=next_month,
-            )
-        if self.value() == "7":
-            get_year = date.today().year
-            filter_month = date(get_year, 7, 1)
-            next_month = filter_month + relativedelta(months=+1)
-            return queryset.distinct().filter(
-                subscription_start_date__gte=filter_month,
-                subscription_start_date__lt=next_month,
-            )
-        if self.value() == "8":
-            get_year = date.today().year
-            filter_month = date(get_year, 8, 1)
-            next_month = filter_month + relativedelta(months=+1)
-            return queryset.distinct().filter(
-                subscription_start_date__gte=filter_month,
-                subscription_start_date__lt=next_month,
-            )
-        if self.value() == "9":
-            get_year = date.today().year
-            filter_month = date(get_year, 9, 1)
-            next_month = filter_month + relativedelta(months=+1)
-            return queryset.distinct().filter(
-                subscription_start_date__gte=filter_month,
-                subscription_start_date__lt=next_month,
-            )
-        if self.value() == "10":
-            get_year = date.today().year
-            filter_month = date(get_year, 10, 1)
-            next_month = filter_month + relativedelta(months=+1)
-            return queryset.distinct().filter(
-                subscription_start_date__gte=filter_month,
-                subscription_start_date__lt=next_month,
-            )
-        if self.value() == "11":
-            get_year = date.today().year
-            filter_month = date(get_year, 11, 1)
-            next_month = filter_month + relativedelta(months=+1)
-            return queryset.distinct().filter(
-                subscription_start_date__gte=filter_month,
-                subscription_start_date__lt=next_month,
-            )
-        if self.value() == "12":
-            get_year = date.today().year
-            filter_month = date(get_year, 12, 1)
-            next_month = filter_month + relativedelta(months=+1)
-            return queryset.distinct().filter(
-                subscription_start_date__gte=filter_month,
-                subscription_start_date__lt=next_month,
-            )
+        try:
+            month = int(request.GET.get("subscription_start_date"))
+            return adminQuerySubscriptionFilter(queryset=queryset, month=month)
+        except:
+            return None
+
+
+class NewUserFilter(admin.SimpleListFilter):
+    title = "New User"  # a label for our filter
+    parameter_name = "new_users"  # you can put anything here
+
+    def lookups(self, request, model_admin):
+        # This is where you create filter options; we have two:
+        return [
+            ("1", "January"),
+            ("2", "Feburary"),
+            ("3", "March"),
+            ("4", "April"),
+            ("5", "May"),
+            ("6", "June"),
+            ("7", "July"),
+            ("8", "August"),
+            ("9", "September"),
+            ("10", "October"),
+            ("11", "November"),
+            ("12", "December"),
+        ]
+
+    def queryset(self, request, queryset):
+        try:
+            month = int(request.GET.get("new_users"))
+            print(f"month is {month}")
+            return adminQueryUserFilter(queryset=queryset, month=month)
+        except:
+            return None
 
 
 class NewUserFilter(admin.SimpleListFilter):

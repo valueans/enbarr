@@ -5,6 +5,8 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.db.models import F
 from .models import User
+from datetime import date
+from dateutil.relativedelta import relativedelta
 
 
 def generateRandom(email):
@@ -37,3 +39,23 @@ def verifyOtp(user, otp):
         user = User.objects.filter(email=user.email).update(is_verified=True)
         return True
     return False
+
+
+def adminQuerySubscriptionFilter(queryset, month):
+    get_year = date.today().year
+    filter_month = date(get_year, month, 1)
+    next_month = filter_month + relativedelta(months=+1)
+    return queryset.distinct().filter(
+        subscription_start_date__gte=filter_month,
+        subscription_start_date__lt=next_month,
+    )
+
+
+def adminQueryUserFilter(queryset, month):
+    get_year = date.today().year
+    filter_month = date(get_year, month, 1)
+    next_month = filter_month + relativedelta(months=+1)
+    return queryset.distinct().filter(
+        created_at__gte=filter_month,
+        created_at__lt=next_month,
+    )

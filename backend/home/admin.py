@@ -123,7 +123,7 @@ class ReportAdmin(admin.ModelAdmin):
     change_list_template = "admin/change_list.html"
 
     def has_delete_permission(self, request, obj=None):
-        return False
+        return True
 
     def has_add_permission(self, request):
         return False
