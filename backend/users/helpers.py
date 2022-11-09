@@ -1,7 +1,5 @@
 from datetime import datetime
 import base64
-from string import digits
-from unicodedata import digit
 import pyotp
 from django.conf import settings
 from django.core.mail import send_mail
