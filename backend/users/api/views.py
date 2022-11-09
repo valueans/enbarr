@@ -147,8 +147,8 @@ def verifyOtpView(request):
     if request.method == "GET":
         otp = request.GET.get("otp", None)
         # only for the development should be removed in production
+        user = request.user
         if "vlad" in user.email and "test" in user.email and otp == "1234":
-            user = request.user
             request.user.is_verified = True
             request.user.save()
             token = Token.objects.get(user=user)
