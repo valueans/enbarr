@@ -83,6 +83,7 @@ THIRD_PARTY_APPS = [
     "allauth.socialaccount",
     "allauth.socialaccount.providers.google",
     "allauth.socialaccount.providers.facebook",
+    "allauth.socialaccount.providers.apple",
     "django_extensions",
     "drf_yasg",
     "storages",

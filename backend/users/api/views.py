@@ -161,7 +161,6 @@ def verifyOtpView(request):
 
         user = request.user
         verify = verifyOtp(user, otp)
-        print(verify)
 
         if verify == True:
             token = Token.objects.get(user=user)
@@ -256,7 +255,16 @@ def resetPasswordView(request):
         return Response(data=data, status=status.HTTP_200_OK)
 
 
-@swagger_auto_schema(method="get", responses={200: UserProfileSerializer})
+@swagger_auto_schema(
+    method="get",
+    manual_parameters=[
+        createParam(
+            paramName="user-id",
+            description="to get userprofile for specific user (optional field) if you will not pass the user-id it will return the userprofile for requested user",
+        )
+    ],
+    responses={200: UserProfileSerializer},
+)
 @swagger_auto_schema(method="post", request_body=UserProfileSerializer)
 @swagger_auto_schema(method="put", responses={200: UserProfileSerializer})
 @swagger_auto_schema(method="delete", responses=customDeleteResponse())
@@ -265,6 +273,16 @@ def resetPasswordView(request):
 @authentication_classes([TokenAuthentication])
 def userProfileView(request):
     if request.method == "GET":
+        user_id = request.GET.get("user-id", None)
+        if user_id is not None:
+            try:
+                user = User.objects.get(id=user_id)
+            except:
+                data = {"status": "error", "message": "Invalid user id"}
+                return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+            instance = UserProfile.objects.get(user=user)
+            serializer = UserProfileSerializer(instance)
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
         try:
             instance = UserProfile.objects.get(user=request.user)
         except:

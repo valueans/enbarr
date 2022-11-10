@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 from users.models import UserProfile, UserSearchSave
-from users.api.serializers import UserProfileSerializer
+from users.api.serializers import UserProfileSerializer, UserSerializer
 from home.models import (
     ContactUs,
     HorseImages,
@@ -50,6 +50,7 @@ class HorsesSerializer(serializers.ModelSerializer):
     dislikes = serializers.SerializerMethodField(read_only=True)
     isliked = serializers.SerializerMethodField(read_only=True)
     isdisliked = serializers.SerializerMethodField(read_only=True)
+    uploaded_by = UserSerializer(read_only=True)
 
     class Meta:
         model = Horses

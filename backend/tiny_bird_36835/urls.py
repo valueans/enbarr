@@ -27,6 +27,7 @@ from rest_framework.authtoken.models import TokenProxy
 from allauth.socialaccount.models import SocialToken, SocialAccount, SocialApp
 from django_celery_beat.models import ClockedSchedule, SolarSchedule, IntervalSchedule
 from django.contrib.sites.models import Site
+from users.superadmin import super_admin_site
 
 admin.site.site_header = "ENBARR"
 admin.site.site_title = "ENBARR Admin Portal"
@@ -50,6 +51,7 @@ urlpatterns = [
     path("api/v1/", include("home.api.v1.urls")),
     path("grappelli/", include("grappelli.urls")),
     path("admin/", admin.site.urls),
+    path("super-admin/", super_admin_site.urls),
     path("users/", include("users.urls")),
     path("api/v1/users/", include("users.api.urls")),
     path("api/v1/feedback/", include("feedback.api.urls")),

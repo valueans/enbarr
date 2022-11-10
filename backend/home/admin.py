@@ -18,7 +18,7 @@ class HorsesAdmin(admin.ModelAdmin):
         "age",
         "color",
         "height",
-        "temprament",
+        "temperament",
         "discipline",
         "keywords",
         "uploaded_by",

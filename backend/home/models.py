@@ -50,7 +50,7 @@ class Horses(models.Model):
     age = models.IntegerField(null=True, blank=True)
     color = models.CharField(max_length=100, null=True, blank=True)
     height = models.CharField(max_length=500, null=True, blank=True)
-    temprament = models.CharField(max_length=500, null=True, blank=True)
+    temperament = models.CharField(max_length=500, null=True, blank=True)
     discipline = models.CharField(max_length=500, null=True, blank=True)
     keywords = models.ManyToManyField(Keywords, related_name="keywords")
     likes = models.ManyToManyField("Likes", related_name="likes")
