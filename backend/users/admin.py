@@ -1,10 +1,9 @@
 from django.contrib import admin
 from django.contrib.auth import get_user_model
 from .models import UserProfile
-from datetime import date
-from dateutil.relativedelta import relativedelta
 from home.helpers import banUserAppLogin, banUserPosting
 from .helpers import adminQuerySubscriptionFilter, adminQueryUserFilter
+from .forms import UserCreationForm
 
 User = get_user_model()
 
@@ -70,6 +69,7 @@ class NewUserFilter(admin.SimpleListFilter):
 
 @admin.register(UserProfile)
 class UserProfile(admin.ModelAdmin):
+
     list_display = [
         "get_username",
         "get_email",

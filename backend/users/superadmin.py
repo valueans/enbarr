@@ -4,11 +4,14 @@ from home.models import *
 from feedback.models import *
 from notifications.models import *
 from payments.models import *
+from modules.terms_and_conditions.terms_and_conditions.models import TermAndCondition
 from allauth.account.models import EmailAddress
 from rest_framework.authtoken.models import TokenProxy
 from allauth.socialaccount.models import SocialToken, SocialAccount, SocialApp
 from django_celery_beat.models import ClockedSchedule, SolarSchedule, IntervalSchedule
+
 from django.contrib.sites.models import Site
+from .forms import UserCreationForm
 
 
 class SuperAdminSite(admin.AdminSite):
@@ -20,7 +23,13 @@ class SuperAdminSite(admin.AdminSite):
 super_admin_site = SuperAdminSite(name="super_admin")
 
 # user models
-super_admin_site.register(User)
+class UserAdmin(admin.ModelAdmin):
+    form = UserCreationForm
+
+
+super_admin_site.register(User, UserAdmin)
+
+
 super_admin_site.register(UserProfile)
 super_admin_site.register(UserSearchSave)
 super_admin_site.register(DeletedUsers)
@@ -64,3 +73,6 @@ super_admin_site.register(ClockedSchedule)
 super_admin_site.register(SolarSchedule)
 super_admin_site.register(IntervalSchedule)
 super_admin_site.register(Site)
+
+# terms and condition
+super_admin_site.register(TermAndCondition)
