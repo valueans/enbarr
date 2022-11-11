@@ -6,6 +6,8 @@ from modules.terms_and_conditions.terms_and_conditions.models import TermAndCond
 from django.db.models import Q
 from drf_yasg.utils import swagger_auto_schema
 from datetime import datetime, date
+from django.db.models import Q
+from home.helpers import *
 import ast
 from django.contrib.auth import get_user_model
 from users.models import (
@@ -354,8 +356,7 @@ def KeywordsView(request):
         horse_id = request.GET.get("horse-id", None)
         if horse_id is None:
             keywords = Keywords.objects.all()
-            serializer = KeywordsSerializer(keywords, many=True)
-            return Response(data=serializer.data, status=status.HTTP_200_OK)
+            return getPagination(keywords, request, KeywordsSerializer)
         try:
             horse = Horses.objects.get(id=horse_id)
         except:
@@ -448,11 +449,7 @@ def HorseView(request):
             horses = (
                 Horses.objects.filter(uploaded_by=request.user).order_by("id").reverse()
             )
-
-            serializer = HorsesSerializer(
-                horses, many=True, context={"request": request}
-            )
-            return Response(data=serializer.data, status=status.HTTP_200_OK)
+            return getPagination(horses, request, HorsesSerializer)
         try:
             horse = Horses.objects.get(id=horse_id)
         except:
@@ -540,8 +537,7 @@ def HorseView(request):
 @authentication_classes([TokenAuthentication])
 def HorsesView(request):
     querset = Horses.objects.all().order_by("id").reverse()
-    serializer = HorsesSerializer(querset, many=True, context={"request": request})
-    return Response(data=serializer.data, status=status.HTTP_200_OK)
+    return getPagination(querset, request, HorsesSerializer)
 
 
 @swagger_auto_schema(method="get", responses={200: FavouriteSerializer(many=True)})
@@ -631,17 +627,29 @@ def searchHorseView(request):
         keywords = request.GET.get("keywords", None)
         title = request.GET.get("title", None)
 
-        if keywords != None:
+        if keywords != None and title != None:
             keywords = ast.literal_eval(keywords)
-            print(keywords)
-            instance = Horses.objects.filter(keywords__keyword__in=keywords)
-        if title != None:
-            instance = Horses.objects.filter(title__contains=title)
-        if keywords is None and title is None:
-            instance = Horses.objects.all()
-
-        serializer = HorsesSerializer(instance, many=True, context={"request": request})
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
+            queryset = (
+                Horses.objects.filter(
+                    Q(keywords__keyword__in=keywords) | Q(title__contains=title)
+                )
+                .distinct()
+                .order_by("id")
+                .reverse()
+            )
+        elif title != None:
+            queryset = (
+                Horses.objects.filter(title__contains=title).order_by("id").reverse()
+            )
+        elif keywords != None:
+            keywords = ast.literal_eval(keywords)
+            queryset = (
+                Horses.objects.filter(keywords__keyword__in=keywords)
+                .distinct()
+                .order_by("id")
+                .reverse()
+            )
+        return getPagination(queryset, request, HorsesSerializer)
 
 
 @swagger_auto_schema(method="GET", responses={200: UserSearchSaveSerializer(many=True)})
