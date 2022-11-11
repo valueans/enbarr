@@ -29,7 +29,7 @@ services:
   #   depends_on:
   #     - redis
   #     - postgres
-  #   command: celery -A tiny_bird_36835 worker -l INFO
+  #   command: celery -A <project_name> worker -l INFO
 
   # celerybeat:
   #   build:
@@ -38,7 +38,7 @@ services:
   #   depends_on:
   #     - redis
   #   ports: []
-  #   command: celery -A tiny_bird_36835 beat -l INFO
+  #   command: celery -A <project_name> beat -l INFO
   
   # flower:
   #   build:
@@ -47,7 +47,7 @@ services:
   #   env_file: .env
   #   ports:
   #     - "5555:5555"
-  #   command: celery -A tiny_bird_36835.celery -b "${REDIS_URL}" flower --basic_auth="${CELERY_FLOWER_USER}:${CELERY_FLOWER_PASSWORD}"
+  #   command: celery -A <project_name>.celery -b "${REDIS_URL}" flower --basic_auth="${CELERY_FLOWER_USER}:${CELERY_FLOWER_PASSWORD}"
 
 volumes: 
   postgres-data:

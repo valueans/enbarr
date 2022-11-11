@@ -53,8 +53,8 @@ class Horses(models.Model):
     temperament = models.CharField(max_length=500, null=True, blank=True)
     discipline = models.CharField(max_length=500, null=True, blank=True)
     keywords = models.ManyToManyField(Keywords, related_name="keywords")
-    likes = models.ManyToManyField("Likes", related_name="likes")
-    dislikes = models.ManyToManyField("DisLikes", related_name="dislikes")
+    likes = models.ManyToManyField("Likes", related_name="likes", blank=True)
+    dislikes = models.ManyToManyField("DisLikes", related_name="dislikes", blank=True)
     uploaded_by = models.ForeignKey(
         User, on_delete=models.CASCADE, null=True, blank=True
     )

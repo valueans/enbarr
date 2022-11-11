@@ -259,8 +259,8 @@ def resetPasswordView(request):
     method="get",
     manual_parameters=[
         createParam(
-            paramName="user-id",
-            description="to get userprofile for specific user (optional field) if you will not pass the user-id it will return the userprofile for requested user",
+            paramName="id",
+            description="to get userprofile for specific user (optional field) if you will not pass the id it will return the userprofile for requested user",
         )
     ],
     responses={200: UserProfileSerializer},
@@ -273,7 +273,7 @@ def resetPasswordView(request):
 @authentication_classes([TokenAuthentication])
 def userProfileView(request):
     if request.method == "GET":
-        user_id = request.GET.get("user-id", None)
+        user_id = request.GET.get("id", None)
         if user_id is not None:
             try:
                 user = User.objects.get(id=user_id)

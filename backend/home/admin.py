@@ -55,6 +55,9 @@ class HorsesAdmin(admin.ModelAdmin):
     )
     actions = ["approve_posts", "unapprove_posts"]
 
+    def has_add_permission(self, request):
+        return False
+
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         return qs.all().order_by("-id").order_by("approved")
