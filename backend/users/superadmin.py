@@ -11,7 +11,8 @@ from allauth.socialaccount.models import SocialToken, SocialAccount, SocialApp
 from django_celery_beat.models import ClockedSchedule, SolarSchedule, IntervalSchedule
 
 from django.contrib.sites.models import Site
-from .forms import UserCreationForm
+from .forms import UserCreationForm, UserChangeForm
+from django.contrib.auth import admin as auth_admin
 
 
 class SuperAdminSite(admin.AdminSite):
@@ -23,8 +24,12 @@ class SuperAdminSite(admin.AdminSite):
 super_admin_site = SuperAdminSite(name="super_admin")
 
 # user models
-class UserAdmin(admin.ModelAdmin):
-    form = UserCreationForm
+class UserAdmin(auth_admin.UserAdmin):
+    form = UserChangeForm
+    add_form = UserCreationForm
+    fieldsets = (("User", {"fields": ("name",)}),) + auth_admin.UserAdmin.fieldsets
+    list_display = ["username", "name", "is_superuser"]
+    search_fields = ["name"]
 
 
 super_admin_site.register(User, UserAdmin)
