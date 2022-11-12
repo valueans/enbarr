@@ -614,8 +614,12 @@ def favouriteView(request):
 @swagger_auto_schema(
     method="get",
     manual_parameters=[
-        createParamList(paramName="keywords", description="to search using keywords"),
-        createParam(paramName="title", description="to search for specific title"),
+        createParamList(
+            paramName="keywords", description="to search using keywords", required=True
+        ),
+        createParam(
+            paramName="title", description="to search for specific title", required=True
+        ),
     ],
     responses={200: HorsesSerializer(many=True)},
 )
@@ -626,6 +630,12 @@ def searchHorseView(request):
     if request.method == "GET":
         keywords = request.GET.get("keywords", None)
         title = request.GET.get("title", None)
+        if keywords is None and title is None:
+            data = {
+                "status": "error",
+                "message": "title or keywords are required for search",
+            }
+            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
 
         if keywords != None and title != None:
             keywords = ast.literal_eval(keywords)
