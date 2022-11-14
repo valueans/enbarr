@@ -294,9 +294,13 @@ def userProfileView(request):
     if request.method == "POST":
         try:
             instance = UserProfile.objects.get(user=request.user)
-            serializer = UserProfileSerializer(instance, data=request.data)
+            serializer = UserProfileSerializer(
+                instance, data=request.data, context={"request": request}
+            )
         except:
-            serializer = UserProfileSerializer(data=request.data)
+            serializer = UserProfileSerializer(
+                data=request.data, context={"request": request}
+            )
         if serializer.is_valid():
             serializer.save(user=request.user)
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
@@ -305,9 +309,13 @@ def userProfileView(request):
     if request.method == "PUT":
         try:
             instance = UserProfile.objects.get(user=request.user)
-            serializer = UserProfileSerializer(instance, data=request.data)
+            serializer = UserProfileSerializer(
+                instance, data=request.data, context={"request": request}
+            )
         except:
-            serializer = UserProfileSerializer(data=request.data)
+            serializer = UserProfileSerializer(
+                data=request.data, context={"request": request}
+            )
         if serializer.is_valid():
             serializer.save(user=request.user)
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
