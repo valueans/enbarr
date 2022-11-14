@@ -50,7 +50,7 @@ class HorsesSerializer(serializers.ModelSerializer):
     dislikes = serializers.SerializerMethodField(read_only=True)
     isliked = serializers.SerializerMethodField(read_only=True)
     isdisliked = serializers.SerializerMethodField(read_only=True)
-    uploaded_by = UserSerializer(read_only=True)
+    userprofile = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Horses
@@ -90,6 +90,12 @@ class HorsesSerializer(serializers.ModelSerializer):
                 setattr(instance, key, value)
         instance.save()
         return instance
+
+    def get_userprofile(self, obj):
+        serializer = UserProfileSerializer(
+            obj.uploaded_by.userprofile, context=self.context
+        )
+        return serializer.data
 
     def get_likes(self, obj):
         return obj.likes.all().count()

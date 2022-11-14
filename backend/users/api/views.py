@@ -281,14 +281,14 @@ def userProfileView(request):
                 data = {"status": "error", "message": "Invalid user id"}
                 return Response(data=data, status=status.HTTP_404_NOT_FOUND)
             instance = UserProfile.objects.get(user=user)
-            serializer = UserProfileSerializer(instance)
+            serializer = UserProfileSerializer(instance, context={"request": request})
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         try:
             instance = UserProfile.objects.get(user=request.user)
         except:
             return Response(data=[], status=status.HTTP_200_OK)
 
-        serializer = UserProfileSerializer(instance)
+        serializer = UserProfileSerializer(instance, context={"request": request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     if request.method == "POST":
