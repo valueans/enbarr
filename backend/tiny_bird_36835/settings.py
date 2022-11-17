@@ -298,8 +298,8 @@ GRAPPELLI_ADMIN_TITLE = "ENBARR"
 
 
 # CELERY SETTINGS
-CELERY_BROKER_URL = env.str("REDIS_URL", default="redis://127.0.0.1:6379")
-CELERY_RESULT_BACKEND = env.str("REDIS_URL", default="redis://127.0.0.1:6379")
+CELERY_BROKER_URL = env.str("REDIS_URL", default="redis://redis:6379")
+CELERY_RESULT_BACKEND = env.str("REDIS_URL", default="redis://redis:6379")
 CELERY_TIMEZONE = TIME_ZONE
 CELERY_ACCEPT_CONTENT = ["application/json"]
 RESULT_SERIALIZER = "json"
