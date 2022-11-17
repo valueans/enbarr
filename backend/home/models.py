@@ -26,10 +26,14 @@ class ContactUs(models.Model):
 
 
 class HorseImages(models.Model):
-    file = models.FileField(null=True, blank=True)
+    file = models.FileField(null=False, blank=False)
 
     def __str__(self):
-        return self.file.url
+        try:
+            url = self.file.url
+        except:
+            url = ""
+        return url
 
 
 class Keywords(models.Model):
