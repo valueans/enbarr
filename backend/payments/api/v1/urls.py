@@ -4,6 +4,7 @@ from .views import (
     setupIntentStripeView,
     paymentMethods,
     stripe_webhook,
+    chargeSubscription,
 )
 
 urlpatterns = [
@@ -12,5 +13,6 @@ urlpatterns = [
         "customer-intent-stripe/", setupIntentStripeView, name="customer-intent-stripe"
     ),
     path("paymentMethods/", paymentMethods, name="paymentMethods"),
-    path("stripe-webhooks/", stripe_webhook, name="stripe_webhook"),
+    path("stripe-webhook/", stripe_webhook, name="stripe_webhook"),
+    path("charge/", chargeSubscription, name="charge_subscription"),
 ]

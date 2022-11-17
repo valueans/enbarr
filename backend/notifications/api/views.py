@@ -4,6 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
+from home.helpers import getPagination
 from .serializers import *
 
 from rest_framework.decorators import (
@@ -40,8 +41,7 @@ def notificationsView(request):
         instance = (
             Notifications.objects.filter(user=request.user).order_by("id").reverse()
         )
-        serializer = NotificationsSerializer(instance, many=True)
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
+        return getPagination(instance, request, NotificationsSerializer)
     if request.method == "POST":
         serializer = NotificationsSerializer(data=request.data)
         if serializer.is_valid():

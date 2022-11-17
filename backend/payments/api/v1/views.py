@@ -4,9 +4,13 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 from django.conf import settings
 from drf_yasg.utils import swagger_auto_schema
+from home.api.v1.viewsets import deleted_message
+from payments.models import SubscriptionPlans, StripeCustomer, Cards
+import stripe
+from django.http import HttpResponse
+from .helpers import *
 from .serializers import (
     CardsSerializer,
-    StripeCustomerSerializer,
     SubscriptionPlansSerializer,
     CardsSerializer,
 )
@@ -15,20 +19,13 @@ from home.api.v1.swaggerParams import (
     customSetupIntentResponse,
     createParam,
 )
-from home.api.v1.viewsets import deleted_message
-from payments.models import SubscriptionPlans, StripeCustomer, Cards
-import stripe
-from django.http import HttpResponse
-from .helpers import *
-
-stripe.api_key = settings.STRIPE_SECRET_KEY
-
-
 from rest_framework.decorators import (
     api_view,
     permission_classes,
     authentication_classes,
 )
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 @swagger_auto_schema(
@@ -84,9 +81,8 @@ def plansView(request):
         return Response(data=data, status=status.HTTP_200_OK)
 
 
-@swagger_auto_schema(method="get", responses={200: StripeCustomerSerializer()})
-@swagger_auto_schema(method="POST", responses=customSetupIntentResponse())
-@api_view(["GET", "POST"])
+@swagger_auto_schema(method="get", responses=customSetupIntentResponse())
+@api_view(["GET"])
 @permission_classes([IsAuthenticated])
 @authentication_classes([TokenAuthentication])
 def setupIntentStripeView(request):
@@ -96,16 +92,14 @@ def setupIntentStripeView(request):
     """
     if request.method == "GET":
         user = request.user
-        insatnce = StripeCustomer.objects.get(user=user)
-        serializer = StripeCustomerSerializer(insatnce)
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
-    if request.method == "POST":
-        user = request.user
+        stipe_customer = StripeCustomer.objects.get(user=user)
         setup_intent = createSetupIntentCustomer(user)
         data = {
             "status": "OK",
-            "setup-intent-id": setup_intent.setupIntent,
-            "setup-intent-secret": setup_intent.intent_secret,
+            "setupIntent": setup_intent.intent_secret,
+            "ephemeralKey": setup_intent.ephemeral_key,
+            "customer": stipe_customer.stipe_customerId,
+            "publish_key": settings.STRIPE_PUBLISHABLE_KEY,
         }
         return Response(data=data, status=status.HTTP_200_OK)
 
@@ -142,10 +136,38 @@ def paymentMethods(request):
 
         payment_method_id = card.payment_id
 
-        response = stripe.PaymentMethod.detach(payment_method_id)
+        stripe.PaymentMethod.detach(payment_method_id)
 
         data = {"status": "OK", "message": deleted_message}
         return Response(data=data, status=status.HTTP_200_OK)
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+@authentication_classes([TokenAuthentication])
+def chargeSubscription(request):
+    """
+    if the customer has finished the adds before month then you can call this api to re subscribe the user
+
+    # successfull payment response
+        {"status": "OK", "message": "Payment Successfull"}
+    # un-successfull payment response
+        {
+            "status": "error",
+            "message": "Failed to charge the payment method with status code:<error code>",
+        }
+    """
+    user = request.user
+    response = createMonthlySubscriptionCharge(user)
+    if response == True:
+        data = {"status": "OK", "message": "Payment Successfull"}
+        return Response(data=data, status=status.HTTP_200_OK)
+    else:
+        data = {
+            "status": "error",
+            "message": f"Failed to charge the payment method with status code:{response}",
+        }
+        return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(["POST"])
@@ -183,11 +205,17 @@ def stripe_webhook(request):
             )
             Cards.objects.create(
                 user=stripe_customer.user,
-                last_4=response["last_4"],
-                exp_month=response["exp_month"],
-                exp_year=response["exp_year"],
+                last_4=response["card"]["last4"],
+                exp_month=response["card"]["exp_month"],
+                exp_year=response["card"]["exp_year"],
                 payment_id=instance.payment_method_id,
             )
+        elif event.type == "setup_intent.created":
+            return HttpResponse(status=200)
+        elif event.type == "payment_intent.created":
+            return HttpResponse(status=200)
+        elif event.type == "payment_intent.succeeded":
+            return HttpResponse(status=200)
         else:
             print("Unhandled event type {}".format(event.type))
 

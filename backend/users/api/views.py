@@ -265,10 +265,8 @@ def resetPasswordView(request):
     ],
     responses={200: UserProfileSerializer},
 )
-@swagger_auto_schema(method="post", request_body=UserProfileSerializer)
 @swagger_auto_schema(method="put", responses={200: UserProfileSerializer})
-@swagger_auto_schema(method="delete", responses=customDeleteResponse())
-@api_view(["GET", "POST", "PUT", "DELETE"])
+@api_view(["GET", "PUT"])
 @permission_classes([IsAuthenticated])
 @authentication_classes([TokenAuthentication])
 def userProfileView(request):
@@ -290,22 +288,6 @@ def userProfileView(request):
 
         serializer = UserProfileSerializer(instance, context={"request": request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)
-
-    if request.method == "POST":
-        try:
-            instance = UserProfile.objects.get(user=request.user)
-            serializer = UserProfileSerializer(
-                instance, data=request.data, context={"request": request}
-            )
-        except:
-            serializer = UserProfileSerializer(
-                data=request.data, context={"request": request}
-            )
-        if serializer.is_valid():
-            serializer.save(user=request.user)
-            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
-        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
     if request.method == "PUT":
         try:
             instance = UserProfile.objects.get(user=request.user)
@@ -320,16 +302,6 @@ def userProfileView(request):
             serializer.save(user=request.user)
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    if request.method == "DELETE":
-        try:
-            instance = UserProfile.objects.get(user=request.user)
-        except:
-            data = {"status": "error", "message": "Invalid favourite-id"}
-            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
-        instance.delete()
-        data = {"status": "ok", "message": deleted_message}
-        return Response(data=data, status=status.HTTP_200_OK)
 
 
 @swagger_auto_schema(method="GET", responses=customDeleteResponse())

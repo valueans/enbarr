@@ -9,6 +9,7 @@ from datetime import datetime, date
 from django.db.models import Q
 from home.helpers import *
 import ast
+from payments.api.v1.helpers import createMonthlySubscriptionCharge
 from django.contrib.auth import get_user_model
 from users.models import (
     UserProfile,
@@ -85,7 +86,7 @@ def ContactUsView(request):
         serializer = ContactUsSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(data=serializer.data, status=status.HTTP_200_OK)
+            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -308,7 +309,7 @@ def HorseImagesView(request):
         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     if request.method == "DELETE":
-        image_id = request.POST.get("image-id", None)
+        image_id = request.GET.get("image-id", None)
         if image_id is None:
             data = {"status": "ERROR", "message": "image-id is required"}
             return Response(data=data, status=status.HTTP_404_NOT_FOUND)
@@ -367,12 +368,15 @@ def KeywordsView(request):
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     if request.method == "POST":
-        serializer = KeywordsSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
-
-        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        keyword_value = request.POST.get("keyword", None)
+        if keyword_value is None or len(keyword_value) == 0:
+            data = {"status": "error", "message": "keyword is required!"}
+            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+        print(keyword_value)
+        keyword, created = Keywords.objects.get_or_create(keyword=keyword_value)
+        print(keyword)
+        serializer = KeywordsSerializer(keyword)
+        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
     if request.method == "PUT":
         keyword_id = request.GET.get("keyword-id", None)
         if keyword_id is None:
@@ -456,7 +460,7 @@ def HorseView(request):
             data = {"status": "ERROR", "message": "Invalid Horse id"}
             return Response(data=data, status=status.HTTP_404_NOT_FOUND)
 
-        serializer = HorsesSerializer(data=horse)
+        serializer = HorsesSerializer(horse, context={"request": request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     if request.method == "POST":
@@ -472,20 +476,33 @@ def HorseView(request):
                 return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
         except:
             pass
-
         serializer = HorsesSerializer(data=request.data, context={"request": request})
         user_profile = UserProfile.objects.get(user=request.user)
+
+        if (
+            user_profile.subscription_renew_date is None
+            and user_profile.promotion_adds == 0
+        ):
+            response = createMonthlySubscriptionCharge(user_profile.user)
+            if response:
+                pass
+            else:
+                data = {
+                    "status": "error",
+                    "message": "Your promotion period ended and we are unable to charge your card please add a new payment method.",
+                }
+                return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
         if user_profile.promotion_adds > 0:
             if serializer.is_valid():
                 serializer.save(uploaded_by=request.user)
                 user_profile.promotion_adds -= 1
                 user_profile.save()
-                return Response(data=serializer.data, status=status.HTTP_200_OK)
+                return Response(data=serializer.data, status=status.HTTP_201_CREATED)
             return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
             data = {
                 "status": "error",
-                "message": "your promotion add are finished subscribe to a plan to post a new add.",
+                "message": "You have 0 adds left Upgrade your subscription or re-subscribe it.",
             }
             return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
@@ -543,15 +560,6 @@ def HorsesView(request):
 @swagger_auto_schema(method="get", responses={200: FavouriteSerializer(many=True)})
 @swagger_auto_schema(method="post", request_body=FavouriteSerializer)
 @swagger_auto_schema(
-    method="put",
-    manual_parameters=[
-        createParam(
-            paramName="favourite-id", description="to update specific favourite"
-        )
-    ],
-    responses={200: FavouriteSerializer},
-)
-@swagger_auto_schema(
     method="delete",
     manual_parameters=[
         createParam(
@@ -560,13 +568,15 @@ def HorsesView(request):
     ],
     responses=customDeleteResponse(),
 )
-@api_view(["GET", "POST", "PUT", "DELETE"])
+@api_view(["GET", "POST", "DELETE"])
 @permission_classes([IsAuthenticated])
 @authentication_classes([TokenAuthentication])
 def favouriteView(request):
     if request.method == "GET":
         instance = Favourite.objects.filter(user=request.user)
-        serializer = FavouriteSerializer(instance, many=True)
+        serializer = FavouriteSerializer(
+            instance, many=True, context={"request": request}
+        )
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     if request.method == "POST":
@@ -577,23 +587,6 @@ def favouriteView(request):
             serializer.save(user=request.user)
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
         return Response(data=serializer.errors, status=status.HTTP_200_OK)
-
-    if request.method == "PUT":
-        favourite_id = request.GET.get("favourite-id", None)
-        if favourite_id is None:
-            data = {"status": "error", "message": "favourite-id is required"}
-            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
-        try:
-            instance = Favourite.objects.get(id=favourite_id)
-        except:
-            data = {"status": "error", "message": "Invalid favourite-id"}
-            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
-
-        serializer = FavouriteSerializer(instance, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(data=serializer.data, status=status.HTTP_200_OK)
-        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     if request.method == "DELETE":
         favourite_id = request.GET.get("favourite-id", None)
@@ -815,20 +808,18 @@ def messagesView(request):
     if request.method == "POST":
         serializer = MessagesSerializer(data=request.data)
         if serializer.is_valid():
-            message_instance = serializer.save()
+            message_instance = serializer.save(sender=request.user)
             try:
                 conversation_instance = Conversation.objects.get(
-                    Q(user_one=message_instance.sender)
-                    & Q(user_two=message_instance.receiver)
-                    | Q(user_one=message_instance.receiver)
-                    | Q(user_two=message_instance.sender)
+                    Q(user_one=request.user) & Q(user_two=message_instance.receiver)
+                    | Q(user_one=message_instance.receiver) & Q(user_two=request.user)
                 )
                 conversation_instance.updated_at = datetime.now()
                 conversation_instance.message.add(message_instance)
                 conversation_instance.save()
             except:
                 conversation_instance = Conversation.objects.create(
-                    user_one=message_instance.sender,
+                    user_one=request.user,
                     user_two=message_instance.receiver,
                     updated_at=datetime.now(),
                 )
@@ -867,11 +858,10 @@ def messagesView(request):
 @authentication_classes([TokenAuthentication])
 def conversationView(request):
     if request.method == "GET":
-        intance = Conversation.objects.get(
+        intance = Conversation.objects.filter(
             Q(user_one=request.user) | Q(user_two=request.user)
         )
-        serializer = ConversationSerializer(intance)
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
+        return getPagination(intance, request, ConversationSerializer)
     if request.method == "DELETE":
         conversation_id = request.GET.get("conversation-id", None)
         if conversation_id is None:
@@ -883,6 +873,8 @@ def conversationView(request):
         except:
             data = {"status": "ERROR", "message": "Invalid conversation-id"}
             return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+        messages = instance.message.all()
+        messages.delete()
         instance.delete()
         data = {"status": "OK", "message": deleted_message}
         return Response(data=data, status=status.HTTP_200_OK)
@@ -924,7 +916,7 @@ def ReportView(request):
         serializer = ReportSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(user=request.user)
-            return Response(data=serializer.data, status=status.HTTP_200_OK)
+            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     if request.method == "DELETE":

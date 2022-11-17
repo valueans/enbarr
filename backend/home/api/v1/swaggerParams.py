@@ -248,12 +248,20 @@ def customSetupIntentResponse():
                     title="OK",
                     type=openapi.TYPE_STRING,
                 ),
-                "setup-intent-id": openapi.Schema(
-                    title="setup-intent-id",
+                "setupIntent": openapi.Schema(
+                    title="setup-intent-secret",
                     type=openapi.TYPE_STRING,
                 ),
-                "setup-intent-secret": openapi.Schema(
-                    title="setup-intent-secret",
+                "ephemeralKey": openapi.Schema(
+                    title="ephemeralKey",
+                    type=openapi.TYPE_STRING,
+                ),
+                "customer": openapi.Schema(
+                    title="customer",
+                    type=openapi.TYPE_STRING,
+                ),
+                "publish_key": openapi.Schema(
+                    title="publish_key",
                     type=openapi.TYPE_STRING,
                 ),
             },

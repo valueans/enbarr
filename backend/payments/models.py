@@ -15,6 +15,7 @@ class StripeSetupIntent(models.Model):
     setupIntent = models.CharField(max_length=1000, null=True, blank=True)
     intent_secret = models.CharField(max_length=1000, null=True, blank=True)
     payment_method_id = models.CharField(max_length=1000, null=True, blank=True)
+    ephemeral_key = models.CharField(max_length=1000, null=True, blank=True)
     status = models.BooleanField(default=False)
 
 
@@ -24,6 +25,7 @@ class Cards(models.Model):
     exp_month = models.CharField(max_length=2, null=True, blank=True)
     exp_year = models.CharField(max_length=4, null=True, blank=True)
     payment_id = models.CharField(max_length=1000, null=True, blank=True)
+    message = models.CharField(max_length=1000, default="")
 
 
 class StripeCustomer(models.Model):

@@ -21,6 +21,11 @@ User = get_user_model()
 
 
 class ContactUsSerializer(serializers.ModelSerializer):
+    first_name = serializers.CharField(max_length=100, required=True)
+    last_name = serializers.CharField(max_length=100, required=True)
+    email = serializers.EmailField(required=True)
+    query = serializers.CharField(max_length=1000, required=True)
+
     class Meta:
         model = ContactUs
         fields = "__all__"

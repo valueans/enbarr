@@ -12,7 +12,13 @@ class SubscriptionPlansSerializer(serializers.ModelSerializer):
 class CardsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cards
-        fields = "__all__"
+        fields = (
+            "id",
+            "last_4",
+            "exp_month",
+            "exp_year",
+            "user",
+        )
         read_only_fields = ["id"]
 
 
