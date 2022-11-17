@@ -56,6 +56,17 @@ class HorsesSerializer(serializers.ModelSerializer):
     isliked = serializers.SerializerMethodField(read_only=True)
     isdisliked = serializers.SerializerMethodField(read_only=True)
     userprofile = serializers.SerializerMethodField(read_only=True)
+    title = serializers.CharField(max_length=300, required=True)
+    location = serializers.CharField(max_length=1000, required=True)
+    price = serializers.FloatField(required=True)
+    description = serializers.CharField(max_length=2000, required=True)
+    breed = serializers.CharField(max_length=100, required=True)
+    gender = serializers.CharField(max_length=100, required=True)
+    age = serializers.IntegerField(required=True)
+    color = serializers.CharField(max_length=100, required=True)
+    height = serializers.CharField(max_length=500, required=True)
+    temperament = serializers.CharField(max_length=500, required=True)
+    discipline = serializers.CharField(max_length=500, required=True)
 
     class Meta:
         model = Horses

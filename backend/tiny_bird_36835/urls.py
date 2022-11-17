@@ -27,6 +27,7 @@ from rest_framework.authtoken.models import TokenProxy
 from allauth.socialaccount.models import SocialToken, SocialAccount, SocialApp
 from django_celery_beat.models import ClockedSchedule, SolarSchedule, IntervalSchedule
 from django.contrib.sites.models import Site
+from django.contrib.auth.models import Group
 from users.superadmin import super_admin_site
 
 admin.site.site_header = "ENBARR"
@@ -42,6 +43,7 @@ admin.site.unregister(ClockedSchedule)
 admin.site.unregister(SolarSchedule)
 admin.site.unregister(IntervalSchedule)
 admin.site.unregister(Site)
+admin.site.unregister(Group)
 
 urlpatterns = [
     path("", include("home.urls")),

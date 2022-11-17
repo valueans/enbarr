@@ -216,11 +216,11 @@ REST_AUTH_REGISTER_SERIALIZERS = {
 AUTH_USER_MODEL = "users.User"
 
 EMAIL_HOST = env.str("EMAIL_HOST", "smtp.sendgrid.net")
-EMAIL_HOST_USER = env.str("SENDGRID_USERNAME", "")
+EMAIL_HOST_USER = env.str("SENDGRID_USERNAME", "apikey")
 EMAIL_HOST_PASSWORD = env.str("SENDGRID_PASSWORD", "")
+SENDGRID_EMAIL = env.str("SENDGRID_EMAIL", "")
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-
 
 # AWS S3 config
 AWS_ACCESS_KEY_ID = env.str("AWS_ACCESS_KEY_ID", "")
@@ -254,7 +254,7 @@ SWAGGER_SETTINGS = {
     "DEFAULT_INFO": f"{ROOT_URLCONF}.api_info",
 }
 
-if DEBUG or not (EMAIL_HOST_USER and EMAIL_HOST_PASSWORD):
+if DEBUG or not (EMAIL_HOST_USER and EMAIL_HOST_PASSWORD and SENDGRID_EMAIL):
     # output email to console instead of sending
     if not DEBUG:
         logging.warning(

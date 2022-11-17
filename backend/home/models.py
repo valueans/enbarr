@@ -73,11 +73,11 @@ class Horses(models.Model):
         verbose_name_plural = "Horses"
 
     def horse_image(self):
-        return format_html(
-            '<img src="{}" width="100" height=100/>'.format(
-                self.images.all().first().file.url
-            )
-        )
+        try:
+            url = self.images.all().first().file.url
+        except:
+            url = ""
+        return format_html('<img src="{}" width="100" height=100/>'.format(url))
 
     horse_image.short_description = "Image"
     horse_image.allow_tags = True

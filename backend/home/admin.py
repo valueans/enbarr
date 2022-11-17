@@ -1,8 +1,7 @@
 from django.contrib import admin
-from django.contrib.auth.models import Group
 from django.utils.html import format_html
 from .helpers import banUserAppLogin, banUserPosting
-from .models import Horses, Report, HorseImages
+from .models import Horses, Report
 
 
 @admin.register(Horses)
@@ -84,8 +83,12 @@ class HorsesAdmin(admin.ModelAdmin):
     def horse_image_inside(self, obj):
         div = ""
         for image in obj.images.all():
+            try:
+                url = image.file.url
+            except:
+                url = ""
             div += '<a href="{}"> <img src="{}" width=200 height=200/></a>'.format(
-                image.file.url, image.file.url
+                url, url
             )
         return format_html(
             f'<div style="display:flex;flex-direction:row;justify-content:space-evenly;">{div}</div>'
@@ -221,7 +224,3 @@ class ReportAdmin(admin.ModelAdmin):
     ban_user_from_app_6_month.short_description = "Ban User from Application for 6"
     ban_user_from_app_9_month.short_description = "Ban User from Application for 9"
     ban_user_from_app_12_month.short_description = "Ban User from Application for 12"
-
-
-# unregister
-admin.site.unregister(Group)
