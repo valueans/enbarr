@@ -261,7 +261,7 @@ if DEBUG or not (EMAIL_HOST_USER and EMAIL_HOST_PASSWORD and SENDGRID_EMAIL):
         logging.warning(
             "You should setup `SENDGRID_USERNAME` and `SENDGRID_PASSWORD` env vars to send emails."
         )
-    # EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 
 # GCP config

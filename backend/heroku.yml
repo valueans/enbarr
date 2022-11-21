@@ -8,3 +8,17 @@ release:
   image: web
   command:
     - python3 manage.py migrate
+run:
+  web: waitress-serve --port=5555
+  celery:
+    command:
+      - celery -A tiny_bird_36835 worker -l info
+    image: web
+  celery_beat:
+    command:
+      - celery -A tiny_bird_36835 beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    image: web
+  celery_flower:
+    command:
+      - celery -A tiny_bird_36835 -b "redis://redis:6379" flower --port=5555 --basic_auth="NKsqkrPPcdrcuKHNczMgSATNMLFPdAfoc:FpreAwvBNfoLnaLuhV7deT5yPNGJ2qpxU2VJ36GmZRe7Mk5FxRUjx6URnTC1lzWX"
+    image: web

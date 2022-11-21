@@ -24,21 +24,9 @@ ENV PATH="/.venv/bin:$PATH"
 # Copy app source
 COPY --chown=django:django . .
 
-# COPY ./docker-celery/worker/start ./start-celeryworker
-# RUN sed -i 's/\r$//g' ./start-celeryworker
-# RUN chmod +x ./start-celeryworker
-
-# COPY ./docker-celery/beat/start ./start-celerybeat
-# RUN sed -i 's/\r$//g' ./start-celerybeat
-# RUN chmod +x ./start-celerybeat
-
-# COPY ./docker-celery/flower/start ./start-flower
-# RUN sed -i 's/\r$//g' ./start-flower
-# RUN chmod +x ./start-flower
 
 # Collect static files and serve app
-# EXPOSE 5555
+EXPOSE 5555
 RUN python3 manage.py collectstatic --no-input
 RUN python3 manage.py migrate
-# RUN ./start-flower && ./start-celerybeat && ./start-celeryworker
 CMD waitress-serve --port=$PORT tiny_bird_36835.wsgi:application

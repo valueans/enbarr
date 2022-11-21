@@ -21,8 +21,9 @@ def user_verification_send_otp(sender, instance, created, **kwargs):
             UserProfile.objects.get(user=instance)
         except:
             UserProfile.objects.create(user=instance, promotion_adds=100)
-    sendOtpEmail(instance)
-    createStripeCustomer(instance)
+    if created:
+        sendOtpEmail(instance)
+        createStripeCustomer(instance)
 
 
 @receiver(post_delete, sender=UserProfile)
