@@ -1,6 +1,6 @@
 build:
   docker:
-    web: ./backend/Dockerfile
+    web: Dockerfile
   config:
     DEBUG_COLLECTSTATIC: 1
     SECRET_KEY: build
@@ -8,3 +8,16 @@ release:
   image: web
   command:
     - python3 manage.py migrate
+run:
+  worker:
+    command:
+      - celery -A tiny_bird_36835 worker -l INFO
+    image: web
+  scheduler:
+    command:
+      - celery -A tiny_bird_36835 beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    image: web
+  flower:
+    command:
+      - celery -A tiny_bird_36835 -b $REDIS_URL flower --port=5555 --basic_auth="$CELERY_FLOWER_USER:$CELERY_FLOWER_PASSWORD"
+    image: web
