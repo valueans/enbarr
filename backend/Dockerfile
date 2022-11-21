@@ -26,7 +26,6 @@ COPY --chown=django:django . .
 
 
 # Collect static files and serve app
-EXPOSE 5555
 RUN python3 manage.py collectstatic --no-input
 RUN python3 manage.py migrate
 CMD waitress-serve --port=$PORT tiny_bird_36835.wsgi:application

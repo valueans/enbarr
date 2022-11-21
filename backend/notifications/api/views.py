@@ -57,7 +57,7 @@ def notificationsView(request):
         try:
             instance = Notifications.objects.get(id=notification_id)
         except:
-            data = {"status": "error", "message": "Invalid plan-id"}
+            data = {"status": "error", "message": "Invalid notification-id"}
             return Response(data=data, status=status.HTTP_404_NOT_FOUND)
 
         serializer = NotificationsSerializer(instance, data=request.data)
@@ -74,7 +74,7 @@ def notificationsView(request):
         try:
             instance = Notifications.objects.get(id=notification_id)
         except:
-            data = {"status": "error", "message": "Invalid plan-id"}
+            data = {"status": "error", "message": "Invalid notification-id"}
             return Response(data=data, status=status.HTTP_404_NOT_FOUND)
         instance.delete()
         data = {"status": "ok", "message": deleted_message}
