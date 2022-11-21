@@ -55,6 +55,7 @@ SECRET_KEY = env.str("SECRET_KEY")
 ALLOWED_HOSTS = env.list("HOST", default=["*"])
 SITE_ID = 1
 
+
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 SECURE_SSL_REDIRECT = env.bool("SECURE_REDIRECT", default=False)
 
@@ -260,7 +261,7 @@ if DEBUG or not (EMAIL_HOST_USER and EMAIL_HOST_PASSWORD and SENDGRID_EMAIL):
         logging.warning(
             "You should setup `SENDGRID_USERNAME` and `SENDGRID_PASSWORD` env vars to send emails."
         )
-    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+    # EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 
 # GCP config
@@ -305,3 +306,19 @@ CELERY_ACCEPT_CONTENT = ["application/json"]
 RESULT_SERIALIZER = "json"
 CELERY_TASK_SERIALIZER = "json"
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+
+
+# facebook
+SOCIAL_AUTH_FACEBOOK_KEY = env.str("SOCIAL_AUTH_FACEBOOK_KEY", "")
+SOCIAL_AUTH_FACEBOOK_SECRET = env.str("SOCIAL_AUTH_FACEBOOK_SECRET", "")
+# google
+SOCIAL_AUTH_GOOGLE_KEY = env.str("SOCIAL_AUTH_GOOGLE_KEY", "")
+SOCIAL_AUTH_GOOGLE_SECRET = env.str("SOCIAL_AUTH_GOOGLE_SECRET", "")
+
+LOGIN_REDIRECT_URL = "/"
+SOCIALACCOUNT_QUERY_EMAIL = True
+ACCOUNT_LOGOUT_ON_GET = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_EMAIL_REQUIRED = True
+SOCIALACCOUNT_EMAIL_VERIFICATION = True
+SOCIALACCOUNT_EMAIL_REQUIRED = True

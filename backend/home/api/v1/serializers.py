@@ -81,11 +81,21 @@ class HorsesSerializer(serializers.ModelSerializer):
         instance = Horses.objects.create(**validated_data)
 
         for id in images_id:
-            image_instance = HorseImages.objects.get(id=id)
+            try:
+                image_instance = HorseImages.objects.get(id=id)
+            except:
+                raise serializers.ValidationError(
+                    {"status": "error", "message": "Invalid image-id"}
+                )
             instance.images.add(image_instance)
 
         for id in keywords_id:
-            keyword_instance = Keywords.objects.get(id=id)
+            try:
+                keyword_instance = Keywords.objects.get(id=id)
+            except:
+                raise serializers.ValidationError(
+                    {"status": "error", "message": "Invalid keyword-id"}
+                )
             instance.keywords.add(keyword_instance)
 
         instance.save()
@@ -149,7 +159,12 @@ class FavouriteSerializer(serializers.ModelSerializer):
         id = validated_data.pop("horse_id")
 
         user = self.context["request"].user
-        horseInstance = Horses.objects.get(id=id)
+        try:
+            horseInstance = Horses.objects.get(id=id)
+        except:
+            raise serializers.ValidationError(
+                {"status": "error", "message": "Invalid horse id"}
+            )
         try:
             Favourite.objects.get(user=user, horses=horseInstance)
         except:
