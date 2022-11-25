@@ -8,6 +8,7 @@ import json
 @receiver(post_save, sender=PushNotificationsAdmin)
 def set_push_notifications(sender, instance, created, **kwargs):
     schedule = instance.run_at
+    print(created)
     if created == True:
 
         PeriodicTask.objects.create(

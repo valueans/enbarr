@@ -13,8 +13,6 @@ app.conf.update(timezone=settings.TIME_ZONE)
 
 app.config_from_object(settings, namespace="CELERY")
 
-# app.conf.beat_schedule = {
-# }
 
 app.autodiscover_tasks()
 

@@ -51,7 +51,6 @@ urlpatterns = [
     path("accounts/", include("allauth.urls")),
     path("modules/", include("modules.urls")),
     path("api/v1/", include("home.api.v1.urls")),
-    path("grappelli/", include("grappelli.urls")),
     path("admin/", admin.site.urls),
     path("super-admin/", super_admin_site.urls),
     path("users/", include("users.urls")),

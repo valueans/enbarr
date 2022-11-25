@@ -294,17 +294,13 @@ STRIPE_PUBLISHABLE_KEY = env.str("STRIPE_PUBLISHABLE_KEY", "")
 STRIPE_WEBHOOK_SECRET = env.str("STRIPE_WEBHOOK_SECRET", "")
 
 
-# GRAPELLI SETTINGS
-GRAPPELLI_ADMIN_TITLE = "ENBARR"
-
-
 # CELERY SETTINGS
-CELERY_BROKER_URL = env.str("REDIS_URL", default="redis://redis:6379")
-CELERY_RESULT_BACKEND = env.str("REDIS_URL", default="redis://redis:6379")
-CELERY_TIMEZONE = TIME_ZONE
-CELERY_ACCEPT_CONTENT = ["application/json"]
+broker_url = env.str("REDIS_URL", default="redis://redis:6379")
+result_backend = env.str("REDIS_URL", default="redis://redis:6379")
+timezone = TIME_ZONE
+accept_content = ["application/json"]
 RESULT_SERIALIZER = "json"
-CELERY_TASK_SERIALIZER = "json"
+task_serializer = "json"
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 
 
@@ -322,3 +318,9 @@ ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_EMAIL_REQUIRED = True
 SOCIALACCOUNT_EMAIL_VERIFICATION = True
 SOCIALACCOUNT_EMAIL_REQUIRED = True
+
+
+# ONESIGNAL CONFIG
+
+ONESIGNAL_APPID = ("ONESIGNAL_APPID", "")
+ONESIGNAL_RESTAPI_KEY = env.str("ONESIGNAL_RESTAPI_KEY", "")

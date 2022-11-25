@@ -11,6 +11,7 @@ from home.helpers import *
 import ast
 from payments.api.v1.helpers import createMonthlySubscriptionCharge
 from django.contrib.auth import get_user_model
+from notifications.onesignal_service import sendLikedHorseNotification
 from users.models import (
     UserProfile,
     UserSearchSave,
@@ -726,7 +727,8 @@ def likeHorseView(request):
         pass
 
     horse.save()
-
+    if request.user != horse.uploaded_by:
+        sendLikedHorseNotification(horse.uploaded_by, horse, request.user)
     likes = horse.likes.all().count()
 
     data = {"status": "OK", "message": "Successfull", "likes": likes}

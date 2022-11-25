@@ -17,7 +17,3 @@ run:
     command:
       - celery -A tiny_bird_36835 beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler
     image: web
-  flower:
-    command:
-      - celery -A tiny_bird_36835 -b $REDIS_URL flower --port=5555 --basic_auth="$CELERY_FLOWER_USER:$CELERY_FLOWER_PASSWORD"
-    image: web
