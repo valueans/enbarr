@@ -21,13 +21,13 @@ def publish_callback(result, status):
 def subcribeChannel(channel_name, user_id):
     pnconfig.user_id = str(user_id)
     pubnub = PubNub(pnconfig)
-    pubnub.subscribe().channels(channel_name, "alerts.system").execute()
+    pubnub.subscribe().channels(channel_name).execute()
 
 
 def unsubcribeChannel(channel_name, user_id):
     pnconfig.user_id = str(user_id)
     pubnub = PubNub(pnconfig)
-    pubnub.subscribe().channels(channel_name, "alerts.system").execute()
+    pubnub.subscribe().channels(channel_name).execute()
 
 
 def sendMessage(channel_name, user_id, message):
