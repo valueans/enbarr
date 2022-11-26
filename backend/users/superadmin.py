@@ -4,12 +4,12 @@ from home.models import *
 from feedback.models import *
 from notifications.models import *
 from payments.models import *
+from chat.models import *
 from modules.terms_and_conditions.terms_and_conditions.models import TermAndCondition
 from allauth.account.models import EmailAddress
 from rest_framework.authtoken.models import TokenProxy
 from allauth.socialaccount.models import SocialToken, SocialAccount, SocialApp
 from django_celery_beat.models import ClockedSchedule, SolarSchedule, IntervalSchedule
-
 from django.contrib.sites.models import Site
 from .forms import UserCreationForm, UserChangeForm
 from django.contrib.auth import admin as auth_admin

@@ -3,7 +3,6 @@ from .viewsets import (
     ContactUsView,
     ReportView,
     favouriteView,
-    messagesView,
     termAndConditionView,
     privacyPolicyView,
     HorseImagesView,
@@ -14,7 +13,6 @@ from .viewsets import (
     userSearchView,
     likeHorseView,
     dislikeHorseView,
-    conversationView,
 )
 
 
@@ -31,7 +29,5 @@ urlpatterns = [
     path("user-saved-search/", userSearchView, name="user-saved-search"),
     path("like-horse/", likeHorseView, name="like-horse"),
     path("dislike-horse/", dislikeHorseView, name="dislike-horse"),
-    path("messages/", messagesView, name="messages"),
-    path("conversation/", conversationView, name="conversation"),
     path("report/", ReportView, name="report"),
 ]

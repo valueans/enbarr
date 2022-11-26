@@ -42,4 +42,6 @@ redis = "==4.3.4"
 flower = "==1.2.0"
 "backports.zoneinfo" = "==0.2.1"
 django-jazzmin = "==2.6.0"
+pubnub = "==7.0.1"
+
 

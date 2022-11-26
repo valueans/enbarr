@@ -102,30 +102,6 @@ class DisLikes(models.Model):
         return f"{self.user.email}"
 
 
-class Messages(models.Model):
-    sender = models.ForeignKey(
-        User, on_delete=models.CASCADE, null=True, blank=True, related_name="sender"
-    )
-    receiver = models.ForeignKey(
-        User, on_delete=models.CASCADE, null=True, blank=True, related_name="receiver"
-    )
-    message = models.TextField(null=True, blank=True)
-    file = models.FileField(null=True, blank=True)
-    timestamp = models.DateTimeField(auto_now_add=True)
-
-
-class Conversation(models.Model):
-    user_one = models.ForeignKey(
-        User, on_delete=models.CASCADE, null=True, blank=True, related_name="userone"
-    )
-    user_two = models.ForeignKey(
-        User, on_delete=models.CASCADE, null=True, blank=True, related_name="usertwo"
-    )
-    message = models.ManyToManyField(Messages, related_name="messages")
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-
 class Report(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     horse = models.ForeignKey(Horses, on_delete=models.CASCADE, null=True, blank=True)

@@ -1,8 +1,8 @@
 from django.contrib.auth import get_user_model
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
-from users.models import UserProfile, UserSearchSave
-from users.api.serializers import UserProfileSerializer, UserSerializer
+from users.models import UserSearchSave
+from users.api.serializers import UserProfileSerializer
 from home.models import (
     ContactUs,
     HorseImages,
@@ -11,8 +11,6 @@ from home.models import (
     Favourite,
     Likes,
     DisLikes,
-    Messages,
-    Conversation,
     Report,
     PrivacyPolicy,
 )
@@ -190,39 +188,6 @@ class DislikesSerializer(serializers.ModelSerializer):
     class Meta:
         model = DisLikes
         fields = "__all__"
-
-
-class MessagesSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Messages
-        fields = "__all__"
-
-
-class ConversationSerializer(serializers.ModelSerializer):
-    user_one_profile = serializers.SerializerMethodField(read_only=True)
-    user_two_profile = serializers.SerializerMethodField(read_only=True)
-    message = MessagesSerializer(read_only=True, many=True)
-
-    class Meta:
-        model = Conversation
-        fields = (
-            "id",
-            "user_one_profile",
-            "user_two_profile",
-            "message",
-            "created_at",
-            "updated_at",
-        )
-
-    def get_user_one_profile(self, obj):
-        profile = UserProfile.objects.get(user=obj.user_one)
-        serializer = UserProfileSerializer(profile)
-        return serializer.data
-
-    def get_user_two_profile(self, obj):
-        profile = UserProfile.objects.get(user=obj.user_two)
-        serializer = UserProfileSerializer(profile)
-        return serializer.data
 
 
 class ReportSerializer(serializers.ModelSerializer):

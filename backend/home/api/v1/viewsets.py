@@ -42,8 +42,6 @@ from home.api.v1.serializers import (
     KeywordsSerializer,
     FavouriteSerializer,
     UserSearchSaveSerializer,
-    MessagesSerializer,
-    ConversationSerializer,
     ReportSerializer,
     PrivacyPolicySerializer,
 )
@@ -55,8 +53,6 @@ from home.models import (
     Favourite,
     Likes,
     DisLikes,
-    Messages,
-    Conversation,
     Report,
     PrivacyPolicy,
 )
@@ -771,115 +767,6 @@ def dislikeHorseView(request):
 
     data = {"status": "OK", "message": "Successfull", "dislikes": dislikes}
     return Response(data=data, status=status.HTTP_200_OK)
-
-
-@swagger_auto_schema(
-    method="get",
-    manual_parameters=[
-        createParam(
-            paramName="message-id", description="to get details of specific message"
-        )
-    ],
-    responses={200: MessagesSerializer()},
-)
-@swagger_auto_schema(method="post", request_body=MessagesSerializer)
-@swagger_auto_schema(
-    method="delete",
-    manual_parameters=[
-        createParam(paramName="message-id", description="to delete message")
-    ],
-    responses=customDeleteResponse(),
-)
-@api_view(["GET", "POST", "DELETE"])
-@permission_classes([IsAuthenticated])
-@authentication_classes([TokenAuthentication])
-def messagesView(request):
-    if request.method == "GET":
-        message_id = request.GET.get("message-id", None)
-        if message_id is None:
-            data = {"status": "ERROR", "message": "message-id is required"}
-            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
-        try:
-            message = Messages.objects.get(id=message_id)
-        except:
-            data = {"status": "ERROR", "message": "Invalid message-id"}
-            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
-        serializer = MessagesSerializer(message)
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
-
-    if request.method == "POST":
-        serializer = MessagesSerializer(data=request.data)
-        if serializer.is_valid():
-            message_instance = serializer.save(sender=request.user)
-            try:
-                conversation_instance = Conversation.objects.get(
-                    Q(user_one=request.user) & Q(user_two=message_instance.receiver)
-                    | Q(user_one=message_instance.receiver) & Q(user_two=request.user)
-                )
-                conversation_instance.updated_at = datetime.now()
-                conversation_instance.message.add(message_instance)
-                conversation_instance.save()
-            except:
-                conversation_instance = Conversation.objects.create(
-                    user_one=request.user,
-                    user_two=message_instance.receiver,
-                    updated_at=datetime.now(),
-                )
-                conversation_instance.message.add(message_instance)
-                conversation_instance.save()
-            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
-        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    if request.method == "DELETE":
-        message_id = request.GET.get("message-id", None)
-        if message_id is None:
-            data = {"status": "ERROR", "message": "message-id is required"}
-            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
-        try:
-            message = Messages.objects.get(id=message_id)
-        except:
-            data = {"status": "ERROR", "message": "Invalid message-id"}
-            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
-        message.delete()
-
-        data = {"status": "OK", "message": deleted_message}
-        return Response(data=data, status=status.HTTP_200_OK)
-
-
-@swagger_auto_schema(method="get", responses={200: ConversationSerializer(many=True)})
-@swagger_auto_schema(
-    method="delete",
-    manual_parameters=[
-        createParam(
-            paramName="conversation-id", description="to delete specific conversation"
-        )
-    ],
-    responses=customDeleteResponse(),
-)
-@api_view(["GET", "DELETE"])
-@permission_classes([IsAuthenticated])
-@authentication_classes([TokenAuthentication])
-def conversationView(request):
-    if request.method == "GET":
-        intance = Conversation.objects.filter(
-            Q(user_one=request.user) | Q(user_two=request.user)
-        )
-        return getPagination(intance, request, ConversationSerializer)
-    if request.method == "DELETE":
-        conversation_id = request.GET.get("conversation-id", None)
-        if conversation_id is None:
-            data = {"status": "ERROR", "message": "conversation-id is required"}
-            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
-
-        try:
-            instance = Conversation.objects.get(id=conversation_id)
-        except:
-            data = {"status": "ERROR", "message": "Invalid conversation-id"}
-            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
-        messages = instance.message.all()
-        messages.delete()
-        instance.delete()
-        data = {"status": "OK", "message": deleted_message}
-        return Response(data=data, status=status.HTTP_200_OK)
 
 
 @swagger_auto_schema(
