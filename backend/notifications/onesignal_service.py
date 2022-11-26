@@ -36,11 +36,13 @@ def sendAdminNotification(notificationTo, message):
     response = requests.post(url, json=payload, headers=headers)
 
 
-def sendSpecificPlayerNotification(notificationTo, message, message_from):
+def sendMessageNotification(notificationTo, message, message_from):
+    name = f"You have received a new message from {message_from.email}"
+    Notifications.objects.create(user=notificationTo, description=name)
     payload = {
-        "include_email_tokens": [notificationTo],
+        "include_email_tokens": [notificationTo.email],
         "contents": {"en": message},
-        "name": f"You have received a new message from {message_from}",
+        "name": name,
     }
     response = requests.post(url, json=payload, headers=headers)
 

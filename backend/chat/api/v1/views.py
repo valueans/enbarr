@@ -11,6 +11,7 @@ from home.helpers import getPagination
 from chat.pubnub_service import sendMessage, subcribeChannel
 from django.contrib.auth import get_user_model
 from django.http import HttpResponse
+from notifications.onesignal_service import sendMessageNotification
 from rest_framework.decorators import (
     api_view,
     permission_classes,
@@ -63,8 +64,9 @@ def messagesView(request):
                 updated_at=datetime.now(),
             )
             subcribeChannel(channel, receiver.id)
-        response = sendMessage(conversation_instance.channel, request.user.id, message)
-        data = {"status": "ok", "message": "message successfull", "response": response}
+        sendMessage(conversation_instance.channel, request.user.id, message)
+        sendMessageNotification(receiver, message, request.user)
+        data = {"status": "ok", "message": "message successfully sent"}
         return Response(data=data, status=status.HTTP_200_OK)
     if request.method == "DELETE":
         message_id = request.GET.get("message-id", None)
