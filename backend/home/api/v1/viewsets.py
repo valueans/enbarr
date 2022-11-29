@@ -39,11 +39,16 @@ from home.api.v1.serializers import (
     ContactUsSerializer,
     HorseImagesSerializer,
     HorsesSerializer,
+    HorseUpdateSerializer,
     KeywordsSerializer,
     FavouriteSerializer,
     UserSearchSaveSerializer,
     ReportSerializer,
     PrivacyPolicySerializer,
+    TemperamentsSerializer,
+    DisciplinesSerializer,
+    ColorsSerializer,
+    BreedsSerializer,
 )
 from home.models import (
     ContactUs,
@@ -55,6 +60,10 @@ from home.models import (
     DisLikes,
     Report,
     PrivacyPolicy,
+    Temperaments,
+    Colors,
+    Disciplines,
+    Breeds,
 )
 
 
@@ -515,7 +524,7 @@ def HorseView(request):
             data = {"status": "ERROR", "message": "Invalid Horse id"}
             return Response(data=data, status=status.HTTP_404_NOT_FOUND)
 
-        serializer = HorsesSerializer(
+        serializer = HorseUpdateSerializer(
             horse, data=request.data, context={"request": request}
         )
         if serializer.is_valid():
@@ -818,3 +827,59 @@ def ReportView(request):
         report.delete()
         data = {"status": "OK", "message": deleted_message}
         return Response(data=data, status=status.HTTP_200_OK)
+
+
+@swagger_auto_schema(
+    method="GET",
+    responses={200: TemperamentsSerializer(many=True)},
+)
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+@authentication_classes([TokenAuthentication])
+def temperamentView(request):
+    if request.method == "GET":
+        instance = Temperaments.objects.all()
+        serializer = TemperamentsSerializer(instance, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
+@swagger_auto_schema(
+    method="GET",
+    responses={200: DisciplinesSerializer(many=True)},
+)
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+@authentication_classes([TokenAuthentication])
+def disciplineView(request):
+    if request.method == "GET":
+        instance = Disciplines.objects.all()
+        serializer = DisciplinesSerializer(instance, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
+@swagger_auto_schema(
+    method="GET",
+    responses={200: ColorsSerializer(many=True)},
+)
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+@authentication_classes([TokenAuthentication])
+def colorView(request):
+    if request.method == "GET":
+        instance = Colors.objects.all()
+        serializer = ColorsSerializer(instance, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
+@swagger_auto_schema(
+    method="GET",
+    responses={200: BreedsSerializer(many=True)},
+)
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+@authentication_classes([TokenAuthentication])
+def BreedView(request):
+    if request.method == "GET":
+        instance = Breeds.objects.all()
+        serializer = BreedsSerializer(instance, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)

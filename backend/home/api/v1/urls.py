@@ -13,6 +13,10 @@ from .viewsets import (
     userSearchView,
     likeHorseView,
     dislikeHorseView,
+    temperamentView,
+    disciplineView,
+    colorView,
+    BreedView,
 )
 
 
@@ -30,4 +34,8 @@ urlpatterns = [
     path("like-horse/", likeHorseView, name="like-horse"),
     path("dislike-horse/", dislikeHorseView, name="dislike-horse"),
     path("report/", ReportView, name="report"),
+    path("temperaments/", temperamentView, name="temperament"),
+    path("disciplines/", disciplineView, name="discipline"),
+    path("colors/", colorView, name="colors"),
+    path("breeds/", BreedView, name="breeds"),
 ]

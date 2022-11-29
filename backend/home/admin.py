@@ -1,7 +1,13 @@
 from django.contrib import admin
 from django.utils.html import format_html
 from .helpers import banUserAppLogin, banUserPosting
-from .models import Horses, Report
+from .models import Horses, Report, Temperaments, Disciplines, Colors, Breeds
+
+
+admin.site.register(Temperaments)
+admin.site.register(Disciplines)
+admin.site.register(Colors)
+admin.site.register(Breeds)
 
 
 @admin.register(Horses)

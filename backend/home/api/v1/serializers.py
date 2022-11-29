@@ -13,6 +13,10 @@ from home.models import (
     DisLikes,
     Report,
     PrivacyPolicy,
+    Temperaments,
+    Disciplines,
+    Colors,
+    Breeds,
 )
 
 User = get_user_model()
@@ -44,6 +48,146 @@ class KeywordsSerializer(serializers.ModelSerializer):
         read_only_fields = ["id"]
 
 
+class TemperamentsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Temperaments
+        fields = "__all__"
+
+
+class DisciplinesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Disciplines
+        fields = "__all__"
+
+
+class ColorsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Colors
+        fields = "__all__"
+
+
+class ColorsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Colors
+        fields = "__all__"
+
+
+class BreedsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Breeds
+        fields = "__all__"
+
+
+class HorseUpdateSerializer(serializers.ModelSerializer):
+    images = HorseImagesSerializer(read_only=True, many=True)
+    keywords = KeywordsSerializer(read_only=True, many=True)
+    images_id = serializers.ListField(write_only=True, required=False)
+    keywords_id = serializers.ListField(write_only=True, required=False)
+    likes = serializers.SerializerMethodField(read_only=True)
+    dislikes = serializers.SerializerMethodField(read_only=True)
+    isliked = serializers.SerializerMethodField(read_only=True)
+    isdisliked = serializers.SerializerMethodField(read_only=True)
+    userprofile = serializers.SerializerMethodField(read_only=True)
+    title = serializers.CharField(max_length=300, required=False)
+    location = serializers.CharField(max_length=1000, required=False)
+    price = serializers.FloatField(required=False)
+    description = serializers.CharField(max_length=2000, required=False)
+    breed = BreedsSerializer(read_only=True)
+    breed_id = serializers.IntegerField(write_only=True, required=False)
+    color = ColorsSerializer(read_only=True)
+    color_id = serializers.IntegerField(write_only=True, required=False)
+    temperament = TemperamentsSerializer(read_only=True)
+    temperament_id = serializers.IntegerField(write_only=True, required=False)
+    discipline = DisciplinesSerializer(read_only=True)
+    discipline_id = serializers.IntegerField(write_only=True, required=False)
+    gender = serializers.CharField(max_length=100, required=False)
+    age = serializers.IntegerField(required=False)
+    height = serializers.CharField(max_length=500, required=False)
+
+    class Meta:
+        model = Horses
+        fields = "__all__"
+        extra_kwargs = {"uploaded_by": {"required": False}}
+        read_only_fields = ["id"]
+
+    def update(self, instance, validated_data):
+        for key, value in validated_data.items():
+            if key == "images_id":
+                for id in value:
+                    obj = HorseImages.objects.get(id=id)
+                    instance.images.add(obj)
+            elif key == "keywords_id":
+                instance.keywords.clear()
+                for id in value:
+                    obj = Keywords.objects.get(id=id)
+                    instance.keywords.add(obj)
+            elif key == "color_id":
+                try:
+                    color = Colors.objects.get(id=value)
+                    instance.color = color
+                except:
+                    raise serializers.ValidationError(
+                        {"status": "error", "message": "Invalid color_id"}
+                    )
+            elif key == "breed_id":
+                try:
+                    breed = Breeds.objects.get(id=value)
+                    instance.breed = breed
+                except:
+                    raise serializers.ValidationError(
+                        {"status": "error", "message": "Invalid breed_id"}
+                    )
+            elif key == "discipline_id":
+                try:
+                    discipline = Disciplines.objects.get(id=value)
+                    instance.discipline = discipline
+                except:
+                    raise serializers.ValidationError(
+                        {"status": "error", "message": "Invalid discipline_id"}
+                    )
+            elif key == "temerament_id":
+                try:
+                    temperament = Temperaments.objects.get(id=value)
+                    instance.temperament = temperament
+                except:
+                    raise serializers.ValidationError(
+                        {"status": "error", "message": "Invalid temperament_id"}
+                    )
+
+            else:
+                setattr(instance, key, value)
+        instance.save()
+        return instance
+
+    def get_userprofile(self, obj):
+        serializer = UserProfileSerializer(
+            obj.uploaded_by.userprofile, context=self.context
+        )
+        return serializer.data
+
+    def get_likes(self, obj):
+        return obj.likes.all().count()
+
+    def get_dislikes(self, obj):
+        return obj.dislikes.all().count()
+
+    def get_isliked(self, obj):
+        user = self.context["request"].user
+        try:
+            obj.likes.get(user=user)
+        except:
+            return False
+        return True
+
+    def get_isdisliked(self, obj):
+        user = self.context["request"].user
+        try:
+            obj.dislikes.get(user=user)
+        except:
+            return False
+        return True
+
+
 class HorsesSerializer(serializers.ModelSerializer):
     images = HorseImagesSerializer(read_only=True, many=True)
     keywords = KeywordsSerializer(read_only=True, many=True)
@@ -58,13 +202,17 @@ class HorsesSerializer(serializers.ModelSerializer):
     location = serializers.CharField(max_length=1000, required=True)
     price = serializers.FloatField(required=True)
     description = serializers.CharField(max_length=2000, required=True)
-    breed = serializers.CharField(max_length=100, required=True)
+    breed = BreedsSerializer(read_only=True)
+    breed_id = serializers.IntegerField(write_only=True, required=True)
+    color = ColorsSerializer(read_only=True)
+    color_id = serializers.IntegerField(write_only=True, required=True)
+    temperament = TemperamentsSerializer(read_only=True)
+    temperament_id = serializers.IntegerField(write_only=True, required=True)
+    discipline = DisciplinesSerializer(read_only=True)
+    discipline_id = serializers.IntegerField(write_only=True, required=True)
     gender = serializers.CharField(max_length=100, required=True)
     age = serializers.IntegerField(required=True)
-    color = serializers.CharField(max_length=100, required=True)
     height = serializers.CharField(max_length=500, required=True)
-    temperament = serializers.CharField(max_length=500, required=True)
-    discipline = serializers.CharField(max_length=500, required=True)
 
     class Meta:
         model = Horses
@@ -75,8 +223,42 @@ class HorsesSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         images_id = validated_data.pop("images_id")
         keywords_id = validated_data.pop("keywords_id")
+        breed_id = validated_data.pop("breed_id")
+        color_id = validated_data.pop("color_id")
+        temperament_id = validated_data.pop("temperament_id")
+        discipline_id = validated_data.pop("discipline_id")
+
+        try:
+            breed = Breeds.objects.get(id=breed_id)
+        except:
+            raise serializers.ValidationError(
+                {"status": "error", "message": "Invalid breed_id"}
+            )
+        try:
+            color = Colors.objects.get(id=color_id)
+        except:
+            raise serializers.ValidationError(
+                {"status": "error", "message": "Invalid color_id"}
+            )
+        try:
+            temperament = Temperaments.objects.get(id=temperament_id)
+        except:
+            raise serializers.ValidationError(
+                {"status": "error", "message": "Invalid temperament_id"}
+            )
+
+        try:
+            discipline = Disciplines.objects.get(id=discipline_id)
+        except:
+            raise serializers.ValidationError(
+                {"status": "error", "message": "Invalid discipline_id"}
+            )
 
         instance = Horses.objects.create(**validated_data)
+        instance.color = color
+        instance.temperament = temperament
+        instance.discipline = discipline
+        instance.breed = breed
 
         for id in images_id:
             try:
@@ -96,22 +278,6 @@ class HorsesSerializer(serializers.ModelSerializer):
                 )
             instance.keywords.add(keyword_instance)
 
-        instance.save()
-        return instance
-
-    def update(self, instance, validated_data):
-        for key, value in validated_data.items():
-            if key == "images_id":
-                for id in value:
-                    obj = HorseImages.objects.get(id=id)
-                    instance.images.add(obj)
-            elif key == "keywords_id":
-                instance.keywords.clear()
-                for id in value:
-                    obj = Keywords.objects.get(id=id)
-                    instance.keywords.add(obj)
-            else:
-                setattr(instance, key, value)
         instance.save()
         return instance
 
