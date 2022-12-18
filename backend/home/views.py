@@ -17,4 +17,4 @@ def home(request):
         },
     ]
     context = {"packages": packages}
-    return render(request, "home/index.html", context)
+    return render(request, "index.html", context)

@@ -125,7 +125,6 @@ TEMPLATES = [
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [
             os.path.join(REACT_APP_DIR, "build"),
-            os.path.join(BASE_DIR, "web_build"),
         ],
         "APP_DIRS": True,
         "OPTIONS": {
