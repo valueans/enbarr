@@ -27,6 +27,8 @@ from modules.manifest import get_modules
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+REACT_APP_DIR = os.path.join(BASE_DIR, "frontend")
+
 env_file = os.path.join(BASE_DIR, ".env")
 env = environ.Env()
 env.read_env(env_file)
@@ -83,6 +85,7 @@ LOCAL_APPS = [
 ]
 THIRD_PARTY_APPS = [
     "rest_framework",
+    "corsheaders",
     "rest_framework.authtoken",
     "rest_auth",
     "rest_auth.registration",
@@ -103,6 +106,7 @@ MODULES_APPS = get_modules()
 INSTALLED_APPS += LOCAL_APPS + THIRD_PARTY_APPS + MODULES_APPS
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -112,12 +116,17 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+
 ROOT_URLCONF = "tiny_bird_36835.urls"
+
 
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [os.path.join(BASE_DIR, "web_build")],
+        "DIRS": [
+            os.path.join(REACT_APP_DIR, "build"),
+            os.path.join(BASE_DIR, "web_build"),
+        ],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -190,6 +199,7 @@ AUTHENTICATION_BACKENDS = (
 
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATICFILES_DIRS = [
+    os.path.join(REACT_APP_DIR, "build", "static"),
     os.path.join(BASE_DIR, "static"),
     os.path.join(BASE_DIR, "web_build/static"),
 ]
@@ -301,7 +311,6 @@ STRIPE_SECRET_KEY = env.str("STRIPE_SECRET_KEY", "")
 STRIPE_PUBLISHABLE_KEY = env.str("STRIPE_PUBLISHABLE_KEY", "")
 STRIPE_WEBHOOK_SECRET = env.str("STRIPE_WEBHOOK_SECRET", "")
 
-
 # CELERY SETTINGS
 broker_url = env.str("REDIS_URL", default="redis://redis:6379")
 result_backend = env.str("REDIS_URL", default="redis://redis:6379")
@@ -318,6 +327,9 @@ SOCIAL_AUTH_FACEBOOK_SECRET = env.str("SOCIAL_AUTH_FACEBOOK_SECRET", "")
 # google
 SOCIAL_AUTH_GOOGLE_KEY = env.str("SOCIAL_AUTH_GOOGLE_KEY", "")
 SOCIAL_AUTH_GOOGLE_SECRET = env.str("SOCIAL_AUTH_GOOGLE_SECRET", "")
+
+# Google MAPS
+GOOGLE_MAPS_API_KEY = env.str("GOOGLE_MAPS_API_KEY", "")
 
 LOGIN_REDIRECT_URL = "/"
 SOCIALACCOUNT_QUERY_EMAIL = True
@@ -337,3 +349,9 @@ ONESIGNAL_RESTAPI_KEY = env.str("ONESIGNAL_RESTAPI_KEY", "")
 PUBNUB_SUBSCRIBED_KEY = env.str("PUBNUB_SUBSCRIBED_KEY", "")
 PUBNUB_PUBLISH_KEY = env.str("PUBNUB_PUBLISH_KEY", "")
 PUBNUB_SECRET_KEY = env.str("PUBNUB_SECRET_KEY", "")
+
+
+CORS_ORIGIN_ALLOW_ALL = True
+CSRF_COOKIE_SECURE = False
+CSRF_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SECURE = False

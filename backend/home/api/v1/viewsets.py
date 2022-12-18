@@ -595,14 +595,14 @@ def favouriteView(request):
         return Response(data=serializer.errors, status=status.HTTP_200_OK)
 
     if request.method == "DELETE":
-        favourite_id = request.GET.get("favourite-id", None)
-        if favourite_id is None:
-            data = {"status": "error", "message": "favourite-id is required"}
+        horse_id = request.GET.get("horse-id", None)
+        if horse_id is None:
+            data = {"status": "error", "message": "horse-id is required"}
             return Response(data=data, status=status.HTTP_404_NOT_FOUND)
         try:
-            instance = Favourite.objects.get(id=favourite_id)
+            instance = Favourite.objects.get(horses__id=horse_id, user=request.user)
         except:
-            data = {"status": "error", "message": "Invalid favourite-id"}
+            data = {"status": "error", "message": "Invalid horse-id"}
             return Response(data=data, status=status.HTTP_404_NOT_FOUND)
 
         instance.delete()

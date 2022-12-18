@@ -3,6 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 from users.models import UserSearchSave
 from users.api.serializers import UserProfileSerializer
+from home.google_maps_services import getAddress
 from home.models import (
     ContactUs,
     HorseImages,
@@ -87,6 +88,7 @@ class HorseUpdateSerializer(serializers.ModelSerializer):
     dislikes = serializers.SerializerMethodField(read_only=True)
     isliked = serializers.SerializerMethodField(read_only=True)
     isdisliked = serializers.SerializerMethodField(read_only=True)
+    isfav = serializers.SerializerMethodField(read_only=True)
     userprofile = serializers.SerializerMethodField(read_only=True)
     title = serializers.CharField(max_length=300, required=False)
     location = serializers.CharField(max_length=1000, required=False)
@@ -179,6 +181,14 @@ class HorseUpdateSerializer(serializers.ModelSerializer):
             return False
         return True
 
+    def get_isfav(self, obj):
+        user = self.context["request"].user
+        try:
+            Favourite.objects.get(user=user, horses=obj)
+        except:
+            return False
+        return True
+
     def get_isdisliked(self, obj):
         user = self.context["request"].user
         try:
@@ -197,6 +207,7 @@ class HorsesSerializer(serializers.ModelSerializer):
     dislikes = serializers.SerializerMethodField(read_only=True)
     isliked = serializers.SerializerMethodField(read_only=True)
     isdisliked = serializers.SerializerMethodField(read_only=True)
+    isfav = serializers.SerializerMethodField(read_only=True)
     userprofile = serializers.SerializerMethodField(read_only=True)
     title = serializers.CharField(max_length=300, required=True)
     location = serializers.CharField(max_length=1000, required=True)
@@ -260,6 +271,11 @@ class HorsesSerializer(serializers.ModelSerializer):
         instance.discipline = discipline
         instance.breed = breed
 
+        location = instance.location
+        state, country = getAddress(location)
+        instance.state = state
+        instance.country = country
+
         for id in images_id:
             try:
                 image_instance = HorseImages.objects.get(id=id)
@@ -297,6 +313,14 @@ class HorsesSerializer(serializers.ModelSerializer):
         user = self.context["request"].user
         try:
             obj.likes.get(user=user)
+        except:
+            return False
+        return True
+
+    def get_isfav(self, obj):
+        user = self.context["request"].user
+        try:
+            Favourite.objects.get(user=user, horses=obj)
         except:
             return False
         return True

@@ -43,13 +43,6 @@ class Keywords(models.Model):
         return self.keyword
 
 
-class Breeds(models.Model):
-    breed = models.CharField(max_length=1000, null=False, blank=False, unique=True)
-
-    def __str__(self):
-        self.breed
-
-
 class Disciplines(models.Model):
     discipline = models.CharField(max_length=1000, null=False, blank=False, unique=True)
 
@@ -96,6 +89,8 @@ class Horses(models.Model):
     images = models.ManyToManyField(HorseImages, related_name="horse_images")
     title = models.CharField(max_length=300, null=True, blank=True)
     location = models.CharField(max_length=500, null=True, blank=True)
+    state = models.CharField(max_length=1000, null=True, blank=True)
+    country = models.CharField(max_length=1000, null=True, blank=True)
     price = models.FloatField(null=True, blank=True)
     description = models.TextField(max_length=2000, null=True, blank=True)
     breed = models.ForeignKey(Breeds, on_delete=models.CASCADE, null=True, blank=True)
