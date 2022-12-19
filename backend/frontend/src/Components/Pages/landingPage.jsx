@@ -1,5 +1,4 @@
 import React from 'react';
-import landingImage from '../../assets/landingImage.png';
 import facebookImage from '../../assets/facebook.svg';
 import instagramImage from '../../assets/instagram.svg';
 import linkedInImage from '../../assets/linkedin.svg';
@@ -9,18 +8,26 @@ import googleImage from '../../assets/google.svg';
 import verticalLineImage from '../../assets/verticalLine.svg';
 import horizontalLineImage from '../../assets/horizontalLine.svg';
 import {Grid,Typography} from '@mui/material';
-import ButtonAppBar from "../Header/headers";
-import Button from '../Buttons/button';
+import ButtonAppBar from "../Header/Headers";
+import Button from '../Buttons/Button';
+import HeaderImageGrid from '../Header/HeaderImageGrid';
+import { useNavigate } from 'react-router-dom';
+import Footer from '../Footer/Footer';
 
 const LandingPage = () => {
+    const navigate = useNavigate();
+
+    const buttonClick = ()=>{
+        return navigate('/auth')
+    }
   return (
     <>
         <ButtonAppBar />
-        <Grid container xs={12}>
+        <Grid container>
             <Grid item xs={8} sx={{height:"86.5vh"}}>
-                <Grid container xs={12} sx={{height:"100%"}}>
+                <Grid container sx={{height:"100%"}}>
                     <Grid item xs={2} sx={{display:"flex",justifyContent:"center",alignItems:"center"}}>
-                        <Grid container direction="column" xs={12} sx={{display:"flex",alignContent:"center"}}
+                        <Grid container direction="column" sx={{display:"flex",alignContent:"center"}}
                             spacing={3}>
                             <Grid item xs={2} style={{display:"flex",justifyContent:"center"}}>
                                 <img src={instagramImage} alt="insta-logo" />
@@ -40,8 +47,8 @@ const LandingPage = () => {
                         </Grid>
                     </Grid>
                     <Grid item xs={10} sx={{display:"flex",alignItems:"center"}}>
-                        <Grid container xs={12} direction="column" sx={{paddingLeft:"40px",paddingRight:"40px"}}
-                            spacing={1}>
+                        <Grid container direction="column" sx={{paddingLeft:"40px",paddingRight:"40px"}}
+                            spacing={0.5}>
                             <Grid item>
                                 <Typography variant='landingPageTitle'>
                                     ENBARR HORSES
@@ -61,7 +68,7 @@ const LandingPage = () => {
                                 </Typography>
                             </Grid>
                             <Grid item>
-                                <Grid container xs={12} spacing={1}>
+                                <Grid container spacing={1}>
                                     <Grid item>
                                         <img src={googleImage} alt="google-logo" />
                                     </Grid>
@@ -70,22 +77,15 @@ const LandingPage = () => {
                                     </Grid>
                                 </Grid>
                                 <Grid item>
-                                    <Button title="Sign up" />
+                                    <Button title="Sign up" onClick={buttonClick}/>
                                 </Grid>
                             </Grid>
+                            <Footer />
                         </Grid>
                     </Grid>
                 </Grid>
             </Grid>
-            <Grid item xs={4} sx={{display:"flex",justifyContent:"center",height:"86.5vh"}}>
-                <div
-                    style={{height:"80%",width: "100%",backdropFilter:"blur(2px)",background:"linear-gradient(180deg, rgba(49, 48, 51, 0.25) 0%, rgba(0, 0, 0, 0.25) 100%)",alignSelf:"center",position:"relative",left: "34px",zIndex:5}}>
-                </div>
-                <div
-                    style={{height:"95%",width: "100%",backdropFilter:"blur(7.5px)",background:"linear-gradient(180deg, rgba(49, 48, 51, 0.5) 0%, rgba(0, 0, 0, 0.5) 100%)",alignSelf:"center",zIndex:7,position:"relative",left:"16px"}}>
-                </div>
-                <img src={landingImage} alt="landing-img" style={{height:"100vh",zIndex:8,position:"relative",top:"-102px"}} />
-            </Grid>
+            <HeaderImageGrid />
         </Grid>
         </>
   )

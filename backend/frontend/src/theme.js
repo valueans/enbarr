@@ -8,6 +8,7 @@ const theme = createTheme({
             fontSize: "29.0323px",
             lineHeight: "34px",
             color: "#302F32",
+            textDecoration:"none",
         },
         headerLinks:{
             fontFamily: 'Poppins',
@@ -41,6 +42,22 @@ const theme = createTheme({
             fontSize: "20px",
             lineHeight: "30px",
             color: "#000000"
+        },
+        authTitle:{
+            fontFamily: 'Poppins',
+            fontStyle: "normal",
+            fontWeight: "700",
+            fontSize: "40px",
+            lineHeight: "70px",
+            color: "#302F32"
+        },
+        authInputTitle:{
+            fontFamily: 'Poppins',
+            fontStyle: "normal",
+            fontWeight: "600",
+            fontSize: "12px",
+            lineHeight: "18px",
+            color: "#313033"
         }
     }
   });

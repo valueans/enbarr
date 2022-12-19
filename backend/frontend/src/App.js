@@ -3,14 +3,14 @@ import './styles/app.css';
 import theme from './theme';
 import { ThemeProvider} from "@mui/material/styles";
 import CssBaseline from '@mui/material/CssBaseline';
-import LandingPage from "./Components/Pages/landingPage";
+import Routes from './Routes/Routes'
 
 function App() {
   return (
     <ThemeProvider theme={theme}>
     <div className="App">
       <CssBaseline/>
-      <LandingPage></LandingPage>
+      <Routes />
     </div>
     </ThemeProvider>
   );
