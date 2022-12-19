@@ -309,8 +309,8 @@ STRIPE_PUBLISHABLE_KEY = env.str("STRIPE_PUBLISHABLE_KEY", "")
 STRIPE_WEBHOOK_SECRET = env.str("STRIPE_WEBHOOK_SECRET", "")
 
 # CELERY SETTINGS
-broker_url = env.str("REDIS_URL", default="redis://redis:6379")
-result_backend = env.str("REDIS_URL", default="redis://redis:6379")
+broker_url = env.str("REDISURL", default="redis://redis:6379")
+result_backend = env.str("REDISURL", default="redis://redis:6379")
 timezone = TIME_ZONE
 accept_content = ["application/json"]
 RESULT_SERIALIZER = "json"
