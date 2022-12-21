@@ -11,9 +11,9 @@ release:
 run:
   worker:
     command:
-      - celery -A tiny_bird_36835 worker -l INFO
+      - celery -A tiny_bird_36835 worker
     image: web
   scheduler:
     command:
-      - celery -A tiny_bird_36835 beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler
+      - celery -A tiny_bird_36835 beat
     image: web
