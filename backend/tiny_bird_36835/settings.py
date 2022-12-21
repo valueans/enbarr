@@ -309,13 +309,15 @@ STRIPE_PUBLISHABLE_KEY = env.str("STRIPE_PUBLISHABLE_KEY", "")
 STRIPE_WEBHOOK_SECRET = env.str("STRIPE_WEBHOOK_SECRET", "")
 
 # CELERY SETTINGS
-broker_url = env.str("REDIS_URL", default="redis://redis:6379")
-result_backend = env.str("REDIS_URL", default="redis://redis:6379")
+CELERY_BROKER_URL = env.str("REDIS_URL", default="redis://redis:6379")
+CELERY_RESULT_BACKEND = env.str("REDIS_URL", default="redis://redis:6379")
 timezone = TIME_ZONE
 accept_content = ["application/json"]
 RESULT_SERIALIZER = "json"
-task_serializer = "json"
+CELERY_TASK_SERIALIZER = "json"
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+CELERY_RESULT_BACKEND = "django-db"
+CELERY_CACHE_BACKEND = "django-cache"
 
 
 # facebook
