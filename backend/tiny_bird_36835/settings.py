@@ -35,7 +35,7 @@ env.read_env(env_file)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = env.bool("DEBUG", default=False)
-DEBUG = True
+DEBUG = False
 
 try:
     # Pull secrets from Secret Manager
@@ -127,6 +127,8 @@ TEMPLATES = [
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [
             os.path.join(REACT_APP_DIR, "build"),
+            os.path.join(BASE_DIR, "web_build"),
+            os.path.join(BASE_DIR, "templates"),
         ],
         "APP_DIRS": True,
         "OPTIONS": {
