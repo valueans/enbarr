@@ -272,9 +272,12 @@ class HorsesSerializer(serializers.ModelSerializer):
         instance.breed = breed
 
         location = instance.location
-        state, country = getAddress(location)
-        instance.state = state
-        instance.country = country
+        try:
+            state, country = getAddress(location)
+            instance.state = state
+            instance.country = country
+        except:
+            pass
 
         for id in images_id:
             try:
