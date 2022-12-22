@@ -81,17 +81,7 @@ urlpatterns += [
     path("api-docs/", schema_view.with_ui("swagger", cache_timeout=0), name="api_docs")
 ]
 
-from django.views.static import serve
 
-urlpatterns += [
-    re_path(
-        r"^mediafiles/(?P<path>.*)$",
-        serve,
-        {
-            "document_root": settings.MEDIA_ROOT,
-        },
-    ),
-]
 
 urlpatterns += [path("", TemplateView.as_view(template_name="index.html"))]
 urlpatterns += [
