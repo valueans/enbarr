@@ -58,7 +58,15 @@ const theme = createTheme({
             fontSize: "12px",
             lineHeight: "18px",
             color: "#313033"
-        }
+        },
+        enbarTitleWhite:{
+            fontFamily: 'Bookman Old Style',
+            fontStyle: "normal",
+            fontWeight: "300",
+            fontSize: "40px",
+            lineHeight: "47px",
+            color: "#FFFFFF",
+        },
     }
   });
 

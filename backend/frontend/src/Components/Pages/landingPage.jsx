@@ -1,14 +1,13 @@
 import React from 'react';
-import appleImage from '../../assets/apple.svg';
-import googleImage from '../../assets/google.svg';
-import horizontalLineImage from '../../assets/horizontalLine.svg';
 import {Grid,Typography} from '@mui/material';
 import ButtonAppBar from "../Header/Headers";
 import Button from '../Buttons/Button';
 import HeaderImageGrid from '../Header/HeaderImageGrid';
 import { useNavigate } from 'react-router-dom';
 import Footer from '../Footer/Footer';
-import SocialLinks from '../Header/SocialLinks';
+import SocialLinksVertical from '../SocialLinks/SocialLinksVertical';
+import StoreLinks from '../SocialLinks/StoreLinks';
+import HorizontalLineIcon from '../Svgs/HorizontalLineIcon';
 
 const LandingPage = () => {
     const navigate = useNavigate();
@@ -27,7 +26,7 @@ const LandingPage = () => {
             <Grid item xs={8} sx={{height:"calc(100vh - 101px)"}}>
                 {/* left side of landing page with title description and social LInks starts */}
                 <Grid container sx={{height:"100%"}}>
-                    <SocialLinks />
+                    <SocialLinksVertical />
                     <Grid item xs={10} sx={{display:"flex",alignItems:"center"}}>
                         <Grid container direction="column" sx={{paddingLeft:"40px",paddingRight:"40px"}}
                             spacing={0.5}>
@@ -35,7 +34,7 @@ const LandingPage = () => {
                                 <Typography variant='landingPageTitle'>
                                     ENBARR HORSES
                                 </Typography>
-                                <img src={horizontalLineImage} alt="horizontal-logo" />
+                                <HorizontalLineIcon />
                             </Grid>
                             <Grid item>
                                 <Typography variant='landingPageDesc'>
@@ -50,14 +49,7 @@ const LandingPage = () => {
                                 </Typography>
                             </Grid>
                             <Grid item>
-                                <Grid container spacing={1}>
-                                    <Grid item>
-                                        <img src={googleImage} alt="google-logo" />
-                                    </Grid>
-                                    <Grid item>
-                                        <img src={appleImage} alt="apple-logo" />
-                                    </Grid>
-                                </Grid>
+                                <StoreLinks/>
                                 <Grid item>
                                     <Button title="Sign up" onClick={buttonClick}/>
                                 </Grid>

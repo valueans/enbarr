@@ -31,7 +31,7 @@ const AuthenticationPage = () => {
         {/* form image right taking 4 column */}
         <Grid item xs={7} sx={{height:"100vh",p:8}}>
           {/* logo grid starts */}
-          <Grid item container xs={12}>
+          <Grid item container>
             <Grid item xs={1} sx={{textAlign:"center"}}>
               <Link to="/" variant="logo">
               <img src={logo} alt="logo" style={{height:"85px",width:"35.36px",marginTop:"7px"}} />

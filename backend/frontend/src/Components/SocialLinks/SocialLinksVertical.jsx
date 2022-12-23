@@ -1,31 +1,31 @@
-import { Grid } from '@mui/material';
 import React from 'react'
-import facebookImage from '../../assets/facebook.svg';
-import instagramImage from '../../assets/instagram.svg';
-import linkedInImage from '../../assets/linkedin.svg';
-import twitterImage from '../../assets/twitter.svg';
-import verticalLineImage from '../../assets/verticalLine.svg';
+import { Grid } from '@mui/material';
+import InstagramSocialIcon from '../Svgs/InstagramSocialIcon'
+import FacebookSocialIcon from '../Svgs/FacebookSocialIcon';
+import TwitterSocialIcon from '../Svgs/TwitterSocialIcon';
+import LinkedInSocialIcon from '../Svgs/LinkedInSocialIcon';
+import VerticalLineIcon from '../Svgs/VerticalLineIcon';
 
-const SocialLinks = () => {
+const SocialLinksVertical = () => {
   return (
     <>
     <Grid item xs={2} sx={{display:"flex",justifyContent:"center",alignItems:"center"}}>
         <Grid container direction="column" sx={{display:"flex",alignContent:"center"}}
             spacing={3}>
             <Grid item xs={2} style={{display:"flex",justifyContent:"center"}}>
-                <img src={instagramImage} alt="insta-logo" />
+                <InstagramSocialIcon />
             </Grid>
             <Grid item xs={2} style={{display:"flex",justifyContent:"center"}}>
-                <img src={twitterImage} alt="twitter-logo" />
+                <TwitterSocialIcon />
             </Grid>
             <Grid item xs={2} style={{display:"flex",justifyContent:"center"}}>
-                <img src={facebookImage} alt="facebook-logo" />
+                <FacebookSocialIcon />
             </Grid>
             <Grid item xs={2} style={{display:"flex",justifyContent:"center"}}>
-                <img src={linkedInImage} alt="linkedin-logo" />
+                <LinkedInSocialIcon />
             </Grid>
             <Grid item xs={2} style={{display:"flex",justifyContent:"center"}}>
-                <img src={verticalLineImage} alt="verticalLine-logo" />
+                <VerticalLineIcon />
             </Grid>
         </Grid>
     </Grid>
@@ -33,4 +33,4 @@ const SocialLinks = () => {
   )
 }
 
-export default SocialLinks
+export default SocialLinksVertical
