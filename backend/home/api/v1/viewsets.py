@@ -580,7 +580,7 @@ def HorsesView(request):
 def favouriteView(request):
     if request.method == "GET":
         queryset = Favourite.objects.filter(user=request.user).order_by("id").reverse()
-        return getPagination(queryset, request, HorsesSerializer)
+        return getPagination(queryset, request, FavouriteSerializer)
     if request.method == "POST":
         serializer = FavouriteSerializer(
             data=request.data, context={"request": request}
