@@ -3,6 +3,7 @@ import { Grid,Typography } from '@mui/material'
 
 const Footer = () => {
   return (
+    // footer for login page and landing page starts 
     <Grid container item>
         <Grid item xs={6} sx={{display:"flex",justifyContent:"end"}}>
             <Typography variant='headerLinks'>
@@ -20,6 +21,7 @@ const Footer = () => {
             </Typography>
         </Grid>
     </Grid>
+    // footer for login page and landing page ends
   )
 }
 

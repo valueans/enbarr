@@ -19,16 +19,16 @@ const AuthenticationForm = ({formType}) => {
                 <Typography variant="authInputTitle" component="div">Email</Typography>
                 <CustomInput type="text" placeholder="Email"/>
             </Grid>
-            <Grid item xs={12}>
+            {(formType==="Sign up"?
+            <>
+            <Grid item xs={6}>
                 <Typography variant="authInputTitle" component="div">Create password</Typography>
                 <CustomInput type="password" placeholder="password"/>
             </Grid>
-            {(formType==="Sign up"?
-            <>
-            {/* <Grid item xs={12}>
-                <Typography variant="authInputTitle" component="div">Confirm Password</Typography>
-                <CustomInput type="password" placeholder="Confirm Password"/>
-            </Grid> */}
+            <Grid item xs={6}>
+                <Typography variant="authInputTitle" component="div">Confirm Create password</Typography>
+                <CustomInput type="password" placeholder="password"/>
+            </Grid>
             <Grid item xs={12}>
             <FormGroup>
                 <FormControlLabel control={<Checkbox defaultChecked />} label="I have read Terms and Conditions and Privacy Policy" />
@@ -45,6 +45,10 @@ const AuthenticationForm = ({formType}) => {
             </>
             :
             <>
+            <Grid item xs={12}>
+                <Typography variant="authInputTitle" component="div">password</Typography>
+                <CustomInput type="password" placeholder="password"/>
+            </Grid>
             <Grid item xs={12}>
                 <Button title="Login" type="submit" width="100%"/>
             </Grid>

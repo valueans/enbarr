@@ -34,8 +34,7 @@ env = environ.Env()
 env.read_env(env_file)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = env.bool("DEBUG", default=False)
-DEBUG = False
+DEBUG = env.bool("DEBUG", default=False)
 
 try:
     # Pull secrets from Secret Manager
@@ -101,7 +100,7 @@ THIRD_PARTY_APPS = [
     "drf_yasg",
     "storages",
     "django_celery_beat",
-    "django_celery_results"
+    "django_celery_results",
 ]
 MODULES_APPS = get_modules()
 
@@ -272,7 +271,7 @@ if USE_S3:
     )
     MEDIA_URL = "/mediafiles/"
     MEDIA_ROOT = os.path.join(BASE_DIR, "mediafiles")
-    
+
 # Swagger settings for api docs
 SWAGGER_SETTINGS = {
     "DEFAULT_INFO": f"{ROOT_URLCONF}.api_info",

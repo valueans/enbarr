@@ -579,12 +579,8 @@ def HorsesView(request):
 @authentication_classes([TokenAuthentication])
 def favouriteView(request):
     if request.method == "GET":
-        instance = Favourite.objects.filter(user=request.user)
-        serializer = FavouriteSerializer(
-            instance, many=True, context={"request": request}
-        )
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
-
+        queryset = Favourite.objects.filter(user=request.user).order_by("id").reverse()
+        return getPagination(queryset, request, HorsesSerializer)
     if request.method == "POST":
         serializer = FavouriteSerializer(
             data=request.data, context={"request": request}
