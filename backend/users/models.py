@@ -38,6 +38,8 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     phone_number = models.CharField(max_length=15, null=True, blank=True)
     profile_photo = models.ImageField(null=True, blank=True)
+    first_name = models.CharField(max_length=50, null=True, blank=True)
+    last_name = models.CharField(max_length=50, null=True, blank=True)
     bio = models.TextField(max_length=1500, null=True, blank=True)
     address = models.CharField(max_length=1000, null=True, blank=True)
     city = models.CharField(max_length=100, null=True, blank=True)
