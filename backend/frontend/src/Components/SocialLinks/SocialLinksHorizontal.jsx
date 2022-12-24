@@ -5,26 +5,36 @@ import FacebookSocialIcon from '../Svgs/FacebookSocialIcon';
 import TwitterSocialIcon from '../Svgs/TwitterSocialIcon';
 import LinkedInSocialIcon from '../Svgs/LinkedInSocialIcon';
 import HorizontalLineIcon from '../Svgs/HorizontalLineIcon';
+import { instagramLink,facebookLink,linkedinLink,twitterLink } from '../../Constants/urls';
+
 const SocialLinksVertical = () => {
   return (
     <>
-    <Grid container>
-        <Grid item xs={2}>
-            <HorizontalLineIcon color='#FFFFFF'/>
+        <Grid container>
+            <Grid item xs={2}>
+                <HorizontalLineIcon color='#FFFFFF' />
+            </Grid>
+            <Grid item xs={1}>
+                <a href={instagramLink} target="_blank" rel="noreferrer">
+                    <InstagramSocialIcon color='#FFFFFF' />
+                </a>
+            </Grid>
+            <Grid item xs={1}>
+                <a href={twitterLink} target="_blank" rel="noreferrer">
+                    <TwitterSocialIcon color='#FFFFFF' />
+                </a>
+            </Grid>
+            <Grid item xs={1}>
+                <a href={facebookLink} target="_blank" rel="noreferrer">
+                    <FacebookSocialIcon color='#FFFFFF' />
+                </a>
+            </Grid>
+            <Grid item xs={1}>
+                <a href={linkedinLink} target="_blank" rel="noreferrer">
+                    <LinkedInSocialIcon color='#FFFFFF' />
+                </a>
+            </Grid>
         </Grid>
-        <Grid item xs={1}>
-            <InstagramSocialIcon color='#FFFFFF'/>
-        </Grid>
-        <Grid item xs={1}>
-            <TwitterSocialIcon color='#FFFFFF'/>
-        </Grid>
-        <Grid item xs={1}>
-            <FacebookSocialIcon color='#FFFFFF'/>
-        </Grid>
-        <Grid item xs={1}>
-            <LinkedInSocialIcon color='#FFFFFF'/>
-        </Grid>
-    </Grid>
     </>
   )
 }

@@ -55,7 +55,7 @@ const theme = createTheme({
             fontFamily: 'Poppins',
             fontStyle: "normal",
             fontWeight: "600",
-            fontSize: "12px",
+            fontSize: "16px",
             lineHeight: "18px",
             color: "#313033"
         },

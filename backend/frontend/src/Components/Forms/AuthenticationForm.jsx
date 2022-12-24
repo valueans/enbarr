@@ -49,6 +49,11 @@ const AuthenticationForm = ({formType}) => {
                 <Typography variant="authInputTitle" component="div">password</Typography>
                 <CustomInput type="password" placeholder="password"/>
             </Grid>
+            <Grid item xs={12} className="justifyContentEnd">
+                <a href="http://" target="_blank" rel="noopener noreferrer" className='linkBlack'>
+                    <Typography variant='authInputTitle'>Forgot password</Typography>
+                </a>
+            </Grid>
             <Grid item xs={12}>
                 <Button title="Login" type="submit" width="100%"/>
             </Grid>
