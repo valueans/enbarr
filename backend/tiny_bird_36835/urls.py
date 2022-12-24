@@ -46,7 +46,6 @@ admin.site.unregister(Site)
 admin.site.unregister(Group)
 
 urlpatterns = [
-    path("", include("home.urls")),
     path("api/v1/payment/", include("payments.api.v1.urls")),
     path("accounts/", include("allauth.urls")),
     path("modules/", include("modules.urls")),
@@ -86,3 +85,4 @@ urlpatterns += [path("", TemplateView.as_view(template_name="index.html"))]
 urlpatterns += [
     re_path(r"^(?:.*)/?$", TemplateView.as_view(template_name="index.html"))
 ]
+urlpatterns += [path("", include("home.urls"))]
