@@ -1,9 +1,9 @@
 import React from 'react';
-import LoginButton from './ButtonStyle';
+import CustomButton from './ButtonStyle';
 
 const Button = (props) => {
   return (
-    <LoginButton onClick={props.onClick} type={props.type} style={{width:props.width}}>{props.title}</LoginButton>
+    <CustomButton onClick={props.onClick} type={props.type} style={{width:props.width}}>{props.title}</CustomButton>
   )
 }
 export default Button;

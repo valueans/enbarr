@@ -6,8 +6,17 @@ import SocialLinks from '../SocialLinks/SocialLinksVertical'
 import Button from '../Buttons/Button'
 import HorseCardList from '../Cards/HorseCardList'
 import BlackFooter from '../Footer/BlackFooter'
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
+    const navigate = useNavigate();
+
+    const buyerClicks = ()=>{
+        return navigate('/buyer')
+    }
+    const sellerClicks = ()=>{
+        return navigate('/seller')
+    }
   return (
     <>
         {/* header when the user will logged in starts */}
@@ -41,10 +50,10 @@ const Home = () => {
                             <Grid item sx={{mt:4}}>
                                 <Grid container spacing={0.2}>
                                     <Grid item xs={5}>
-                                        <Button title="A Buyer" />
+                                        <Button title="A Buyer" onClick={buyerClicks} />
                                     </Grid>
                                     <Grid item xs={5}>
-                                        <Button title="A Seller" />
+                                        <Button title="A Seller" onClick={sellerClicks} />
                                     </Grid>
                                 </Grid>
                             </Grid>

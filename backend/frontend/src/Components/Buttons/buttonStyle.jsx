@@ -1,7 +1,7 @@
 import Button from '@mui/material/Button';
 import {styled } from '@mui/material/styles';
 
-const LoginButton = styled(Button)(({ theme }) => ({
+const CustomButton = styled(Button)(({ theme }) => ({
     width: "201px",
     height: "60px",
     borderRadius: "30px",
@@ -20,4 +20,4 @@ const LoginButton = styled(Button)(({ theme }) => ({
         },
   }));
   
-export default LoginButton;
+export default CustomButton;

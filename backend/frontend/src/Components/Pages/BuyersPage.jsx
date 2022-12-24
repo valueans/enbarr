@@ -1,8 +1,13 @@
 import React from 'react'
+import { Grid,Typography } from '@mui/material';
 
 const BuyersPage = () => {
   return (
-    <div>BuyersPage</div>
+    <Grid container sx={{height:"calc(100vh - 101px)"}}> 
+        <Grid item xs={12} sx={{border:"1px solid black"}}>
+
+        </Grid>
+    </Grid>
   )
 }
 
