@@ -1,5 +1,13 @@
 import { createTheme } from "@mui/material/styles";
 const theme = createTheme({
+    palette: {
+        primary: {
+          main: '#302F32'
+        },
+        secondary: {
+          main: '#FFFFFF'
+        }
+    },
     typography: {
         logo:{
             fontFamily: 'Bookman Old Style',

@@ -11,6 +11,10 @@
     display: flex;
     justify-content: center;
 }
+.justifyContentBetween{
+    display: flex;
+    justify-content: space-between;
+}
 
 .justifyContentEndAlignCenter{
     display: flex;
@@ -41,4 +45,12 @@
 .linkBlack{
     color:#302F32;
     text-decoration: none;
+}
+
+.customInput{
+    background: #F4F4F4;
+    border-radius: 15px;
+    width:100%;
+    border:none;
+    padding:10px;
 }

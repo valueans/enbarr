@@ -3,15 +3,14 @@ import {Routes,Route} from "react-router-dom"
 import LandingPage from '../Components/Pages/LandingPage';
 import Home from '../Components/Pages/Home';
 import AuthenticationPage from '../Components/Pages/AuthenticationPage';
-import BuyersPage from '../Components/Pages/BuyersPage';
 
 const Routers = () => {
   return (
     <Routes>
         <Route path='/' element={<LandingPage></LandingPage>}/>
         <Route path='/auth' element={<AuthenticationPage/>}/>
-        <Route path='/home' element={<Home/>}/>
-        <Route path='/buyer' element={<BuyersPage/>}/>
+        <Route path='/home' element={<Home page="home" />}/>
+        <Route path='/buyer' element={<Home page="buyer" />} />
         <Route path='*' element={<LandingPage></LandingPage>}/>
 
 
