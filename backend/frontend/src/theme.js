@@ -25,7 +25,8 @@ const theme = createTheme({
             fontSize: "15px",
             lineHeight: "40px",
             color: "#313033",
-            textAlign:"center"
+            textAlign:"center",
+            cursor:"pointer"
         },
         landingPageTitle:{
             fontFamily: 'Poppins',
@@ -73,6 +74,14 @@ const theme = createTheme({
             fontWeight: "600",
             fontSize: "15px",
             lineHeight: "22.5px",
+            color: "#FFFFFF"
+        },
+        myHorseCardTitle:{
+            fontFamily: 'Poppins',
+            fontStyle: "normal",
+            fontWeight: "600",
+            fontSize: "20px",
+            lineHeight: "30px",
             color: "#FFFFFF"
         },
         characteristicsHeading:{

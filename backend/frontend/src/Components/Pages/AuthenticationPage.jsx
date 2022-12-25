@@ -4,27 +4,35 @@ import HeaderImageGrid from '../Header/HeaderImageGrid';
 import logo from '../../assets/logo.svg'
 import {Link} from 'react-router-dom';
 import AuthenticationTabs from '../Buttons/AuthenticationTabs';
-import AuthenticationForm from '../Forms/AuthenticationForm';
 import Footer from '../Footer/Footer';
+import { Routes,Route } from 'react-router-dom';
+import SignUpForm from '../Forms/SignUpForm';
+import SignInForm from '../Forms/SignInForm';
+import OtpVerificationForm from '../Forms/OtpVerificationForm';
+import { useNavigate } from 'react-router-dom';
 
 const AuthenticationPage = () => {
-  const [loginTab,setloginTab] = useState(false);
-  const [showTabs,setShowTabs] = useState(true);
-  const [signUpTab,setsignUpTab] = useState(true);
-  const [formTitle,setFormTitle] = useState("Sign up");
+  const navigator = useNavigate();
 
-  const tabsChange = (title)=>{
-    if (title==="Login"){
-        setloginTab(true)
-        setFormTitle("Login")
-        setsignUpTab(false)
-    }
-    else{
-      setsignUpTab(true)
-      setFormTitle("Sign up")
-      setloginTab(false)
-    }
+  const [signupActive,setSignupActive] = useState(true);
+  const [loginActive,setLoginActive] = useState(false);
+  const [showTabs,setShowTabs] = useState(true);
+
+
+  const signupRouter = ()=>{
+    setSignupActive(true)
+    setLoginActive(false)
+    return navigator('/auth/register');
   }
+
+  const loginRouter = ()=>{
+    setSignupActive(false)
+    setLoginActive(true)
+    return navigator('/auth/login');
+  }
+
+  
+
 
   return (
     <>
@@ -49,20 +57,26 @@ const AuthenticationPage = () => {
           <Grid container >
           {/* login/signup tabs start */}
           <Grid item xs={6}>
-            <AuthenticationTabs title="Sign up" isActive={signUpTab} onClick={tabsChange}
+            <AuthenticationTabs title="Sign up" isActive={signupActive} onClick={signupRouter}
               borderRadius="50px 0px 0px 50px" />
           </Grid>
           <Grid item xs={6}>
-            <AuthenticationTabs title="Login" isActive={loginTab} onClick={tabsChange}
+            <AuthenticationTabs title="Login" isActive={loginActive} onClick={loginRouter}
               borderRadius="0px 50px 50px 0px" />
           </Grid>
           {/* login/signup tabs ends */}
         </Grid>:""
           }
           {/* authentication forms starts */}
+
           <Grid container sx={{mt:2,background:"#FFFFFF",boxShadow:"0px 5px 40px rgba(0, 0, 0, 0.15)",borderRadius:"15px",p:6}}>
             <Grid item xs={12}>
-              <AuthenticationForm formType={formTitle} setFormTitle={setFormTitle} setShowTabs={setShowTabs}/>
+            <Routes>
+            <Route path="register" element={<SignUpForm/>} />
+            <Route path="*" element={<SignUpForm/>} />
+            <Route path="login" element={<SignInForm/>} />
+            <Route path="verify" element={<OtpVerificationForm setShowTabs={setShowTabs}/>} />
+          </Routes>
             </Grid>
           </Grid>
           {/* authentication forms ends */}

@@ -3,14 +3,16 @@ import {Routes,Route} from "react-router-dom"
 import LandingPage from '../Components/Pages/LandingPage';
 import Home from '../Components/Pages/Home';
 import AuthenticationPage from '../Components/Pages/AuthenticationPage';
+import MyHorse from '../Components/Pages/MyHorse';
 
 const Routers = () => {
   return (
     <Routes>
-        <Route exact path='/' element={<LandingPage></LandingPage>}/>
-        <Route path='/auth' element={<AuthenticationPage/>}/>
+        <Route exact path='/landing' element={<LandingPage></LandingPage>}/>
+        <Route path='/auth/*' element={<AuthenticationPage/>}/>
         <Route path='/home/*' element={<Home/>}/>
-        <Route path='*' element={<Home></Home>}/>
+        <Route path='/myhorse/*' element={<MyHorse></MyHorse>}/>
+        <Route path='/' element={<Home></Home>}/>
 
 
         {/* example of custom routing */}

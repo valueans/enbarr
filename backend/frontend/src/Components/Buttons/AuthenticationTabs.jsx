@@ -1,6 +1,8 @@
 import React from 'react'
 
 const AuthenticationTabs = ({title,isActive,onClick,borderRadius}) => {
+
+  
   return (
     isActive?<div onClick={()=>{
       onClick(title)

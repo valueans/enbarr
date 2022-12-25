@@ -9,17 +9,17 @@ import profilePic from '../../assets/profile.png';
 import { Link,useNavigate } from 'react-router-dom';
 
 
-export default function ButtonAppBar({headerType="landing"}) {
+export default function ButtonAppBar({headerType="landing",currentPage="home"}) {
     const navigate = useNavigate();
 
     const buttonClick = ()=>{
         return navigate('/auth')
     }
 
-    const [homeActive,setHomeActive] = useState(true);
-    const [messageActive,setMessageActive] = useState(false);
-    const [myHorseActive,setMyHorseActive] = useState(false);
-    const [settingsActive,setSettingsActive] = useState(false);
+    const [homeActive,setHomeActive] = useState(currentPage==="home"?true:false);
+    const [messageActive,setMessageActive] = useState(currentPage==="message"?true:false);
+    const [myHorseActive,setMyHorseActive] = useState(currentPage==="my-horse"?true:false);
+    const [settingsActive,setSettingsActive] = useState(currentPage==="settings"?true:false);
 
 
     const setActiveLink = (clickedButton)=>{
@@ -28,6 +28,7 @@ export default function ButtonAppBar({headerType="landing"}) {
             setMessageActive(false)
             setMyHorseActive(false)
             setSettingsActive(false)
+            return navigate('/home')
         }
         if (clickedButton==="message"){
             setHomeActive(false)
@@ -40,6 +41,7 @@ export default function ButtonAppBar({headerType="landing"}) {
             setMessageActive(false)
             setMyHorseActive(true)
             setSettingsActive(false)
+            return navigate('/myhorse')
         }
         if (clickedButton==="settings"){
             setHomeActive(false)
@@ -48,7 +50,7 @@ export default function ButtonAppBar({headerType="landing"}) {
             setSettingsActive(true)
         }
     }
-
+    
   return (
     <Grid container>
         <Grid item xs={12}>
