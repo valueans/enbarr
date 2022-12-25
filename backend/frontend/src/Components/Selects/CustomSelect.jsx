@@ -9,7 +9,7 @@ const CustomSelect = () => {
   };
   return (
     <FormControl fullWidth>
-    <Select value={age} onChange={handleChange} className="customInput" sx={{p:0}}>
+    <Select value={age} onChange={handleChange} className="customInput" sx={{minHeight:"60px"}} variant="standard" disableUnderline={true}>
         <MenuItem value={10}>Ten</MenuItem>
         <MenuItem value={20}>Twenty</MenuItem>
         <MenuItem value={30}>Thirty</MenuItem>

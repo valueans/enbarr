@@ -75,6 +75,14 @@ const theme = createTheme({
             lineHeight: "47px",
             color: "#FFFFFF",
         },
+        imageDescriptions:{
+            fontFamily: 'Poppins',
+            fontStyle: "normal",
+            fontWeight: "400",
+            fontSize: "14px",
+            lineHeight: "15px",
+            color: "#313033",
+        },
     }
   });
 

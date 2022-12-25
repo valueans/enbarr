@@ -3,6 +3,7 @@ import Headers from '../Header/Headers'
 import BlackFooter from '../Footer/BlackFooter'
 import HomeContent from '../Home/HomeContent'
 import BuyerContent from '../Home/BuyerContent'
+import SellerContent from '../Home/SellerContent'
 
 const Home = ({page="home"}) => {
   return (
@@ -12,7 +13,7 @@ const Home = ({page="home"}) => {
         {/* header when the user will logged in ends */}
 
         {
-            page==="home"?<HomeContent/>:page==="buyer"?<BuyerContent/>:""
+            page==="home"?<HomeContent/>:page==="buyer"?<BuyerContent/>:<SellerContent/>
         }
 
         {/* footer starts */}

@@ -9,6 +9,7 @@ import Footer from '../Footer/Footer';
 
 const AuthenticationPage = () => {
   const [loginTab,setloginTab] = useState(false);
+  const [showTabs,setShowTabs] = useState(true);
   const [signUpTab,setsignUpTab] = useState(true);
   const [formTitle,setFormTitle] = useState("Sign up");
 
@@ -44,22 +45,24 @@ const AuthenticationPage = () => {
             </Grid>
           </Grid>
           {/* logo grids ends */}
-          <Grid container>
-            {/* login/signup tabs start */}
-            <Grid item xs={6}>
-              <AuthenticationTabs title="Sign up" isActive={signUpTab} onClick={tabsChange}
-                borderRadius="50px 0px 0px 50px" />
-            </Grid>
-            <Grid item xs={6}>
-              <AuthenticationTabs title="Login" isActive={loginTab} onClick={tabsChange}
-                borderRadius="0px 50px 50px 0px" />
-            </Grid>
-            {/* login/signup tabs ends */}
+          {showTabs?
+          <Grid container >
+          {/* login/signup tabs start */}
+          <Grid item xs={6}>
+            <AuthenticationTabs title="Sign up" isActive={signUpTab} onClick={tabsChange}
+              borderRadius="50px 0px 0px 50px" />
           </Grid>
+          <Grid item xs={6}>
+            <AuthenticationTabs title="Login" isActive={loginTab} onClick={tabsChange}
+              borderRadius="0px 50px 50px 0px" />
+          </Grid>
+          {/* login/signup tabs ends */}
+        </Grid>:""
+          }
           {/* authentication forms starts */}
           <Grid container sx={{mt:2,background:"#FFFFFF",boxShadow:"0px 5px 40px rgba(0, 0, 0, 0.15)",borderRadius:"15px",p:6}}>
             <Grid item xs={12}>
-              <AuthenticationForm formType={formTitle} />
+              <AuthenticationForm formType={formTitle} setFormTitle={setFormTitle} setShowTabs={setShowTabs}/>
             </Grid>
           </Grid>
           {/* authentication forms ends */}
