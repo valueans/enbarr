@@ -67,6 +67,22 @@ const theme = createTheme({
             lineHeight: "18px",
             color: "#313033"
         },
+        horseDetailsUserName:{
+            fontFamily: 'Poppins',
+            fontStyle: "normal",
+            fontWeight: "600",
+            fontSize: "15px",
+            lineHeight: "22.5px",
+            color: "#FFFFFF"
+        },
+        characteristicsHeading:{
+            fontFamily: 'Poppins',
+            fontStyle: "normal",
+            fontWeight: "600",
+            fontSize: "16px",
+            lineHeight: "22.5px",
+            color: "#313033"
+        },
         enbarTitleWhite:{
             fontFamily: 'Bookman Old Style',
             fontStyle: "normal",

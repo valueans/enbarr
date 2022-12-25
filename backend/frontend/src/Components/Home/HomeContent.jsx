@@ -10,10 +10,10 @@ const HomeContent = () => {
     const navigate = useNavigate();
 
     const buyerClicks = ()=>{
-        return navigate('/buyer')
+        return navigate('/home/buyer')
     }
     const sellerClicks = ()=>{
-        return navigate('/seller')
+        return navigate('/home/seller')
     }
 
   return (
@@ -21,7 +21,7 @@ const HomeContent = () => {
     {/* Loggedin user Landing page starts */}
     <Grid container sx={{height:"calc(100vh - 101px)"}}>
             {/* left side contains title description socialLinks icons and buyer/seller buttons starts */}
-            <Grid item xs={6}>
+            <Grid item xs={12} lg={6}>
                 <Grid container sx={{height:"100%"}}>
                     <SocialLinks />
                     <Grid item xs={10} sx={{display:"flex",alignItems:"center"}}>

@@ -7,12 +7,10 @@ import AuthenticationPage from '../Components/Pages/AuthenticationPage';
 const Routers = () => {
   return (
     <Routes>
-        <Route path='/' element={<LandingPage></LandingPage>}/>
+        <Route exact path='/' element={<LandingPage></LandingPage>}/>
         <Route path='/auth' element={<AuthenticationPage/>}/>
-        <Route path='/home' element={<Home page="home" />}/>
-        <Route path='/buyer' element={<Home page="buyer" />} />
-        <Route path='/seller' element={<Home page="seller" />} />
-        <Route path='*' element={<LandingPage></LandingPage>}/>
+        <Route path='/home/*' element={<Home/>}/>
+        <Route path='*' element={<Home></Home>}/>
 
 
         {/* example of custom routing */}

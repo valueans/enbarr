@@ -22,7 +22,7 @@ const SellerContent = () => {
   return (
     // seler page starts
     <Grid container sx={{minHeight:"calc(100vh - 101px)"}} className="justifyContentCenter">
-        <Grid item xs={6} sx={{background:"#FFFFFF",borderRadius:"15px",marginTop:"39px",padding:"65px"}}>
+        <Grid item xs={12} lg={6} sx={{background:"#FFFFFF",borderRadius:"15px",marginTop:"39px",padding:"65px"}}>
             {/* main container starts */}
             <Grid container>
                 {/* title starts */}
@@ -137,7 +137,7 @@ const SellerContent = () => {
                             <Typography variant='authInputTitle'>Gender</Typography>
                         </Grid>
                         <Grid item xs={12}>
-                            <FormControl onC>
+                            <FormControl>
                                 <RadioGroup row aria-labelledby="demo-radio-buttons-group-label" defaultValue="Gelding"
                                     name="radio-buttons-group">
                                     <FormControlLabel value="Gelding" control={<Radio />} label="Gelding" />
