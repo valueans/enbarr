@@ -4,6 +4,7 @@ import LandingPage from '../Components/Pages/LandingPage';
 import Home from '../Components/Pages/Home';
 import AuthenticationPage from '../Components/Pages/AuthenticationPage';
 import MyHorse from '../Components/Pages/MyHorse';
+import SettingsPage from '../Components/Pages/SettingsPage';
 
 const Routers = () => {
   return (
@@ -12,6 +13,7 @@ const Routers = () => {
         <Route path='/auth/*' element={<AuthenticationPage/>}/>
         <Route path='/home/*' element={<Home/>}/>
         <Route path='/myhorse/*' element={<MyHorse></MyHorse>}/>
+        <Route path='/settings/*' element={<SettingsPage></SettingsPage>}/>
         <Route path='/' element={<Home></Home>}/>
 
 

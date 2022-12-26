@@ -48,6 +48,7 @@ export default function ButtonAppBar({headerType="landing",currentPage="home"}) 
             setMessageActive(false)
             setMyHorseActive(false)
             setSettingsActive(true)
+            return navigate('/settings')
         }
     }
     
