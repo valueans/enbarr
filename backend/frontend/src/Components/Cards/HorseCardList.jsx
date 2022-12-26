@@ -28,7 +28,7 @@ const HorseCardList = ({title,numberOfCards=1,typeCard="horse"}) => {
     }
     else{
         index> 2?divs.push(
-            <Grid item lg={4} sm={6} xs={12} sx={{mt:4}}
+            <Grid item lg={4} sm={6} xs={12}
                  key={index} >
                     <MyHorseCard />
             </Grid>):divs.push(
