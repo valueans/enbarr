@@ -6,7 +6,7 @@ import Footer from './Footer'
 
 const BlackFooter = () => {
   return (
-    <Grid container sx={{width:"100%",height:"259px",mt:5,background: "linear-gradient(180deg, #313033 0%, #000000 100%)",padding:"30px"}}>
+    <Grid container sx={{width:"100%",minHeight:"259px",mt:5,background: "linear-gradient(180deg, #313033 0%, #000000 100%)",padding:"30px"}}>
         <Grid item xs={6}>
             <Grid container direction="column" spacing={1}>
                 <Grid item xs={6}>

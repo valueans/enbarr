@@ -28,6 +28,16 @@
     justify-content: center;
     align-items: center;
 }
+.justifyContentEndAlignCenter{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.alignContentCenter{
+    display: flex;
+    align-items: center;
+}
 
 .flexColumn{
     display: flex;

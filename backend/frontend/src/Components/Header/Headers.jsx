@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import {Toolbar,Box,AppBar,Typography,Grid,Avatar,Badge} from '@mui/material';
-
+import {Toolbar,Box,AppBar,Typography,Grid,Avatar} from '@mui/material';
 import Button from '../Buttons/Button.jsx';
 import logo from '../../assets/logo.svg';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import SearchIcon from '@mui/icons-material/Search';
 import profilePic from '../../assets/profile.png';
 import { Link,useNavigate } from 'react-router-dom';
+import BasicMenu from '../Menu/CustomMenu.jsx';
 
 
 export default function ButtonAppBar({headerType="landing",currentPage="home"}) {
@@ -100,46 +99,50 @@ export default function ButtonAppBar({headerType="landing",currentPage="home"}) 
                                 ):(<>
                                     <Grid container item xs={6} direction="row">
                                         <Grid item xs={3}>
-                                                <div className='flexColumn'>
-                                                <Typography variant="headerLinks" component="div" onClick={()=>{setActiveLink("home")}}>
+                                            <div className='flexColumn'>
+                                                <Typography variant="headerLinks" component="div" onClick={()=>
+                                                    {setActiveLink("home")}}>
                                                     Home
                                                 </Typography>
                                                 {
-                                                    homeActive?
-                                                    <div className='linkBar'/>:""
+                                                homeActive?
+                                                <div className='linkBar' />:""
                                                 }
                                             </div>
                                         </Grid>
                                         <Grid item xs={3}>
                                             <div className='flexColumn'>
-                                                <Typography variant="headerLinks" component="div" onClick={()=>{setActiveLink("message")}}>
+                                                <Typography variant="headerLinks" component="div" onClick={()=>
+                                                    {setActiveLink("message")}}>
                                                     Messages
                                                 </Typography>
                                                 {
-                                                    messageActive?
-                                                    <div className='linkBar' />:""
-                                                }
-                                            </div>
-                                        </Grid>
-                                        <Grid item xs={3} >
-                                            <div className='flexColumn'>
-                                                <Typography variant="headerLinks" component="div" onClick={()=>{setActiveLink("my-horse")}}>
-                                                    My Horse
-                                                </Typography>
-                                                {
-                                                    myHorseActive?
-                                                    <div className='linkBar'/>:""
+                                                messageActive?
+                                                <div className='linkBar' />:""
                                                 }
                                             </div>
                                         </Grid>
                                         <Grid item xs={3}>
                                             <div className='flexColumn'>
-                                                <Typography variant="headerLinks" component="div" onClick={()=>{setActiveLink("settings")}}>
+                                                <Typography variant="headerLinks" component="div" onClick={()=>
+                                                    {setActiveLink("my-horse")}}>
+                                                    My Horse
+                                                </Typography>
+                                                {
+                                                myHorseActive?
+                                                <div className='linkBar' />:""
+                                                }
+                                            </div>
+                                        </Grid>
+                                        <Grid item xs={3}>
+                                            <div className='flexColumn'>
+                                                <Typography variant="headerLinks" component="div" onClick={()=>
+                                                    {setActiveLink("settings")}}>
                                                     settings
                                                 </Typography>
                                                 {
-                                                    settingsActive?
-                                                    <div className='linkBar' />:""
+                                                settingsActive?
+                                                <div className='linkBar' />:""
                                                 }
                                             </div>
                                         </Grid>
@@ -147,19 +150,14 @@ export default function ButtonAppBar({headerType="landing",currentPage="home"}) 
                                     <Grid item xs={3}>
                                         <Grid container>
                                             <Grid item xs={4} className="justifyContentEndAlignCenter">
-                                                <SearchIcon className="headerIcons"/>
+                                                <SearchIcon className="headerIcons" />
                                             </Grid>
                                             <Grid item xs={4} className="justifyContentEndAlignCenter">
-                                            <Badge badgeContent={4} color="warning">
-                                                <NotificationsIcon className="headerIcons"/>
-                                            </Badge>
+                                                <BasicMenu />
                                             </Grid>
                                             <Grid item xs={4} className="justifyContentEndAlignCenter">
-                                            <Avatar
-                                                alt="Remy Sharp"
-                                                src={profilePic}
-                                                sx={{ width: "50px", height: "50px",marginTop:"7px"}}
-                                                />
+                                                <Avatar alt="Remy Sharp" src={profilePic}
+                                                    sx={{ width: "50px", height: "50px",marginTop:"7px"}} />
                                             </Grid>
                                         </Grid>
                                     </Grid>

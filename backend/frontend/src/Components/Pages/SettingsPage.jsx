@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Grid,Typography,Switch } from '@mui/material';
 import Headers from '../Header/Headers';
 import BlackFooter from '../Footer/BlackFooter';
@@ -15,45 +15,59 @@ import DeleteAccountIcon from '../Svgs/DeleteAccountIcon';
 import LogoutIcon from '../Svgs/LogoutIcon';
 import UpgradeSubscribtion from '../Settings/UpgradeSubscribtion';
 import { useNavigate } from 'react-router-dom';
-
+import CustomModel from '../Models/CustomModel';
+import ProfilePage from '../Settings/ProfilePage';
+import PrivacyPolicy from '../Settings/PrivacyPolicy';
+import TermsAndCondition from '../Settings/TermsAndCondition';
+import ChangePassword from '../Settings/ChangePassword';
+import Feedback from '../Settings/Feedback';
 
 const SettingsPage = () => {
     const navigator = useNavigate();
+    const [openSubscribeModel,setOpenSubscribeModel] = useState(false);
+    const [openDeleteAccountModel,setOpenDeleteAccountModel] = useState(false);
+    const [openLogoutModel,setOpenLogoutModel] = useState(false);
+
+    const [style,setStyle] = useState({background: "#FFFFFF",borderRadius:"15px",boxShadow:"1px 1px 13px 1px grey"});
 
     const redirect = (event,buttonName)=>{
         if (buttonName==="upgrade"){
-            console.log("upgrade")
+            setStyle({background: "#FFFFFF",borderRadius:"15px",boxShadow:"1px 1px 13px 1px grey"});
             return navigator('/settings/upgrade')
         }
         else if (buttonName==="unsubscribed"){
-            console.log("unsubscribed")
-
+            setOpenSubscribeModel(true)
         }
         else if (buttonName==="profile"){
-            console.log("profile")
+            setStyle({background: "#FFFFFF",borderRadius:"15px",boxShadow:"1px 1px 13px 1px grey"});
+            return navigator('/settings/profile')
 
         }
         else if (buttonName==="notification"){
             console.log("notifications get",event.target.checked)
         }
         else if (buttonName==="privacy"){
-            console.log("privacy")
+            setStyle({});
+            return navigator('/settings/privacypolicy')
 
         }
         else if (buttonName==="terms"){
-            console.log("terms")
+            setStyle({});
+            return navigator('/settings/terms&condition')
         }
         else if (buttonName==="changePassword"){
-            console.log("change password")
+            setStyle({background: "#FFFFFF",borderRadius:"15px",boxShadow:"1px 1px 13px 1px grey"});
+            return navigator('/settings/changepassword')
         }
         else if (buttonName==="feedback"){
-            console.log("feedback")
+            setStyle({background: "#FFFFFF",borderRadius:"15px",boxShadow:"1px 1px 13px 1px grey"});
+            return navigator('/settings/feedback')
         }
-        else if (buttonName==="delete-acount"){
-            console.log("delete-account")
+        else if (buttonName==="delete-account"){
+            setOpenDeleteAccountModel(true)
         }
         else if (buttonName==="logout"){
-            console.log("logout")
+            setOpenLogoutModel(true)
         }
 
     }
@@ -66,8 +80,8 @@ const SettingsPage = () => {
         {/* main container starts */}
         <Grid container sx={{p:4}} className="justifyContentBetween">
             {/* setting menu starts */}
-            <Grid item xs={3}
-                sx={{minHeight:"calc(100vh - 101px)",p:4,background: "#FFFFFF",borderRadius:"15px",boxShadow:"1px 1px 13px 1px grey"}}>
+            <Grid item lg={3} xs={12}
+                sx={{minHeight:"calc(100vh - 101px)",maxHeight:"calc(100vh - 101px)",p:4,background: "#FFFFFF",borderRadius:"15px",boxShadow:"1px 1px 13px 1px grey"}}>
                 <Grid container>
                     {/* settings heading starts */}
                     <Grid item xs={12}>
@@ -225,15 +239,22 @@ const SettingsPage = () => {
             {/* setting menu end*/}
 
             {/* menu button pages starts */}
-            <Grid item xs={8} sx={{p:4,background: "#FFFFFF",borderRadius:"15px",boxShadow:"1px 1px 13px 1px grey"}}>
+            <Grid item xs={12} lg={8} sx={style}>
                 <Routes>
                     <Route path='upgrade' element={<UpgradeSubscribtion />} />
                     <Route path='*' element={<UpgradeSubscribtion />} />
+                    <Route path='profile' element={<ProfilePage />} />
+                    <Route path="privacypolicy" element={<PrivacyPolicy />}></Route>
+                    <Route path="terms&condition" element={<TermsAndCondition />}></Route>
+                    <Route path="changepassword" element={<ChangePassword />}></Route>
+                    <Route path="feedback" element={<Feedback />}></Route>
                 </Routes>
             </Grid>
+            <CustomModel title="Unsubscribe" open={openSubscribeModel} setOpen={setOpenSubscribeModel}/>
+            <CustomModel title="Delete this Account" open={openDeleteAccountModel} setOpen={setOpenDeleteAccountModel}/>
+            <CustomModel title="Logout" open={openLogoutModel} setOpen={setOpenLogoutModel}/>
             {/* menu button pages ends */}
         </Grid>
-
         {/* main container ends */}
 
         {/* footer starts */}

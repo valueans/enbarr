@@ -36,6 +36,22 @@ const theme = createTheme({
             lineHeight: "70px",
             color: "#302F32"
         },
+        notification:{
+            fontFamily: 'Poppins',
+            fontStyle: "normal",
+            fontWeight: "500",
+            fontSize: "15px",
+            lineHeight: "15px",
+            color: "#302F32"
+        },
+        notificationMessage:{
+            fontFamily: 'Poppins',
+            fontStyle: "normal",
+            fontWeight: "600",
+            fontSize: "15px",
+            lineHeight: "15px",
+            color: "#313033"
+        },
         landingPageDesc:{
             fontFamily: 'Poppins',
             fontStyle: "normal",
@@ -107,6 +123,14 @@ const theme = createTheme({
             fontSize: "14px",
             lineHeight: "15px",
             color: "#313033",
+        },
+        subscriptionCardTitle:{
+            fontFamily: 'Poppins',
+            fontStyle: "normal",
+            fontWeight: "600",
+            fontSize: "40px",
+            lineHeight: "40px",
+            color: "#2F3C4C",
         },
     }
   });

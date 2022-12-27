@@ -11,25 +11,25 @@ const SocialLinksVertical = () => {
   return (
     <>
         <Grid container>
-            <Grid item xs={2}>
+            <Grid item lg={2} xs={12}>
                 <HorizontalLineIcon color='#FFFFFF' />
             </Grid>
-            <Grid item xs={1}>
+            <Grid item lg={1} xs={12}>
                 <a href={instagramLink} target="_blank" rel="noreferrer">
                     <InstagramSocialIcon color='#FFFFFF' />
                 </a>
             </Grid>
-            <Grid item xs={1}>
+            <Grid item lg={1} xs={12}>
                 <a href={twitterLink} target="_blank" rel="noreferrer">
                     <TwitterSocialIcon color='#FFFFFF' />
                 </a>
             </Grid>
-            <Grid item xs={1}>
+            <Grid item lg={1} xs={12}>
                 <a href={facebookLink} target="_blank" rel="noreferrer">
                     <FacebookSocialIcon color='#FFFFFF' />
                 </a>
             </Grid>
-            <Grid item xs={1}>
+            <Grid item lg={1} xs={12}>
                 <a href={linkedinLink} target="_blank" rel="noreferrer">
                     <LinkedInSocialIcon color='#FFFFFF' />
                 </a>
