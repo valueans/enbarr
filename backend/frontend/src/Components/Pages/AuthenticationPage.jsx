@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React,{useState,useEffect} from 'react';
 import {Grid, Typography} from '@mui/material';
 import HeaderImageGrid from '../Header/HeaderImageGrid';
 import logo from '../../assets/logo.svg'
@@ -10,6 +10,7 @@ import SignUpForm from '../Forms/SignUpForm';
 import SignInForm from '../Forms/SignInForm';
 import OtpVerificationForm from '../Forms/OtpVerificationForm';
 import { useNavigate } from 'react-router-dom';
+import AuthService from '../../Services/AuthService';
 
 const AuthenticationPage = () => {
   const navigator = useNavigate();
@@ -17,6 +18,15 @@ const AuthenticationPage = () => {
   const [signupActive,setSignupActive] = useState(true);
   const [loginActive,setLoginActive] = useState(false);
   const [showTabs,setShowTabs] = useState(true);
+
+  const isAuthenticated = AuthService.checkUserAuthenticated();
+
+
+    useEffect(() => {
+        if (isAuthenticated){
+          navigator("/home")   
+        }
+    },[isAuthenticated,navigator])
 
 
   const signupRouter = ()=>{

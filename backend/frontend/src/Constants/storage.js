@@ -1,4 +1,9 @@
-const getAccessToken = (key) => localStorage.getItem(key);
+const getAccessToken = () => localStorage.getItem("token");
+
+const setAccessToken = (key) => localStorage.setItem("token",key);
+
+const setVerifyStatus = (status) => localStorage.setItem("verified",status);
+const getVerifyStatus = () => localStorage.getItem("verified");
 
 const clearStorage = () => localStorage.clear();
 
@@ -15,6 +20,9 @@ const getCSRF =  (name="csrftoken") => {
 
 export {
     getAccessToken,
+    setAccessToken,
+    getVerifyStatus,
+    setVerifyStatus,
     clearStorage,
     getCSRF,
 }

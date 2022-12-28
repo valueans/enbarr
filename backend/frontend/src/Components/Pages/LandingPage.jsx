@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{ useEffect } from 'react';
 import {Grid,Typography} from '@mui/material';
 import ButtonAppBar from "../Header/Headers";
 import Button from '../Buttons/Button';
@@ -8,13 +8,23 @@ import Footer from '../Footer/Footer';
 import SocialLinksVertical from '../SocialLinks/SocialLinksVertical';
 import StoreLinks from '../SocialLinks/StoreLinks';
 import HorizontalLineIcon from '../Svgs/HorizontalLineIcon';
+import AuthService from '../../Services/AuthService';
 
 const LandingPage = () => {
-    const navigate = useNavigate();
+    const navigator = useNavigate();
+    const isAuthenticated = AuthService.checkUserAuthenticated();
+
+
+    useEffect(() => {
+        if (isAuthenticated){
+         navigator("/home")   
+        }
+    },[isAuthenticated,navigator])
 
     const buttonClick = ()=>{
-        return navigate('/auth')
+        return navigator('/auth')
     }
+    
   return (
     <>
         {/* LandingPage header starts */}

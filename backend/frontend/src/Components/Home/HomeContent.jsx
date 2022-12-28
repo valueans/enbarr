@@ -7,13 +7,13 @@ import HorseCardList from '../Cards/HorseCardList';
 import { useNavigate } from 'react-router-dom';
 
 const HomeContent = () => {
-    const navigate = useNavigate();
+    const navigator = useNavigate();
 
     const buyerClicks = ()=>{
-        return navigate('/home/buyer')
+        return navigator('/home/buyer')
     }
     const sellerClicks = ()=>{
-        return navigate('/home/seller')
+        return navigator('/home/seller')
     }
 
   return (

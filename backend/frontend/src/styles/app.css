@@ -71,3 +71,10 @@
     border:none;
     padding:10px;
 }
+
+.form-error{
+    color:red;
+    font-size: 12px;
+    font-weight: 600;
+    margin-left:10px;
+}

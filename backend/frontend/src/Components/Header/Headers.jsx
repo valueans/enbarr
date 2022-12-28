@@ -9,10 +9,10 @@ import BasicMenu from '../Menu/CustomMenu.jsx';
 
 
 export default function ButtonAppBar({headerType="landing",currentPage="home"}) {
-    const navigate = useNavigate();
+    const navigator = useNavigate();
 
     const buttonClick = ()=>{
-        return navigate('/auth')
+        return navigator('/auth')
     }
 
     const [homeActive,setHomeActive] = useState(currentPage==="home"?true:false);
@@ -27,7 +27,7 @@ export default function ButtonAppBar({headerType="landing",currentPage="home"}) 
             setMessageActive(false)
             setMyHorseActive(false)
             setSettingsActive(false)
-            return navigate('/home')
+            return navigator('/home')
         }
         if (clickedButton==="message"){
             setHomeActive(false)
@@ -40,14 +40,14 @@ export default function ButtonAppBar({headerType="landing",currentPage="home"}) 
             setMessageActive(false)
             setMyHorseActive(true)
             setSettingsActive(false)
-            return navigate('/myhorse')
+            return navigator('/myhorse')
         }
         if (clickedButton==="settings"){
             setHomeActive(false)
             setMessageActive(false)
             setMyHorseActive(false)
             setSettingsActive(true)
-            return navigate('/settings')
+            return navigator('/settings')
         }
     }
     

@@ -8,8 +8,9 @@ const ax = axios.create({
 
 
 ax.interceptors.request.use((config) => {
+
     var CSRF_TOKEN = getCSRF("csrftoken");
-    const accessToken = getAccessToken('token');
+    const accessToken = getAccessToken();
     if (accessToken) config.headers.Authorization = `Token ${accessToken}`;
     config.headers['X-CSRFToken'] = CSRF_TOKEN;
     config.headers['Content-Type'] = 'application/json';

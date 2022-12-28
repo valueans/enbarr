@@ -1,13 +1,24 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Headers from '../Header/Headers'
 import BlackFooter from '../Footer/BlackFooter'
 import HomeContent from '../Home/HomeContent'
 import BuyerContent from '../Home/BuyerContent'
 import SellerContent from '../Home/SellerContent'
 import HorseDetailContent from '../Home/HorseDetailContent'
-import {Routes,Route } from 'react-router-dom'
+import {Routes,Route, useNavigate } from 'react-router-dom'
+import AuthService from '../../Services/AuthService'
 
 const Home = () => {
+
+    const navigator = useNavigate();
+    const isAuthenticated = AuthService.checkUserAuthenticated();
+
+
+    useEffect(() => {
+        if (!isAuthenticated){
+          navigator("/")   
+        }
+    },[isAuthenticated,navigator])
   
 
   return (
