@@ -34,12 +34,14 @@ const SignUpForm = () => {
             return navigator('/auth/verify')
         }).catch(error=>{
             if (error.response.status === 400){
-                setError("Invalid email or password")
+                if (error.response.data.email){
+                    console.log(error.response.data);
+                    setError(error.response.data.email[0])
+                }
             }
             else{
                 setError("Something went wrong please try again later")
             }
-            console.log(error.response.status);
         })
         },
       });
