@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React,{useEffect, useState} from 'react';
 import Headers from '../Header/Headers';
 import BlackFooter from '../Footer/BlackFooter';
 import {Routes,Route } from 'react-router-dom';
@@ -7,9 +7,19 @@ import AuthenticationTabs from '../Buttons/AuthenticationTabs';
 import { useNavigate } from 'react-router-dom';
 import FavoriteHorse from '../Myhorse/FavoriteHorse';
 import MyHorses from '../Myhorse/MyHorses';
+import AuthService from '../../Services/AuthService';
 
 const MyHorse = () => {
     const navigator = useNavigate();
+
+    const isAuthenticated = AuthService.checkUserAuthenticated();
+
+
+    useEffect(() => {
+        if (!isAuthenticated){
+        navigator("/")
+        }
+    },[isAuthenticated,navigator])
 
     const [favActive,setFavActive] = useState(true);
     const [myHorseActive,setMyHorseActive] = useState(false);

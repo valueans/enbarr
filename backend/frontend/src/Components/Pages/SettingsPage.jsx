@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Grid,Typography,Switch } from '@mui/material';
 import Headers from '../Header/Headers';
 import BlackFooter from '../Footer/BlackFooter';
@@ -21,12 +21,23 @@ import PrivacyPolicy from '../Settings/PrivacyPolicy';
 import TermsAndCondition from '../Settings/TermsAndCondition';
 import ChangePassword from '../Settings/ChangePassword';
 import Feedback from '../Settings/Feedback';
+import { clearStorage } from '../../Constants/storage';
+import AuthService from '../../Services/AuthService';
 
 const SettingsPage = () => {
     const navigator = useNavigate();
     const [openSubscribeModel,setOpenSubscribeModel] = useState(false);
     const [openDeleteAccountModel,setOpenDeleteAccountModel] = useState(false);
     const [openLogoutModel,setOpenLogoutModel] = useState(false);
+
+    const isAuthenticated = AuthService.checkUserAuthenticated();
+
+
+    useEffect(() => {
+        if (!isAuthenticated){
+            navigator("/")
+        }
+    },[isAuthenticated,navigator])
 
     const [style,setStyle] = useState({background: "#FFFFFF",borderRadius:"15px",boxShadow:"1px 1px 13px 1px grey"});
 
@@ -69,8 +80,9 @@ const SettingsPage = () => {
         else if (buttonName==="logout"){
             setOpenLogoutModel(true)
         }
-
     }
+
+
   return (
     <>
         {/* header when the user will logged in starts */}
@@ -252,7 +264,10 @@ const SettingsPage = () => {
             </Grid>
             <CustomModel title="Unsubscribe" open={openSubscribeModel} setOpen={setOpenSubscribeModel}/>
             <CustomModel title="Delete this Account" open={openDeleteAccountModel} setOpen={setOpenDeleteAccountModel}/>
-            <CustomModel title="Logout" open={openLogoutModel} setOpen={setOpenLogoutModel}/>
+            <CustomModel title="Logout" open={openLogoutModel} setOpen={setOpenLogoutModel} onClick={()=>{
+                clearStorage();
+                return navigator('/')
+            }}/>
             {/* menu button pages ends */}
         </Grid>
         {/* main container ends */}

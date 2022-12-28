@@ -3,7 +3,7 @@ import { Modal,Typography,Box,Grid } from '@mui/material';
 import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 import Button from '../Buttons/Button';
 
-const CustomModel = ({open,setOpen,title}) => {
+const CustomModel = ({open,setOpen,title,onClick}) => {
 
     const handleClose = ()=>{
         setOpen(false)
@@ -65,7 +65,7 @@ const CustomModel = ({open,setOpen,title}) => {
                 </Grid>
                 <Grid item container xs={12} spacing={2} className="justifyContentCenter" sx={{mt:3}}>
                     <Grid item xs={4}>
-                        <Button title="Yes" width="100%"></Button>
+                        <Button title="Yes" width="100%" onClick={onClick}></Button>
                     </Grid>
                     <Grid item xs={4}>
                         <Button title="No" onClick={handleClose} backgroundColor="#E1E1E1" color='#313033' width="100%" border="1px solid #868686"></Button>

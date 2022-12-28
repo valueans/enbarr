@@ -6,15 +6,15 @@ import AuthenticationPage from '../Components/Pages/AuthenticationPage';
 import MyHorse from '../Components/Pages/MyHorse';
 import SettingsPage from '../Components/Pages/SettingsPage';
 
+
 const Routers = () => {
   return (
     <Routes>
-        <Route exact path='/landing' element={<LandingPage></LandingPage>}/>
+        <Route exact path='/' element={<LandingPage></LandingPage>}/>
         <Route path='/auth/*' element={<AuthenticationPage/>}/>
         <Route path='/home/*' element={<Home/>}/>
         <Route path='/myhorse/*' element={<MyHorse></MyHorse>}/>
         <Route path='/settings/*' element={<SettingsPage></SettingsPage>}/>
-        <Route path='/' element={<Home></Home>}/>
 
 
         {/* example of custom routing */}
