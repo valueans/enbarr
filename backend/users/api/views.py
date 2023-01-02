@@ -96,7 +96,11 @@ class LoginViewSet(ViewSet):
         user_profile_serializer = UserProfileSerializer(user.userprofile)
         if user.is_verified == True:
             return Response(
-                {"token": token.key, "user": user_serializer.data,"user-profile":user_profile_serializer.data},
+                {
+                    "token": token.key,
+                    "user": user_serializer.data,
+                    "user-profile": user_profile_serializer.data,
+                },
                 status=status.HTTP_200_OK,
             )
 

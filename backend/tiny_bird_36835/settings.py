@@ -124,9 +124,7 @@ ROOT_URLCONF = "tiny_bird_36835.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [
-            os.path.join(REACT_APP_DIR, "build")
-        ],
+        "DIRS": [os.path.join(REACT_APP_DIR, "build")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -198,7 +196,10 @@ AUTHENTICATION_BACKENDS = (
 )
 
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-STATICFILES_DIRS = [os.path.join(REACT_APP_DIR, "build/static"),os.path.join(BASE_DIR, "static")]
+STATICFILES_DIRS = [
+    os.path.join(REACT_APP_DIR, "build/static"),
+    os.path.join(BASE_DIR, "static"),
+]
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 MEDIA_URL = "/mediafiles/"
@@ -239,7 +240,9 @@ EMAIL_USE_TLS = True
 
 # AWS S3 config
 AWS_ACCESS_KEY_ID = env.str("AWS_ACCESS_KEY_ID", "AKIA4KGTUZ6KNPJVLIH5")
-AWS_SECRET_ACCESS_KEY = env.str("AWS_SECRET_ACCESS_KEY", "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")
+AWS_SECRET_ACCESS_KEY = env.str(
+    "AWS_SECRET_ACCESS_KEY", "fxqTh2rq9dgpjC98rGVMU/9p0VWuU7CfEDKT08Vb"
+)
 AWS_STORAGE_BUCKET_NAME = env.str("AWS_STORAGE_BUCKET_NAME", "tiny-bird-36835")
 AWS_STORAGE_REGION = env.str("AWS_STORAGE_REGION", "us-east-2")
 AWS_DEFAULT_ACL = "private"
@@ -358,7 +361,7 @@ SESSION_COOKIE_SECURE = False
 
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.TokenAuthentication",
     ]
 }

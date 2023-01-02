@@ -882,14 +882,16 @@ def BreedView(request):
         serializer = BreedsSerializer(instance, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
+
 @swagger_auto_schema(
     method="GET",
     responses={200: HorsesSerializer(many=True)},
 )
 @api_view(["GET"])
 def getRecentlyAddedHorsesView(request):
-    horses = Horses.objects.all().order_by('id').reverse()[:3]
+    horses = Horses.objects.all().order_by("id").reverse()[:3]
     return getPagination(horses, request, HorsesSerializer)
+
 
 @swagger_auto_schema(
     method="GET",
@@ -897,15 +899,23 @@ def getRecentlyAddedHorsesView(request):
 )
 @api_view(["GET"])
 def getTopHorseAddsView(request):
-    horses = Horses.objects.all().order_by('total_views').reverse()[:6]
+    horses = Horses.objects.all().order_by("total_views").reverse()[:6]
     return getPagination(horses, request, HorsesSerializer)
 
+
 from django.db.models import Count
+
+
 @swagger_auto_schema(
     method="GET",
     responses={200: HorsesSerializer(many=True)},
 )
 @api_view(["GET"])
 def getTrendingHorseAddsView(request):
-    horses = Horses.objects.annotate(num_likes=Count('likes')).all().order_by('num_likes').reverse()[:6]
+    horses = (
+        Horses.objects.annotate(num_likes=Count("likes"))
+        .all()
+        .order_by("num_likes")
+        .reverse()[:6]
+    )
     return getPagination(horses, request, HorsesSerializer)
