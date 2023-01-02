@@ -113,6 +113,7 @@ class Horses(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     approved = models.BooleanField(default=False)
+    total_views = models.BigIntegerField(default=0)
 
     def __str__(self):
         return self.title

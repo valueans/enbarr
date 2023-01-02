@@ -17,6 +17,9 @@ from .viewsets import (
     disciplineView,
     colorView,
     BreedView,
+    getRecentlyAddedHorsesView,
+    getTopHorseAddsView,
+    getTrendingHorseAddsView
 )
 
 
@@ -38,4 +41,7 @@ urlpatterns = [
     path("disciplines/", disciplineView, name="discipline"),
     path("colors/", colorView, name="colors"),
     path("breeds/", BreedView, name="breeds"),
+    path("recently-added-horses/", getRecentlyAddedHorsesView, name="recently-added-horses"),
+    path("top-horses/", getTopHorseAddsView, name="top-horses"),
+    path("trending-horses/", getTrendingHorseAddsView, name="trending-horses"),
 ]
