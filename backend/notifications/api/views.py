@@ -55,16 +55,15 @@ def notificationsView(request):
             data = {"status": "error", "message": "notification-id is required"}
             return Response(data=data, status=status.HTTP_404_NOT_FOUND)
         try:
-            instance = Notifications.objects.get(id=notification_id)
+            notification_id = notification_id.split(",")
+            instance = Notifications.objects.filter(id__in=notification_id)
+            instance.update(read_status=True)
         except:
             data = {"status": "error", "message": "Invalid notification-id"}
             return Response(data=data, status=status.HTTP_404_NOT_FOUND)
 
-        serializer = NotificationsSerializer(instance, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(data=serializer.data, status=status.HTTP_200_OK)
-        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        data = {"status": "success", "message": "successfully updated"}
+        return Response(data=data, status=status.HTTP_200_OK)
 
     if request.method == "DELETE":
         notification_id = request.GET.get("notification-id", None)
