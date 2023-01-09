@@ -12,6 +12,7 @@ const Home = () => {
 
     const navigator = useNavigate();
     const isAuthenticated = AuthService.checkUserAuthenticated();
+    
 
 
     useEffect(() => {
@@ -19,7 +20,6 @@ const Home = () => {
           navigator("/")   
         }
     },[isAuthenticated,navigator])
-  
 
   return (
     <>
@@ -28,7 +28,7 @@ const Home = () => {
         {/* header when the user will logged in ends */}
 
         <Routes>
-          <Route path="" element={<HomeContent/>} />
+          <Route path="" element={<HomeContent />} />
           <Route path="buyer" element={<BuyerContent/>} />
           <Route path="seller" element={<SellerContent/>} />
           <Route path="horse" element={<HorseDetailContent/>} />

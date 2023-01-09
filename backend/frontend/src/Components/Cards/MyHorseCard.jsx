@@ -1,22 +1,20 @@
 import React from 'react'
-import { Card,Box,Typography,Grid } from '@mui/material';
-import horse from '../../assets/horse.png'
+import { Card,Box,Typography,Grid,CardMedia } from '@mui/material';
 import Button from '../Buttons/Button';
 import { useNavigate } from 'react-router-dom';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 
-const MyHorseCard = () => {
+const MyHorseCard = ({image,horseAddKey,likes=0}) => {
 const navigator = useNavigate();
 
-const detailsClicked = (event,index)=>{
-    return navigator(`/home/horse?id=${index}`)
+const detailsClicked = ()=>{
+    return navigator(`/home/horse?id=${horseAddKey}`)
 
 }
   return (
     <>
-    <Card
-        sx={{backgroundImage:`url(${horse})`,objectFit:"fit",height:"500px",width:"340px",backgroundRepeat:"no-repeat",boxShadow:"0px 10px 10px rgba(0, 0, 0, 0.1)",borderRadius:"30px"}}>
-
+    <Card sx={{height:"500px",width:"340px",boxShadow:"0px 10px 10px rgba(0, 0, 0, 0.1)",borderRadius:"30px"}}>
+        <CardMedia component="img" height="100%" image={image} alt="add-image" />
     </Card>
     <Grid container>
         <Grid item xs={10} sx={{position:"relative",top:"-126px",zIndex:8}} className="justifyContentEnd">
@@ -24,7 +22,7 @@ const detailsClicked = (event,index)=>{
                 <Typography variant='authInputTitle'>
                     <FavoriteIcon />
                 </Typography>
-                <Typography variant='authInputTitle'>456</Typography>
+                <Typography variant='authInputTitle'>{likes}</Typography>
             </Box>
         </Grid>
     </Grid>

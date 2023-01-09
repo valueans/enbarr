@@ -2,7 +2,7 @@ import React,{useState,useEffect} from 'react';
 import {Grid, Typography} from '@mui/material';
 import HeaderImageGrid from '../Header/HeaderImageGrid';
 import logo from '../../assets/logo.svg'
-import {Link} from 'react-router-dom';
+import {Link, useLocation} from 'react-router-dom';
 import AuthenticationTabs from '../Buttons/AuthenticationTabs';
 import Footer from '../Footer/Footer';
 import { Routes,Route } from 'react-router-dom';
@@ -15,8 +15,10 @@ import AuthService from '../../Services/AuthService';
 const AuthenticationPage = () => {
   const navigator = useNavigate();
 
-  const [signupActive,setSignupActive] = useState(true);
-  const [loginActive,setLoginActive] = useState(false);
+  const location = useLocation();
+
+  const [signupActive,setSignupActive] = useState(location.pathname === "/auth/register");
+  const [loginActive,setLoginActive] = useState(location.pathname === "/auth/login");
   const [showTabs,setShowTabs] = useState(true);
 
   const isAuthenticated = AuthService.checkUserAuthenticated();

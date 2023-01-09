@@ -22,7 +22,7 @@ const LandingPage = () => {
     },[isAuthenticated,navigator])
 
     const buttonClick = ()=>{
-        return navigator('/auth')
+        return navigator('/auth/login')
     }
     
   return (

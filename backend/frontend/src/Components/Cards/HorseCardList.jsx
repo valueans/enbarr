@@ -5,41 +5,13 @@ import MyHorseCard from './MyHorseCard';
 import DividerIcon from '../Svgs/DividerIcon';
 import { useNavigate } from 'react-router-dom';
 
-const HorseCardList = ({title,numberOfCards=1,typeCard="horse"}) => {
+const HorseCardList = ({title,adds,typeCard="horse"}) => {
     const navigator = useNavigate();
-
-    var divs = []
+    
     const horseListClicked = (event,index)=>{
         return navigator(`/home/horse?id=${index}`)
 
     }
-
-    const addDivs = ()=>{
-    for (let index = 0; index < numberOfCards; index++) { 
-    if (typeCard === "horse"){
-        index> 2?divs.push(
-            <Grid item lg={4} sm={6} xs={12} sx={{mt:4}}
-                    className="justifyContentCenter" key={index} onClick={event => horseListClicked(event,index)}>
-                    <HorseCard />
-            </Grid>):divs.push(
-            <Grid item lg={4} sm={6} xs={12}  sx={{mt:4}} className="justifyContentCenter" key={index} onClick={event => horseListClicked(event,index)}>
-                <HorseCard />
-            </Grid>)   
-    }
-    else{
-        index> 2?divs.push(
-            <Grid item lg={4} sm={6} xs={12}
-                 key={index} >
-                    <MyHorseCard />
-            </Grid>):divs.push(
-            <Grid item lg={4} sm={6} xs={12}  sx={{mt:4}} key={index}>
-                <MyHorseCard />
-        </Grid>) 
-    }
-        }
-    }
-
-    addDivs()
 
   return (
     <>
@@ -59,14 +31,50 @@ const HorseCardList = ({title,numberOfCards=1,typeCard="horse"}) => {
         {
             typeCard==="horse"?
             <Grid container item sx={{mt:4}}>
-            {divs.map((object,i)=>{
-                return object
-            })}
+            {
+                adds.map((object,index)=>{
+                    return (
+                        index> 2?
+                        <Grid item lg={4} sm={6} xs={12} sx={{mt:4}} className="justifyContentCenter" key={object.id} onClick={event => horseListClicked(event,object.id)}>
+                            <HorseCard image={object.images[0].file}/>
+                        </Grid>:
+                        <Grid item lg={4} sm={6} xs={12}  sx={{mt:4}} className="justifyContentCenter" key={object.id} onClick={event => horseListClicked(event,object.id)}>
+                            <HorseCard image={object.images[0].file}/>
+                        </Grid>
+                    )
+                })
+            }
+            </Grid>:
+            typeCard === "favouriteHorses"?
+            <Grid container item sx={{mt:4}}>
+            {
+                adds.map(({id,horses,user},index)=>{
+                    return (
+                        index> 2?
+                        <Grid item lg={4} sm={6} xs={12} sx={{mt:4}} className="justifyContentCenter" key={horses.id} onClick={event => horseListClicked(event,horses.id)}>
+                            <HorseCard image={horses.images[0].file}/>
+                        </Grid>:
+                        <Grid item lg={4} sm={6} xs={12}  sx={{mt:4}} className="justifyContentCenter" key={horses.id} onClick={event => horseListClicked(event,horses.id)}>
+                            <HorseCard image={horses.images[0].file}/>
+                        </Grid>
+                    )
+                })
+            }
             </Grid>:
             <Grid container>
-                {divs.map((object,i)=>{
-                return object
-                })}
+                {
+                adds.map((element,index)=>{
+                    return (
+                        index> 2?
+                        <Grid item lg={4} sm={6} xs={12} key={element.id} onClick={event => horseListClicked(event,element.id)}>
+                        <MyHorseCard image={element.images[0].file} likes={element.likes}/>
+                        </Grid>:
+                        <Grid item lg={4} sm={6} xs={12}  sx={{mt:4}} key={element.id} onClick={event => horseListClicked(event,element.id)}>
+                            <MyHorseCard image={element.images[0].file} likes={element.likes}/>
+                        </Grid>
+                    )
+                })
+                }
             </Grid>
         }
     </Grid>

@@ -5,14 +5,14 @@ import logo from '../../assets/logo.svg';
 import SearchIcon from '@mui/icons-material/Search';
 import profilePic from '../../assets/profile.png';
 import { Link,useNavigate } from 'react-router-dom';
-import BasicMenu from '../Menu/CustomMenu.jsx';
+import NotificationMenu from '../Menu/NotificationMenu.jsx';
 
 
 export default function ButtonAppBar({headerType="landing",currentPage="home"}) {
     const navigator = useNavigate();
 
     const buttonClick = ()=>{
-        return navigator('/auth')
+        return navigator('/auth/login')
     }
 
     const [homeActive,setHomeActive] = useState(currentPage==="home"?true:false);
@@ -40,7 +40,7 @@ export default function ButtonAppBar({headerType="landing",currentPage="home"}) 
             setMessageActive(false)
             setMyHorseActive(true)
             setSettingsActive(false)
-            return navigator('/myhorse')
+            return navigator('/myhorse/favorites?page=1')
         }
         if (clickedButton==="settings"){
             setHomeActive(false)
@@ -153,7 +153,7 @@ export default function ButtonAppBar({headerType="landing",currentPage="home"}) 
                                                 <SearchIcon className="headerIcons" />
                                             </Grid>
                                             <Grid item xs={4} className="justifyContentEndAlignCenter">
-                                                <BasicMenu />
+                                                <NotificationMenu />
                                             </Grid>
                                             <Grid item xs={4} className="justifyContentEndAlignCenter">
                                                 <Avatar alt="Remy Sharp" src={profilePic}

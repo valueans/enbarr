@@ -1,7 +1,7 @@
 import React,{useEffect, useState} from 'react';
 import Headers from '../Header/Headers';
 import BlackFooter from '../Footer/BlackFooter';
-import {Routes,Route } from 'react-router-dom';
+import {Routes,Route, useLocation } from 'react-router-dom';
 import { Grid } from '@mui/material';
 import AuthenticationTabs from '../Buttons/AuthenticationTabs';
 import { useNavigate } from 'react-router-dom';
@@ -14,6 +14,8 @@ const MyHorse = () => {
 
     const isAuthenticated = AuthService.checkUserAuthenticated();
 
+    const location = useLocation();
+
 
     useEffect(() => {
         if (!isAuthenticated){
@@ -21,18 +23,18 @@ const MyHorse = () => {
         }
     },[isAuthenticated,navigator])
 
-    const [favActive,setFavActive] = useState(true);
-    const [myHorseActive,setMyHorseActive] = useState(false);
+    const [favActive,setFavActive] = useState(location.pathname==="/myhorse/favorites");
+    const [myHorseActive,setMyHorseActive] = useState(location.pathname==="/myhorse/myhorses");
 
     const myHorseRoute = ()=>{
         setFavActive(false)
         setMyHorseActive(true)
-        return navigator('/myhorse/myhorses')
+        return navigator('/myhorse/myhorses?page=1')
     }
     const myFavRoute = ()=>{
         setFavActive(true)
         setMyHorseActive(false)
-        return navigator('/myhorse/favorites')
+        return navigator('/myhorse/favorites?page=1')
     }
 
 return (
@@ -58,9 +60,14 @@ return (
         <Grid item xs={12} className="justifyContentCenter">
             <Grid item xs={10}>
                 <Routes>
-                <Route path="*" element={<FavoriteHorse/>}/>
-                <Route path="favorites" element={<FavoriteHorse/>}/>
-                <Route path="myhorses" element={<MyHorses/>}/>
+                    <Route path="favorites">
+                        <Route index element={<FavoriteHorse/>} />
+                        <Route path="?page=:page" element={<FavoriteHorse/>} />
+                    </Route>
+                    <Route path="myhorses">
+                        <Route index element={<MyHorses/>} />
+                        <Route path="?page=:page" element={<FavoriteHorse/>} />
+                    </Route>
             </Routes>
             </Grid>
         </Grid> 

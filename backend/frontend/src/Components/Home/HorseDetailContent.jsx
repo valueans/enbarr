@@ -11,7 +11,6 @@ import LongHorizontalLineIcon from '../Svgs/LongHorizontalLineIcon'
 const HorseDetailContent = () => {
 const [searchParam] =useSearchParams();
 const id = searchParam.get('id')
-console.log("id is ",id)
 
 return (
 <Grid container sx={{minHeight:"calc(100vh - 101px)"}} className="justifyContentCenter">

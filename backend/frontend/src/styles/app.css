@@ -78,3 +78,8 @@
     font-weight: 600;
     margin-left:10px;
 }
+
+
+.singleNotification{
+    box-shadow:"1px 1px 10px 1px grey"!important;
+}
