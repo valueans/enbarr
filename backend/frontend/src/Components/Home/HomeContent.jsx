@@ -1,13 +1,30 @@
-import React from 'react';
+import React,{useState,useEffect} from 'react';
 import { Grid,Typography } from '@mui/material';
 import homeImage from '../../assets/homeImage.png';
 import SocialLinks from '../SocialLinks/SocialLinksVertical';
 import Button from '../Buttons/Button';
 import HorseCardList from '../Cards/HorseCardList';
 import { useNavigate } from 'react-router-dom';
+import HorseService from '../../Services/HorseService';
 
 const HomeContent = () => {
     const navigator = useNavigate();
+
+    const [recentlyAddedHorses,setRecentlyAddedHorses] = useState([]);
+    const [topHorses,setTopHorses] = useState([]);
+    const [trendingHorses,setTrendingHorses] = useState([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const recentlyAddedAdds = await HorseService.getRecentlyAddedHorses();
+            const topAdds = await HorseService.getTopHorses();
+            const trendingAdds = await HorseService.getTrendingHorses();
+            setRecentlyAddedHorses(recentlyAddedAdds.results)
+            setTopHorses(topAdds.results)
+            setTrendingHorses(trendingAdds.results)
+        }
+        fetchData()
+    },[])
 
     const buyerClicks = ()=>{
         return navigator('/home/buyer')
@@ -66,13 +83,13 @@ const HomeContent = () => {
         </Grid>
         {/* Loggedin user Landing page end */}
         {/* Recentely Added starts */}
-        <HorseCardList title="Recently added" numberOfCards={3} />
+        <HorseCardList title="Recently added" adds={recentlyAddedHorses}/>
         {/* Recentely Added ends */}
         {/* Tops Adds starts */}
-        <HorseCardList title="Top Adds" numberOfCards={6} />
+        <HorseCardList title="Top Adds" adds={topHorses}/>
         {/* Tops Adds ends */}
         {/* Trending Adds starts */}
-        <HorseCardList title="Trending Adds" numberOfCards={6} />
+        <HorseCardList title="Trending Adds" adds={trendingHorses} />
         {/* Trending Adds ends */}
     </>
   )

@@ -18,6 +18,22 @@ export const feedbackUrl = `${api}feedback/`;
 export const chatUrl = `${api}chat/`;
 export const paymentUrl = `${api}payment/`;
 
+// horse urls
+export const recentlyAddedHorsesUrl = `${api}recently-added-horses/`
+export const topHorsesUrl = `${api}top-horses/`
+export const trendingHorsesUrl = `${api}trending-horses/`
+// favorite horses
+
+export const favouriteHorsesUrl = `${api}favourite/`
+
+// my horses
+export const myHorsesUrl = `${api}horse/`
+
+
+// notifications
+
+export const myNotifications = `${api}notifications/notifications/`;
+
 // social links
 export const facebookLink  = "https://www.facebook.com/";
 export const linkedinLink  = "https://pk.linkedin.com/";
