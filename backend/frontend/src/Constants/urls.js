@@ -13,6 +13,7 @@ export const sendOtpUrl = `${usersUrl}sendotp/`;
 export const resetEmailUrl = `${usersUrl}reset-email/`;
 export const resetPasswordUrl = `${usersUrl}reset-password/`;
 export const deleteUserUrl = `${usersUrl}delete-user/`;
+export const userProfileUrl = `${usersUrl}userprofile/`;
 
 export const feedbackUrl = `${api}feedback/`;
 export const chatUrl = `${api}chat/`;
@@ -31,8 +32,24 @@ export const myHorsesUrl = `${api}horse/`
 
 
 // notifications
+export const myNotificationsUrl = `${api}notifications/notifications/`;
 
-export const myNotifications = `${api}notifications/notifications/`;
+// locations
+export const locationsUrl = `${api}locations/`;
+export const breedsUrl = `${api}breeds/`;
+export const disciplineUrl = `${api}disciplines/`;
+export const colorsUrl = `${api}colors/`;
+export const temperamentsUrl = `${api}temperaments/`;
+
+// horse image
+
+export const horseImage = `${api}horse-images/`
+
+// horse keywords
+export const horseKeywords = `${api}keywords/`
+
+// feedback
+export const sendFeedbackUrl = `${feedbackUrl}feedback/`
 
 // social links
 export const facebookLink  = "https://www.facebook.com/";

@@ -19,16 +19,21 @@ import CustomModel from '../Models/CustomModel';
 import ProfilePage from '../Settings/ProfilePage';
 import PrivacyPolicy from '../Settings/PrivacyPolicy';
 import TermsAndCondition from '../Settings/TermsAndCondition';
-import ChangePassword from '../Settings/ChangePassword';
 import Feedback from '../Settings/Feedback';
 import { clearStorage } from '../../Constants/storage';
 import AuthService from '../../Services/AuthService';
+import CustomSnackBar from '../SnackBar/CustomSnackBar';
+import { getUserProfile as getDefaultUserProfile,setUserProfile as setDefaultUserProfile } from '../../Constants/storage';
+import ChangePasswordForm from '../Forms/ChangePasswordForm';
+import ChangePassword from '../Settings/ChangePassword';
 
 const SettingsPage = () => {
     const navigator = useNavigate();
     const [openSubscribeModel,setOpenSubscribeModel] = useState(false);
     const [openDeleteAccountModel,setOpenDeleteAccountModel] = useState(false);
     const [openLogoutModel,setOpenLogoutModel] = useState(false);
+    const [snackBarData,setSnackBarData] = useState({open:false,message:"",severity:"error"});
+    const getUserProfile = getDefaultUserProfile();
 
     const isAuthenticated = AuthService.checkUserAuthenticated();
 
@@ -41,7 +46,21 @@ const SettingsPage = () => {
 
     const [style,setStyle] = useState({background: "#FFFFFF",borderRadius:"15px",boxShadow:"1px 1px 13px 1px grey"});
 
-    const redirect = (event,buttonName)=>{
+
+    const deleteUserAccount = async ()=>{
+        try{
+            const response = await AuthService.deleteUser()
+            clearStorage();
+            return navigator('/')
+
+        }catch(error){
+            setSnackBarData({open:true,message:"Something went wrong",severity:"error"})
+            console.log(error)
+        }
+    }
+
+
+    const redirect = async (event,buttonName)=>{
         if (buttonName==="upgrade"){
             setStyle({background: "#FFFFFF",borderRadius:"15px",boxShadow:"1px 1px 13px 1px grey"});
             return navigator('/settings/upgrade')
@@ -55,7 +74,8 @@ const SettingsPage = () => {
 
         }
         else if (buttonName==="notification"){
-            console.log("notifications get",event.target.checked)
+            const response = await AuthService.updateNotificationStatus(event.target.checked)
+            setDefaultUserProfile(response)
         }
         else if (buttonName==="privacy"){
             setStyle({});
@@ -85,6 +105,7 @@ const SettingsPage = () => {
 
   return (
     <>
+        <CustomSnackBar snackBarData={snackBarData} setSnackBarData={setSnackBarData} />
         {/* header when the user will logged in starts */}
         <Headers headerType="home-page" currentPage='settings' />
         {/* header when the user will logged in ends */}
@@ -93,7 +114,7 @@ const SettingsPage = () => {
         <Grid container sx={{p:4}} className="justifyContentBetween">
             {/* setting menu starts */}
             <Grid item lg={3} xs={12}
-                sx={{minHeight:"calc(100vh - 101px)",maxHeight:"calc(100vh - 101px)",p:4,background: "#FFFFFF",borderRadius:"15px",boxShadow:"1px 1px 13px 1px grey"}}>
+                sx={{minHeight:"100vh",maxHeight:"auto",p:4,background: "#FFFFFF",borderRadius:"15px",boxShadow:"1px 1px 13px 1px grey"}}>
                 <Grid container>
                     {/* settings heading starts */}
                     <Grid item xs={12}>
@@ -154,7 +175,7 @@ const SettingsPage = () => {
                             </Grid>
                             <Grid item xs={10} className="justifyContentBetween">
                                 <Typography variant="headerLinks">Notifications</Typography>
-                                <Switch color="primary" onChange={event => redirect(event,"notification")}/>
+                                <Switch color="primary" onChange={(event) => redirect(event,"notification")} defaultChecked={getUserProfile.receive_notifications}/>
                             </Grid>
                         </Grid>
                         {/* Notifications button ends */}
@@ -255,15 +276,15 @@ const SettingsPage = () => {
                 <Routes>
                     <Route path='upgrade' element={<UpgradeSubscribtion />} />
                     <Route path='*' element={<UpgradeSubscribtion />} />
-                    <Route path='profile' element={<ProfilePage />} />
+                    <Route path='profile' element={<ProfilePage setSnackBarData={setSnackBarData}/>} />
                     <Route path="privacypolicy" element={<PrivacyPolicy />}></Route>
                     <Route path="terms&condition" element={<TermsAndCondition />}></Route>
-                    <Route path="changepassword" element={<ChangePassword />}></Route>
-                    <Route path="feedback" element={<Feedback />}></Route>
+                    <Route path="changepassword" element={<ChangePassword setSnackBarData={setSnackBarData}/>}></Route>
+                    <Route path="feedback" element={<Feedback setSnackBarData={setSnackBarData}/>}></Route>
                 </Routes>
             </Grid>
             <CustomModel title="Unsubscribe" open={openSubscribeModel} setOpen={setOpenSubscribeModel}/>
-            <CustomModel title="Delete this Account" open={openDeleteAccountModel} setOpen={setOpenDeleteAccountModel}/>
+            <CustomModel title="Delete this Account" open={openDeleteAccountModel} setOpen={setOpenDeleteAccountModel} onClick={deleteUserAccount}/>
             <CustomModel title="Logout" open={openLogoutModel} setOpen={setOpenLogoutModel} onClick={()=>{
                 clearStorage();
                 return navigator('/')

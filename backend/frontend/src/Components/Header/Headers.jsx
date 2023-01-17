@@ -3,13 +3,16 @@ import {Toolbar,Box,AppBar,Typography,Grid,Avatar} from '@mui/material';
 import Button from '../Buttons/Button.jsx';
 import logo from '../../assets/logo.svg';
 import SearchIcon from '@mui/icons-material/Search';
-import profilePic from '../../assets/profile.png';
 import { Link,useNavigate } from 'react-router-dom';
 import NotificationMenu from '../Menu/NotificationMenu.jsx';
+import { getUserProfile } from '../../Constants/storage.js';
+import ProfileCard from '../Cards/ProfileCard.jsx';
 
 
 export default function ButtonAppBar({headerType="landing",currentPage="home"}) {
     const navigator = useNavigate();
+
+    const currentLoginUserProfile = getUserProfile();
 
     const buttonClick = ()=>{
         return navigator('/auth/login')
@@ -156,8 +159,7 @@ export default function ButtonAppBar({headerType="landing",currentPage="home"}) 
                                                 <NotificationMenu />
                                             </Grid>
                                             <Grid item xs={4} className="justifyContentEndAlignCenter">
-                                                <Avatar alt="Remy Sharp" src={profilePic}
-                                                    sx={{ width: "50px", height: "50px",marginTop:"7px"}} />
+                                                <ProfileCard image={currentLoginUserProfile && currentLoginUserProfile.profile_photo?currentLoginUserProfile.profile_photo:""} height="50px" width='50px'/>
                                             </Grid>
                                         </Grid>
                                     </Grid>

@@ -1,5 +1,5 @@
 import axios from '../Constants/requests';
-import { recentlyAddedHorsesUrl,topHorsesUrl,trendingHorsesUrl,favouriteHorsesUrl, myHorsesUrl } from '../Constants/urls';
+import { recentlyAddedHorsesUrl,topHorsesUrl,trendingHorsesUrl,favouriteHorsesUrl, myHorsesUrl,locationsUrl,breedsUrl, disciplineUrl, colorsUrl, temperamentsUrl, horseImage, horseKeywords } from '../Constants/urls';
 
 const HorseService = {
 
@@ -21,6 +21,96 @@ const HorseService = {
     },
     getMyHorses : async (page=1) =>{
         const {data:response} = await axios.get(myHorsesUrl+`?page=${page}`);
+        return response
+    },
+    getAllLocations : async () =>{
+        const {data:response} = await axios.get(locationsUrl);
+        return response
+    },
+    getAllBreeds : async () =>{
+        const {data:response} = await axios.get(breedsUrl);
+        return response
+    },
+    getAllDisciplines : async () =>{
+        const {data:response} = await axios.get(disciplineUrl);
+        return response
+    },
+    getAllColors : async () =>{
+        const {data:response} = await axios.get(colorsUrl);
+        return response
+    },
+    getAllTemperaments : async () =>{
+        const {data:response} = await axios.get(temperamentsUrl);
+        return response
+    },
+    saveHorseImage : async (image) =>{
+        let formData = new FormData();
+        formData.append("file", image,image.name);
+        const {data:response} = await axios.post(horseImage,formData,{
+            headers:{
+                'Content-Type' : 'multipart/form-data'
+            }
+        });
+        return response
+    },
+    deleteHorseImage : async (id) =>{
+        const {data:response} = await axios.delete(horseImage,{
+            params:{
+                "image-id":id
+            }
+        });
+        return response
+    },
+    saveHorseKeyword : async (keyword) =>{
+        let formData = new FormData();
+        formData.append("keyword", keyword);
+        const {data:response} = await axios.post(horseKeywords,formData,{
+            headers:{
+                'Content-Type' : 'multipart/form-data'
+            }
+        });
+        return response
+    },
+    deleteHorseKeyword : async (id) =>{
+        const {data:response} = await axios.delete(horseKeywords,{
+            params:{
+                "keyword-id":id
+            }
+        });
+        return response
+    },
+    saveHorse : async (data) =>{
+        const {data:response} = await axios.post(myHorsesUrl,data,{
+            headers:{
+                'Content-Type' : 'application/json'
+            }
+        });
+        return response
+    },
+    getHorseDetails : async (id) =>{
+        const {data:response} = await axios.get(myHorsesUrl,{
+            params:{
+                "horse-id":id
+            }
+        });
+        return response
+    },
+    addHorseToFav : async (id) =>{
+        const formData = new FormData();
+        formData.append('horse_id',id)
+        const {data:response} = await axios.post(favouriteHorsesUrl,formData,{
+            headers:{
+                'Content-Type' : 'multipart/form-data'
+            }
+        });
+        return response
+    },
+    deleteHorseFromFav : async (id) =>{
+        const {data:response} = await axios.delete(favouriteHorsesUrl,{
+            params:{
+                "horse-id":id
+            }
+        });
         return response
     }
 }

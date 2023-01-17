@@ -23,6 +23,7 @@ class User(AbstractUser):
 
     # First Name and Last Name do not cover name patterns
     # around the globe.
+    email = models.EmailField(unique=True)
     name = models.CharField(_("Name of User"), blank=True, null=True, max_length=255)
     is_verified = models.BooleanField(default=False)
     otp_counter = models.IntegerField(default=0)
@@ -63,6 +64,7 @@ class UserProfile(models.Model):
     ban_user_from_posting_date = models.DateField(null=True, blank=True)
     ban_user_from_app = models.BooleanField(default=False)
     ban_user_from_app_date = models.DateField(null=True, blank=True)
+    receive_notifications = models.BooleanField(default=True)
 
     def __str__(self):
         return self.user.email

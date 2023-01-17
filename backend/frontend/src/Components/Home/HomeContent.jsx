@@ -6,6 +6,8 @@ import Button from '../Buttons/Button';
 import HorseCardList from '../Cards/HorseCardList';
 import { useNavigate } from 'react-router-dom';
 import HorseService from '../../Services/HorseService';
+import AuthService from '../../Services/AuthService';
+import { setUserProfile } from '../../Constants/storage';
 
 const HomeContent = () => {
     const navigator = useNavigate();
@@ -23,6 +25,11 @@ const HomeContent = () => {
             setTopHorses(topAdds.results)
             setTrendingHorses(trendingAdds.results)
         }
+        const getUserProfile = async ()=>{
+            const response = await AuthService.getUserProfile();
+            setUserProfile(response)
+        }
+        getUserProfile()
         fetchData()
     },[])
 

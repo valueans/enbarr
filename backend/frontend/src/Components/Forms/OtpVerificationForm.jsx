@@ -1,24 +1,34 @@
 import React,{useState} from 'react'
-import {Grid, Typography,Alert} from '@mui/material';
+import {Grid, Typography} from '@mui/material';
 import CustomInput from '../Inputs/CustomInput';
 import Button from '../Buttons/Button';
-import { useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { verifyOtpSchema } from '../../Schemas';
 import { useFormik } from "formik";
 import AuthService from '../../Services/AuthService';
 import { setVerifyStatus } from '../../Constants/storage';
 
-const OtpVerificationForm = ({setShowTabs}) => {
+const OtpVerificationForm = ({setShowTabs,setSnackBarData,verificationType="normal"}) => {
 
     const navigator = useNavigate();
+    const location = useLocation();
     setShowTabs(false)
+
     const initialValues = {
         otp1: "",
         otp2: "",
         otp3: "",
         otp4: "",
       };
-    const [error,setError] = useState("");
+
+    const resendVerificationOtp = async () => {
+        try {
+            const response = await AuthService.sendOtp();
+            setSnackBarData({open:true,message:"Verification otp is sended",severity:"success"})
+        } catch (error) {
+            
+        }
+    }
 
     const { values, handleBlur, handleChange, handleSubmit} =
       useFormik({
@@ -26,18 +36,23 @@ const OtpVerificationForm = ({setShowTabs}) => {
         validationSchema: verifyOtpSchema,
         validateOnChange: true,
         validateOnBlur: false,
-        onSubmit: (values, action) => {
-        const response = AuthService.verifyOtpMethod(`${values.otp1}${values.otp2}${values.otp3}${values.otp4}`);
-        response.then(result =>{
-            setVerifyStatus(true)
+        onSubmit: async (values, action) => {
+        try {
+            const response = await AuthService.verifyOtpMethod(`${values.otp1}${values.otp2}${values.otp3}${values.otp4}`);   
+            
             action.resetForm();
-            return navigator('/')
-        })
-        .catch(error=>{
-            if (error.response.status === 400){
-                setError(error.response.data.message);
+            if (location.state && location.state.verificationType === "reset-email"){
+                return navigator('/auth/change-password')
             }
-        })
+            else{
+                setVerifyStatus(true)
+                return navigator('/')
+            }
+        } catch (error) {
+            if (error.response.status === 400){
+                setSnackBarData({open:true,message:error.response.data.message,severity:"error"})
+            }   
+        }
         },
       });
 
@@ -51,11 +66,6 @@ const OtpVerificationForm = ({setShowTabs}) => {
                 <Typography variant="authInputTitle" component="div">Verification Otp is sended to registered email
                 </Typography>
             </Grid>
-            {
-                error?<Grid item xs={12} sx={{width:"100%"}}>
-                    <Alert severity="error">{error}</Alert>
-                </Grid>:null
-            }
             <Grid item xs={12} sx={{mt:4}}>
                 <Grid container className="justifyContentCenter">
                     <Grid item xs={1} sx={{ml:2,mr:2}}>
@@ -71,6 +81,9 @@ const OtpVerificationForm = ({setShowTabs}) => {
                         <CustomInput type="text" maxLength={1} value={values.otp4} name="otp4" onChange={handleChange} onBlur={handleBlur}/>
                     </Grid>
                 </Grid>
+            </Grid>
+            <Grid item xs={12} className="justifyContentEnd">
+                <button className='linkBlack' style={{border:"none",cursor:"pointer"}} onClick={resendVerificationOtp}>Resend OTP</button>
             </Grid>
             <Grid item xs={12} sx={{mt:4}}>
                 <Button title="Verify" type="submit" width="100%" />

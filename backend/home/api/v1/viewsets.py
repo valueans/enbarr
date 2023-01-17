@@ -49,6 +49,7 @@ from home.api.v1.serializers import (
     DisciplinesSerializer,
     ColorsSerializer,
     BreedsSerializer,
+    LocationsSerializer,
 )
 from home.models import (
     ContactUs,
@@ -64,6 +65,7 @@ from home.models import (
     Colors,
     Disciplines,
     Breeds,
+    Locations,
 )
 
 
@@ -880,6 +882,20 @@ def BreedView(request):
     if request.method == "GET":
         instance = Breeds.objects.all()
         serializer = BreedsSerializer(instance, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
+@swagger_auto_schema(
+    method="GET",
+    responses={200: LocationsSerializer(many=True)},
+)
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+@authentication_classes([TokenAuthentication])
+def LocationView(request):
+    if request.method == "GET":
+        instance = Locations.objects.all()
+        serializer = LocationsSerializer(instance, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
