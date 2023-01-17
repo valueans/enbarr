@@ -13,13 +13,14 @@ from django.utils.translation import ugettext_lazy as _
 class SignupSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ("id", "name", "email", "password")
+        fields = ("id", "name", "email", "password", "userprofile")
         extra_kwargs = {
             "password": {"write_only": True, "style": {"input_type": "password"}},
             "email": {
                 "required": True,
                 "allow_blank": False,
             },
+            "userprofile": {"read_only": True},
         }
 
     def _get_request(self):
@@ -63,16 +64,24 @@ class SignupSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["id", "email", "name", "is_verified"]
+        fields = ["id", "email", "name", "is_verified", "userprofile"]
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
+    email = serializers.EmailField(write_only=True, required=False)
 
     class Meta:
         model = UserProfile
         fields = "__all__"
         read_only_fields = ["id"]
+
+    def validate_email(self, email):
+
+        user = User.objects.filter(email=email)
+        if user.count() > 0:
+            raise serializers.ValidationError("Email Already Exist")
+        return email
 
     def update(self, instance, validated_data):
         obj = super().update(instance, validated_data)
@@ -81,9 +90,19 @@ class UserProfileSerializer(serializers.ModelSerializer):
             if instance.subscription_plan == None:
                 instance.subscription_date = datetime.now()
             instance.subscription_plan = subscription_plan
-            instance.save()
         except:
             pass
+
+        try:
+            email = validated_data.pop("email", None)
+            if email:
+                if obj.user.email != email:
+                    obj.user.email = email
+                    obj.user.is_verified = False
+                    obj.user.save()
+        except:
+            pass
+        instance.save()
         return obj
 
 

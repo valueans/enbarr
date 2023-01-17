@@ -4,6 +4,7 @@ from rest_framework import serializers
 from users.models import UserSearchSave
 from users.api.serializers import UserProfileSerializer
 from home.google_maps_services import getAddress
+from datetime import date
 from home.models import (
     ContactUs,
     HorseImages,
@@ -18,6 +19,7 @@ from home.models import (
     Disciplines,
     Colors,
     Breeds,
+    Locations,
 )
 
 User = get_user_model()
@@ -79,6 +81,12 @@ class BreedsSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class LocationsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Locations
+        fields = "__all__"
+
+
 class HorseUpdateSerializer(serializers.ModelSerializer):
     images = HorseImagesSerializer(read_only=True, many=True)
     keywords = KeywordsSerializer(read_only=True, many=True)
@@ -91,7 +99,8 @@ class HorseUpdateSerializer(serializers.ModelSerializer):
     isfav = serializers.SerializerMethodField(read_only=True)
     userprofile = serializers.SerializerMethodField(read_only=True)
     title = serializers.CharField(max_length=300, required=False)
-    location = serializers.CharField(max_length=1000, required=False)
+    location = LocationsSerializer(read_only=True)
+    location_id = serializers.IntegerField(write_only=True, required=False)
     price = serializers.FloatField(required=False)
     description = serializers.CharField(max_length=2000, required=False)
     breed = BreedsSerializer(read_only=True)
@@ -103,7 +112,7 @@ class HorseUpdateSerializer(serializers.ModelSerializer):
     discipline = DisciplinesSerializer(read_only=True)
     discipline_id = serializers.IntegerField(write_only=True, required=False)
     gender = serializers.CharField(max_length=100, required=False)
-    age = serializers.IntegerField(required=False)
+    age = serializers.SerializerMethodField(read_only=True)
     height = serializers.CharField(max_length=500, required=False)
 
     class Meta:
@@ -155,6 +164,14 @@ class HorseUpdateSerializer(serializers.ModelSerializer):
                     raise serializers.ValidationError(
                         {"status": "error", "message": "Invalid temperament_id"}
                     )
+            elif key == "location_id":
+                try:
+                    location = Locations.objects.get(id=value)
+                    instance.location = location
+                except:
+                    raise serializers.ValidationError(
+                        {"status": "error", "message": "Invalid temperament_id"}
+                    )
 
             else:
                 setattr(instance, key, value)
@@ -197,6 +214,10 @@ class HorseUpdateSerializer(serializers.ModelSerializer):
             return False
         return True
 
+    def get_age(self, obj):
+        print(obj.year_of_birth)
+        return date.today().year - obj.year_of_birth
+
 
 class HorsesSerializer(serializers.ModelSerializer):
     images = HorseImagesSerializer(read_only=True, many=True)
@@ -210,7 +231,8 @@ class HorsesSerializer(serializers.ModelSerializer):
     isfav = serializers.SerializerMethodField(read_only=True)
     userprofile = serializers.SerializerMethodField(read_only=True)
     title = serializers.CharField(max_length=300, required=True)
-    location = serializers.CharField(max_length=1000, required=True)
+    location = LocationsSerializer(read_only=True)
+    location_id = serializers.IntegerField(write_only=True, required=True)
     price = serializers.FloatField(required=True)
     description = serializers.CharField(max_length=2000, required=True)
     breed = BreedsSerializer(read_only=True)
@@ -222,7 +244,7 @@ class HorsesSerializer(serializers.ModelSerializer):
     discipline = DisciplinesSerializer(read_only=True)
     discipline_id = serializers.IntegerField(write_only=True, required=True)
     gender = serializers.CharField(max_length=100, required=True)
-    age = serializers.IntegerField(required=True)
+    age = serializers.SerializerMethodField(read_only=True)
     height = serializers.CharField(max_length=500, required=True)
 
     class Meta:
@@ -238,6 +260,7 @@ class HorsesSerializer(serializers.ModelSerializer):
         color_id = validated_data.pop("color_id")
         temperament_id = validated_data.pop("temperament_id")
         discipline_id = validated_data.pop("discipline_id")
+        location_id = validated_data.pop("location_id")
 
         try:
             breed = Breeds.objects.get(id=breed_id)
@@ -265,15 +288,30 @@ class HorsesSerializer(serializers.ModelSerializer):
                 {"status": "error", "message": "Invalid discipline_id"}
             )
 
+        try:
+            discipline = Disciplines.objects.get(id=discipline_id)
+        except:
+            raise serializers.ValidationError(
+                {"status": "error", "message": "Invalid discipline_id"}
+            )
+        try:
+            location = Locations.objects.get(id=location_id)
+        except:
+            raise serializers.ValidationError(
+                {"status": "error", "message": "Invalid discipline_id"}
+            )
+
         instance = Horses.objects.create(**validated_data)
         instance.color = color
         instance.temperament = temperament
         instance.discipline = discipline
         instance.breed = breed
+        instance.location = location
 
-        location = instance.location
+        # verifying location from google maps api
+        user_location = instance.user_location
         try:
-            state, country = getAddress(location)
+            state, country = getAddress(user_location)
             instance.state = state
             instance.country = country
         except:
@@ -335,6 +373,9 @@ class HorsesSerializer(serializers.ModelSerializer):
         except:
             return False
         return True
+
+    def get_age(self, obj):
+        return date.today().year - obj.year_of_birth
 
 
 class FavouriteSerializer(serializers.ModelSerializer):

@@ -13,7 +13,6 @@ ax.interceptors.request.use((config) => {
     const accessToken = getAccessToken();
     if (accessToken) config.headers.Authorization = `Token ${accessToken}`;
     config.headers['X-CSRFToken'] = CSRF_TOKEN;
-    config.headers['Content-Type'] = 'application/json';
     return config;
 });
 

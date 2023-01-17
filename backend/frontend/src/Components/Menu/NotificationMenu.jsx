@@ -146,7 +146,7 @@ export default function NotificationMenu() {
                             <Typography variant="notification">All notifications</Typography>
                         </Grid>
                         <Grid item xs={5} sx={{textAlign:"end"}}>
-                        <IconButton onClick={updateAllNotificationStatus}><Typography variant="notification" sx={{color:"#8F8F8F"}}>Mark all as read</Typography></IconButton>
+                        <IconButton onClick={updateAllNotificationStatus} disabled={unReadCount===0}><Typography variant="notification" sx={{color:"#8F8F8F"}}>Mark all as read</Typography></IconButton>
                         </Grid>
                     </Grid>
                 </Grid>

@@ -11,6 +11,9 @@ import SignInForm from '../Forms/SignInForm';
 import OtpVerificationForm from '../Forms/OtpVerificationForm';
 import { useNavigate } from 'react-router-dom';
 import AuthService from '../../Services/AuthService';
+import CustomSnackBar from '../SnackBar/CustomSnackBar';
+import ResetEmailForm from '../Forms/ResetEmailForm';
+import ChangePasswordForm from '../Forms/ChangePasswordForm';
 
 const AuthenticationPage = () => {
   const navigator = useNavigate();
@@ -22,7 +25,7 @@ const AuthenticationPage = () => {
   const [showTabs,setShowTabs] = useState(true);
 
   const isAuthenticated = AuthService.checkUserAuthenticated();
-
+  const [snackBarData,setSnackBarData] = useState({open:false,message:"",severity:"error"});
 
     useEffect(() => {
         if (isAuthenticated){
@@ -48,6 +51,7 @@ const AuthenticationPage = () => {
 
   return (
     <>
+      <CustomSnackBar snackBarData={snackBarData} setSnackBarData={setSnackBarData} />
       <Grid container>
         {/* form image right taking 4 column */}
         <Grid item xs={7} sx={{height:"100vh",p:8}}>
@@ -84,10 +88,12 @@ const AuthenticationPage = () => {
           <Grid container sx={{mt:2,background:"#FFFFFF",boxShadow:"0px 5px 40px rgba(0, 0, 0, 0.15)",borderRadius:"15px",p:6}}>
             <Grid item xs={12}>
             <Routes>
-            <Route path="register" element={<SignUpForm/>} />
-            <Route path="*" element={<SignUpForm/>} />
-            <Route path="login" element={<SignInForm/>} />
-            <Route path="verify" element={<OtpVerificationForm setShowTabs={setShowTabs}/>} />
+            <Route path="register" element={<SignUpForm setSnackBarData={setSnackBarData}/>} />
+            <Route path="*" element={<SignUpForm setSnackBarData={setSnackBarData}/>} />
+            <Route path="login" element={<SignInForm setSnackBarData={setSnackBarData}/>} />
+            <Route path="verify" element={<OtpVerificationForm setShowTabs={setShowTabs} setSnackBarData={setSnackBarData}/>} />
+            <Route path="reset-email" element={<ResetEmailForm setShowTabs={setShowTabs} setSnackBarData={setSnackBarData}/>} />
+            <Route path="change-password" element={<ChangePasswordForm setSnackBarData={setSnackBarData}/>} />
           </Routes>
             </Grid>
           </Grid>

@@ -6,13 +6,11 @@ import { useNavigate } from 'react-router-dom';
 import { useFormik } from "formik";
 import { signUpSchema } from '../../Schemas';
 import AuthService from '../../Services/AuthService';
-import Alert from '@mui/material/Alert';
 import { setAccessToken,setVerifyStatus } from '../../Constants/storage';
 
-const SignUpForm = () => {
+const SignUpForm = ({setSnackBarData}) => {
     const navigator = useNavigate();
 
-    const [error,setError] = useState("");
 
     const initialValues = {
         email: "",
@@ -26,23 +24,24 @@ const SignUpForm = () => {
         validationSchema: signUpSchema,
         validateOnChange: true,
         validateOnBlur: false,
-        onSubmit: (values, action) => {
-        const response = AuthService.registerMethod(values.email,values.password);
-        response.then(result =>{
-            setAccessToken(result.token);
-            setVerifyStatus(result.user.is_verified)
+        onSubmit: async (values, action) => {
+        try {
+            const response = await AuthService.registerMethod(values.email,values.password);
+            setAccessToken(response.token);
+            setVerifyStatus(response.user.is_verified)
             return navigator('/auth/verify')
-        }).catch(error=>{
+            
+        } catch (error) {
             if (error.response.status === 400){
                 if (error.response.data.email){
                     console.log(error.response.data);
-                    setError(error.response.data.email[0])
+                    setSnackBarData({open:true,message:error.response.data.email[0],severity:"error"})
                 }
             }
             else{
-                setError("Something went wrong please try again later")
-            }
-        })
+                setSnackBarData({open:true,message:"Something went wrong please try again later",severity:"error"})
+            }   
+        }
         },
       });
 
@@ -52,11 +51,6 @@ const SignUpForm = () => {
             <Grid item xs={12} sx={{width:"100%"}}>
                 <Typography variant="authTitle" component="div">Sign up</Typography>
             </Grid>
-            {
-                error?<Grid item xs={12} sx={{width:"100%"}}>
-                    <Alert severity="error">{error}</Alert>
-                </Grid>:null
-            }
             <Grid item xs={12}>
                 <Typography variant="authInputTitle" component="div">Email</Typography>
                 <CustomInput type="text" placeholder="Email" name="email" value={values.email} onChange={handleChange} onBlur={handleBlur} />
