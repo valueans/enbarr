@@ -24,8 +24,8 @@ import { clearStorage } from '../../Constants/storage';
 import AuthService from '../../Services/AuthService';
 import CustomSnackBar from '../SnackBar/CustomSnackBar';
 import { getUserProfile as getDefaultUserProfile,setUserProfile as setDefaultUserProfile } from '../../Constants/storage';
-import ChangePasswordForm from '../Forms/ChangePasswordForm';
 import ChangePassword from '../Settings/ChangePassword';
+import StripePaymentForm from '../Forms/StripePaymentForm';
 
 const SettingsPage = () => {
     const navigator = useNavigate();
@@ -49,7 +49,7 @@ const SettingsPage = () => {
 
     const deleteUserAccount = async ()=>{
         try{
-            const response = await AuthService.deleteUser()
+            await AuthService.deleteUser()
             clearStorage();
             return navigator('/')
 
@@ -175,7 +175,7 @@ const SettingsPage = () => {
                             </Grid>
                             <Grid item xs={10} className="justifyContentBetween">
                                 <Typography variant="headerLinks">Notifications</Typography>
-                                <Switch color="primary" onChange={(event) => redirect(event,"notification")} defaultChecked={getUserProfile.receive_notifications}/>
+                                <Switch color="primary" onChange={(event) => redirect(event,"notification")} defaultChecked={getUserProfile?getUserProfile.receive_notifications:false}/>
                             </Grid>
                         </Grid>
                         {/* Notifications button ends */}
@@ -274,8 +274,8 @@ const SettingsPage = () => {
             {/* menu button pages starts */}
             <Grid item xs={12} lg={8} sx={style}>
                 <Routes>
-                    <Route path='upgrade' element={<UpgradeSubscribtion />} />
-                    <Route path='*' element={<UpgradeSubscribtion />} />
+                    <Route path='upgrade' element={<StripePaymentForm setSnackBarData={setSnackBarData}/>} />
+                    <Route path='*' element={<StripePaymentForm setSnackBarData={setSnackBarData}/>} />
                     <Route path='profile' element={<ProfilePage setSnackBarData={setSnackBarData}/>} />
                     <Route path="privacypolicy" element={<PrivacyPolicy />}></Route>
                     <Route path="terms&condition" element={<TermsAndCondition />}></Route>

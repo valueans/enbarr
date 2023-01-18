@@ -1,12 +1,13 @@
 from rest_framework import status
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.authentication import TokenAuthentication
 from django.conf import settings
 from drf_yasg.utils import swagger_auto_schema
 from home.api.v1.viewsets import deleted_message
 from payments.models import SubscriptionPlans, StripeCustomer, Cards
 import stripe
+from users.models import UserProfile
 from django.http import HttpResponse
 from .helpers import *
 from .serializers import (
@@ -39,7 +40,7 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 @authentication_classes([TokenAuthentication])
 def plansView(request):
     if request.method == "GET":
-        instance = SubscriptionPlans.objects.all()
+        instance = SubscriptionPlans.objects.all().order_by("id")
         serializer = SubscriptionPlansSerializer(instance, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
     if request.method == "POST":
@@ -119,8 +120,8 @@ def paymentMethods(request):
     """you can use this api to get all card details for specific user"""
     if request.method == "GET":
         user = request.user
-        instances = Cards.objects.filter(user=user)
-        serializer = CardsSerializer(instances, many=True)
+        instances = Cards.objects.filter(user=user).last()
+        serializer = CardsSerializer(instances)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
     if request.method == "DELETE":
         card_id = request.GET.get("card-id", None)
@@ -171,13 +172,40 @@ def chargeSubscription(request):
 
 
 @api_view(["POST"])
+@permission_classes([IsAuthenticated])
+@authentication_classes([TokenAuthentication])
+def upgradeSubscriptionView(request):
+    if request.method == "POST":
+        user = request.user
+        upgrade_plan_id = request.POST.get("plan-id", None)
+        if upgrade_plan_id is None:
+            data = {
+                "status": "error",
+                "message": "plan-id is required",
+            }
+            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+
+        plan = SubscriptionPlans.objects.get(id=upgrade_plan_id)
+        profile = UserProfile.objects.get(user=user)
+        profile.subscription_plan = plan
+        profile.save()
+        createMonthlySubscriptionCharge(profile.user)
+        data = {"status": "OK", "message": "Subscription updated"}
+        return Response(data=data, status=status.HTTP_200_OK)
+
+
+@api_view(["POST"])
+@permission_classes([AllowAny])
 def stripe_webhook(request):
     """_stripe webhook when the user will create the setup intent and add a card on setup intent on stripe page.it will send the response for that setup intent for verification_
     Returns:
         200
     """
     if request.method == "POST":
-        webhook_secret = settings.STRIPE_WEBHOOK_SECRET
+        # webhook_secret = settings.STRIPE_WEBHOOK_SECRET
+        webhook_secret = (
+            "whsec_deb681598854083ff326bae68399a61060ec3ba2e61aa474938833b0a70bbe3f"
+        )
         payload = request.body
         signature = request.headers.get("stripe-signature")
         event = None
@@ -210,11 +238,14 @@ def stripe_webhook(request):
                 exp_year=response["card"]["exp_year"],
                 payment_id=instance.payment_method_id,
             )
+            return HttpResponse(status=200)
         elif event.type == "setup_intent.created":
             return HttpResponse(status=200)
         elif event.type == "payment_intent.created":
             return HttpResponse(status=200)
         elif event.type == "payment_intent.succeeded":
+            return HttpResponse(status=200)
+        elif event.type == "customer.deleted":
             return HttpResponse(status=200)
         else:
             print("Unhandled event type {}".format(event.type))

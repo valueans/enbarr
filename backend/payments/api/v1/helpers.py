@@ -50,70 +50,83 @@ def getPaymentMethodDetails(method_id):
     return response
 
 
-def charge(user):
-    # charge will be made on monthly basis after the promotion periods ends.
-    # charge will be made on the existing subscription plan
-    # charge will be made on the last payment method added.
-    plan = user.userprofile.subscription_plan
-    customer_id = createStripeCustomer(user)
-    try:
-        response = stripe.PaymentIntent.create(
+def createStripeSubcription(user):
+    if (
+        user.userprofile.user_stripe_subscription_id != ""
+        or user.userprofile.user_stripe_subscription_id != None
+    ):
+        updateStripeSubcription(user)
+    else:
+        customer_id = createStripeCustomer(user)
+        response = stripe.Subscription.create(
             customer=customer_id,
-            off_session=True,
-            confirm=True,
-            amount=int(plan.price)
-            * 100,  # stripe will charge in cents so e.g 10USD = 1000cents
-            currency="usd",
+            items=[
+                {"price": user.userprofile.subscription_plan.stripe_price_id},
+            ],
         )
-        return response, None
-    except stripe.error.CardError as e:
-        err = e.error
-        # Error code will be authentication_required if authentication is needed
-        print("Code is: %s" % err.code)
-        return None, err
-
-
-def createMonthlySubscriptionCharge(user):
-    response, error = charge(user)
-    if error is None:
-        now = datetime.now()
-        minutes = now.minute
-        hour = now.hour
-        day_of_month = now.day
-        try:
-            schedule = CrontabSchedule.objects.get(
-                minute=minutes, hour=hour, day_of_month=day_of_month, month_of_year="*"
-            )
-        except:
-            schedule = CrontabSchedule.objects.create(
-                minute=minutes, hour=hour, day_of_month=day_of_month, month_of_year="*"
-            )
-
-        try:
-            task = PeriodicTask.objects.get(
-                name=f"{user.email} subscription",
-            )
-            task.crontab = schedule
-            task.save()
-        except:
-            PeriodicTask.objects.create(
-                crontab=schedule,
-                name=f"{user.email} subscription",
-                args=json.dumps([user.id]),
-                task="payments.tasks.chargeCustomerEveryMonth",
-            )
-        user.userprofile.subscription_start_date = now
+        user.userprofile.subscription_start_date = datetime.now()
         user.userprofile.subscription_renew_date = datetime.now() + relativedelta(
             months=+1
         )
-        if user.userprofile.subscription_plan.title == "Basic":
-            user.userprofile.promotion_adds = 1
-        elif user.userprofile.subscription_plan.title == "Premium":
-            user.userprofile.promotion_adds = 10
-        elif user.userprofile.subscription_plan.title == "Platinum":
-            user.userprofile.promotion_adds = 1000000000
+        user.userprofile.user_stripe_subscription_id = response.id
         user.userprofile.save()
-        return True
+        return response
+
+
+def updateStripeSubcription(user):
+    response = stripe.Subscription.modify(
+        user.userprofile.user_stripe_subscription_id,
+        items=[
+            {"price": user.userprofile.subscription_plan.stripe_price_id},
+        ],
+    )
+    user.userprofile.user_stripe_subscription_id = response.id
+    user.userprofile.save()
+    return response
+
+
+def deleteSubscription(user):
+    if user.userprofile.subscription_plan.title != "Basic":
+        response = stripe.Subscription.delete(
+            user.userprofile.user_stripe_subscription_id,
+        )
+        user.userprofile.user_stripe_subscription_id = ""
+        user.userprofile.save()
+        return response
+
+
+def createMonthlySubscriptionBasic(user):
+    now = datetime.now()
+    minutes = now.minute
+    hour = now.hour
+    day_of_month = now.day
+    schedule = CrontabSchedule.objects.get_or_create(
+        minute=minutes, hour=hour, day_of_month=day_of_month, month_of_year="*"
+    )
+
+    try:
+        task = PeriodicTask.objects.get(
+            name=f"{user.email} subscription",
+        )
+        task.crontab = schedule
+        task.save()
+    except:
+        PeriodicTask.objects.create(
+            crontab=schedule,
+            name=f"{user.email} subscription",
+            args=json.dumps([user.id]),
+            task="payments.tasks.basicSubscriptionEveryMonth",
+        )
+    user.userprofile.subscription_start_date = now
+    user.userprofile.subscription_renew_date = datetime.now() + relativedelta(months=+1)
+    user.userprofile.subscription_adds = 1
+    user.userprofile.save()
+    return True
+
+
+def createMonthlySubscriptionCharge(user):
+    if user.userprofile.subscription_plan.title == "Basic":
+        response = createMonthlySubscriptionBasic(user)
     else:
-        print(error)
-        return error.code
+        response = createStripeSubcription(user)
+    return response

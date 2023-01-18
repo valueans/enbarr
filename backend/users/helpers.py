@@ -7,10 +7,22 @@ from django.db.models import F
 from .models import User
 from datetime import date
 from dateutil.relativedelta import relativedelta
+from payments.models import SubscriptionPlans
 
 
 def generateRandom(email):
     return str(email) + str(datetime.date(datetime.now()))
+
+
+def subscribeUserToFreeSubscription(user):
+    try:
+        plan = SubscriptionPlans.objects.get(title="Basic")
+        user = User.objects.filter(email=user.email).update(
+            userprofile__subscription_plan=plan
+        )
+    except:
+        pass
+    return True
 
 
 def sendOtpEmail(user):

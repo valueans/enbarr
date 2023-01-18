@@ -15,173 +15,416 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Breeds',
+            name="Breeds",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('breed', models.CharField(max_length=1000, unique=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("breed", models.CharField(max_length=1000, unique=True)),
             ],
             options={
-                'verbose_name_plural': 'Breeds',
+                "verbose_name_plural": "Breeds",
             },
         ),
         migrations.CreateModel(
-            name='Colors',
+            name="Colors",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('color', models.CharField(max_length=1000, unique=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("color", models.CharField(max_length=1000, unique=True)),
             ],
             options={
-                'verbose_name_plural': 'Colors',
+                "verbose_name_plural": "Colors",
             },
         ),
         migrations.CreateModel(
-            name='ContactUs',
+            name="ContactUs",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('first_name', models.CharField(blank=True, max_length=100, null=True)),
-                ('last_name', models.CharField(blank=True, max_length=100, null=True)),
-                ('email', models.EmailField(blank=True, max_length=254, null=True)),
-                ('query', models.TextField(blank=True, max_length=1000, null=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("first_name", models.CharField(blank=True, max_length=100, null=True)),
+                ("last_name", models.CharField(blank=True, max_length=100, null=True)),
+                ("email", models.EmailField(blank=True, max_length=254, null=True)),
+                ("query", models.TextField(blank=True, max_length=1000, null=True)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
             ],
         ),
         migrations.CreateModel(
-            name='Disciplines',
+            name="Disciplines",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('discipline', models.CharField(max_length=1000, unique=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("discipline", models.CharField(max_length=1000, unique=True)),
             ],
             options={
-                'verbose_name_plural': 'Disciplines',
+                "verbose_name_plural": "Disciplines",
             },
         ),
         migrations.CreateModel(
-            name='DisLikes',
+            name="DisLikes",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('user', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='HorseImages',
+            name="HorseImages",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('file', models.FileField(upload_to='')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("file", models.FileField(upload_to="")),
             ],
         ),
         migrations.CreateModel(
-            name='Horses',
+            name="Horses",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(blank=True, max_length=300, null=True)),
-                ('user_location', models.CharField(blank=True, max_length=500, null=True)),
-                ('state', models.CharField(blank=True, max_length=1000, null=True)),
-                ('country', models.CharField(blank=True, max_length=1000, null=True)),
-                ('price', models.FloatField(blank=True, null=True)),
-                ('description', models.TextField(blank=True, max_length=2000, null=True)),
-                ('gender', models.CharField(blank=True, max_length=100, null=True)),
-                ('year_of_birth', models.IntegerField(blank=True, null=True)),
-                ('height', models.CharField(blank=True, max_length=500, null=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('approved', models.BooleanField(default=False)),
-                ('total_views', models.BigIntegerField(default=0)),
-                ('breed', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='home.Breeds')),
-                ('color', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='home.Colors')),
-                ('discipline', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='home.Disciplines')),
-                ('dislikes', models.ManyToManyField(blank=True, related_name='dislikes', to='home.DisLikes')),
-                ('images', models.ManyToManyField(related_name='horse_images', to='home.HorseImages')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("title", models.CharField(blank=True, max_length=300, null=True)),
+                (
+                    "user_location",
+                    models.CharField(blank=True, max_length=500, null=True),
+                ),
+                ("state", models.CharField(blank=True, max_length=1000, null=True)),
+                ("country", models.CharField(blank=True, max_length=1000, null=True)),
+                ("price", models.FloatField(blank=True, null=True)),
+                (
+                    "description",
+                    models.TextField(blank=True, max_length=2000, null=True),
+                ),
+                ("gender", models.CharField(blank=True, max_length=100, null=True)),
+                ("year_of_birth", models.IntegerField(blank=True, null=True)),
+                ("height", models.CharField(blank=True, max_length=500, null=True)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                ("approved", models.BooleanField(default=False)),
+                ("total_views", models.BigIntegerField(default=0)),
+                (
+                    "breed",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="home.Breeds",
+                    ),
+                ),
+                (
+                    "color",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="home.Colors",
+                    ),
+                ),
+                (
+                    "discipline",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="home.Disciplines",
+                    ),
+                ),
+                (
+                    "dislikes",
+                    models.ManyToManyField(
+                        blank=True, related_name="dislikes", to="home.DisLikes"
+                    ),
+                ),
+                (
+                    "images",
+                    models.ManyToManyField(
+                        related_name="horse_images", to="home.HorseImages"
+                    ),
+                ),
             ],
             options={
-                'verbose_name_plural': 'Horses',
+                "verbose_name_plural": "Horses",
             },
         ),
         migrations.CreateModel(
-            name='Keywords',
+            name="Keywords",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('keyword', models.CharField(max_length=100)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("keyword", models.CharField(max_length=100)),
             ],
         ),
         migrations.CreateModel(
-            name='Locations',
+            name="Locations",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('location', models.CharField(max_length=1000, unique=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("location", models.CharField(max_length=1000, unique=True)),
             ],
             options={
-                'verbose_name_plural': 'Locations',
+                "verbose_name_plural": "Locations",
             },
         ),
         migrations.CreateModel(
-            name='Temperaments',
+            name="Temperaments",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('temperament', models.CharField(max_length=1000, unique=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("temperament", models.CharField(max_length=1000, unique=True)),
             ],
             options={
-                'verbose_name_plural': 'Temperaments',
+                "verbose_name_plural": "Temperaments",
             },
         ),
         migrations.CreateModel(
-            name='Report',
+            name="Report",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('reason', models.CharField(blank=True, choices=[('Spam', 'Spam'), ('Pornography', 'Pornography'), ('Self-harm', 'Self-harm'), ('Not for children', 'Not for children'), ('Illegal activities (e.g. drug selling)', 'Illegal activities (e.g. drug selling)'), ('Deceptive content', 'Deceptive content')], max_length=1000, null=True)),
-                ('reviewed', models.BooleanField(default=False)),
-                ('horse', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='home.Horses')),
-                ('user', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "reason",
+                    models.CharField(
+                        blank=True,
+                        choices=[
+                            ("Spam", "Spam"),
+                            ("Pornography", "Pornography"),
+                            ("Self-harm", "Self-harm"),
+                            ("Not for children", "Not for children"),
+                            (
+                                "Illegal activities (e.g. drug selling)",
+                                "Illegal activities (e.g. drug selling)",
+                            ),
+                            ("Deceptive content", "Deceptive content"),
+                        ],
+                        max_length=1000,
+                        null=True,
+                    ),
+                ),
+                ("reviewed", models.BooleanField(default=False)),
+                (
+                    "horse",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="home.Horses",
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='PrivacyPolicy',
+            name="PrivacyPolicy",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('body', models.TextField()),
-                ('is_active', models.BooleanField(default=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('author', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("body", models.TextField()),
+                ("is_active", models.BooleanField(default=True)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                (
+                    "author",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Likes',
+            name="Likes",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('user', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.AddField(
-            model_name='horses',
-            name='keywords',
-            field=models.ManyToManyField(related_name='keywords', to='home.Keywords'),
+            model_name="horses",
+            name="keywords",
+            field=models.ManyToManyField(related_name="keywords", to="home.Keywords"),
         ),
         migrations.AddField(
-            model_name='horses',
-            name='likes',
-            field=models.ManyToManyField(blank=True, related_name='likes', to='home.Likes'),
+            model_name="horses",
+            name="likes",
+            field=models.ManyToManyField(
+                blank=True, related_name="likes", to="home.Likes"
+            ),
         ),
         migrations.AddField(
-            model_name='horses',
-            name='location',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='home.Locations'),
+            model_name="horses",
+            name="location",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="home.Locations",
+            ),
         ),
         migrations.AddField(
-            model_name='horses',
-            name='temperament',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='home.Temperaments'),
+            model_name="horses",
+            name="temperament",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="home.Temperaments",
+            ),
         ),
         migrations.AddField(
-            model_name='horses',
-            name='uploaded_by',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+            model_name="horses",
+            name="uploaded_by",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.CreateModel(
-            name='Favourite',
+            name="Favourite",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('horses', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='home.Horses')),
-                ('user', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "horses",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="home.Horses",
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
     ]

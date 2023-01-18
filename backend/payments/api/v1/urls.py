@@ -5,6 +5,7 @@ from .views import (
     paymentMethods,
     stripe_webhook,
     chargeSubscription,
+    upgradeSubscriptionView,
 )
 
 urlpatterns = [
@@ -15,4 +16,7 @@ urlpatterns = [
     path("paymentMethods/", paymentMethods, name="paymentMethods"),
     path("stripe-webhook/", stripe_webhook, name="stripe_webhook"),
     path("charge/", chargeSubscription, name="charge_subscription"),
+    path(
+        "updagradeSubscription/", upgradeSubscriptionView, name="upgrade_subscription"
+    ),
 ]

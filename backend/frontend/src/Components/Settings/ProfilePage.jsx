@@ -4,7 +4,7 @@ import Fab from '@mui/material/Fab';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import CustomInput from '../Inputs/CustomInput';
 import Button from '../Buttons/Button';
-import { getUserProfile, setVerifyStatus } from '../../Constants/storage';
+import { setVerifyStatus } from '../../Constants/storage';
 import AuthService from '../../Services/AuthService';
 import { setUserProfile as setDefaultUserProfile,getUserProfile as getDefaultUserProfile } from '../../Constants/storage';
 

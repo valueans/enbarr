@@ -502,17 +502,20 @@ def HorseView(request):
                     "message": "Your promotion period ended and we are unable to charge your card please add a new payment method.",
                 }
                 return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
-        if user_profile.promotion_adds > 0:
+        if user_profile.promotion_adds > 0 or user_profile.subscription_adds > 0:
             if serializer.is_valid():
                 serializer.save(uploaded_by=request.user)
-                user_profile.promotion_adds -= 1
+                if user_profile.promotion_adds > 0:
+                    user_profile.promotion_adds -= 1
+                else:
+                    user_profile.subscription_adds -= 1
                 user_profile.save()
                 return Response(data=serializer.data, status=status.HTTP_201_CREATED)
             return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
             data = {
                 "status": "error",
-                "message": "You have 0 adds left Upgrade your subscription or re-subscribe it.",
+                "message": "You have 0 adds left Upgrade your subscription",
             }
             return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 

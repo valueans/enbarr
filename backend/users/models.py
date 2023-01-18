@@ -50,6 +50,9 @@ class UserProfile(models.Model):
     subscription_plan = models.ForeignKey(
         "payments.SubscriptionPlans", on_delete=models.CASCADE, null=True, blank=True
     )
+    user_stripe_subscription_id = models.CharField(
+        max_length=1000, null=True, blank=True
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     subscription_start_date = models.DateTimeField(
@@ -59,6 +62,7 @@ class UserProfile(models.Model):
         null=True, blank=True, default=timezone.now
     )
     promotion_adds = models.IntegerField(default=100)
+    subscription_adds = models.IntegerField(default=1)
 
     ban_user_from_posting = models.BooleanField(default=False)
     ban_user_from_posting_date = models.DateField(null=True, blank=True)

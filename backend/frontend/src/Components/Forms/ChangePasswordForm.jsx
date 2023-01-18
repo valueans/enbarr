@@ -5,7 +5,6 @@ import CustomInput from '../Inputs/CustomInput';
 import AuthService from '../../Services/AuthService';
 import { useFormik } from "formik";
 import { changePasswordSchema } from '../../Schemas';
-import { useLocation } from 'react-router-dom';
 import { setVerifyStatus } from '../../Constants/storage';
 
 const ChangePasswordForm = ({setSnackBarData}) => {
@@ -23,7 +22,7 @@ const ChangePasswordForm = ({setSnackBarData}) => {
       validateOnBlur: false,
       onSubmit: async (values, action) => {
       try {
-          const response = await AuthService.changePassword(values.password,values.confirm_password);
+          await AuthService.changePassword(values.password,values.confirm_password);
           action.resetForm();
           setSnackBarData({open:true,message:"Password Successfully Changed",severity:"success"})
           setVerifyStatus(true)

@@ -1,11 +1,10 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Grid,Typography } from '@mui/material';
 import Button from '../Buttons/Button';
 import CustomInput from '../Inputs/CustomInput';
 import { feedbackSchema } from '../../Schemas';
 import { useFormik } from 'formik';
 import FeedbackService from '../../Services/FeedbackService';
-import CustomSnackBar from '../SnackBar/CustomSnackBar';
 
 const Feedback = ({setSnackBarData}) => {
 
@@ -22,7 +21,7 @@ const Feedback = ({setSnackBarData}) => {
         validateOnBlur: false,
         onSubmit: async (values, action) => {
         try {
-            const response = await FeedbackService.sendFeedback(values.email,values.message);
+            await FeedbackService.sendFeedback(values.email,values.message);
             action.resetForm();
             setSnackBarData({open:true,message:"Your feedback is Successfully submitted.We wil get back to you shortly..",severity:"success"})
         } catch (error) {

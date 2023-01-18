@@ -18,6 +18,7 @@ class CardsSerializer(serializers.ModelSerializer):
             "exp_month",
             "exp_year",
             "user",
+            "message",
         )
         read_only_fields = ["id"]
 

@@ -1,7 +1,7 @@
 // production
-// export const baseUrl = "https://tiny-bird-36835.botics.co/";
+export const baseUrl = "https://tiny-bird-36835.botics.co/";
 // development
-export const baseUrl = "http://127.0.0.1:8000/";
+// export const baseUrl = "http://127.0.0.1:8000/";
 export const api = `${baseUrl}api/v1/`;
 
 
@@ -30,7 +30,6 @@ export const favouriteHorsesUrl = `${api}favourite/`
 // my horses
 export const myHorsesUrl = `${api}horse/`
 
-
 // notifications
 export const myNotificationsUrl = `${api}notifications/notifications/`;
 
@@ -42,7 +41,6 @@ export const colorsUrl = `${api}colors/`;
 export const temperamentsUrl = `${api}temperaments/`;
 
 // horse image
-
 export const horseImage = `${api}horse-images/`
 
 // horse keywords
@@ -50,6 +48,13 @@ export const horseKeywords = `${api}keywords/`
 
 // feedback
 export const sendFeedbackUrl = `${feedbackUrl}feedback/`
+
+
+// plans url
+export const plansUrl = `${paymentUrl}plans/`
+export const setupIntentUrl = `${paymentUrl}customer-intent-stripe/`
+export const paymentMethodsUrl = `${paymentUrl}paymentMethods/`
+export const updagradeSubscriptionUrl = `${paymentUrl}updagradeSubscription/`
 
 // social links
 export const facebookLink  = "https://www.facebook.com/";
