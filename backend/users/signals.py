@@ -1,15 +1,13 @@
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
-from .helpers import sendOtpEmail
+from .helpers import sendOtpEmail,subscribeUserToFreeSubscription
 from .models import User, UserProfile, DeletedUsers
-from payments.api.v1.helpers import (
-    createStripeCustomer,
-    subscribeUserToFreeSubscription,
-)
+from payments.api.v1.helpers import createStripeCustomer
 
 
 @receiver(post_save, sender=User)
 def user_verification_send_otp(sender, instance, created, **kwargs):
+    print("this is working")
     """
     sendOTP verification on signup.
     and create userprofile and assign promotion adds if the user is register 1st time
@@ -27,7 +25,7 @@ def user_verification_send_otp(sender, instance, created, **kwargs):
     if created:
         sendOtpEmail(instance)
         createStripeCustomer(instance)
-        subscribeUserToFreeSubscription()
+        subscribeUserToFreeSubscription(instance)
 
 
 @receiver(post_delete, sender=UserProfile)

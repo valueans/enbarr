@@ -80,6 +80,7 @@ def updateStripeSubcription(user):
             {"price": user.userprofile.subscription_plan.stripe_price_id},
         ],
     )
+    print("this is response",response)
     user.userprofile.user_stripe_subscription_id = response.id
     user.userprofile.save()
     return response
@@ -115,7 +116,7 @@ def createMonthlySubscriptionBasic(user):
             crontab=schedule,
             name=f"{user.email} subscription",
             args=json.dumps([user.id]),
-            task="payments.tasks.basicSubscriptionEveryMonth",
+            task="payments.tasks.chargeCustomerEveryMonth",
         )
     user.userprofile.subscription_start_date = now
     user.userprofile.subscription_renew_date = datetime.now() + relativedelta(months=+1)

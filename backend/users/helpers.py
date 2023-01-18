@@ -17,9 +17,8 @@ def generateRandom(email):
 def subscribeUserToFreeSubscription(user):
     try:
         plan = SubscriptionPlans.objects.get(title="Basic")
-        user = User.objects.filter(email=user.email).update(
-            userprofile__subscription_plan=plan
-        )
+        user.userprofile.subscription_plan = plan
+        user.userprofile.save()
     except:
         pass
     return True
