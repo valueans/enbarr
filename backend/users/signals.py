@@ -1,6 +1,6 @@
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
-from .helpers import sendOtpEmail,subscribeUserToFreeSubscription
+from .helpers import sendOtpEmail, subscribeUserToFreeSubscription
 from .models import User, UserProfile, DeletedUsers
 from payments.api.v1.helpers import createStripeCustomer
 

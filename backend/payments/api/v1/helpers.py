@@ -50,60 +50,52 @@ def getPaymentMethodDetails(method_id):
     return response
 
 
-def createStripeSubcription(user):
-    if (
-        user.userprofile.user_stripe_subscription_id != ""
-        or user.userprofile.user_stripe_subscription_id != None
-    ):
-        updateStripeSubcription(user)
-    else:
-        customer_id = createStripeCustomer(user)
-        response = stripe.Subscription.create(
-            customer=customer_id,
-            items=[
-                {"price": user.userprofile.subscription_plan.stripe_price_id},
-            ],
-        )
-        user.userprofile.subscription_start_date = datetime.now()
-        user.userprofile.subscription_renew_date = datetime.now() + relativedelta(
-            months=+1
-        )
-        user.userprofile.user_stripe_subscription_id = response.id
-        user.userprofile.save()
-        return response
-
-
-def updateStripeSubcription(user):
-    response = stripe.Subscription.modify(
-        user.userprofile.user_stripe_subscription_id,
+def createStripeSubcription(user, subscription_plan):
+    if user.userprofile.user_stripe_subscription_id != None:
+        deleteSubscription(user)
+    card = Cards.objects.filter(user=user).order_by("id").last()
+    customer_id = createStripeCustomer(user)
+    response = stripe.Subscription.create(
+        customer=customer_id,
+        default_payment_method=card.payment_id,
         items=[
-            {"price": user.userprofile.subscription_plan.stripe_price_id},
+            {"price": subscription_plan.stripe_price_id},
         ],
     )
-    print("this is response",response)
+    user.userprofile.subscription_start_date = datetime.now()
+    user.userprofile.subscription_renew_date = datetime.now() + relativedelta(months=+1)
     user.userprofile.user_stripe_subscription_id = response.id
     user.userprofile.save()
-    return response
+    return True
 
 
 def deleteSubscription(user):
-    if user.userprofile.subscription_plan.title != "Basic":
-        response = stripe.Subscription.delete(
-            user.userprofile.user_stripe_subscription_id,
-        )
-        user.userprofile.user_stripe_subscription_id = ""
-        user.userprofile.save()
-        return response
+    stripe.Subscription.delete(
+        user.userprofile.user_stripe_subscription_id,
+    )
+    user.userprofile.user_stripe_subscription_id = None
+    user.userprofile.save()
 
 
 def createMonthlySubscriptionBasic(user):
+    if user.userprofile.user_stripe_subscription_id != None:
+        print(
+            "user.userprofile.user_stripe_subscription_id,",
+            user.userprofile.user_stripe_subscription_id,
+        )
+        deleteSubscription(user)
     now = datetime.now()
     minutes = now.minute
     hour = now.hour
     day_of_month = now.day
-    schedule = CrontabSchedule.objects.get_or_create(
-        minute=minutes, hour=hour, day_of_month=day_of_month, month_of_year="*"
-    )
+    try:
+        schedule = CrontabSchedule.objects.get(
+            minute=minutes, hour=hour, day_of_month=day_of_month, month_of_year="*"
+        )
+    except:
+        schedule = CrontabSchedule.objects.create(
+            minute=minutes, hour=hour, day_of_month=day_of_month, month_of_year="*"
+        )
 
     try:
         task = PeriodicTask.objects.get(
@@ -125,9 +117,22 @@ def createMonthlySubscriptionBasic(user):
     return True
 
 
-def createMonthlySubscriptionCharge(user):
-    if user.userprofile.subscription_plan.title == "Basic":
-        response = createMonthlySubscriptionBasic(user)
+def createMonthlySubscriptionCharge(user, plan):
+    # try:
+    # get the plan object from models
+    # only create the subscription if promotion periods ended
+    if user.userprofile.promotion_adds == 0:
+        if plan.title == "Basic":
+            response = createMonthlySubscriptionBasic(user)
+        else:
+            response = createStripeSubcription(user, plan)
+        if response:
+            user.userprofile.subscription_plan = plan
+            user.userprofile.save()
     else:
-        response = createStripeSubcription(user)
-    return response
+        user.userprofile.subscription_plan = plan
+        user.userprofile.save()
+
+    return True
+    # except:
+    #     return False

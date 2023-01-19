@@ -15,10 +15,12 @@ from .serializers import (
     SubscriptionPlansSerializer,
     CardsSerializer,
 )
+from users.api.serializers import UserProfileSerializer
 from home.api.v1.swaggerParams import (
     customDeleteResponse,
     customSetupIntentResponse,
     createParam,
+    customUpgradeSubscriptionResponse,
 )
 from rest_framework.decorators import (
     api_view,
@@ -142,35 +144,9 @@ def paymentMethods(request):
         data = {"status": "OK", "message": deleted_message}
         return Response(data=data, status=status.HTTP_200_OK)
 
-
-@api_view(["POST"])
-@permission_classes([IsAuthenticated])
-@authentication_classes([TokenAuthentication])
-def chargeSubscription(request):
-    """
-    if the customer has finished the adds before month then you can call this api to re subscribe the user
-
-    # successfull payment response
-        {"status": "OK", "message": "Payment Successfull"}
-    # un-successfull payment response
-        {
-            "status": "error",
-            "message": "Failed to charge the payment method with status code:<error code>",
-        }
-    """
-    user = request.user
-    response = createMonthlySubscriptionCharge(user)
-    if response == True:
-        data = {"status": "OK", "message": "Payment Successfull"}
-        return Response(data=data, status=status.HTTP_200_OK)
-    else:
-        data = {
-            "status": "error",
-            "message": f"Failed to charge the payment method with status code:{response}",
-        }
-        return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
-
-
+@swagger_auto_schema(method="POST",manual_parameters=[
+        createParam(paramName="plan-id", description="to get the plan that needs to be upgrade or subscribed",required=True)
+    ],responses=customUpgradeSubscriptionResponse())
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 @authentication_classes([TokenAuthentication])
@@ -186,11 +162,21 @@ def upgradeSubscriptionView(request):
             return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
         plan = SubscriptionPlans.objects.get(id=upgrade_plan_id)
-        profile = UserProfile.objects.get(user=user)
-        profile.subscription_plan = plan
-        profile.save()
-        createMonthlySubscriptionCharge(profile.user)
-        data = {"status": "OK", "message": "Subscription updated"}
+        cards = Cards.objects.filter(user=user)
+        if cards.count() == 0 and plan.title != "Basic":
+            data = {
+                "status": "ERROR",
+                "message": "Please add a payment method before upgrade to subscription",
+            }
+            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+
+        response = createMonthlySubscriptionCharge(user, plan)
+        serializer = UserProfileSerializer(user.userprofile)
+        data = {
+            "status": "OK",
+            "message": "Subscription updated",
+            "data": serializer.data,
+        }
         return Response(data=data, status=status.HTTP_200_OK)
 
 
@@ -203,9 +189,6 @@ def stripe_webhook(request):
     """
     if request.method == "POST":
         webhook_secret = settings.STRIPE_WEBHOOK_SECRET
-        # webhook_secret = (
-        #     "whsec_deb681598854083ff326bae68399a61060ec3ba2e61aa474938833b0a70bbe3f"
-        # )
         payload = request.body
         signature = request.headers.get("stripe-signature")
         event = None
@@ -247,6 +230,56 @@ def stripe_webhook(request):
             return HttpResponse(status=200)
         elif event.type == "customer.deleted":
             return HttpResponse(status=200)
+        elif event.type == "customer.subscription.created":
+            return HttpResponse(status=200)
+        elif event.type == "charge.succeeded":
+            try:
+                response = event.data.object
+                invoice_id = response["invoice"]
+                payment, created = PaymentsHistory.objects.get_or_create(
+                    stripe_invoice_id=invoice_id
+                )
+                card = Cards.objects.get(payment_id=response["payment_method"])
+                payment.card = card
+                payment.user = card.user
+                payment.stripe_receipt_link = response["receipt_url"]
+                payment.amount = float(response["amount"]) / 100
+                payment.payment_intent_id = response["payment_intent"]
+                if response["status"] == "succeeded":
+                    payment.status = True
+                else:
+                    payment.status = False
+                payment.save()
+                if card.user.userprofile.subscription_plan.title == "Premium":
+                    card.user.userprofile.subscription_adds = 10
+                elif card.user.userprofile.subscription_plan == "Platinum":
+                    card.user.userprofile.subscription_adds = 10000000
+                card.user.userprofile.save()
+                return HttpResponse(status=200)
+            except:
+                return HttpResponse(status=400)
+        elif event.type == "invoice.created":
+            return HttpResponse(status=200)
+        elif event.type == "invoice.paid":
+            return HttpResponse(status=200)
+        elif event.type == "invoice.paid":
+            return HttpResponse(status=200)
+        elif event.type == "invoice.payment_failed":
+            try:
+                response = event.data.object
+                stripe_customer = StripeCustomer.objects.get(
+                    stipe_customerId=response["customer"]
+                )
+                card = Cards.objects.filter(user=stripe_customer.user).last()
+                card.message = (
+                    "Unable to charge your card please update your payment method."
+                )
+                card.user.userprofile.subscription_adds = 0
+                card.user.userprofile.save()
+                card.save()
+                return HttpResponse(status=200)
+            except:
+                return HttpResponse(status=400)
         else:
             print("Unhandled event type {}".format(event.type))
 

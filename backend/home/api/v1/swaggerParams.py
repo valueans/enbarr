@@ -1,17 +1,9 @@
 from drf_yasg import openapi
 from rest_framework import status
 from drf_yasg.openapi import Schema, TYPE_OBJECT, TYPE_STRING, TYPE_ARRAY
+from users.api.serializers import UserProfileSerializer
 
 deleted_message = "Successfully Deleted"
-
-favourite_put_param = openapi.Parameter(
-    "favourite-id",
-    openapi.IN_QUERY,
-    description="to update specific favourite",
-    type=openapi.TYPE_INTEGER,
-    require=False,
-)
-
 
 def createParam(paramName, description, required=False):
     return openapi.Parameter(
@@ -231,6 +223,28 @@ def customPasswordResetResponse():
                 ),
                 "message": openapi.Schema(
                     title="Password Reset Successfullly!",
+                    type=openapi.TYPE_STRING,
+                ),
+            },
+        )
+    }
+    return responses
+
+def customUpgradeSubscriptionResponse():
+    responses = {
+        status.HTTP_200_OK: Schema(
+            type=TYPE_OBJECT,
+            properties={
+                "status": openapi.Schema(
+                    title="OK",
+                    type=openapi.TYPE_STRING,
+                ),
+                "message": openapi.Schema(
+                    title="Subscription updated!",
+                    type=openapi.TYPE_STRING,
+                ),
+                "data": openapi.Schema(
+                    title= "user_profile_object",
                     type=openapi.TYPE_STRING,
                 ),
             },

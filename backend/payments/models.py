@@ -58,5 +58,10 @@ class PaymentsHistory(models.Model):
     subscription = models.ForeignKey(
         SubscriptionPlans, on_delete=models.CASCADE, null=True, blank=True
     )
+    card = models.ForeignKey(Cards, on_delete=models.CASCADE, null=True, blank=True)
+    stripe_invoice_id = models.CharField(max_length=2000, null=True, blank=True)
+    stripe_receipt_link = models.CharField(max_length=2000, null=True, blank=True)
+    payment_intent_id = models.CharField(max_length=1000, null=True, blank=True)
+    amount = models.FloatField(default=0.0)
     status = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)

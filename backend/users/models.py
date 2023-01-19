@@ -55,14 +55,10 @@ class UserProfile(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    subscription_start_date = models.DateTimeField(
-        null=True, blank=True, default=timezone.now
-    )
-    subscription_renew_date = models.DateTimeField(
-        null=True, blank=True, default=timezone.now
-    )
+    subscription_start_date = models.DateTimeField(null=True, blank=True)
+    subscription_renew_date = models.DateTimeField(null=True, blank=True)
     promotion_adds = models.IntegerField(default=100)
-    subscription_adds = models.IntegerField(default=1)
+    subscription_adds = models.IntegerField(default=0)
 
     ban_user_from_posting = models.BooleanField(default=False)
     ban_user_from_posting_date = models.DateField(null=True, blank=True)

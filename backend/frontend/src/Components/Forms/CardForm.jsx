@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import PaymentServices from '../../Services/PaymentServices'
 import CustomInput from '../Inputs/CustomInput'
 import Button from '../Buttons/Button'
-import { getUserProfile as DefaultUserProfile } from '../../Constants/storage'
+import { getUserProfile as DefaultUserProfile, setUserProfile } from '../../Constants/storage'
 
 const CardForm = ({subscriptionPlanId,setSnackBarData}) => {
   const [paymentMethodDetails,setPaymentMethodDetails] = useState({id:"",last_4:"",exp_month:"",exp_year:"",message:""})
@@ -24,8 +24,19 @@ const CardForm = ({subscriptionPlanId,setSnackBarData}) => {
 
 
   const upgradeSubscriptionPlan = async ()=>{
-    const response = await PaymentServices.upgradeSubscription(subscriptionPlanId);
-    console.log(response)
+    try{
+      const response = await PaymentServices.upgradeSubscription(subscriptionPlanId);
+      setUserProfile(response['data'])
+      setSnackBarData({open:true,message:"Your subscription plan is successfully updated",severity:"success"})
+    }
+    catch(error){
+      if (error.response.data.message){
+        setSnackBarData({open:true,message:error.response.data.message,severity:"error"})
+      }
+      else{
+        setSnackBarData({open:true,message:"Something went wrong please try later..",severity:"error"})
+      }
+    }
   }
 
 
