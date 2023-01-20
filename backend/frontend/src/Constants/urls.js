@@ -56,6 +56,10 @@ export const setupIntentUrl = `${paymentUrl}customer-intent-stripe/`
 export const paymentMethodsUrl = `${paymentUrl}paymentMethods/`
 export const updagradeSubscriptionUrl = `${paymentUrl}updagradeSubscription/`
 
+
+// buyers
+export const userSearchSaveUrl = `${api}user-saved-search/`;
+
 // social links
 export const facebookLink  = "https://www.facebook.com/";
 export const linkedinLink  = "https://pk.linkedin.com/";

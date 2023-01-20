@@ -406,11 +406,31 @@ class FavouriteSerializer(serializers.ModelSerializer):
 
 
 class UserSearchSaveSerializer(serializers.ModelSerializer):
+    keywords = KeywordsSerializer(read_only=True, many=True)
+    keywords_id = serializers.ListField(write_only=True, required=False)
+    
     class Meta:
         model = UserSearchSave
         fields = "__all__"
         read_only_fields = ["id"]
 
+    def create(self, validated_data):
+        keywords_id = validated_data.pop("keywords_id")
+        try:
+            keywords = Keywords.objects.filter(id__in=keywords_id)
+        except:
+            raise serializers.ValidationError(
+                {"status": "error", "message": "Invalid keyword id"}
+            )
+        user = self.context["request"].user
+        instance,created = UserSearchSave.objects.get_or_create(user=user)
+        for key, value in validated_data.items():
+            setattr(instance, key, value)
+        instance.keywords.set(keywords)
+        instance.save()
+        return instance
+            
+        
 
 class LikesSerializer(serializers.ModelSerializer):
     class Meta:

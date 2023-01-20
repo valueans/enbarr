@@ -110,7 +110,7 @@ class Horses(models.Model):
     gender = models.CharField(max_length=100, null=True, blank=True)
     year_of_birth = models.IntegerField(null=True, blank=True)
     color = models.ForeignKey(Colors, on_delete=models.CASCADE, null=True, blank=True)
-    height = models.CharField(max_length=500, null=True, blank=True)
+    height = models.FloatField(max_length=500, null=True, blank=True)
     temperament = models.ForeignKey(
         Temperaments, on_delete=models.CASCADE, null=True, blank=True
     )

@@ -53,7 +53,7 @@ def getPaymentMethodDetails(method_id):
 def createStripeSubcription(user, subscription_plan):
     if user.userprofile.user_stripe_subscription_id != None:
         deleteSubscription(user)
-    card = Cards.objects.filter(user=user).order_by("id").last()
+    card = Cards.objects.filter(user=user,active=True).order_by("id").last()
     customer_id = createStripeCustomer(user)
     response = stripe.Subscription.create(
         customer=customer_id,

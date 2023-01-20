@@ -6,7 +6,6 @@ from django.utils.translation import ugettext_lazy as _
 from datetime import datetime
 from django.utils import timezone
 
-
 class User(AbstractUser):
     # WARNING!
     """
@@ -75,7 +74,19 @@ class UserProfile(models.Model):
 
 class UserSearchSave(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
-    title = models.CharField(max_length=100, null=True, blank=True)
+    location_id = models.ForeignKey("home.Locations",on_delete=models.CASCADE,null=True,blank=True)
+    breed_id = models.ForeignKey("home.Breeds",on_delete=models.CASCADE,null=True,blank=True)
+    min_age = models.FloatField(null=True,blank=True)
+    max_age = models.FloatField(null=True,blank=True)
+    min_height = models.FloatField(null=True,blank=True)
+    max_height = models.FloatField(null=True,blank=True)
+    min_price = models.FloatField(null=True,blank=True)
+    max_price = models.FloatField(null=True,blank=True)
+    discipline_id = models.ForeignKey("home.Disciplines",on_delete=models.CASCADE,null=True,blank=True)
+    gender = models.CharField(max_length=200,null=True,blank=True)
+    color_id = models.ForeignKey("home.Colors",on_delete=models.CASCADE,null=True,blank=True)
+    temperament_id = models.ForeignKey("home.Temperaments",on_delete=models.CASCADE,null=True,blank=True)
+    keywords = models.ManyToManyField("home.Keywords",related_name="user_search_keywords")
 
 
 class DeletedUsers(models.Model):

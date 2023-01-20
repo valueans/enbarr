@@ -39,23 +39,14 @@ const CardForm = ({subscriptionPlanId,setSnackBarData}) => {
     }
   }
 
-
-  const deletePaymentMethod = async ()=>{
-    try {
-      const response = await  PaymentServices.deletePaymentMethods(paymentMethodDetails.id);
-      setPaymentMethodDetails({id:"",last_4:"",exp_month:"",exp_year:"",message:""})
-      setSnackBarData({open:true,message:"Payment method removed successfully",severity:"success"})
-    } catch (error) {
-      setSnackBarData({open:true,message:"Something went wrong please try later..",severity:"error"})
-    }
-  }
-
   return (
     <Grid container spacing={2}>
         {
           paymentMethodDetails.message && paymentMethodDetails.message.length > 0?
-          <Grid item xs={12}>
+          <Grid item xs={12} sx={{mt:2}}>
             <Alert severity="error">{paymentMethodDetails.message}</Alert>
+          </Grid>:paymentMethodDetails.last_4.length ===0?<Grid item xs={12} sx={{mt:2}}>
+            <Alert severity="warning">"No payment method found please Add Payment method to upgrade your subscription"</Alert>
           </Grid>:""
         }
         <Grid item xs={12}>
@@ -73,9 +64,6 @@ const CardForm = ({subscriptionPlanId,setSnackBarData}) => {
         {
           paymentMethodDetails.id?
           <>
-          <Grid item xs={12}>
-            <Button title="Delete payment method" backgroundColor='#d32f2f' width="100%" onClick={deletePaymentMethod}/>
-          </Grid>
           <Grid item xs={12}>
           <Button title="Upgrade subscription" width="100%" disabled={subscriptionPlan===subscriptionPlanId || paymentMethodDetails.last_4===""} onClick={upgradeSubscriptionPlan}/>
           </Grid>

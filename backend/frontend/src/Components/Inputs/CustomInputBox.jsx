@@ -2,15 +2,13 @@ import React from 'react';
 import { TextField} from '@mui/material';
 import InputButton from '../Buttons/InputButton';
 
-const CustomInputBox = ({title,type="text",placeholder="",maxLength=2,direction="start",paddingLeft="0px",marginRight="5%",keywordVal,setKeywordVal}) => {
-    const onChange =(event)=>{
-        setKeywordVal(event.target.value);
-    }
+const CustomInputBox = ({title,type="text",placeholder="",maxLength=4,direction="start",paddingLeft="0px",marginRight="5%",onChange,value}) => {
   return (
     <TextField
         className="customInput"
         variant="standard"
-        value={keywordVal}
+        type={type}
+        value={value}
         placeholder={placeholder}
         onChange={onChange}
         inputProps={{maxLength:maxLength}}

@@ -25,6 +25,7 @@ class Cards(models.Model):
     exp_year = models.CharField(max_length=4, null=True, blank=True)
     payment_id = models.CharField(max_length=1000, null=True, blank=True)
     message = models.CharField(max_length=1000, default="")
+    active = models.BooleanField(default=True)
 
 
 class StripeCustomer(models.Model):

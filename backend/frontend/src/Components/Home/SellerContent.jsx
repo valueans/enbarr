@@ -1,7 +1,6 @@
 import React,{useEffect, useRef, useState} from 'react'
 import { Grid,Typography,FormControl,FormControlLabel,Radio,RadioGroup,CircularProgress,IconButton} from '@mui/material';
 import LongHorizontalLineIcon from '../Svgs/LongHorizontalLineIcon';
-import CustomSelect from '../Selects/CustomSelect';
 import CustomInput from '../Inputs/CustomInput';
 import CustomChips from '../Chips/CustomChips';
 import Button from '../Buttons/Button';
@@ -11,6 +10,11 @@ import HorseImageUploadCard from '../Cards/HorseImageUploadCard';
 import HorseService from '../../Services/HorseService';
 import CustomSnackBar from '../SnackBar/CustomSnackBar';
 import { useNavigate } from 'react-router-dom';
+import LocationSelect from '../Selects/LocationSelect';
+import BreedSelect from '../Selects/BreedSelect';
+import DisciplineSelect from '../Selects/DisciplineSelect';
+import ColorsSelect from '../Selects/ColorsSelect';
+import TemperamentSelect from '../Selects/TemperamentSelect';
 
 const SellerContent = () => {
 
@@ -54,7 +58,7 @@ const keywordClick = async ()=>{
     let horse_keywords = [...horseData.keywords_id]
     horse_keywords.push(response.id)
     setHorseData({...horseData,keywords_id:horse_keywords})
-    setKeywords([...keywords,{id:response.id,value:keywordVal}])
+    setKeywords([...keywords,{id:response.id,keyword:keywordVal}])
     setKeywordLoading(false)
     setKeywordVal("")
   }
@@ -206,12 +210,12 @@ const keywordClick = async ()=>{
 
                 <Grid item xs={12} sx={{mt:3}}>
                     <Typography variant='authInputTitle'>Location</Typography>
-                    <CustomSelect select_type="locations" horseData={horseData} setHorseData={setHorseData}/>
+                    <LocationSelect horseData={horseData} setHorseData={setHorseData}/>
                 </Grid>
 
                 <Grid item xs={12} sx={{mt:3}}>
                     <Typography variant='authInputTitle'>Breed</Typography>
-                    <CustomSelect select_type="breeds" horseData={horseData} setHorseData={setHorseData}/>
+                    <BreedSelect horseData={horseData} setHorseData={setHorseData}/>
                 </Grid>
 
                 <Grid item xs={12} sx={{mt:3}}>
@@ -234,7 +238,7 @@ const keywordClick = async ()=>{
                 </Grid>
                 <Grid item xs={12} sx={{mt:3}}>
                     <Typography variant='authInputTitle'>Discipline</Typography>
-                    <CustomSelect select_type="discipline" horseData={horseData} setHorseData={setHorseData}/>
+                    <DisciplineSelect horseData={horseData} setHorseData={setHorseData}/>
                 </Grid>
 
                 {/* Gender select starts */}
@@ -262,11 +266,11 @@ const keywordClick = async ()=>{
 
                 <Grid item xs={12} sx={{mt:3}}>
                     <Typography variant='authInputTitle'>Colors</Typography>
-                    <CustomSelect select_type="colors" horseData={horseData} setHorseData={setHorseData}/>
+                    <ColorsSelect horseData={horseData} setHorseData={setHorseData}/>
                 </Grid>
                 <Grid item xs={12} sx={{mt:3}}>
                     <Typography variant='authInputTitle'>Temperaments</Typography>
-                    <CustomSelect select_type="temperaments" horseData={horseData} setHorseData={setHorseData}/>
+                    <TemperamentSelect horseData={horseData} setHorseData={setHorseData}/>
                 </Grid>
                 <Grid item xs={12} sx={{mt:3}}>
                     <Typography variant='authInputTitle'>Describe your Horse</Typography>
@@ -285,8 +289,11 @@ const keywordClick = async ()=>{
                             <CustomInputBox marginRight='0px' title={<IconButton color="secondary" onClick={keywordClick} disabled={keywordLoading || keywordVal.length === 0}
                                 sx={{height:"100%",width:"100%"}}>
                                 <AddIcon />
-                            </IconButton>}direction='end' paddingLeft='5%' maxLength={100} keywordVal={keywordVal}
-                                setKeywordVal={setKeywordVal} placeholder="arabian horse etc..."/>
+                            </IconButton>}
+                            direction='end' paddingLeft='5%' maxLength={100} keywordVal={keywordVal}
+                                setKeywordVal={setKeywordVal} placeholder="arabian horse etc..." onChange={(e)=>{
+                                    setKeywordVal(e.target.value)
+                                  }}/>
                         </Grid>
                     </Grid>
                 </Grid>

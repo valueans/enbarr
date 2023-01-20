@@ -21,6 +21,21 @@ const OtpVerificationForm = ({setShowTabs,setSnackBarData,verificationType="norm
         otp4: "",
       };
 
+
+    const onKeyUp = (e)=>{
+        let id = parseInt(e.target.id)
+        var key = e.keyCode || e.charCode;
+        
+        if(id > 1 && id <= 4 && key === 8){
+            const prev_field = document.querySelector(`input[name=otp${id-1}]`)
+            prev_field.focus();
+        }
+        if (id <= 3 && key !== 8 ){
+            const next_field = document.querySelector(`input[name=otp${id+1}]`)
+            next_field.focus();
+        }
+    }
+
     const resendVerificationOtp = async () => {
         try {
             const response = await AuthService.sendOtp();
@@ -69,16 +84,16 @@ const OtpVerificationForm = ({setShowTabs,setSnackBarData,verificationType="norm
             <Grid item xs={12} sx={{mt:4}}>
                 <Grid container className="justifyContentCenter">
                     <Grid item xs={1} sx={{ml:2,mr:2}}>
-                        <CustomInput type="text" maxLength={1} value={values.otp1} name="otp1" onChange={handleChange} onBlur={handleBlur}/>
+                        <CustomInput type="text" maxLength={1} value={values.otp1} name="otp1" onKeyUp={onKeyUp} onChange={handleChange} onBlur={handleBlur} id={1}/>
                     </Grid>
                     <Grid item xs={1} sx={{ml:2,mr:2}}>
-                        <CustomInput type="text" maxLength={1} value={values.otp2} name="otp2" onChange={handleChange} onBlur={handleBlur}/>
+                        <CustomInput type="text" maxLength={1} value={values.otp2} name="otp2" onKeyUp={onKeyUp} onChange={handleChange} onBlur={handleBlur} id={2}/>
                     </Grid>
                     <Grid item xs={1} sx={{ml:2,mr:2}}>
-                        <CustomInput type="text" maxLength={1} value={values.otp3} name="otp3" onChange={handleChange} onBlur={handleBlur}/>
+                        <CustomInput type="text" maxLength={1} value={values.otp3} name="otp3" onKeyUp={onKeyUp} onChange={handleChange} onBlur={handleBlur} id={3}/>
                     </Grid>
                     <Grid item xs={1} sx={{ml:2,mr:2}}>
-                        <CustomInput type="text" maxLength={1} value={values.otp4} name="otp4" onChange={handleChange} onBlur={handleBlur}/>
+                        <CustomInput type="text" maxLength={1} value={values.otp4} name="otp4" onKeyUp={onKeyUp} onChange={handleChange} onBlur={handleBlur} id={4}/>
                     </Grid>
                 </Grid>
             </Grid>

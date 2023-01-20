@@ -20,12 +20,13 @@ import ProfilePage from '../Settings/ProfilePage';
 import PrivacyPolicy from '../Settings/PrivacyPolicy';
 import TermsAndCondition from '../Settings/TermsAndCondition';
 import Feedback from '../Settings/Feedback';
-import { clearStorage } from '../../Constants/storage';
+import { clearStorage, setUserProfile } from '../../Constants/storage';
 import AuthService from '../../Services/AuthService';
 import CustomSnackBar from '../SnackBar/CustomSnackBar';
 import { getUserProfile as getDefaultUserProfile,setUserProfile as setDefaultUserProfile } from '../../Constants/storage';
 import ChangePassword from '../Settings/ChangePassword';
 import StripePaymentForm from '../Forms/StripePaymentForm';
+import PaymentServices from '../../Services/PaymentServices';
 
 const SettingsPage = () => {
     const navigator = useNavigate();
@@ -59,6 +60,24 @@ const SettingsPage = () => {
         }
     }
 
+    const upgradeSubscriptionPlan = async ()=>{
+        try{
+        
+            const subscription_plans = await PaymentServices.getAllSubscriptionPlans();
+            const response = await PaymentServices.upgradeSubscription(subscription_plans[0]?.id);
+            setOpenSubscribeModel(false)
+            setUserProfile(response['data'])
+            setSnackBarData({open:true,message:"Your subscription plan is successfully updated",severity:"success"})
+        }
+        catch(error){
+          if (error.response.data.message){
+            setSnackBarData({open:true,message:error.response.data.message,severity:"error"})
+          }
+          else{
+            setSnackBarData({open:true,message:"Something went wrong please try later..",severity:"error"})
+          }
+        }
+      }
 
     const redirect = async (event,buttonName)=>{
         if (buttonName==="upgrade"){
@@ -283,7 +302,7 @@ const SettingsPage = () => {
                     <Route path="feedback" element={<Feedback setSnackBarData={setSnackBarData}/>}></Route>
                 </Routes>
             </Grid>
-            <CustomModel title="Unsubscribe" open={openSubscribeModel} setOpen={setOpenSubscribeModel}/>
+            <CustomModel title="Unsubscribe" open={openSubscribeModel} setOpen={setOpenSubscribeModel} onClick={upgradeSubscriptionPlan}/>
             <CustomModel title="Delete this Account" open={openDeleteAccountModel} setOpen={setOpenDeleteAccountModel} onClick={deleteUserAccount}/>
             <CustomModel title="Logout" open={openLogoutModel} setOpen={setOpenLogoutModel} onClick={()=>{
                 clearStorage();
