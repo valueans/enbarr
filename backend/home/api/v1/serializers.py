@@ -98,11 +98,8 @@ class HorseUpdateSerializer(serializers.ModelSerializer):
     isdisliked = serializers.SerializerMethodField(read_only=True)
     isfav = serializers.SerializerMethodField(read_only=True)
     userprofile = serializers.SerializerMethodField(read_only=True)
-    title = serializers.CharField(max_length=300, required=False)
     location = LocationsSerializer(read_only=True)
     location_id = serializers.IntegerField(write_only=True, required=False)
-    price = serializers.FloatField(required=False)
-    description = serializers.CharField(max_length=2000, required=False)
     breed = BreedsSerializer(read_only=True)
     breed_id = serializers.IntegerField(write_only=True, required=False)
     color = ColorsSerializer(read_only=True)
@@ -111,9 +108,7 @@ class HorseUpdateSerializer(serializers.ModelSerializer):
     temperament_id = serializers.IntegerField(write_only=True, required=False)
     discipline = DisciplinesSerializer(read_only=True)
     discipline_id = serializers.IntegerField(write_only=True, required=False)
-    gender = serializers.CharField(max_length=100, required=False)
     age = serializers.SerializerMethodField(read_only=True)
-    height = serializers.FloatField(required=False)
 
     class Meta:
         model = Horses
@@ -215,14 +210,19 @@ class HorseUpdateSerializer(serializers.ModelSerializer):
         return True
 
     def get_age(self, obj):
-        print(obj.year_of_birth)
-        return date.today().year - obj.year_of_birth
+        try:
+            year = date.today().year - obj.year_of_birth
+        except:
+            year = ""
+        return year
 
 
 class HorsesSerializer(serializers.ModelSerializer):
     images = HorseImagesSerializer(read_only=True, many=True)
-    keywords = KeywordsSerializer(read_only=True, many=True)
     images_id = serializers.ListField(write_only=True, required=False)
+    location = LocationsSerializer(read_only=True)
+    location_id = serializers.IntegerField(write_only=True, required=True)
+    keywords = KeywordsSerializer(read_only=True, many=True)
     keywords_id = serializers.ListField(write_only=True, required=False)
     likes = serializers.SerializerMethodField(read_only=True)
     dislikes = serializers.SerializerMethodField(read_only=True)
@@ -230,11 +230,6 @@ class HorsesSerializer(serializers.ModelSerializer):
     isdisliked = serializers.SerializerMethodField(read_only=True)
     isfav = serializers.SerializerMethodField(read_only=True)
     userprofile = serializers.SerializerMethodField(read_only=True)
-    title = serializers.CharField(max_length=300, required=True)
-    location = LocationsSerializer(read_only=True)
-    location_id = serializers.IntegerField(write_only=True, required=True)
-    price = serializers.FloatField(required=True)
-    description = serializers.CharField(max_length=2000, required=True)
     breed = BreedsSerializer(read_only=True)
     breed_id = serializers.IntegerField(write_only=True, required=True)
     color = ColorsSerializer(read_only=True)
@@ -243,9 +238,7 @@ class HorsesSerializer(serializers.ModelSerializer):
     temperament_id = serializers.IntegerField(write_only=True, required=True)
     discipline = DisciplinesSerializer(read_only=True)
     discipline_id = serializers.IntegerField(write_only=True, required=True)
-    gender = serializers.CharField(max_length=100, required=True)
     age = serializers.SerializerMethodField(read_only=True)
-    height = serializers.FloatField(required=False)
 
     class Meta:
         model = Horses
@@ -375,7 +368,11 @@ class HorsesSerializer(serializers.ModelSerializer):
         return True
 
     def get_age(self, obj):
-        return date.today().year - obj.year_of_birth
+        try:
+            year = date.today().year - obj.year_of_birth
+        except:
+            year = ""
+        return year
 
 
 class FavouriteSerializer(serializers.ModelSerializer):
