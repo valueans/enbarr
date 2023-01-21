@@ -113,7 +113,7 @@ class HorseUpdateSerializer(serializers.ModelSerializer):
     discipline_id = serializers.IntegerField(write_only=True, required=False)
     gender = serializers.CharField(max_length=100, required=False)
     age = serializers.SerializerMethodField(read_only=True)
-    height = serializers.CharField(max_length=500, required=False)
+    height = serializers.FloatField(max_length=500, required=False)
 
     class Meta:
         model = Horses
@@ -245,7 +245,7 @@ class HorsesSerializer(serializers.ModelSerializer):
     discipline_id = serializers.IntegerField(write_only=True, required=True)
     gender = serializers.CharField(max_length=100, required=True)
     age = serializers.SerializerMethodField(read_only=True)
-    height = serializers.CharField(max_length=500, required=True)
+    height = serializers.FloatField(max_length=500, required=False)
 
     class Meta:
         model = Horses
