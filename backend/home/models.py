@@ -17,6 +17,11 @@ REPORT_REASON = (
 )
 
 
+HORSE_FILE_TYPE = (
+    ("IMAGE","IMAGE"),
+    ("VIDEO","VIDEO"),
+)
+
 class ContactUs(models.Model):
     first_name = models.CharField(max_length=100, null=True, blank=True)
     last_name = models.CharField(max_length=100, null=True, blank=True)
@@ -27,6 +32,7 @@ class ContactUs(models.Model):
 
 class HorseImages(models.Model):
     file = models.FileField(null=False, blank=False)
+    file_type = models.CharField(max_length=10,choices=HORSE_FILE_TYPE,default="IMAGES")
 
     def __str__(self):
         try:

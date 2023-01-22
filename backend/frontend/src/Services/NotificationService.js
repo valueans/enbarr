@@ -15,7 +15,6 @@ const NotificationsService = {
         const {data:response} = await axios.put(myNotificationsUrl+`?notification-id=${id}`,{
         data:data,
         paramsSerializer: params => {
-            console.log(params)
             return qs.stringify(params)
         }
     });

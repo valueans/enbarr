@@ -218,7 +218,7 @@ class HorseUpdateSerializer(serializers.ModelSerializer):
 
 
 class HorsesSerializer(serializers.ModelSerializer):
-    images = HorseImagesSerializer(read_only=True, many=True)
+    images = serializers.SerializerMethodField('get_images',read_only=True)
     images_id = serializers.ListField(write_only=True, required=False)
     location = LocationsSerializer(read_only=True)
     location_id = serializers.IntegerField(write_only=True, required=True)
@@ -373,6 +373,11 @@ class HorsesSerializer(serializers.ModelSerializer):
         except:
             year = ""
         return year
+    
+    def get_images(self,obj):
+        images = obj.images.all().order_by('id')
+        serializer = HorseImagesSerializer(images, many=True)
+        return serializer.data
 
 
 class FavouriteSerializer(serializers.ModelSerializer):

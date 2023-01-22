@@ -75,12 +75,12 @@ return (
             <Grid container
               sx={{display:"flex",alignItems:"end",height:"103px",position:"relative",top:"20px",right:"10px",justifyContent:"flex-end"}}>
               <Grid item xs={3}>
-                <IconButton sx={{background:"#FFFFFF",width:"60px",height:"60px",boxShadow:"1px 1px 15px 1px grey"}} disabled={currentLoginUserProfile.id === horseDetails.userprofile.user.id}>
+                <IconButton sx={{background:"#FFFFFF",width:"60px",height:"60px",boxShadow:"1px 1px 15px 1px grey"}} disabled={currentLoginUserProfile.id === horseDetails.userprofile.id}>
                   <MailOutlineIcon sx={{height:"100%"}} />
                 </IconButton>
               </Grid>
               <Grid item xs={3}>
-                <IconButton sx={{background:"#FFFFFF",width:"60px",height:"60px",boxShadow:"1px 1px 15px 1px grey"}} color={horseDetails.isfav?"error":"primary"} onClick={handleFavClick} disabled={currentLoginUserProfile.id === horseDetails.userprofile.user.id}>
+                <IconButton sx={{background:"#FFFFFF",width:"60px",height:"60px",boxShadow:"1px 1px 15px 1px grey"}} color={horseDetails.isfav?"error":"primary"} onClick={handleFavClick} disabled={currentLoginUserProfile.id === horseDetails.userprofile.id}>
                   <FavoriteIcon sx={{height:"100%"}} />
                 </IconButton>
               </Grid>

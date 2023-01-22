@@ -5,7 +5,7 @@ import MyHorseCard from './MyHorseCard';
 import DividerIcon from '../Svgs/DividerIcon';
 import { useNavigate } from 'react-router-dom';
 
-const HorseCardList = ({title,adds,typeCard="horse"}) => {
+const HorseCardList = ({title,adds,setAdds,typeCard="horse"}) => {
     const navigator = useNavigate();
     
     const horseListClicked = (event,index)=>{
@@ -36,10 +36,10 @@ const HorseCardList = ({title,adds,typeCard="horse"}) => {
                     return (
                         index> 2?
                         <Grid item lg={4} sm={6} xs={12} sx={{mt:4}} className="justifyContentCenter" key={object.id} onClick={event => horseListClicked(event,object.id)}>
-                            <HorseCard image={object.images[0].file}/>
+                            <HorseCard image={object.images[0]}/>
                         </Grid>:
                         <Grid item lg={4} sm={6} xs={12}  sx={{mt:4}} className="justifyContentCenter" key={object.id} onClick={event => horseListClicked(event,object.id)}>
-                            <HorseCard image={object.images[0].file}/>
+                            <HorseCard image={object.images[0]}/>
                         </Grid>
                     )
                 })
@@ -52,10 +52,10 @@ const HorseCardList = ({title,adds,typeCard="horse"}) => {
                     return (
                         index> 2?
                         <Grid item lg={4} sm={6} xs={12} sx={{mt:4}} className="justifyContentCenter" key={horses.id} onClick={event => horseListClicked(event,horses.id)}>
-                            <HorseCard image={horses.images[0].file}/>
+                            <HorseCard image={horses.images[0]}/>
                         </Grid>:
                         <Grid item lg={4} sm={6} xs={12}  sx={{mt:4}} className="justifyContentCenter" key={horses.id} onClick={event => horseListClicked(event,horses.id)}>
-                            <HorseCard image={horses.images[0].file}/>
+                            <HorseCard image={horses.images[0]}/>
                         </Grid>
                     )
                 })
@@ -66,11 +66,11 @@ const HorseCardList = ({title,adds,typeCard="horse"}) => {
                 adds.map((element,index)=>{
                     return (
                         index> 2?
-                        <Grid item lg={4} sm={6} xs={12} key={element.id} onClick={event => horseListClicked(event,element.id)}>
-                        <MyHorseCard image={element.images[0].file} likes={element.likes}/>
+                        <Grid item lg={4} sm={6} xs={12} key={element.id}>
+                        <MyHorseCard image={element.images[0]} likes={element.likes} adds={adds} setAdds={setAdds} horseAddKey={element.id}/>
                         </Grid>:
-                        <Grid item lg={4} sm={6} xs={12}  sx={{mt:4}} key={element.id} onClick={event => horseListClicked(event,element.id)}>
-                            <MyHorseCard image={element.images[0].file} likes={element.likes}/>
+                        <Grid item lg={4} sm={6} xs={12}  sx={{mt:4}} key={element.id}>
+                            <MyHorseCard image={element.images[0]} likes={element.likes} adds={adds} setAdds={setAdds} horseAddKey={element.id}/>
                         </Grid>
                     )
                 })

@@ -16,6 +16,7 @@ from users.models import (
     UserProfile,
     UserSearchSave,
 )
+import filetype
 
 from rest_framework.decorators import (
     api_view,
@@ -305,13 +306,20 @@ def HorseImagesView(request):
             data = {"status": "ERROR", "message": "Invalid Horse id"}
             return Response(data=data, status=status.HTTP_404_NOT_FOUND)
 
-        serializer = HorseImagesSerializer(horse.images, many=True)
+        images = horse.images.all().order_by('id')
+        serializer = HorseImagesSerializer(images, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     if request.method == "POST":
         serializer = HorseImagesSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            file = request.FILES.get('file')
+            kind = filetype.guess(file)
+            type = kind.mime.split('/')[0]
+            if type == "image":
+                serializer.save(file_type="IMAGE")
+            elif type == "video":
+                serializer.save(file_type="VIDEO")
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)

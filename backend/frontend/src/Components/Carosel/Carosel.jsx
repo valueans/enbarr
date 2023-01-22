@@ -8,7 +8,13 @@ const Carosel = ({images=[]}) => {
         {
             images.map((image)=>{
                 return <div key={image.id}>
-                        <img alt="" src={image.file} style={{height:"600px"}}/>
+                  {
+                    image.file_type === 'IMAGE'?
+                    <img alt="" src={image.file} style={{height:"600px"}}/>:
+                    <video width="100%" height="100%" controls="controls autoplay">
+                        <source src={image.file} type="video/mp4" />
+                    </video>
+                  }
                     </div>
             })
         }

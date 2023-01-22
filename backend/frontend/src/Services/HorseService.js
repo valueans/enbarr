@@ -23,6 +23,14 @@ const HorseService = {
         const {data:response} = await axios.get(myHorsesUrl+`?page=${page}`);
         return response
     },
+    deleteMyHorse : async (id) =>{
+        const {data:response} = await axios.delete(myHorsesUrl,{
+            params:{
+                "horse-id":id
+            }
+        });
+        return response
+    },
     getAllLocations : async () =>{
         const {data:response} = await axios.get(locationsUrl);
         return response
@@ -83,6 +91,17 @@ const HorseService = {
         const {data:response} = await axios.post(myHorsesUrl,data,{
             headers:{
                 'Content-Type' : 'application/json'
+            }
+        });
+        return response
+    },
+    updateHorse : async (data,id) =>{
+        const {data:response} = await axios.put(myHorsesUrl,data,{
+            headers:{
+                'Content-Type' : 'application/json'
+            },
+            params:{
+                "horse-id":id
             }
         });
         return response

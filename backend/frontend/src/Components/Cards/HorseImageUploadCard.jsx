@@ -18,8 +18,12 @@ const HorseImageUploadCard = ({image,setFiles,files,horseData,setHorseData}) => 
   
   
   useEffect(()=>{
-    const objectUrl = URL.createObjectURL(image.image)
-    setImageUrl(objectUrl)
+    try {
+      const objectUrl = URL.createObjectURL(image.image) 
+      setImageUrl(objectUrl)
+    } catch (error) {
+      setImageUrl(image.image)
+    }
   },[])
 
 
@@ -30,10 +34,12 @@ const HorseImageUploadCard = ({image,setFiles,files,horseData,setHorseData}) => 
       </IconButton>
     <Card sx={{border: "2px dashed #666666",width: "70px",height: "70px",background: "#FFFFFF",backgroundImage:horseImage,zIndex:2}}>
     <CardMedia
-      component="img"
+      component={image.file_type === 'IMAGE'?'img':'video'}
       height="100%"
       image={imageUrl}
       alt="add-image"
+      controls
+      autoPlay
     />
   </Card>
     </>

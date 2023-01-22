@@ -9,7 +9,7 @@ import CustomInputBox from '../Inputs/CustomInputBox';
 import HorseImageUploadCard from '../Cards/HorseImageUploadCard';
 import HorseService from '../../Services/HorseService';
 import CustomSnackBar from '../SnackBar/CustomSnackBar';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import LocationSelect from '../Selects/LocationSelect';
 import BreedSelect from '../Selects/BreedSelect';
 import DisciplineSelect from '../Selects/DisciplineSelect';
@@ -17,6 +17,11 @@ import ColorsSelect from '../Selects/ColorsSelect';
 import TemperamentSelect from '../Selects/TemperamentSelect';
 
 const SellerContent = () => {
+
+    const [editHorse,setEditHorse] = useState(false)
+    const [editHorseId,setEditHorseId] = useState(null)
+
+    const location = useLocation();
 
     const [keywords,setKeywords] = useState([]);
     const [keywordVal,setKeywordVal] = useState("");
@@ -45,7 +50,7 @@ const uploadImage = async (image)=>{
     let horse_images = [...horseData.images_id]
     horse_images.push(response.id)
     setHorseData({...horseData,images_id:horse_images})
-    setFiles([...files,{id:response.id,image:image}]);
+    setFiles([...files,{id:response.id,image:image,file_type:response.file_type}]);
   }
 
 const handleFileInputChange = async e => {
@@ -68,6 +73,20 @@ const keywordClick = async ()=>{
         setHorseData({...horseData,user_location:`${position.coords.latitude},${position.coords.longitude}`})
     });
   },[horseData.user_location])
+
+  useEffect(()=>{
+    if (location.state.editHorse){
+        setFiles(location.state.images)
+        setEditHorse(true)
+        setEditHorseId(location.state.horse_id)
+        setLoading(true)
+        setTimeout(()=>{
+            setHorseData(location.state.horseData)
+            setKeywords(location.state.keywords)
+            setLoading(false)
+        },5000)
+    }
+  },[])
 
  const submitHorse = async (button_type_click="add_another")=>{
 
@@ -109,7 +128,15 @@ const keywordClick = async ()=>{
     }
     else{
         try {
-            const response =  await HorseService.saveHorse(horseData)
+            let response = ""
+            if(editHorse){
+                const _response =  await HorseService.updateHorse(horseData,editHorseId)
+                response = _response
+            }
+            else{
+                const _response =  await HorseService.saveHorse(horseData)
+                response = _response
+            }
             setSnackBarData({...snackBarData,open:true,message:"Add posted",severity:"success"})
             if( button_type_click === "add_another"){
                 setHorseData({images_id:[],title:"",year_of_birth:"",location_id:"",user_location:"",price:"",description:"",breed_id:"",gender:"",color_id:"",height:"",temperament_id:"",discipline_id:"",keywords_id:[]})
@@ -205,7 +232,7 @@ const keywordClick = async ()=>{
                     <Typography variant='authInputTitle'>Name of Horse</Typography>
                     <CustomInput type="text" onChange={(e)=>{
                         setHorseData({...horseData,title:e.target.value})
-                        }} value={horseData.title} placeholder="Enbarr horse"/>
+                        }} value={horseData?.title} placeholder="Enbarr horse"/>
                 </Grid>
 
                 <Grid item xs={12} sx={{mt:3}}>
@@ -222,19 +249,19 @@ const keywordClick = async ()=>{
                     <Typography variant='authInputTitle'>Year of birth</Typography>
                     <CustomInput type="number" onChange={(e)=>{
                         setHorseData({...horseData,year_of_birth:e.target.value})
-                        }} value={horseData.year_of_birth} placeholder="2000"/>
+                        }} value={horseData?.year_of_birth} placeholder="2000"/>
                 </Grid>
                 <Grid item xs={12} sx={{mt:3}}>
                     <Typography variant='authInputTitle'>Height (ft)</Typography>
                     <CustomInput type="number" onChange={(e)=>{
                         setHorseData({...horseData,height:e.target.value})
-                        }} value={horseData.height} placeholder="5.1"/>
+                        }} value={horseData?.height} placeholder="5.1"/>
                 </Grid>
                 <Grid item xs={12} sx={{mt:3}}>
                     <Typography variant='authInputTitle'>Price ($)</Typography>
                     <CustomInput type="number" onChange={(e)=>{
                         setHorseData({...horseData,price:e.target.value})
-                        }} value={horseData.price} placeholder="$5000"/>
+                        }} value={horseData?.price} placeholder="$5000"/>
                 </Grid>
                 <Grid item xs={12} sx={{mt:3}}>
                     <Typography variant='authInputTitle'>Discipline</Typography>
@@ -249,13 +276,13 @@ const keywordClick = async ()=>{
                         </Grid>
                         <Grid item xs={12}>
                             <FormControl>
-                                <RadioGroup row aria-labelledby="demo-radio-buttons-group-label" defaultValue="Gelding"
+                                <RadioGroup row aria-labelledby="demo-radio-buttons-group-label" defaultValue={horseData?.gender?horseData?.gender:"Gelding"}
                                     name="radio-buttons-group" onChange={(e)=>{
                                         setHorseData({...horseData,gender:e.target.value})
                                     }}>
-                                    <FormControlLabel value="Gelding" control={<Radio />} label="Gelding" />
-                                    <FormControlLabel value="Mare" control={<Radio />} label="Mare" />
-                                    <FormControlLabel value="Stallion" control={<Radio />} label="Stallion" />
+                                    <FormControlLabel value="Gelding" control={<Radio checked={horseData.gender==="Gelding"}/>} label="Gelding" />
+                      <FormControlLabel value="Mare" control={<Radio checked={horseData.gender==="Mare"}/>} label="Mare" />
+                      <FormControlLabel value="Stallion" control={<Radio checked={horseData.gender==="Stallion"}/>} label="Stallion" />
                                 </RadioGroup>
                             </FormControl>
                         </Grid>
@@ -276,7 +303,7 @@ const keywordClick = async ()=>{
                     <Typography variant='authInputTitle'>Describe your Horse</Typography>
                     <CustomInput type="text" minRows={10} maxRows={20} multiline={true} maxLength={1000} onChange={(e)=>{
                         setHorseData({...horseData,description:e.target.value})
-                        }} value={horseData.description} placeholder="write your description here..."/>
+                        }} value={horseData?.description} placeholder="write your description here..."/>
                 </Grid>
 
                 {/* Input Keywords starts */}
@@ -319,15 +346,19 @@ const keywordClick = async ()=>{
                     </Grid>
                 </Grid>
                 {/* Display Added Keywords ends */}
-
+                {
+                    !editHorse?
+                    <>
+                    <Grid item xs={12} sx={{mt:3}}>
+                        <Button title="Add another" color='#313033' backgroundColor='#868686' width="100%" onClick={e => submitHorse("add_another")}/>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Typography variant='imageDescriptions'>Available for premium users (up to 10 horses)</Typography>
+                    </Grid>
+                    </>:""
+                }
                 <Grid item xs={12} sx={{mt:3}}>
-                    <Button title="Add another" color='#313033' backgroundColor='#868686' width="100%" onClick={e => submitHorse("add_another")}/>
-                </Grid>
-                <Grid item xs={12}>
-                    <Typography variant='imageDescriptions'>Available for premium users (up to 10 horses)</Typography>
-                </Grid>
-                <Grid item xs={12} sx={{mt:3}}>
-                    <Button title="Create" width="100%" onClick={submitHorse}/>
+                    <Button title={editHorse?"Update":"Create"} width="100%" onClick={submitHorse}/>
                 </Grid>
             </Grid>
             {/* main container ends */}

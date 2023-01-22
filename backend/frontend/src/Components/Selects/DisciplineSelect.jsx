@@ -20,7 +20,7 @@ const DisciplineSelect = ({horseData,setHorseData}) => {
     
   return (
     <FormControl fullWidth>
-        <Select value={horseData.discipline_id} onChange={handleChange} className="customInput" sx={{minHeight:"60px"}} variant="standard" disableUnderline={true}>
+        <Select value={horseData?.discipline_id} onChange={handleChange} className="customInput" sx={{minHeight:"60px"}} variant="standard" disableUnderline={true}>
       {options.map((object)=>{
         return <MenuItem value={object.id} key={object.id}>{object.discipline}</MenuItem>
       })}

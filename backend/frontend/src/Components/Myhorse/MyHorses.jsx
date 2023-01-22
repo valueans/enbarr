@@ -16,7 +16,6 @@ const MyHorses = () => {
 
   const getFavouriteHorses = async ()=>{
     const response = await HorseService.getMyHorses(page);
-    console.log("this is response",response)
     setTotalHorseCount(response.count)
     setMyHorse(response.results)
   }
@@ -32,7 +31,7 @@ const MyHorses = () => {
       </Grid>
       <Grid item xs={12} sx={{minHeight:"200px"}}> 
         {totalHorseCount > 0?
-          <HorseCardList adds={myHorse} typeCard="my-horse"/>:
+          <HorseCardList adds={myHorse} setAdds={setMyHorse} typeCard="my-horse"/>:
           <Typography variant='h5' sx={{color:"red"}}>no data found....</Typography>
         }
       </Grid>
