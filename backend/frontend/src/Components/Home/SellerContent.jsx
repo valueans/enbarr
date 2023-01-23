@@ -50,7 +50,7 @@ const uploadImage = async (image)=>{
     let horse_images = [...horseData.images_id]
     horse_images.push(response.id)
     setHorseData({...horseData,images_id:horse_images})
-    setFiles([...files,{id:response.id,image:image,file_type:response.file_type}]);
+    setFiles([...files,{id:response.id,image:image,file_type:response?.file_type}]);
   }
 
 const handleFileInputChange = async e => {

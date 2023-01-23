@@ -45,5 +45,6 @@ django-jazzmin = "==2.6.0"
 pubnub = "==7.0.1"
 django-cors-headers = "==2.2.0"
 django_celery_results = "==2.4.0"
+filetype = "==1.2.0"
 
 
