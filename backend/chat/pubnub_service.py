@@ -1,6 +1,7 @@
 from django.conf import settings
 from pubnub.pnconfiguration import PNConfiguration
 from pubnub.pubnub import PubNub
+from users.api.serializers import UserSerializer 
 
 pnconfig = PNConfiguration()
 
@@ -12,10 +13,13 @@ pnconfig.ssl = False
 
 def publish_callback(result, status):
     if status.is_error():
-        print("Error %s" % str(status.error_data.exception))
-        print("Error category #%d" % status.category)
+        return {
+            "status":"error",
+            "message":status.error_data.exception,
+            "category":status.category
+        }
     else:
-        print(str(result))
+        return result
 
 
 def subcribeChannel(channel_name, user_id):
@@ -30,9 +34,12 @@ def unsubcribeChannel(channel_name, user_id):
     pubnub.subscribe().channels(channel_name).execute()
 
 
-def sendMessage(channel_name, user_id, message):
-    pnconfig.user_id = str(user_id)
+def sendMessage(channel_name, user, message):
+    sender_user_serializer = UserSerializer(user)
+    pnconfig.user_id = str(user.id)
     pubnub = PubNub(pnconfig)
     pubnub.publish().channel(channel_name).message({"text": message}).should_store(
         True
-    ).pn_async(publish_callback)
+    ).meta(sender_user_serializer.data).pn_async(publish_callback)
+    message_timestamp = pubnub.signal().message({"text": message}).channel(channel_name).sync()
+    return message_timestamp.result.timetoken

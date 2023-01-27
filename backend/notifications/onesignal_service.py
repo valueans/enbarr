@@ -38,7 +38,7 @@ def sendAdminNotification(notificationTo, message):
 
 def sendMessageNotification(notificationTo, message, message_from):
     name = f"You have received a new message from {message_from.email}"
-    Notifications.objects.create(user=notificationTo, description=name)
+    Notifications.objects.create(user=notificationTo, description=name,message_profile_url=message_from.userprofile.profile_photo.url)
     payload = {
         "include_email_tokens": [notificationTo.email],
         "contents": {"en": message},

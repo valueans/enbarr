@@ -159,7 +159,8 @@ export default function NotificationMenu() {
                             }
                         </Grid>
                         <Grid item xs={2} className="alignContentCenter">
-                            <Avatar alt="Remy Sharp" sx={{width:"70px",height:"70px"}}/>
+                          {console.log("element",element)}
+                            <Avatar alt="Remy Sharp" sx={{width:"70px",height:"70px"}} src={element?.message_profile_url}/>
                         </Grid>
                         <Grid item xs={7} className="alignContentCenter">
                             <Typography variant="notificationMessage">{element.description}</Typography>

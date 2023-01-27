@@ -6,6 +6,9 @@ User = get_user_model()
 
 class Messages(models.Model):
     message_timestamp = models.CharField(max_length=1000, null=True, blank=True)
+    Messages = models.TextField(max_length=2000,null=True,blank=True)
+    read_status = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
 
 
 class Conversation(models.Model):

@@ -5,6 +5,7 @@ import Home from '../Components/Pages/Home';
 import AuthenticationPage from '../Components/Pages/AuthenticationPage';
 import MyHorse from '../Components/Pages/MyHorse';
 import SettingsPage from '../Components/Pages/SettingsPage';
+import Chat from '../Components/Pages/Chat';
 
 
 const Routers = () => {
@@ -13,6 +14,7 @@ const Routers = () => {
         <Route exact path='/' element={<LandingPage></LandingPage>}/>
         <Route path='/auth/*' element={<AuthenticationPage/>}/>
         <Route path='/home/*' element={<Home/>}/>
+        <Route path='/messages/*' element={<Chat/>}/>
         <Route path='/myhorse/*' element={<MyHorse></MyHorse>}/>
         <Route path='/settings/*' element={<SettingsPage></SettingsPage>}/>
 

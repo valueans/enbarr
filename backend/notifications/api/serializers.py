@@ -11,6 +11,7 @@ class NotificationsSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "description",
+            "message_profile_url",
             "read_status",
             "user_profile",
         )

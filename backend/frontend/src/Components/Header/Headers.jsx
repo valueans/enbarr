@@ -37,6 +37,7 @@ export default function ButtonAppBar({headerType="landing",currentPage="home"}) 
             setMessageActive(true)
             setMyHorseActive(false)
             setSettingsActive(false)
+            return navigator('/messages')
         }
         if (clickedButton==="my-horse"){
             setHomeActive(false)
