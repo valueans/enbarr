@@ -7,78 +7,105 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('home', '0001_initial'),
-        ('users', '0029_auto_20230119_1437'),
+        ("home", "0001_initial"),
+        ("users", "0029_auto_20230119_1437"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='usersearchsave',
-            name='title',
+            model_name="usersearchsave",
+            name="title",
         ),
         migrations.AddField(
-            model_name='usersearchsave',
-            name='breed',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='home.Breeds'),
+            model_name="usersearchsave",
+            name="breed",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="home.Breeds",
+            ),
         ),
         migrations.AddField(
-            model_name='usersearchsave',
-            name='color',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='home.Colors'),
+            model_name="usersearchsave",
+            name="color",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="home.Colors",
+            ),
         ),
         migrations.AddField(
-            model_name='usersearchsave',
-            name='discipline',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='home.Disciplines'),
+            model_name="usersearchsave",
+            name="discipline",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="home.Disciplines",
+            ),
         ),
         migrations.AddField(
-            model_name='usersearchsave',
-            name='gender',
+            model_name="usersearchsave",
+            name="gender",
             field=models.CharField(blank=True, max_length=200, null=True),
         ),
         migrations.AddField(
-            model_name='usersearchsave',
-            name='keywords',
-            field=models.ManyToManyField(related_name='user_search_keywords', to='home.Keywords'),
+            model_name="usersearchsave",
+            name="keywords",
+            field=models.ManyToManyField(
+                related_name="user_search_keywords", to="home.Keywords"
+            ),
         ),
         migrations.AddField(
-            model_name='usersearchsave',
-            name='location',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='home.Locations'),
+            model_name="usersearchsave",
+            name="location",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="home.Locations",
+            ),
         ),
         migrations.AddField(
-            model_name='usersearchsave',
-            name='max_age',
+            model_name="usersearchsave",
+            name="max_age",
             field=models.IntegerField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='usersearchsave',
-            name='max_height',
+            model_name="usersearchsave",
+            name="max_height",
             field=models.IntegerField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='usersearchsave',
-            name='max_price',
+            model_name="usersearchsave",
+            name="max_price",
             field=models.IntegerField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='usersearchsave',
-            name='min_age',
+            model_name="usersearchsave",
+            name="min_age",
             field=models.IntegerField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='usersearchsave',
-            name='min_height',
+            model_name="usersearchsave",
+            name="min_height",
             field=models.IntegerField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='usersearchsave',
-            name='min_price',
+            model_name="usersearchsave",
+            name="min_price",
             field=models.IntegerField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='usersearchsave',
-            name='temperament',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='home.Temperaments'),
+            model_name="usersearchsave",
+            name="temperament",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="home.Temperaments",
+            ),
         ),
     ]

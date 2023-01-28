@@ -218,7 +218,7 @@ class HorseUpdateSerializer(serializers.ModelSerializer):
 
 
 class HorsesSerializer(serializers.ModelSerializer):
-    images = serializers.SerializerMethodField('get_images',read_only=True)
+    images = serializers.SerializerMethodField("get_images", read_only=True)
     images_id = serializers.ListField(write_only=True, required=False)
     location = LocationsSerializer(read_only=True)
     location_id = serializers.IntegerField(write_only=True, required=True)
@@ -373,9 +373,9 @@ class HorsesSerializer(serializers.ModelSerializer):
         except:
             year = ""
         return year
-    
-    def get_images(self,obj):
-        images = obj.images.all().order_by('id')
+
+    def get_images(self, obj):
+        images = obj.images.all().order_by("id")
         serializer = HorseImagesSerializer(images, many=True)
         return serializer.data
 
@@ -410,7 +410,7 @@ class FavouriteSerializer(serializers.ModelSerializer):
 class UserSearchSaveSerializer(serializers.ModelSerializer):
     keywords = KeywordsSerializer(read_only=True, many=True)
     keywords_id = serializers.ListField(write_only=True, required=False)
-    
+
     class Meta:
         model = UserSearchSave
         fields = "__all__"
@@ -425,14 +425,13 @@ class UserSearchSaveSerializer(serializers.ModelSerializer):
                 {"status": "error", "message": "Invalid keyword id"}
             )
         user = self.context["request"].user
-        instance,created = UserSearchSave.objects.get_or_create(user=user)
+        instance, created = UserSearchSave.objects.get_or_create(user=user)
         for key, value in validated_data.items():
             setattr(instance, key, value)
         instance.keywords.set(keywords)
         instance.save()
         return instance
-            
-        
+
 
 class LikesSerializer(serializers.ModelSerializer):
     class Meta:

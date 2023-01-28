@@ -132,6 +132,14 @@ const theme = createTheme({
             lineHeight: "40px",
             color: "#2F3C4C",
         },
+        chatUsersTitle:{
+            fontFamily: 'Poppins',
+            fontStyle: "normal",
+            fontWeight: 500,
+            fontSize: "12px",
+            lineHeight: "18px",
+            color: "#000000",
+        },
     }
   });
 

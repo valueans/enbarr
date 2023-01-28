@@ -3,7 +3,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.authentication import TokenAuthentication
 from rest_framework import status
 from modules.terms_and_conditions.terms_and_conditions.models import TermAndCondition
-from django.db.models import Q,F
+from django.db.models import Q, F
 from drf_yasg.utils import swagger_auto_schema
 from datetime import datetime, date
 from django.db.models import Q
@@ -306,16 +306,16 @@ def HorseImagesView(request):
             data = {"status": "ERROR", "message": "Invalid Horse id"}
             return Response(data=data, status=status.HTTP_404_NOT_FOUND)
 
-        images = horse.images.all().order_by('id')
+        images = horse.images.all().order_by("id")
         serializer = HorseImagesSerializer(images, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     if request.method == "POST":
         serializer = HorseImagesSerializer(data=request.data)
         if serializer.is_valid():
-            file = request.FILES.get('file')
+            file = request.FILES.get("file")
             kind = filetype.guess(file)
-            type = kind.mime.split('/')[0]
+            type = kind.mime.split("/")[0]
             if type == "image":
                 serializer.save(file_type="IMAGE")
             elif type == "video":
@@ -621,76 +621,103 @@ def favouriteView(request):
         return Response(data=data, status=status.HTTP_200_OK)
 
 
-@swagger_auto_schema(method="get",responses={200: HorsesSerializer(many=True)})
+@swagger_auto_schema(method="get", responses={200: HorsesSerializer(many=True)})
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 @authentication_classes([TokenAuthentication])
 def searchHorseView(request):
     if request.method == "GET":
-        
+
         try:
             user_search_history = UserSearchSave.objects.get(user=request.user)
         except:
             data = {
-                "status":"error",
-                "message":"Please add the search criteria before match"
+                "status": "error",
+                "message": "Please add the search criteria before match",
             }
-            return Response(data=data,status=status.HTTP_400_BAD_REQUEST)
-        
+            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+
         current_year = date.today().year
-        queryset = Horses.objects.annotate(age=current_year-F('year_of_birth')).all()
+        queryset = Horses.objects.annotate(age=current_year - F("year_of_birth")).all()
         filter_queryset = []
-        
+
         if user_search_history.location_id:
-            filter_queryset +=  queryset.filter(location=user_search_history.location_id)
+            filter_queryset += queryset.filter(location=user_search_history.location_id)
         if user_search_history.breed_id:
-            filter_queryset +=  queryset.filter(breed=user_search_history.breed_id)
+            filter_queryset += queryset.filter(breed=user_search_history.breed_id)
         if user_search_history.min_age:
-            filter_queryset +=  queryset.filter(age__gte=user_search_history.min_age)
+            filter_queryset += queryset.filter(age__gte=user_search_history.min_age)
         if user_search_history.max_age:
-            filter_queryset +=  queryset.filter(age__lte=user_search_history.max_age)
+            filter_queryset += queryset.filter(age__lte=user_search_history.max_age)
         if user_search_history.min_height:
-            filter_queryset +=  queryset.filter(height__gte=user_search_history.min_height)
+            filter_queryset += queryset.filter(
+                height__gte=user_search_history.min_height
+            )
         if user_search_history.max_height:
-            filter_queryset +=  queryset.filter(height__lte=user_search_history.max_height)
+            filter_queryset += queryset.filter(
+                height__lte=user_search_history.max_height
+            )
         if user_search_history.min_price:
-            filter_queryset +=  queryset.filter(price__gte=user_search_history.min_price)
+            filter_queryset += queryset.filter(price__gte=user_search_history.min_price)
         if user_search_history.max_price:
-            filter_queryset +=  queryset.filter(price__lte=user_search_history.max_price)
+            filter_queryset += queryset.filter(price__lte=user_search_history.max_price)
         if user_search_history.discipline_id:
-            filter_queryset +=  queryset.filter(discipline=user_search_history.discipline_id)
+            filter_queryset += queryset.filter(
+                discipline=user_search_history.discipline_id
+            )
         if user_search_history.gender:
-            filter_queryset +=  queryset.filter(gender=user_search_history.gender)
+            filter_queryset += queryset.filter(gender=user_search_history.gender)
         if user_search_history.color_id:
-            filter_queryset +=  queryset.filter(color=user_search_history.color_id)
+            filter_queryset += queryset.filter(color=user_search_history.color_id)
         if user_search_history.temperament_id:
-            filter_queryset +=  queryset.filter(temperament=user_search_history.temperament_id)
+            filter_queryset += queryset.filter(
+                temperament=user_search_history.temperament_id
+            )
         if user_search_history.keywords.all().count() > 0:
-            filter_queryset +=  queryset.filter(keywords__in=user_search_history.keywords.all())
-            
-        filter_list = Horses.objects.filter(id__in=[q.id for q in filter_queryset]).distinct().order_by('id').reverse()
+            filter_queryset += queryset.filter(
+                keywords__in=user_search_history.keywords.all()
+            )
+
+        filter_list = (
+            Horses.objects.filter(id__in=[q.id for q in filter_queryset])
+            .distinct()
+            .order_by("id")
+            .reverse()
+        )
         return getPagination(filter_list, request, HorsesSerializer)
 
 
 @swagger_auto_schema(method="GET", responses={200: UserSearchSaveSerializer(many=True)})
-@swagger_auto_schema(method="POST", request_body=UserSearchSaveSerializer,responses={200: UserSearchSaveSerializer(many=True)})
+@swagger_auto_schema(
+    method="POST",
+    request_body=UserSearchSaveSerializer,
+    responses={200: UserSearchSaveSerializer(many=True)},
+)
 @swagger_auto_schema(
     method="DELETE",
     manual_parameters=[
-        createParam(paramName="search-id", description="to delete specific search",required=True),
+        createParam(
+            paramName="search-id",
+            description="to delete specific search",
+            required=True,
+        ),
     ],
     responses=customDeleteResponse(),
 )
-@api_view(["GET", "POST","DELETE"])
+@api_view(["GET", "POST", "DELETE"])
 @permission_classes([IsAuthenticated])
 @authentication_classes([TokenAuthentication])
 def userSearchView(request):
     if request.method == "GET":
         instance = UserSearchSave.objects.filter(user=request.user)
-        serializer = UserSearchSaveSerializer(instance, many=True,context={"request": request})
+        serializer = UserSearchSaveSerializer(
+            instance, many=True, context={"request": request}
+        )
         return Response(data=serializer.data, status=status.HTTP_200_OK)
     if request.method == "POST":
-        serializer = UserSearchSaveSerializer(data=request.data,context={"request": request})
+        serializer = UserSearchSaveSerializer(
+            data=request.data, context={"request": request}
+        )
         if serializer.is_valid():
             serializer.save(user=request.user)
             return Response(data=serializer.data, status=status.HTTP_200_OK)

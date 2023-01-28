@@ -75,7 +75,7 @@ const keywordClick = async ()=>{
   },[horseData.user_location])
 
   useEffect(()=>{
-    if (location.state.editHorse){
+    if (location?.state?.editHorse){
         setFiles(location.state.images)
         setEditHorse(true)
         setEditHorseId(location.state.horse_id)

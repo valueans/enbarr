@@ -1,7 +1,7 @@
 from django.conf import settings
 from pubnub.pnconfiguration import PNConfiguration
 from pubnub.pubnub import PubNub
-from users.api.serializers import UserSerializer 
+from users.api.serializers import UserSerializer
 
 pnconfig = PNConfiguration()
 
@@ -14,9 +14,9 @@ pnconfig.ssl = False
 def publish_callback(result, status):
     if status.is_error():
         return {
-            "status":"error",
-            "message":status.error_data.exception,
-            "category":status.category
+            "status": "error",
+            "message": status.error_data.exception,
+            "category": status.category,
         }
     else:
         return result
@@ -41,5 +41,3 @@ def sendMessage(channel_name, user, message):
     pubnub.publish().channel(channel_name).message({"text": message}).should_store(
         True
     ).meta(sender_user_serializer.data).pn_async(publish_callback)
-    message_timestamp = pubnub.signal().message({"text": message}).channel(channel_name).sync()
-    return message_timestamp.result.timetoken

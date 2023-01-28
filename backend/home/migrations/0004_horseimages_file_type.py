@@ -6,13 +6,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('home', '0003_auto_20230121_0803'),
+        ("home", "0003_auto_20230121_0803"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='horseimages',
-            name='file_type',
-            field=models.CharField(choices=[('IMAGE', 'IMAGE'), ('VIDEO', 'VIDEO')], default='IMAGES', max_length=10),
+            model_name="horseimages",
+            name="file_type",
+            field=models.CharField(
+                choices=[("IMAGE", "IMAGE"), ("VIDEO", "VIDEO")],
+                default="IMAGES",
+                max_length=10,
+            ),
         ),
     ]

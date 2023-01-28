@@ -5,6 +5,7 @@ from users.api.serializers import UserProfileSerializer
 
 deleted_message = "Successfully Deleted"
 
+
 def createParam(paramName, description, required=False):
     return openapi.Parameter(
         paramName,
@@ -230,6 +231,7 @@ def customPasswordResetResponse():
     }
     return responses
 
+
 def customUpgradeSubscriptionResponse():
     responses = {
         status.HTTP_200_OK: Schema(
@@ -244,7 +246,7 @@ def customUpgradeSubscriptionResponse():
                     type=openapi.TYPE_STRING,
                 ),
                 "data": openapi.Schema(
-                    title= "user_profile_object",
+                    title="user_profile_object",
                     type=openapi.TYPE_STRING,
                 ),
             },

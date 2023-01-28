@@ -122,7 +122,7 @@ def paymentMethods(request):
     """you can use this api to get all card details for specific user"""
     if request.method == "GET":
         user = request.user
-        instances = Cards.objects.filter(user=user,active=True).order_by('id').last()
+        instances = Cards.objects.filter(user=user, active=True).order_by("id").last()
         serializer = CardsSerializer(instances)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
     if request.method == "DELETE":
@@ -144,9 +144,18 @@ def paymentMethods(request):
         data = {"status": "OK", "message": deleted_message}
         return Response(data=data, status=status.HTTP_200_OK)
 
-@swagger_auto_schema(method="POST",manual_parameters=[
-        createParam(paramName="plan-id", description="to get the plan that needs to be upgrade or subscribed",required=True)
-    ],responses=customUpgradeSubscriptionResponse())
+
+@swagger_auto_schema(
+    method="POST",
+    manual_parameters=[
+        createParam(
+            paramName="plan-id",
+            description="to get the plan that needs to be upgrade or subscribed",
+            required=True,
+        )
+    ],
+    responses=customUpgradeSubscriptionResponse(),
+)
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 @authentication_classes([TokenAuthentication])
@@ -162,7 +171,7 @@ def upgradeSubscriptionView(request):
             return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
         plan = SubscriptionPlans.objects.get(id=upgrade_plan_id)
-        cards = Cards.objects.filter(user=user,active=True)
+        cards = Cards.objects.filter(user=user, active=True)
         if cards.count() == 0 and plan.title != "Basic":
             data = {
                 "status": "ERROR",
@@ -220,15 +229,18 @@ def stripe_webhook(request):
                 exp_month=response["card"]["exp_month"],
                 exp_year=response["card"]["exp_year"],
                 payment_id=instance.payment_method_id,
-                active=True
+                active=True,
             )
-            subscription_id = stripe_customer.user.userprofile.user_stripe_subscription_id
+            subscription_id = (
+                stripe_customer.user.userprofile.user_stripe_subscription_id
+            )
             if subscription_id:
                 stripe.Subscription.modify(
-                    subscription_id,
-                    default_payment_method=card.payment_id
-                    )
-            prev_card = Cards.objects.filter(Q(user=stripe_customer.user),~Q(id=card.id),Q(active=True))
+                    subscription_id, default_payment_method=card.payment_id
+                )
+            prev_card = Cards.objects.filter(
+                Q(user=stripe_customer.user), ~Q(id=card.id), Q(active=True)
+            )
             prev_card.update(active=False)
             return HttpResponse(status=200)
         elif event.type == "setup_intent.created":
@@ -279,7 +291,11 @@ def stripe_webhook(request):
                 stripe_customer = StripeCustomer.objects.get(
                     stipe_customerId=response["customer"]
                 )
-                card = Cards.objects.filter(user=stripe_customer.user,active=True).order_by('id').last()
+                card = (
+                    Cards.objects.filter(user=stripe_customer.user, active=True)
+                    .order_by("id")
+                    .last()
+                )
                 card.message = (
                     "Unable to charge your card please update your payment method."
                 )

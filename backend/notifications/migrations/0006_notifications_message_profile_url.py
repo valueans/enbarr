@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('notifications', '0005_auto_20221105_0703'),
+        ("notifications", "0005_auto_20221105_0703"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='notifications',
-            name='message_profile_url',
+            model_name="notifications",
+            name="message_profile_url",
             field=models.TextField(blank=True, null=True),
         ),
     ]

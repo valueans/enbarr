@@ -1,7 +1,7 @@
 // production
-// export const baseUrl = "https://tiny-bird-36835.botics.co/";
+export const baseUrl = "https://tiny-bird-36835.botics.co/";
 // development
-export const baseUrl = "http://127.0.0.1:8000/";
+// export const baseUrl = "http://127.0.0.1:8000/";
 export const api = `${baseUrl}api/v1/`;
 
 
@@ -59,6 +59,13 @@ export const updagradeSubscriptionUrl = `${paymentUrl}updagradeSubscription/`
 
 // buyers
 export const userSearchSaveUrl = `${api}user-saved-search/`;
+
+
+// chat
+export const conversationUrl = `${chatUrl}conversation/`;
+export const messageUrl = `${chatUrl}messages/`;
+
+
 
 // social links
 export const facebookLink  = "https://www.facebook.com/";

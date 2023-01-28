@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('home', '0002_auto_20230120_1153'),
+        ("home", "0002_auto_20230120_1153"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='horses',
-            name='height',
+            model_name="horses",
+            name="height",
             field=models.FloatField(blank=True, null=True),
         ),
     ]

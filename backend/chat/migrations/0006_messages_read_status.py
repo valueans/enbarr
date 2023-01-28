@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('chat', '0005_messages_created_at'),
+        ("chat", "0005_messages_created_at"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='messages',
-            name='read_status',
+            model_name="messages",
+            name="read_status",
             field=models.BooleanField(default=False),
         ),
     ]

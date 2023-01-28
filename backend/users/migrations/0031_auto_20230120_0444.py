@@ -6,38 +6,38 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('users', '0030_auto_20230120_0428'),
+        ("users", "0030_auto_20230120_0428"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='usersearchsave',
-            name='max_age',
+            model_name="usersearchsave",
+            name="max_age",
             field=models.FloatField(blank=True, null=True),
         ),
         migrations.AlterField(
-            model_name='usersearchsave',
-            name='max_height',
+            model_name="usersearchsave",
+            name="max_height",
             field=models.FloatField(blank=True, null=True),
         ),
         migrations.AlterField(
-            model_name='usersearchsave',
-            name='max_price',
+            model_name="usersearchsave",
+            name="max_price",
             field=models.FloatField(blank=True, null=True),
         ),
         migrations.AlterField(
-            model_name='usersearchsave',
-            name='min_age',
+            model_name="usersearchsave",
+            name="min_age",
             field=models.FloatField(blank=True, null=True),
         ),
         migrations.AlterField(
-            model_name='usersearchsave',
-            name='min_height',
+            model_name="usersearchsave",
+            name="min_height",
             field=models.FloatField(blank=True, null=True),
         ),
         migrations.AlterField(
-            model_name='usersearchsave',
-            name='min_price',
+            model_name="usersearchsave",
+            name="min_price",
             field=models.FloatField(blank=True, null=True),
         ),
     ]

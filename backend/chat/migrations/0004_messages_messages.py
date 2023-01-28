@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('chat', '0003_auto_20221124_1345'),
+        ("chat", "0003_auto_20221124_1345"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='messages',
-            name='Messages',
+            model_name="messages",
+            name="Messages",
             field=models.TextField(blank=True, max_length=2000, null=True),
         ),
     ]

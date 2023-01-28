@@ -65,14 +65,11 @@ def messagesView(request):
             )
             subcribeChannel(channel, receiver.id)
         # send message to user using pubnub
-        try:
-            message_timestamp = sendMessage(conversation_instance.channel, request.user, message)
-        except:
-            return Response(data=message_timestamp,status=status.HTTP_400_BAD_REQUEST)
+        sendMessage(conversation_instance.channel, request.user, message)
         # after sending message creating a notification for user
         sendMessageNotification(receiver, message, request.user)
         # creating the message obj and storing it into database
-        message_obj = Messages.objects.create(Messages=message,message_timestamp=message_timestamp)
+        message_obj = Messages.objects.create(Messages=message)
         # adding the message into the conversation
         conversation_instance.message.add(message_obj)
         conversation_instance.save()

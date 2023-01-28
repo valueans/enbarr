@@ -14,7 +14,7 @@ SEND_PUSH_NOTIFICATION_USER_GROUP = (
 class Notifications(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     description = models.TextField(max_length=1000, null=True, blank=True)
-    message_profile_url = models.TextField(null=True,blank=True)
+    message_profile_url = models.TextField(null=True, blank=True)
     read_status = models.BooleanField(default=False)
 
     def __str__(self):
