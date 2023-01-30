@@ -140,6 +140,14 @@ const theme = createTheme({
             lineHeight: "18px",
             color: "#000000",
         },
+        chatMessageTime:{
+            fontFamily: 'Poppins',
+            fontStyle: "normal",
+            fontWeight: 300,
+            fontSize: "10px",
+            lineHeight: "15px",
+            color: "#302F32",
+        },
     }
   });
 

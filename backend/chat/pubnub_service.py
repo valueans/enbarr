@@ -1,7 +1,7 @@
 from django.conf import settings
 from pubnub.pnconfiguration import PNConfiguration
 from pubnub.pubnub import PubNub
-from users.api.serializers import UserSerializer
+from users.api.serializers import UserProfileSerializer
 
 pnconfig = PNConfiguration()
 
@@ -35,9 +35,9 @@ def unsubcribeChannel(channel_name, user_id):
 
 
 def sendMessage(channel_name, user, message):
-    sender_user_serializer = UserSerializer(user)
+    sender_user_serializer = UserProfileSerializer(user.userprofile)
     pnconfig.user_id = str(user.id)
     pubnub = PubNub(pnconfig)
     pubnub.publish().channel(channel_name).message({"text": message}).should_store(
         True
-    ).meta(sender_user_serializer.data).pn_async(publish_callback)
+    ).meta({"userprofile": sender_user_serializer.data}).pn_async(publish_callback)

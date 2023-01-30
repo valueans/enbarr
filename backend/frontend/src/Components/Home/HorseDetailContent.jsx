@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Carosel from '../Carosel/Carosel'
 import { Grid,Typography,Box,IconButton } from '@mui/material'
-import { useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
@@ -9,9 +9,11 @@ import LongHorizontalLineIcon from '../Svgs/LongHorizontalLineIcon'
 import HorseService from '../../Services/HorseService'
 import ProfileCard from '../Cards/ProfileCard';
 import { getUserProfile } from '../../Constants/storage';
+import ChatService from '../../Services/ChatService';
 
 const HorseDetailContent = () => {
 const [searchParam] =useSearchParams();
+const navigator = useNavigate(); 
 const [horseDetails,setHorseDetails] = useState({title:"",description:"",gender:"",height:"",price:"",userprofile:{first_name:"",last_name:"",profile_photo:"",user:{id:""}},breed:{breed:""},temperament:{temperament:""},discipline:{discipline:""}})
 const currentLoginUserProfile = getUserProfile();
 
@@ -38,6 +40,11 @@ useEffect(()=>{
   window.scrollTo(0, 0);
 },[])
 
+
+const messageOwner = async ()=>{
+    const response = await ChatService.generateConversations(horseDetails.userprofile.user.id)
+    return navigator('/messages')
+}
 
 return (
 <Grid container sx={{minHeight:"calc(100vh - 101px)"}} className="justifyContentCenter">
@@ -75,7 +82,7 @@ return (
             <Grid container
               sx={{display:"flex",alignItems:"end",height:"103px",position:"relative",top:"20px",right:"10px",justifyContent:"flex-end"}}>
               <Grid item xs={3}>
-                <IconButton sx={{background:"#FFFFFF",width:"60px",height:"60px",boxShadow:"1px 1px 15px 1px grey"}} disabled={currentLoginUserProfile.id === horseDetails.userprofile.id}>
+                <IconButton sx={{background:"#FFFFFF",width:"60px",height:"60px",boxShadow:"1px 1px 15px 1px grey"}} disabled={currentLoginUserProfile.id === horseDetails.userprofile.id} onClick={messageOwner}>
                   <MailOutlineIcon sx={{height:"100%"}} />
                 </IconButton>
               </Grid>

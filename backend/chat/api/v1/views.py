@@ -56,7 +56,7 @@ def messagesView(request):
                 | Q(user_one=receiver) & Q(user_two=request.user)
             )
         except:
-            channel = f"chat.{request.user.id}{receiver.id}"
+            channel = f"channel-chat-{request.user.id}{receiver.id}"
             conversation_instance = Conversation.objects.create(
                 user_one=request.user,
                 user_two=receiver,
@@ -64,14 +64,21 @@ def messagesView(request):
                 updated_at=datetime.now(),
             )
             subcribeChannel(channel, receiver.id)
+            subcribeChannel(channel, request.user.id)
         # send message to user using pubnub
         sendMessage(conversation_instance.channel, request.user, message)
         # after sending message creating a notification for user
         sendMessageNotification(receiver, message, request.user)
         # creating the message obj and storing it into database
-        message_obj = Messages.objects.create(Messages=message)
+        # get previous mesage and delete it
+        message_obj = Messages.objects.filter(channel=conversation_instance.channel)
+        message_obj.delete()
+        # then store new last message
+        message_obj = Messages.objects.create(
+            Messages=message, channel=conversation_instance.channel
+        )
         # adding the message into the conversation
-        conversation_instance.message.add(message_obj)
+        conversation_instance.last_message = message_obj
         conversation_instance.save()
         data = {"status": "ok", "message": "message successfully sent"}
         return Response(data=data, status=status.HTTP_200_OK)
@@ -116,24 +123,39 @@ def messagesView(request):
 @authentication_classes([TokenAuthentication])
 def conversationView(request):
     if request.method == "GET":
-        conversation_id = request.GET.get("conversation-id", None)
-        if conversation_id is None:
-            intance = (
+        receiver_id = request.GET.get("receiver-id", None)
+        if receiver_id is None:
+            instance = (
                 Conversation.objects.filter(
                     Q(user_one=request.user) | Q(user_two=request.user)
                 )
                 .order_by("updated_at")
                 .reverse()
             )
-            return getPagination(intance, request, ConversationSerializer)
-        try:
-            intance = Conversation.objects.get(id=conversation_id)
-        except:
-            data = {"status": "error", "message": "Invalid conversation-id"}
-            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
-        serializer = ConversationSerializer(intance)
+            return getPagination(instance, request, ConversationSerializer)
+        else:
+            try:
+                receiver = User.objects.get(id=receiver_id)
+            except:
+                data = {"status": "error", "message": "Invalid receiver id"}
+                return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+            try:
+                instance = Conversation.objects.get(
+                    Q(user_one=request.user) & Q(user_two=receiver)
+                    | Q(user_one=receiver) & Q(user_two=request.user)
+                )
+            except:
+                channel = f"channel-chat-{request.user.id}-{receiver.id}"
+                instance = Conversation.objects.create(
+                    user_one=request.user,
+                    user_two=receiver,
+                    channel=channel,
+                    updated_at=datetime.now(),
+                )
+        serializer = ConversationSerializer(instance, context={"request": request})
         data = {"status": "ok", "message": "successfull", "data": serializer.data}
         return Response(data=data, status=status.HTTP_200_OK)
+
     if request.method == "DELETE":
         conversation_id = request.GET.get("conversation-id", None)
         if conversation_id is None:
@@ -159,9 +181,21 @@ import json
 def pubnub_webhook(request):
     body = json.loads(request.body)
     channel = body["event"]["channel"]
-    timetoken = body["event"]["timetoken"]
-    message = Messages.objects.create(message_timestamp=timetoken)
+    message = body["event"]["eventPayload"]["message"]["text"]
+    sender = body["event"]["senderId"]
     conversation = Conversation.objects.get(channel=channel)
-    conversation.message.add(message)
+    try:
+        prev_messages = Messages.objects.filter(channel=channel)
+        prev_messages.delete()
+    except:
+        pass
+
+    message_obj = Messages.objects.create(channel=channel, Messages=message)
+    conversation.last_message = message_obj
     conversation.save()
+    if conversation.user_one.email == sender:
+        sendMessageNotification(conversation.user_two, message, conversation.user_one)
+    else:
+        sendMessageNotification(conversation.user_one, message, conversation.user_two)
+
     return HttpResponse(200)

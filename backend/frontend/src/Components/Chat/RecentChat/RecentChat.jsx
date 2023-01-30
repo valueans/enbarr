@@ -5,7 +5,6 @@ import clip from "text-clipper";
 import moment from 'moment';
 
 const RecentChat = (props) => {
-    console.log("props",props)
   return (
     <>
     <Grid container spacing={2} sx={{mb:3,cursor:"pointer"}}>
@@ -17,12 +16,12 @@ const RecentChat = (props) => {
                 <Typography variant="characteristicsHeading">{props.user_two_profile.user.email.split('@')[0]}</Typography>
             </Grid>
             <Grid item xs={12}>
-                <Typography variant="imageDescriptions">{clip(props.last_message.Messages, 50)}</Typography>
+                <Typography variant="imageDescriptions">{props.last_message?clip(props.last_message.Messages, 50):""}</Typography>
             </Grid>
         </Grid>
         <Grid container item xs={2}>
             <Grid item xs={12}>
-                <Typography>{moment(props.last_message.created_at).format('HH:MM')}</Typography>
+                <Typography>{props.last_message?moment(props?.last_message?.created_at).format('HH:MM'):""}</Typography>
             </Grid>
         </Grid>
     </Grid>

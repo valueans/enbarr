@@ -6,6 +6,14 @@ const ChatService = {
         const {data:response} = await axios.get(conversationUrl+`?page=${page}`);
         return response
     },
+    generateConversations : async (receiverId)=>{
+        const {data:response} = await axios.get(conversationUrl,{
+            params:{
+                'receiver-id':receiverId
+            }
+        });
+        return response
+    },
 }
 
 export default ChatService;

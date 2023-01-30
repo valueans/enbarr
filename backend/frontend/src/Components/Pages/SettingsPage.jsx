@@ -13,7 +13,6 @@ import ChangePasswordIcon from '../Svgs/ChangePasswordIcon';
 import FeedbackIcon from '../Svgs/FeedbackIcon';
 import DeleteAccountIcon from '../Svgs/DeleteAccountIcon';
 import LogoutIcon from '../Svgs/LogoutIcon';
-import UpgradeSubscribtion from '../Settings/UpgradeSubscribtion';
 import { useNavigate } from 'react-router-dom';
 import CustomModel from '../Models/CustomModel';
 import ProfilePage from '../Settings/ProfilePage';
