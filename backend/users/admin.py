@@ -61,7 +61,6 @@ class NewUserFilter(admin.SimpleListFilter):
     def queryset(self, request, queryset):
         try:
             month = int(request.GET.get("new_users"))
-            print(f"month is {month}")
             return adminQueryUserFilter(queryset=queryset, month=month)
         except:
             return None

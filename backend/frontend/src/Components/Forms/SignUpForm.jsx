@@ -34,7 +34,6 @@ const SignUpForm = ({setSnackBarData}) => {
         } catch (error) {
             if (error.response.status === 400){
                 if (error.response.data.email){
-                    console.log(error.response.data);
                     setSnackBarData({open:true,message:error.response.data.email[0],severity:"error"})
                 }
             }

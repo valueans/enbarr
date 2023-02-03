@@ -157,7 +157,7 @@ class ReportAdmin(admin.ModelAdmin):
     # actions
     def send_warning_to_published_user(modeladmin, request, queryset):
         # a warning will be sended to user
-        print(queryset)
+        pass
 
     def delete_content(modeladmin, request, queryset):
         for query in queryset:

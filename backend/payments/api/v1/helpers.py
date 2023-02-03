@@ -79,10 +79,6 @@ def deleteSubscription(user):
 
 def createMonthlySubscriptionBasic(user):
     if user.userprofile.user_stripe_subscription_id != None:
-        print(
-            "user.userprofile.user_stripe_subscription_id,",
-            user.userprofile.user_stripe_subscription_id,
-        )
         deleteSubscription(user)
     now = datetime.now()
     minutes = now.minute
