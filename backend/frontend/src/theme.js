@@ -148,6 +148,14 @@ const theme = createTheme({
             lineHeight: "15px",
             color: "#302F32",
         },
+        matchHorseTitle:{
+        fontFamily: 'Bookman Old Style',
+        fontStyle: "normal",
+        fontWeight: 300,
+        fontSize: "50px",
+        lineHeight: "59px",
+        color: "#302F32",
+        },
     }
   });
 

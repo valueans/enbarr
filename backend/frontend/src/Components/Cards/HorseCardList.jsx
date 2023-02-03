@@ -36,10 +36,10 @@ const HorseCardList = ({title,adds,setAdds,typeCard="horse"}) => {
                     return (
                         index> 2?
                         <Grid item lg={4} sm={6} xs={12} sx={{mt:4}} className="justifyContentCenter" key={object.id} onClick={event => horseListClicked(event,object.id)}>
-                            <HorseCard image={object.images[0]}/>
+                            <HorseCard image={object.images}/>
                         </Grid>:
                         <Grid item lg={4} sm={6} xs={12}  sx={{mt:4}} className="justifyContentCenter" key={object.id} onClick={event => horseListClicked(event,object.id)}>
-                            <HorseCard image={object.images[0]}/>
+                            <HorseCard image={object.images}/>
                         </Grid>
                     )
                 })
@@ -52,10 +52,10 @@ const HorseCardList = ({title,adds,setAdds,typeCard="horse"}) => {
                     return (
                         index> 2?
                         <Grid item lg={4} sm={6} xs={12} sx={{mt:4}} className="justifyContentCenter" key={horses.id} onClick={event => horseListClicked(event,horses.id)}>
-                            <HorseCard image={horses.images[0]}/>
+                            <HorseCard image={horses.images}/>
                         </Grid>:
                         <Grid item lg={4} sm={6} xs={12}  sx={{mt:4}} className="justifyContentCenter" key={horses.id} onClick={event => horseListClicked(event,horses.id)}>
-                            <HorseCard image={horses.images[0]}/>
+                            <HorseCard image={horses.images}/>
                         </Grid>
                     )
                 })

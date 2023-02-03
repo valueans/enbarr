@@ -1,15 +1,19 @@
 import React from 'react'
 import { styled } from '@mui/material/styles';
-import {Badge,Avatar,Grid,Typography } from '@mui/material';
+import {Badge,Grid,Typography } from '@mui/material';
 import CustomAvatar from './CustomAvatar';
+import { useDispatch } from 'react-redux';
+import { setSelectedChannelId,setSelectedChannel } from '../../../store/actions';
 
 
-const CustomAvatarOnline = ({image,name}) => {
+const CustomAvatarOnline = ({image,name,online=false,channel}) => {
+
+    const dispatch = useDispatch();
 
     const StyledBadge = styled(Badge)(({ theme }) => ({
         '& .MuiBadge-badge': {
-          backgroundColor: '#44b700',
-          color: '#44b700',
+          backgroundColor: online?'#44b700':'#ff9800',
+          color: online?'#44b700':'#ff9800',
           boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
           '&::after': {
             position: 'absolute',
@@ -36,7 +40,10 @@ const CustomAvatarOnline = ({image,name}) => {
       }));
 
   return (
-    <Grid xs={2} sx={{ml:2,mr:2,textAlign:"center"}}> 
+    <Grid xs={2} sx={{ml:2,mr:2,textAlign:"center"}} onClick={()=>{
+      dispatch(setSelectedChannelId(channel))
+      dispatch(setSelectedChannel({user_two_profile:{profile_photo:image,user:{email:name}}}))
+    }}> 
         <StyledBadge
             overlap="circular"
             anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}

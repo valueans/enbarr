@@ -3,11 +3,20 @@ import { Grid,Typography, } from '@mui/material';
 import CustomAvatar from '../Avatar/CustomAvatar';
 import clip from "text-clipper";
 import moment from 'moment';
+import {useSelector,useDispatch} from 'react-redux';
+import { setSelectedChannelId,setSelectedChannel } from '../../../store/actions';
 
 const RecentChat = (props) => {
+
+    const selected_conversation = useSelector(state=>state.SelectedChatId);
+    const dispatch = useDispatch();
+
   return (
     <>
-    <Grid container spacing={2} sx={{mb:3,cursor:"pointer"}}>
+    <Grid container spacing={2} sx={{mb:3}} className={selected_conversation===props.channel?'channelItem active alignContentCenter':'channelItem alignContentCenter'} onClick={(e)=>{
+        dispatch(setSelectedChannelId(props.channel))
+        dispatch(setSelectedChannel(props))
+    }}>
         <Grid item xs={3}>
             <CustomAvatar name={props.user_two_profile.user.email} image={props.user_two_profile.profile_photo}/>
         </Grid>

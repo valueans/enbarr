@@ -8,6 +8,8 @@ import HorseDetailContent from '../Home/HorseDetailContent'
 import {Routes,Route, useNavigate } from 'react-router-dom'
 import AuthService from '../../Services/AuthService'
 import CustomSnackBar from '../SnackBar/CustomSnackBar'
+import PrivacyPolicy from '../Settings/PrivacyPolicy'
+import MatchHorseContent from '../Home/MatchHorseContent'
 
 const Home = () => {
 
@@ -32,9 +34,11 @@ const Home = () => {
 
         <Routes>
           <Route path="" element={<HomeContent />} />
+          <Route path="privacypolicy" element={<PrivacyPolicy />} />
           <Route path="buyer" element={<BuyerContent setSnackBarData={setSnackBarData}/>} />
           <Route path="seller" element={<SellerContent/>} />
           <Route path="horse" element={<HorseDetailContent/>} />
+          <Route path="matchhorses" element={<MatchHorseContent/>} />
         </Routes>
 
         {/* footer starts */}

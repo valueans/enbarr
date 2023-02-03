@@ -154,10 +154,12 @@ export default function ButtonAppBar({headerType="landing",currentPage="home"}) 
                                     <Grid item xs={3}>
                                         <Grid container>
                                             <Grid item xs={4} className="justifyContentEndAlignCenter">
-                                                <SearchIcon className="headerIcons" />
+                                                <Link to='/home/buyer'>
+                                                <SearchIcon className="headerIcons" sx={{cursor:"pointer"}}/>
+                                                </Link>
                                             </Grid>
                                             <Grid item xs={4} className="justifyContentEndAlignCenter">
-                                                <NotificationMenu />
+                                                <NotificationMenu sx={{cursor:"pointer"}}/>
                                             </Grid>
                                             <Grid item xs={4} className="justifyContentEndAlignCenter">
                                                 <ProfileCard image={currentLoginUserProfile && currentLoginUserProfile.profile_photo?currentLoginUserProfile.profile_photo:""} height="50px" width='50px'/>

@@ -14,6 +14,14 @@ const ChatService = {
         });
         return response
     },
+    deleteConversation : async (conversation_id) =>{
+        const {data:response} = await axios.delete(conversationUrl,{
+            params:{
+                'conversation-id': conversation_id
+            }
+        });
+        return response
+    }
 }
 
 export default ChatService;

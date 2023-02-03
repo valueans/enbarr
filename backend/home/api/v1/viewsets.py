@@ -638,7 +638,11 @@ def searchHorseView(request):
             return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
         current_year = date.today().year
-        queryset = Horses.objects.annotate(age=current_year - F("year_of_birth")).all()
+        queryset = (
+            Horses.objects.annotate(age=current_year - F("year_of_birth"))
+            .all()
+            .exclude(uploaded_by__id=request.user.id)
+        )
         filter_queryset = []
 
         if user_search_history.location_id:
@@ -812,7 +816,6 @@ def dislikeHorseView(request):
     horse.save()
 
     dislikes = horse.dislikes.all().count()
-
     data = {"status": "OK", "message": "Successfull", "dislikes": dislikes}
     return Response(data=data, status=status.HTTP_200_OK)
 

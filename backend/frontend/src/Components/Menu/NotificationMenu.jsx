@@ -129,7 +129,7 @@ export default function NotificationMenu() {
     <div>
         <CustomSnackBar snackBarData={snackBarData} setSnackBarData={setSnackBarData} />
 
-        <Badge badgeContent={unReadCount} color="warning">
+        <Badge badgeContent={unReadCount} color="warning" sx={{cursor:"pointer"}}>
             <NotificationsIcon className="headerIcons" id="basic-button" aria-controls={open ? 'basic-menu' : undefined}
                 aria-haspopup="true" aria-expanded={open ? 'true' : undefined} onClick={handleClick} />
         </Badge>

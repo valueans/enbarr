@@ -83,3 +83,22 @@
 .singleNotification{
     box-shadow:"1px 1px 10px 1px grey"!important;
 }
+
+
+.channelItem{
+    border: 1px solid transparent;
+    min-height: 100px;
+    max-height: 100px;
+    cursor: pointer;
+}
+.channelItem.active{
+    background: #efefef;
+}
+.channelItem:hover{
+    background: #efefef;
+}
+
+.swiper-wrapper{
+    margin: auto;
+    width: 50%!important;
+}

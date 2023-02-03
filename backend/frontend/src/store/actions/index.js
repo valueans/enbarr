@@ -1,40 +1,23 @@
-import LocationService from "../../Services/LocationService";
-
-export const setAllLocations = async () =>{
-    const response =  await LocationService.getAllLocation();
-    const data = await response.data;
+export const setSelectedChannelId = (channel_id)=>{
     return {
-        type: 'SET_LOCATIONS',
-        payload: data
+        type:"SET_SELECTED_CHANNEL_ID",
+        payload: channel_id
+    }
+}
+export const getSelectedChannelId = () =>{ 
+    return {
+        type:"GET_SELECTED_CHANNEL_ID"
     }
 }
 
-export const getAllLocations = async () =>{
+export const setSelectedChannel = (channel)=>{
     return {
-        type: 'GET_LOCATIONS',
+        type:"SET_SELECTED_CHANNEL",
+        payload: channel
     }
 }
-
-export const setUserData = (data) =>{ 
+export const getSelectedChannel = () =>{ 
     return {
-        type:"SET_USER_DATA",
-        payload: data
-    }
-}
-export const getUserData = () =>{ 
-    return {
-        type:"GET_USER_DATA"
-    }
-}
-
-export const setAuthTabsFalse = () =>{ 
-    return {
-        type:"SET_AUTH_TABS_FALSE",
-    }
-}
-
-export const setAuthTabsTrue = () =>{ 
-    return {
-        type:"SET_AUTH_TABS_TRUE",
+        type:"GET_SELECTED_CHANNEL"
     }
 }

@@ -30,6 +30,14 @@ export const favouriteHorsesUrl = `${api}favourite/`
 // my horses
 export const myHorsesUrl = `${api}horse/`
 
+
+// match horse url
+
+export const matchHorseUrl = `${api}search-horse/`;
+// like horse
+export const likeHorseUrl = `${api}like-horse/`;
+
+export const disLikeHorseUrl = `${api}dislike-horse/`;
 // notifications
 export const myNotificationsUrl = `${api}notifications/notifications/`;
 

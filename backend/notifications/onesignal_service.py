@@ -16,13 +16,16 @@ headers = {
 
 def sendAdminNotification(notificationTo, message):
     if notificationTo == "ALL":
-        users = UserProfile.objects.all()
+        users = UserProfile.objects.filter(receive_notifications=True)
     elif notificationTo == "SUBSCRIBED":
-        users = UserProfile.objects.filter(subscription_renew_date__gt=timezone.now())
+        users = UserProfile.objects.filter(
+            subscription_renew_date__gt=timezone.now(), receive_notifications=True
+        )
     else:
         users = UserProfile.objects.filter(
             Q(subscription_renew_date__lt=timezone.now())
-            | Q(subscription_renew_date=None)
+            | Q(subscription_renew_date=None),
+            Q(receive_notifications=True),
         )
 
     Notifications.objects.bulk_create(
@@ -37,24 +40,32 @@ def sendAdminNotification(notificationTo, message):
 
 
 def sendMessageNotification(notificationTo, message, message_from):
-    name = f"You have received a new message from {message_from.email}"
-    if message_from.userprofile.profile_photo:
-        message_profile_url = message_from.userprofile.profile_photo.url
+    if notificationTo.userprofile.receive_notifications:
+        name = f"You have received a new message from {message_from.email}"
+        if message_from.userprofile.profile_photo:
+            message_profile_url = message_from.userprofile.profile_photo.url
+        else:
+            message_profile_url = ""
+        Notifications.objects.create(
+            user=notificationTo,
+            description=name,
+            message_profile_url=message_profile_url,
+        )
+        payload = {
+            "include_email_tokens": [notificationTo.email],
+            "contents": {"en": message},
+            "name": name,
+        }
+        response = requests.post(url, json=payload, headers=headers)
     else:
-        message_profile_url = ""
-    Notifications.objects.create(
-        user=notificationTo, description=name, message_profile_url=message_profile_url
-    )
-    payload = {
-        "include_email_tokens": [notificationTo.email],
-        "contents": {"en": message},
-        "name": name,
-    }
-    response = requests.post(url, json=payload, headers=headers)
+        pass
 
 
 def sendLikedHorseNotification(notificationTo, horse, message_from):
-    message = f"{message_from.email} has liked {horse.title}"
-    Notifications.objects.create(user=notificationTo, description=message)
-    payload = {"include_email_tokens": [notificationTo.email], "name": message}
-    response = requests.post(url, json=payload, headers=headers)
+    if notificationTo.userprofile.receive_notifications:
+        message = f"{message_from.email} has liked {horse.title}"
+        Notifications.objects.create(user=notificationTo, description=message)
+        payload = {"include_email_tokens": [notificationTo.email], "name": message}
+        response = requests.post(url, json=payload, headers=headers)
+    else:
+        pass

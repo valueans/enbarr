@@ -1,17 +1,17 @@
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 from rest_framework import status
 from django.db.models import Q
 from drf_yasg.utils import swagger_auto_schema
-from .serializers import MessagesSerializer, ConversationSerializer
+from .serializers import ConversationSerializer
 from chat.models import Messages, Conversation
 from datetime import datetime
 from home.helpers import getPagination
-from chat.pubnub_service import sendMessage, subcribeChannel
 from django.contrib.auth import get_user_model
 from django.http import HttpResponse
 from notifications.onesignal_service import sendMessageNotification
+from chat.pubnub_service import unsubcribeChannel
 from rest_framework.decorators import (
     api_view,
     permission_classes,
@@ -25,77 +25,6 @@ from home.api.v1.swaggerParams import (
 
 
 User = get_user_model()
-
-
-@swagger_auto_schema(method="post", request_body=MessagesSerializer)
-@swagger_auto_schema(
-    method="delete",
-    manual_parameters=[
-        createParam(paramName="message-id", description="to delete message")
-    ],
-    responses=customDeleteResponse(),
-)
-@api_view(["POST", "DELETE"])
-@permission_classes([IsAuthenticated])
-@authentication_classes([TokenAuthentication])
-def messagesView(request):
-    if request.method == "POST":
-        receiver = request.POST.get("receiver", None)
-        message = request.POST.get("message", None)
-        if receiver is None or message is None:
-            data = {"status": "error", "message": "receiver & message is required"}
-            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
-        try:
-            receiver = User.objects.get(id=receiver)
-        except:
-            data = {"status": "error", "message": "Invalid receiver"}
-            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
-        try:
-            conversation_instance = Conversation.objects.get(
-                Q(user_one=request.user) & Q(user_two=receiver)
-                | Q(user_one=receiver) & Q(user_two=request.user)
-            )
-        except:
-            channel = f"channel-chat-{request.user.id}{receiver.id}"
-            conversation_instance = Conversation.objects.create(
-                user_one=request.user,
-                user_two=receiver,
-                channel=channel,
-                updated_at=datetime.now(),
-            )
-            subcribeChannel(channel, receiver.id)
-            subcribeChannel(channel, request.user.id)
-        # send message to user using pubnub
-        sendMessage(conversation_instance.channel, request.user, message)
-        # after sending message creating a notification for user
-        sendMessageNotification(receiver, message, request.user)
-        # creating the message obj and storing it into database
-        # get previous mesage and delete it
-        message_obj = Messages.objects.filter(channel=conversation_instance.channel)
-        message_obj.delete()
-        # then store new last message
-        message_obj = Messages.objects.create(
-            Messages=message, channel=conversation_instance.channel
-        )
-        # adding the message into the conversation
-        conversation_instance.last_message = message_obj
-        conversation_instance.save()
-        data = {"status": "ok", "message": "message successfully sent"}
-        return Response(data=data, status=status.HTTP_200_OK)
-    if request.method == "DELETE":
-        message_id = request.GET.get("message-id", None)
-        if message_id is None:
-            data = {"status": "ERROR", "message": "message-id is required"}
-            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
-        try:
-            message = Messages.objects.get(id=message_id)
-        except:
-            data = {"status": "ERROR", "message": "Invalid message-id"}
-            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
-        message.delete()
-
-        data = {"status": "OK", "message": deleted_message}
-        return Response(data=data, status=status.HTTP_200_OK)
 
 
 @swagger_auto_schema(
@@ -164,11 +93,18 @@ def conversationView(request):
 
         try:
             instance = Conversation.objects.get(id=conversation_id)
+            if request.user.id == instance.user_one.id:
+                unsubcribeChannel(instance.channel, instance.user_one.email)
+            else:
+                unsubcribeChannel(instance.channel, instance.user_two.email)
+
         except:
             data = {"status": "ERROR", "message": "Invalid conversation-id"}
             return Response(data=data, status=status.HTTP_404_NOT_FOUND)
-        messages = instance.message.all()
-        messages.delete()
+        try:
+            instance.last_message.delete()
+        except:
+            pass
         instance.delete()
         data = {"status": "OK", "message": deleted_message}
         return Response(data=data, status=status.HTTP_200_OK)

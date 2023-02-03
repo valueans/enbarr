@@ -13,9 +13,12 @@ import DisciplineSelect from '../Selects/DisciplineSelect';
 import ColorsSelect from '../Selects/ColorsSelect';
 import TemperamentSelect from '../Selects/TemperamentSelect';
 import LocationSelect from '../Selects/LocationSelect';
+import { useNavigate } from 'react-router-dom';
 
 const BuyerContent = ({setSnackBarData}) => {
   
+  const navigator = useNavigate();
+
   const [keywords,setKeywords] = useState([]);
   const [keywordVal,setKeywordVal] = useState("");
 
@@ -25,6 +28,15 @@ const BuyerContent = ({setSnackBarData}) => {
   const [userSearchSaveData,setUserSearchSaveData] = useState({location_id:"",breed_id:"",min_age:"",max_age:"",min_height:"",max_height:"",min_price:"",max_price:"",discipline_id:"",gender:"",color_id:"",temperament_id:"",keywords_id:[]});
 
 
+  const handleMatch = async ()=>{
+    try {
+      const response = await HorseService.getMatchHorse(); 
+      return navigator('/home/matchhorses')
+    } catch (error) {
+      setSnackBarData({open:true,message:error.response.data.message,severity:"error"})
+    }
+
+  }
 
   const keywordClick = async ()=>{
     setKeywordLoading(true)
@@ -260,7 +272,9 @@ const BuyerContent = ({setSnackBarData}) => {
                   <Grid item xs={6} sx={{mt:2,pr:2}}><Button title="clear" width="100%" backgroundColor='#F4F4F4' color="#313033" onClick={()=>{
                     setUserSearchSaveData({location_id:"",breed_id:"",min_age:"",max_age:"",min_height:"",max_height:"",min_price:"",max_price:"",discipline_id:"",gender:"",color_id:"",temperament_id:"",keywords_id:[]})
                   }}/></Grid>
-                  <Grid item xs={6} sx={{mt:2,pl:2}}><Button title="match" width="100%"/></Grid>
+                  <Grid item xs={6} sx={{mt:2,pl:2}}>
+                    <Button title="match" width="100%" onClick={handleMatch}/>
+                    </Grid>
               </Grid>
           </Grid>
           {/* Buttons ends */}
