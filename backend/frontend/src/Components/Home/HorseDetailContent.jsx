@@ -150,7 +150,7 @@ return (
             <Typography variant="imageDescriptions">Breed</Typography>
           </Grid>
           <Grid item xs={12}>
-            <Typography variant="characteristicsHeading">{horseDetails.breed.breed}</Typography>
+            <Typography variant="characteristicsHeading">{horseDetails?.breed?.breed}</Typography>
           </Grid>
         </Grid>
 
