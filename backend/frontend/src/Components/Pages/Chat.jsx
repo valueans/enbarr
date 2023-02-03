@@ -67,7 +67,6 @@ const Chat = ({pubnub}) => {
                 dispatch(setSelectedChannelId(_remaining_conversation_ids[0]))
                 dispatch(setSelectedChannel(_remaining_conversation[0]))
                 let _remaining_users = _remaining_conversation.map((item)=>{
-                    console.log(item)
                     return {
                         ...item.user_two_profile,online:false,channel:item.channel
                     }

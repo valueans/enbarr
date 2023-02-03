@@ -31,6 +31,9 @@ export const favouriteHorsesUrl = `${api}favourite/`
 export const myHorsesUrl = `${api}horse/`
 
 
+export const getDistanceUrl = `${api}get-distance/`
+
+
 // match horse url
 
 export const matchHorseUrl = `${api}search-horse/`;

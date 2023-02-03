@@ -55,7 +55,6 @@ const SettingsPage = () => {
 
         }catch(error){
             setSnackBarData({open:true,message:"Something went wrong",severity:"error"})
-            console.log(error)
         }
     }
 

@@ -16,6 +16,7 @@ from users.models import (
     UserProfile,
     UserSearchSave,
 )
+from home.google_maps_services import getDistance
 import filetype
 
 from rest_framework.decorators import (
@@ -30,7 +31,7 @@ from modules.terms_and_conditions.terms_and_conditions.serializers import (
 from .swaggerParams import (
     createParam,
     customDeleteResponse,
-    createParamList,
+    customDistanceResponse,
     customLikeResponse,
     customDisLikeResponse,
     deleted_message,
@@ -388,9 +389,7 @@ def KeywordsView(request):
         if keyword_value is None or len(keyword_value) == 0:
             data = {"status": "error", "message": "keyword is required!"}
             return Response(data=data, status=status.HTTP_404_NOT_FOUND)
-        print(keyword_value)
         keyword, created = Keywords.objects.get_or_create(keyword=keyword_value)
-        print(keyword)
         serializer = KeywordsSerializer(keyword)
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
     if request.method == "PUT":
@@ -977,3 +976,32 @@ def getTrendingHorseAddsView(request):
         .reverse()[:6]
     )
     return getPagination(horses, request, HorsesSerializer)
+
+
+@swagger_auto_schema(
+    method="GET",
+    manual_parameters=[
+        createParam(
+            paramName="user-location",
+            description="to get distance between horse add and user",
+            required=True,
+        ),
+        createParam(
+            paramName="horse-location",
+            description="to get distance between horse add and user",
+            required=True,
+        ),
+    ],
+    responses=customDistanceResponse(),
+)
+@api_view(["GET"])
+def getDistanceBetweenUserAndHorseView(request):
+    user_location = request.GET.get("user-location", None)
+    horse_location = request.GET.get("horse-location", None)
+
+    data = {
+        "status": "ok",
+        "message": "successfull",
+        "distance": getDistance(user_location, horse_location),
+    }
+    return Response(data=data, status=status.HTTP_200_OK)

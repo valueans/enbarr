@@ -7,7 +7,6 @@ from payments.api.v1.helpers import createStripeCustomer
 
 @receiver(post_save, sender=User)
 def user_verification_send_otp(sender, instance, created, **kwargs):
-    print("this is working")
     """
     sendOTP verification on signup.
     and create userprofile and assign promotion adds if the user is register 1st time

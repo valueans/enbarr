@@ -1,5 +1,5 @@
 import axios from '../Constants/requests';
-import { recentlyAddedHorsesUrl,topHorsesUrl,trendingHorsesUrl,favouriteHorsesUrl, myHorsesUrl,locationsUrl,breedsUrl, disciplineUrl, colorsUrl, temperamentsUrl, horseImage, horseKeywords, matchHorseUrl, likeHorseUrl, disLikeHorseUrl } from '../Constants/urls';
+import { recentlyAddedHorsesUrl,topHorsesUrl,trendingHorsesUrl,favouriteHorsesUrl, myHorsesUrl,locationsUrl,breedsUrl, disciplineUrl, colorsUrl, temperamentsUrl, horseImage, horseKeywords, matchHorseUrl, likeHorseUrl, disLikeHorseUrl, getDistanceUrl } from '../Constants/urls';
 
 const HorseService = {
 
@@ -109,7 +109,7 @@ const HorseService = {
     getHorseDetails : async (id) =>{
         const {data:response} = await axios.get(myHorsesUrl,{
             params:{
-                "horse-id":id
+                "horse-id":id,
             }
         });
         return response
@@ -152,6 +152,15 @@ const HorseService = {
         const {data:response} = await axios.get(disLikeHorseUrl,{
             params:{
                 "horse-id":horseId
+            }
+        });
+        return response
+    },
+    getDistance : async (user_location,horse_location) =>{
+        const {data:response} = await axios.get(getDistanceUrl,{
+            params:{
+                "user-location":user_location,
+                "horse-location":horse_location,
             }
         });
         return response

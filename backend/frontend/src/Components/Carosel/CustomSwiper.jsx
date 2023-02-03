@@ -22,8 +22,7 @@ const CustomSwiper = ({currentHorseId,setCurrentHorseId,setIsLiked,setIsDisLiked
     useEffect(()=>{
         const getMatchHorse = async () =>{
             try{
-                const response = await HorseService.getMatchHorse(currentPage);
-                console.log("response",response)   
+                const response = await HorseService.getMatchHorse(currentPage);  
                 setTotalAddsCount(response?.count)
                 setMatchList([...matchList,...response?.results])
                 if (response.count > 0){

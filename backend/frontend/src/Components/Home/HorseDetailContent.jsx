@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Carosel from '../Carosel/Carosel'
 import { Grid,Typography,Box,IconButton } from '@mui/material'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
@@ -13,9 +13,11 @@ import ChatService from '../../Services/ChatService';
 
 const HorseDetailContent = () => {
 const [searchParam] =useSearchParams();
-const navigator = useNavigate(); 
+const navigate = useNavigate(); 
 const [horseDetails,setHorseDetails] = useState({title:"",description:"",gender:"",height:"",price:"",userprofile:{first_name:"",last_name:"",profile_photo:"",user:{id:""}},breed:{breed:""},temperament:{temperament:""},discipline:{discipline:""}})
 const currentLoginUserProfile = getUserProfile();
+
+const [distance,setDistance] = useState("");
 
 const id = searchParam.get('id')
 
@@ -34,7 +36,15 @@ const handleFavClick = async ()=>{
 useEffect(()=>{
   const getHorseDetails = async ()=>{
     const response = await HorseService.getHorseDetails(id);
+
     setHorseDetails(response)
+
+    if (response.user_location){
+      navigator.geolocation.getCurrentPosition(async (position)=> {
+        const distance_response = await HorseService.getDistance(`${position.coords.latitude},${position.coords.longitude}`,response.user_location);
+        setDistance(distance_response.distance)
+      });
+    }
   }
   getHorseDetails()
   window.scrollTo(0, 0);
@@ -42,8 +52,8 @@ useEffect(()=>{
 
 
 const messageOwner = async ()=>{
-    const response = await ChatService.generateConversations(horseDetails.userprofile.user.id)
-    return navigator('/messages')
+    await ChatService.generateConversations(horseDetails.userprofile.user.id)
+    return navigate('/messages')
 }
 
 return (
@@ -106,17 +116,17 @@ return (
         {/* horse title ends */}
 
         {/* horse location starts */}
-        <Grid item xs={12}>
+        {
+          distance?
+          <Grid item xs={12}>
           <Grid container>
-            <Grid item xs={1}>
+            <Grid item xs={3} className="alignContentCenter">
               <LocationOnIcon sx={{color:"#EA0000"}} />
-            </Grid>
-            <Grid item xs={2}>
-              <Typography variant="imageDescriptions">4.5 km</Typography>
+              <Typography variant="imageDescriptions">{distance}</Typography>
             </Grid>
           </Grid>
-        </Grid>
-
+        </Grid>:""
+        }
         {/* horse location ends */}
 
 

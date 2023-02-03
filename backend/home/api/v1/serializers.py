@@ -3,7 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 from users.models import UserSearchSave
 from users.api.serializers import UserProfileSerializer
-from home.google_maps_services import getAddress
+from home.google_maps_services import getAddress, getDistance
 from datetime import date
 from home.models import (
     ContactUs,
