@@ -63,7 +63,7 @@ return (
         <Grid container>
           {/* profile picture and uploader name starts */}
           <Grid item xs={12} lg={6} sx={{height:"103px"}}>
-            <Grid container sx={{display:"flex",alignItems:"center",height:"103px"}}>
+            <Grid container sx={{display:"flex",alignItems:"center",height:"103px",ml:3}}>
               <Grid item xs={3} lg={2} sx={{display:"flex",alignItems:"center",zIndex:7}}>
                 <ProfileCard image={horseDetails.userprofile.profile_photo}/>
               </Grid>
