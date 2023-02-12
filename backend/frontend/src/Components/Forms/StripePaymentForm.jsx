@@ -8,17 +8,15 @@ import {loadStripe} from '@stripe/stripe-js';
 import PaymentServices from '../../Services/PaymentServices'
 import Button from '../Buttons/Button'
 import CreditCardIcon from '@mui/icons-material/CreditCard';
-import { getUserProfile as DefaultUserProfile } from '../../Constants/storage'
 import CardForm from './CardForm'
 
 
 
-const StripePaymentForm = ({setSnackBarData}) => {
+const StripePaymentForm = ({setSnackBarData,subscriptionPlanId,setSubscriptionPlanId}) => {
     const [setupIntent,setSetupIntent] = useState({setupIntent:"",ephemeralKey:"",customer:"",publish_key:""});
     const stripePromise = loadStripe(setupIntent.publish_key);
     const [showPaymentForm,setShowPaymentForm] = useState(false);
     const [plans,setPlans] = useState([]);
-    const [subscriptionPlanId,setSubscriptionPlanId] = useState(DefaultUserProfile().subscription_plan);
 
     useEffect(()=>{
         const getAllSubscriptionPlans = async ()=>{

@@ -1,5 +1,5 @@
 import axios from "../Constants/requests";
-import { paymentMethodsUrl, plansUrl, setupIntentUrl, updagradeSubscriptionUrl } from "../Constants/urls";
+import { paymentMethodsUrl, plansUrl, setupIntentUrl, unsubscribeSubscriptionUrl, updagradeSubscriptionUrl } from "../Constants/urls";
 
 const PaymentServices = {
     getAllSubscriptionPlans : async ()=>{
@@ -26,6 +26,10 @@ const PaymentServices = {
         const formData = new FormData();
         formData.append("plan-id",id)
         const {data:response} = await axios.post(updagradeSubscriptionUrl,formData);
+        return response
+    },
+    unsubscribeSubscription : async ()=>{
+        const {data:response} = await axios.post(unsubscribeSubscriptionUrl);
         return response
     }
 

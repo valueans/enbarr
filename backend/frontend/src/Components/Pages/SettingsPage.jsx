@@ -34,7 +34,9 @@ const SettingsPage = () => {
     const [openLogoutModel,setOpenLogoutModel] = useState(false);
     const [snackBarData,setSnackBarData] = useState({open:false,message:"",severity:"error"});
     const getUserProfile = getDefaultUserProfile();
-
+    
+    const [subscriptionPlanId,setSubscriptionPlanId] = useState(getDefaultUserProfile().subscription_plan);
+    
     const isAuthenticated = AuthService.checkUserAuthenticated();
 
 
@@ -58,13 +60,12 @@ const SettingsPage = () => {
         }
     }
 
-    const upgradeSubscriptionPlan = async ()=>{
+    const ubsubscribeSubscriptionPlan = async ()=>{
         try{
-        
-            const subscription_plans = await PaymentServices.getAllSubscriptionPlans();
-            const response = await PaymentServices.upgradeSubscription(subscription_plans[0]?.id);
+            const response = await PaymentServices.unsubscribeSubscription();
             setOpenSubscribeModel(false)
             setUserProfile(response['data'])
+            setSubscriptionPlanId(response['data']['subscription_plan'])
             setSnackBarData({open:true,message:"Your subscription plan is successfully updated",severity:"success"})
         }
         catch(error){
@@ -291,8 +292,8 @@ const SettingsPage = () => {
             {/* menu button pages starts */}
             <Grid item xs={12} lg={8} sx={style}>
                 <Routes>
-                    <Route path='upgrade' element={<StripePaymentForm setSnackBarData={setSnackBarData}/>} />
-                    <Route path='*' element={<StripePaymentForm setSnackBarData={setSnackBarData}/>} />
+                    <Route path='upgrade' element={<StripePaymentForm subscriptionPlanId={subscriptionPlanId} setSubscriptionPlanId={setSubscriptionPlanId} setSnackBarData={setSnackBarData}/>} />
+                    <Route path='*' element={<StripePaymentForm subscriptionPlanId={subscriptionPlanId} setSubscriptionPlanId={setSubscriptionPlanId}  setSnackBarData={setSnackBarData}/>} />
                     <Route path='profile' element={<ProfilePage setSnackBarData={setSnackBarData}/>} />
                     <Route path="privacypolicy" element={<PrivacyPolicy />}></Route>
                     <Route path="terms&condition" element={<TermsAndCondition />}></Route>
@@ -300,7 +301,7 @@ const SettingsPage = () => {
                     <Route path="feedback" element={<Feedback setSnackBarData={setSnackBarData}/>}></Route>
                 </Routes>
             </Grid>
-            <CustomModel title="Unsubscribe" open={openSubscribeModel} setOpen={setOpenSubscribeModel} onClick={upgradeSubscriptionPlan}/>
+            <CustomModel title="Unsubscribe" open={openSubscribeModel} setOpen={setOpenSubscribeModel} onClick={ubsubscribeSubscriptionPlan}/>
             <CustomModel title="Delete this Account" open={openDeleteAccountModel} setOpen={setOpenDeleteAccountModel} onClick={deleteUserAccount}/>
             <CustomModel title="Logout" open={openLogoutModel} setOpen={setOpenLogoutModel} onClick={()=>{
                 clearStorage();

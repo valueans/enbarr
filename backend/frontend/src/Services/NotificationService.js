@@ -1,5 +1,5 @@
 import axios from '../Constants/requests';
-import { myNotificationsUrl } from '../Constants/urls';
+import { myNotificationsUrl, readAllNotificationsUrl } from '../Constants/urls';
 import qs from "qs";
 
 
@@ -18,6 +18,10 @@ const NotificationsService = {
             return qs.stringify(params)
         }
     });
+        return response
+    },
+    readAllNotifications : async () => {
+        const {data:response} = await axios.post(readAllNotificationsUrl);
         return response
     },
     deleteNotification : async (id) => {

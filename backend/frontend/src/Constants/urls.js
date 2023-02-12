@@ -44,6 +44,8 @@ export const disLikeHorseUrl = `${api}dislike-horse/`;
 // notifications
 export const myNotificationsUrl = `${api}notifications/notifications/`;
 
+export const readAllNotificationsUrl = `${api}notifications/read-all-notifications/`;
+
 // locations
 export const locationsUrl = `${api}locations/`;
 export const breedsUrl = `${api}breeds/`;
@@ -66,6 +68,7 @@ export const plansUrl = `${paymentUrl}plans/`
 export const setupIntentUrl = `${paymentUrl}customer-intent-stripe/`
 export const paymentMethodsUrl = `${paymentUrl}paymentMethods/`
 export const updagradeSubscriptionUrl = `${paymentUrl}updagradeSubscription/`
+export const unsubscribeSubscriptionUrl = `${paymentUrl}unsubscribeSubscription/`
 
 
 // buyers
