@@ -307,3 +307,22 @@ def customSetupIntentResponse():
         )
     }
     return responses
+
+
+def customSuccessfullResponse():
+    responses = {
+        status.HTTP_200_OK: Schema(
+            type=TYPE_OBJECT,
+            properties={
+                "status": openapi.Schema(
+                    title="OK",
+                    type=openapi.TYPE_STRING,
+                ),
+                "message": openapi.Schema(
+                    title="successfull",
+                    type=openapi.TYPE_STRING,
+                ),
+            },
+        )
+    }
+    return responses

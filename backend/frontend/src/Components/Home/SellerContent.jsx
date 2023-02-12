@@ -252,7 +252,7 @@ const keywordClick = async ()=>{
                         }} value={horseData?.year_of_birth} placeholder="2000"/>
                 </Grid>
                 <Grid item xs={12} sx={{mt:3}}>
-                    <Typography variant='authInputTitle'>Height (ft)</Typography>
+                    <Typography variant='authInputTitle'>Height (Hands)</Typography>
                     <CustomInput type="number" onChange={(e)=>{
                         setHorseData({...horseData,height:e.target.value})
                         }} value={horseData?.height} placeholder="5.1"/>

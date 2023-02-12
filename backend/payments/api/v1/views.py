@@ -189,6 +189,26 @@ def upgradeSubscriptionView(request):
         return Response(data=data, status=status.HTTP_200_OK)
 
 
+@swagger_auto_schema(
+    method="POST",
+    responses=customUpgradeSubscriptionResponse(),
+)
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+@authentication_classes([TokenAuthentication])
+def unsubscripeSubscription(request):
+    plan = SubscriptionPlans.objects.get(title="Basic")
+    user = request.user
+    response = createMonthlySubscriptionCharge(user, plan)
+    serializer = UserProfileSerializer(user.userprofile)
+    data = {
+        "status": "OK",
+        "message": "Subscription updated",
+        "data": serializer.data,
+    }
+    return Response(data=data, status=status.HTTP_200_OK)
+
+
 @api_view(["POST"])
 @permission_classes([AllowAny])
 def stripe_webhook(request):

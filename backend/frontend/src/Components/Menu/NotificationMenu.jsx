@@ -72,17 +72,13 @@ export default function NotificationMenu() {
   }
   
   const updateAllNotificationStatus = async ()=>{
-    const getAllUnreadNotifications = notifications.filter((item)=>item.read_status===false)
-    const getAllUnreadId = getAllUnreadNotifications.map((item)=>item.id)
     try{
-        await NotificationsService.updateNotificationStatus(getAllUnreadId);
+        await NotificationsService.readAllNotifications();
         handleSingleNotiClose()
         setSnackBarData({open:true,message:"Successfully read",severity:"success"})
         setAnchorSingleNotiEl(null);
         notifications.map((item)=>{
-            if (getAllUnreadId.includes(item.id)){
-                item.read_status = true;
-            }
+            item.read_status = true;
         })
         setNotifications([...notifications])
     }

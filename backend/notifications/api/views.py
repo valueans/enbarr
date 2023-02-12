@@ -78,3 +78,18 @@ def notificationsView(request):
         instance.delete()
         data = {"status": "ok", "message": deleted_message}
         return Response(data=data, status=status.HTTP_200_OK)
+
+
+@swagger_auto_schema(
+    method="post",
+    responses=customSuccessfullResponse(),
+)
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+@authentication_classes([TokenAuthentication])
+def readAllnotificationView(request):
+    if request.method == "POST":
+        instances = Notifications.objects.filter(user=request.user)
+        instances.update(read_status=True)
+        data = {"status": "ok", "message": "successfull"}
+        return Response(data=data, status=status.HTTP_200_OK)
