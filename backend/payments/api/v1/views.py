@@ -217,10 +217,7 @@ def stripe_webhook(request):
         200
     """
     if request.method == "POST":
-        # webhook_secret = settings.STRIPE_WEBHOOK_SECRET
-        webhook_secret = (
-            "whsec_deb681598854083ff326bae68399a61060ec3ba2e61aa474938833b0a70bbe3f"
-        )
+        webhook_secret = settings.STRIPE_WEBHOOK_SECRET
         payload = request.body
         signature = request.headers.get("stripe-signature")
         event = None
