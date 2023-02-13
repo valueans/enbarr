@@ -15,7 +15,7 @@ const Routers = () => {
   const pubnub = new PubNub({
     publishKey: "pub-c-17cb7332-770a-4b7b-a4c8-f6aa6e86deb8",
     subscribeKey: "sub-c-813ba4c4-971e-42d7-a6f7-9a885fa58663",
-    userId: `${userprofile?.user?.email}`,
+    uuid: `${userprofile?.user?.email}`,
 });
 
   return (

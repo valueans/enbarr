@@ -65,7 +65,7 @@ const SignUpForm = ({setSnackBarData}) => {
                 ) : null}
             </Grid>
             <Grid item xs={6}>
-                <Typography variant="authInputTitle" component="div">Confirm Create password</Typography>
+                <Typography variant="authInputTitle" component="div">Confirm password</Typography>
                 <CustomInput type="password" placeholder="password" name="confirm_password" value={values.confirm_password} onChange={handleChange} onBlur={handleBlur} />
                 {touched.confirm_password && errors.confirm_password ? (
                       <span className="form-error">{errors.confirm_password}</span>

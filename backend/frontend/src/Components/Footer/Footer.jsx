@@ -3,16 +3,18 @@ import { Grid,Typography } from '@mui/material'
 import AuthService from '../../Services/AuthService';
 import { Link } from 'react-router-dom';
 
-const Footer = ({color="#313033"}) => {
+const Footer = ({color="#313033",mt=0}) => {
 
     const isAuthenticated = AuthService.checkUserAuthenticated();
   return (
     // footer for login page and landing page starts 
-    <Grid container item>
+    <Grid container item sx={{mt:mt}}>
         <Grid item xs={6} sx={{display:"flex",justifyContent:"end"}}>
+        <Link to={isAuthenticated?"/home/termsAndCondition":"/termsAndCondition"} style={{color:color,textDecoration:"none"}}>
             <Typography variant='headerLinks' sx={{color:color}}>
                 Terms and Conditions
             </Typography>
+            </Link>
         </Grid>
         <Grid item xs={6} sx={{display:"flex",justifyContent:"start",pl:6}}>
             <Link to={isAuthenticated?"/home/privacypolicy":"/privacypolicy"} style={{color:color,textDecoration:"none"}}>

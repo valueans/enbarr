@@ -11,6 +11,7 @@ import CustomSnackBar from '../SnackBar/CustomSnackBar'
 import PrivacyPolicy from '../Settings/PrivacyPolicy'
 import MatchHorseContent from '../Home/MatchHorseContent'
 import UpgradeSubscribtion from '../Settings/UpgradeSubscribtion'
+import TermsAndCondition from '../Settings/TermsAndCondition'
 
 const Home = () => {
 
@@ -36,6 +37,7 @@ const Home = () => {
         <Routes>
           <Route path="" element={<HomeContent />} />
           <Route path="privacypolicy" element={<PrivacyPolicy />} />
+          <Route path="termsAndCondition" element={<TermsAndCondition />} />
           <Route path="buyer" element={<BuyerContent setSnackBarData={setSnackBarData}/>} />
           <Route path="upgradeSubscription" element={<UpgradeSubscribtion/>} />
           <Route path="seller" element={<SellerContent/>} />

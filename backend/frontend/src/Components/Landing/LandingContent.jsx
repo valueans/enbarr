@@ -35,20 +35,20 @@ const LandingContent = () => {
                                     The history of mankind is carried on the back of a horse.
                                 </Typography>
                             </Grid>
-                            <Grid item>
+                            <Grid item sx={{mt:2}}>
                                 <Typography variant='landingPageSubDesc'>
                                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Scelerisque in mattis risus
                                     nam vitae. Facilisis morbi purus vitae in quisque habitant ipsum, sollicitudin
                                     lacinia.
                                 </Typography>
                             </Grid>
-                            <Grid item>
+                            <Grid item sx={{mt:2}}>
                                 <StoreLinks/>
-                                <Grid item>
+                                <Grid item sx={{mt:2}}> 
                                     <Button title="Sign up" onClick={buttonClick}/>
                                 </Grid>
                             </Grid>
-                            <Footer />
+                            <Footer mt={10}/>
                         </Grid>
                     </Grid>
                 </Grid>

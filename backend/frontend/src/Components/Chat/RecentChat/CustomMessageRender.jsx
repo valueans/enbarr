@@ -5,6 +5,7 @@ import ReceiverMessageCard from '../../Cards/ReceiverMessageCard'
 
 
 const CustomMessageRender = (props) => {
+  console.log("props",props)
   return (
     props.isOwn?<ReceiverMessageCard message={props.message}/>:<SenderMessageCard message={props.message}/>
   )
