@@ -8,13 +8,13 @@ const StoreLinks = ({color="#313033",className}) => {
   return (
     <Grid container spacing={1} className={className}>
       <Grid item>
-        <a href={googlePlayLink} target="_blank" rel="noopener noreferrer">
-          <GoogleStoreSocialIcon color={color} />
+        <a href={appleStoreLink} target="_blank" rel="noopener noreferrer">
+          <AppleStoreSocialIcon color={color} />
         </a>
       </Grid>
       <Grid item>
-        <a href={appleStoreLink} target="_blank" rel="noopener noreferrer">
-          <AppleStoreSocialIcon color={color} />
+        <a href={googlePlayLink} target="_blank" rel="noopener noreferrer">
+          <GoogleStoreSocialIcon color={color} />
         </a>
       </Grid>
     </Grid>

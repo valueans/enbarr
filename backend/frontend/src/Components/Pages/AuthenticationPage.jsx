@@ -64,7 +64,7 @@ const AuthenticationPage = () => {
             </Grid>
             <Grid item xs={1} sx={{display:"flex",alignItems:"center"}}>
               <Typography variant="logo" component="div">
-                <Link to="/" style={{color:"#302F32",textDecoration:"none"}}>Enbarr</Link>
+                <Link to="/" style={{color:"#302F32",textDecoration:"none"}}>ENBARR</Link>
               </Typography>
             </Grid>
           </Grid>

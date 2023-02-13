@@ -72,7 +72,7 @@ export default function ButtonAppBar({headerType="landing",currentPage="home"}) 
                                 </Grid>
                                 <Grid item xs={1}>
                                     <Typography variant="logo" component="div">
-                                        <Link to="/" className='linkBlack'>Enbarr</Link>
+                                        <Link to="/" className='linkBlack'>ENBARR</Link>
                                     </Typography>
                                 </Grid>
                                 {
@@ -81,19 +81,25 @@ export default function ButtonAppBar({headerType="landing",currentPage="home"}) 
                                 <>
                                     <Grid container item xs={6} direction="row">
                                         <Grid item xs={4}>
-                                            <Typography variant="headerLinks" component="div">
-                                                Contact us
-                                            </Typography>
-                                        </Grid>
-                                        <Grid item xs={4}>
-                                            <Typography variant="headerLinks" component="div">
-                                                FAQ
-                                            </Typography>
-                                        </Grid>
-                                        <Grid item xs={4}>
+                                            <Link to='/aboutus' style={{textDecoration:"none"}}>
                                             <Typography variant="headerLinks" component="div">
                                                 About us
                                             </Typography>
+                                            </Link>
+                                        </Grid>
+                                        <Grid item xs={4}>
+                                            <Link to='/faq' style={{textDecoration:"none"}}>
+                                            <Typography variant="headerLinks" component="div">
+                                                FAQ
+                                            </Typography>
+                                            </Link>
+                                        </Grid>
+                                        <Grid item xs={4}>
+                                            <Link to='/contactus' style={{textDecoration:"none"}}>
+                                            <Typography variant="headerLinks" component="div">
+                                                Contact us
+                                            </Typography>
+                                            </Link>
                                         </Grid>
                                     </Grid>
                                     <Grid item xs={4} className="justifyContentEnd">
