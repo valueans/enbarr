@@ -121,7 +121,7 @@ const BuyerContent = ({setSnackBarData}) => {
           <Grid item xs={12}>
             <Grid container sx={{maxHeight:"60px"}}>
               <Grid item xs={6} sx={{pr:2}}>
-                <CustomInputBox title="Max" type="number" onChange={(e)=>{
+                <CustomInputBox title="Min" type="number" onChange={(e)=>{
                         setUserSearchSaveData({...userSearchSaveData,min_age:e.target.value})
                   }} value={userSearchSaveData.min_age} placeholder="5.1"/>
               </Grid>
@@ -147,7 +147,7 @@ const BuyerContent = ({setSnackBarData}) => {
                   }} value={userSearchSaveData.min_height} placeholder="5.1"/>
               </Grid>
               <Grid item xs={6} sx={{pl:2}}>
-                <CustomInputBox title="Min" type="number" onChange={(e)=>{
+                <CustomInputBox title="Max" type="number" onChange={(e)=>{
                         setUserSearchSaveData({...userSearchSaveData,max_height:e.target.value})
                   }} value={userSearchSaveData.max_height} placeholder="5.1"/>
               </Grid>
@@ -168,7 +168,7 @@ const BuyerContent = ({setSnackBarData}) => {
                   }} value={userSearchSaveData.min_price}/>
               </Grid>
               <Grid item xs={6} sx={{pl:2}}>
-              <CustomInputBox title="Min" type="number" placeholder="$5000" maxLength={10} onChange={(e)=>{
+              <CustomInputBox title="Max" type="number" placeholder="$5000" maxLength={10} onChange={(e)=>{
                         setUserSearchSaveData({...userSearchSaveData,max_price:e.target.value})
                   }} value={userSearchSaveData.max_price}/>
               </Grid>

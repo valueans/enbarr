@@ -130,7 +130,7 @@ export default function ButtonAppBar({headerType="landing",currentPage="home"}) 
                                             <div className='flexColumn'>
                                                 <Typography variant="headerLinks" component="div" onClick={()=>
                                                     {setActiveLink("my-horse")}}>
-                                                    My Horse
+                                                    My Horses
                                                 </Typography>
                                                 {
                                                 myHorseActive?
@@ -142,7 +142,7 @@ export default function ButtonAppBar({headerType="landing",currentPage="home"}) 
                                             <div className='flexColumn'>
                                                 <Typography variant="headerLinks" component="div" onClick={()=>
                                                     {setActiveLink("settings")}}>
-                                                    settings
+                                                    Settings
                                                 </Typography>
                                                 {
                                                 settingsActive?
@@ -162,7 +162,9 @@ export default function ButtonAppBar({headerType="landing",currentPage="home"}) 
                                                 <NotificationMenu sx={{cursor:"pointer"}}/>
                                             </Grid>
                                             <Grid item xs={4} className="justifyContentEndAlignCenter">
+                                                <Link to='/settings/profile'>
                                                 <ProfileCard image={currentLoginUserProfile && currentLoginUserProfile.profile_photo?currentLoginUserProfile.profile_photo:""} height="50px" width='50px'/>
+                                                </Link>
                                             </Grid>
                                         </Grid>
                                     </Grid>

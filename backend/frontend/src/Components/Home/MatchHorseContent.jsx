@@ -6,6 +6,7 @@ import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp
 import Button from '../Buttons/Button';
 import CustomSwiper from '../Carosel/CustomSwiper';
 import HorseService from '../../Services/HorseService';
+import { Link } from 'react-router-dom';
 
 
 const MatchHorseContent = () => {
@@ -54,7 +55,9 @@ const MatchHorseContent = () => {
           </Grid>
         </Grid>
         <Grid xs={12} className="justifyContentCenter" sx={{mt:3}}>
-          <Button title="close" width="50%"/>
+          <Link to='/' style={{width:"50%",textDecoration:"none"}}>
+            <Button title="close" width="100%"/>
+          </Link>
         </Grid>
       </Grid>
       </Grid>

@@ -7,7 +7,7 @@ import HorseCardList from '../Cards/HorseCardList';
 import { useNavigate } from 'react-router-dom';
 import HorseService from '../../Services/HorseService';
 import AuthService from '../../Services/AuthService';
-import { setUserProfile } from '../../Constants/storage';
+import { setUserProfile,getUserProfile } from '../../Constants/storage';
 
 const HomeContent = () => {
     const navigator = useNavigate();
@@ -37,13 +37,19 @@ const HomeContent = () => {
         return navigator('/home/buyer')
     }
     const sellerClicks = ()=>{
-        return navigator('/home/seller')
+        const profile = getUserProfile();
+        if (profile.user_subscription.title === 'Basic'){
+            return navigator('/home/upgradeSubscription')
+        }
+        else{
+            return navigator('/home/seller')
+        }
     }
 
   return (
     <>
     {/* Loggedin user Landing page starts */}
-    <Grid container sx={{height:"calc(100vh - 101px)"}}>
+    <Grid container sx={{height:"calc(70vh - 101px)"}}>
             {/* left side contains title description socialLinks icons and buyer/seller buttons starts */}
             <Grid item xs={12} lg={6}>
                 <Grid container sx={{height:"100%"}}>
