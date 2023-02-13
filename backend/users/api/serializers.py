@@ -7,6 +7,8 @@ from allauth.account.adapter import get_adapter
 from allauth.account.utils import setup_user_email
 from allauth.account.forms import ResetPasswordForm
 from rest_auth.serializers import PasswordResetSerializer
+from payments.api.v1.serializers import SubscriptionPlansSerializer
+from payments.models import SubscriptionPlans
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -70,6 +72,9 @@ class UserSerializer(serializers.ModelSerializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
     email = serializers.EmailField(write_only=True, required=False)
+    user_subscription = serializers.SerializerMethodField(
+        "get_user_subscription", read_only=True
+    )
 
     class Meta:
         model = UserProfile
@@ -104,6 +109,14 @@ class UserProfileSerializer(serializers.ModelSerializer):
             pass
         instance.save()
         return obj
+
+    def get_user_subscription(self, obj):
+        try:
+            instance = SubscriptionPlans.objects.get(id=obj.subscription_plan.id)
+            serializer = SubscriptionPlansSerializer(instance)
+            return serializer.data
+        except:
+            return None
 
 
 class PasswordSerializer(PasswordResetSerializer):

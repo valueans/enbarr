@@ -17,7 +17,7 @@ const HorseCardList = ({title,adds,setAdds,typeCard="horse"}) => {
     <>
     <Grid container sx={{justifyContent:"center",display:"flex",alignItems:"center",pl:10,pr:10}}>
         {
-            title?<Grid container item sx={{textAlign:"center",mb:4,mt:4}}>
+            title?<Grid container item sx={{textAlign:"center",mb:4,mt:2}}>
             <Grid item xs={12}>
                 <Typography variant='authTitle' sx={{fontSize:"25px"}}>
                     {title}
@@ -30,7 +30,7 @@ const HorseCardList = ({title,adds,setAdds,typeCard="horse"}) => {
         }
         {
             typeCard==="horse"?
-            <Grid container item sx={{mt:4}}>
+            <Grid container item sx={{mt:2}}>
             {
                 adds.map((object,index)=>{
                     return (
