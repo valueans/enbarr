@@ -12,11 +12,10 @@ const RecentChat = (props) => {
     const dispatch = useDispatch();
 
   return (
-    <>
     <Grid container spacing={2} sx={{mb:3}} className={selected_conversation===props.channel?'channelItem active alignContentCenter':'channelItem alignContentCenter'} onClick={(e)=>{
         dispatch(setSelectedChannelId(props.channel))
         dispatch(setSelectedChannel(props))
-    }}>
+    }} key={props.channel}>
         <Grid item xs={3}>
             <CustomAvatar name={props.user_two_profile.user.email} image={props.user_two_profile.profile_photo}/>
         </Grid>
@@ -34,7 +33,6 @@ const RecentChat = (props) => {
             </Grid>
         </Grid>
     </Grid>
-    </>
   )
 }
 

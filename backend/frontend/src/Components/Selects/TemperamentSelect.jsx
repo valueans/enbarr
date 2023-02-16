@@ -2,7 +2,7 @@ import React, { useEffect,useState } from 'react';
 import { Select,MenuItem,FormControl } from '@mui/material';
 import HorseService from '../../Services/HorseService';
 
-const TemperamentSelect = ({horseData,setHorseData}) => {
+const TemperamentSelect = ({horseData,setHorseData,disabled=false}) => {
 
     const [options,setOptions] = useState([])
 
@@ -18,7 +18,7 @@ const TemperamentSelect = ({horseData,setHorseData}) => {
           getAllTemperament()
     },[])
   return (
-    <FormControl fullWidth>
+    <FormControl fullWidth disabled={disabled}>
         <Select value={horseData?.temperament_id} onChange={handleChange} className="customInput" sx={{minHeight:"60px"}} variant="standard" disableUnderline={true}>
       {options.map((object)=>{
         return <MenuItem value={object.id} key={object.id}>{object.temperament}</MenuItem>

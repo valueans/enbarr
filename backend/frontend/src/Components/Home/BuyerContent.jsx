@@ -22,7 +22,7 @@ const BuyerContent = ({setSnackBarData}) => {
   const [keywords,setKeywords] = useState([]);
   const [keywordVal,setKeywordVal] = useState("");
 
-  const [loading,setLoading] = useState(false);
+  const [disabledForm,setDisabledForm] = useState(true);
   const [keywordLoading,setKeywordLoading] = useState(false);
 
   const [userSearchSaveData,setUserSearchSaveData] = useState({location_id:"",breed_id:"",min_age:"",max_age:"",min_height:"",max_height:"",min_price:"",max_price:"",discipline_id:"",gender:"",color_id:"",temperament_id:"",keywords_id:[]});
@@ -30,7 +30,7 @@ const BuyerContent = ({setSnackBarData}) => {
 
   const handleMatch = async ()=>{
     try {
-      const response = await HorseService.getMatchHorse(); 
+      await HorseService.getMatchHorse(); 
       return navigator('/home/matchhorses')
     } catch (error) {
       setSnackBarData({open:true,message:error.response.data.message,severity:"error"})
@@ -42,7 +42,7 @@ const BuyerContent = ({setSnackBarData}) => {
     setKeywordLoading(true)
     try {
       const response = await HorseService.saveHorseKeyword(keywordVal)
-      let user_keywords = [...userSearchSaveData.keywords_id]
+      let user_keywords = [...userSearchSaveData.keywords]
       user_keywords.push(response.id)
       setUserSearchSaveData({...userSearchSaveData,keywords_id:user_keywords})
       setKeywords([...keywords,{id:response.id,keyword:keywordVal}])
@@ -81,6 +81,7 @@ const BuyerContent = ({setSnackBarData}) => {
     try {
       await BuyerService.saveSaveBuyersSearch(userSearchSaveData);
       setSnackBarData({open:true,message:"Successfull",severity:"success"})
+      setDisabledForm(true)
     } catch (error) {
         setSnackBarData({open:true,message:"something went wrong",severity:"error"})
     }
@@ -88,7 +89,7 @@ const BuyerContent = ({setSnackBarData}) => {
 
 
   return (
-    <Grid container sx={{minHeight:"calc(100vh - 101px)"}} className="justifyContentCenter">
+    <Grid container sx={{minHeight:"calc(100vh - 101px)"}} className="justifyContentCenter" id="root">
       <Grid item xs={12} lg={6} sx={{background:"#FFFFFF",borderRadius:"15px",marginTop:"39px",padding:"65px"}}>
         <Grid container>
           <Grid item xs={12}>
@@ -103,14 +104,14 @@ const BuyerContent = ({setSnackBarData}) => {
           {/* Location dropdown starts */}
           <Grid item xs={12} sx={{mt:3}}>
             <Typography variant='authInputTitle'>Location</Typography>
-            <LocationSelect horseData={userSearchSaveData} setHorseData={setUserSearchSaveData}/>
+            <LocationSelect horseData={userSearchSaveData} setHorseData={setUserSearchSaveData} disabled={disabledForm}/>
           </Grid>
           {/* Location dropdown ends */}
 
           {/* Breed dropdown starts */}
           <Grid item xs={12} sx={{mt:3}}>
             <Typography variant='authInputTitle'>Breed</Typography>
-            <BreedSelect horseData={userSearchSaveData} setHorseData={setUserSearchSaveData}/>
+            <BreedSelect horseData={userSearchSaveData} setHorseData={setUserSearchSaveData} disabled={disabledForm}/>
           </Grid>
           {/* Breed dropdown ends */}
 
@@ -121,14 +122,14 @@ const BuyerContent = ({setSnackBarData}) => {
           <Grid item xs={12}>
             <Grid container sx={{maxHeight:"60px"}}>
               <Grid item xs={6} sx={{pr:2}}>
-                <CustomInputBox title="Min" type="number" onChange={(e)=>{
+                <CustomInputBox title="Min" dis type="number" onChange={(e)=>{
                         setUserSearchSaveData({...userSearchSaveData,min_age:e.target.value})
-                  }} value={userSearchSaveData.min_age} placeholder="5.1"/>
+                  }} value={userSearchSaveData.min_age} placeholder="5.1" disabled={disabledForm}/>
               </Grid>
               <Grid item xs={6} sx={{pl:2}}>
                 <CustomInputBox title="Max" type="number" onChange={(e)=>{
                         setUserSearchSaveData({...userSearchSaveData,max_age:e.target.value})
-                  }} value={userSearchSaveData.max_age} placeholder="5.1"/>
+                  }} value={userSearchSaveData.max_age} placeholder="5.1" disabled={disabledForm}/>
               </Grid>
             </Grid>
           </Grid>
@@ -144,12 +145,12 @@ const BuyerContent = ({setSnackBarData}) => {
               <Grid item xs={6} sx={{pr:2}}>
               <CustomInputBox title="Min" type="number" onChange={(e)=>{
                         setUserSearchSaveData({...userSearchSaveData,min_height:e.target.value})
-                  }} value={userSearchSaveData.min_height} placeholder="5.1"/>
+                  }} value={userSearchSaveData.min_height} placeholder="5.1" disabled={disabledForm}/>
               </Grid>
               <Grid item xs={6} sx={{pl:2}}>
                 <CustomInputBox title="Max" type="number" onChange={(e)=>{
                         setUserSearchSaveData({...userSearchSaveData,max_height:e.target.value})
-                  }} value={userSearchSaveData.max_height} placeholder="5.1"/>
+                  }} value={userSearchSaveData.max_height} placeholder="5.1" disabled={disabledForm}/>
               </Grid>
             </Grid>
           </Grid>
@@ -165,12 +166,12 @@ const BuyerContent = ({setSnackBarData}) => {
               <Grid item xs={6} sx={{pr:2}}>
                 <CustomInputBox title="Min" type="number" placeholder="$3000" maxLength={10} onChange={(e)=>{
                         setUserSearchSaveData({...userSearchSaveData,min_price:e.target.value})
-                  }} value={userSearchSaveData.min_price}/>
+                  }} value={userSearchSaveData.min_price} disabled={disabledForm}/>
               </Grid>
               <Grid item xs={6} sx={{pl:2}}>
               <CustomInputBox title="Max" type="number" placeholder="$5000" maxLength={10} onChange={(e)=>{
                         setUserSearchSaveData({...userSearchSaveData,max_price:e.target.value})
-                  }} value={userSearchSaveData.max_price}/>
+                  }} value={userSearchSaveData.max_price} disabled={disabledForm}/>
               </Grid>
             </Grid>
           </Grid>
@@ -180,7 +181,7 @@ const BuyerContent = ({setSnackBarData}) => {
           {/* Discipline dropdown starts */}
           <Grid item xs={12} sx={{mt:3}}>
             <Typography variant='authInputTitle'>Discipline</Typography>
-            <DisciplineSelect horseData={userSearchSaveData} setHorseData={setUserSearchSaveData}/>
+            <DisciplineSelect horseData={userSearchSaveData} setHorseData={setUserSearchSaveData} disabled={disabledForm}/>
           </Grid>
           {/* Discipline dropdown ends */}
 
@@ -191,7 +192,7 @@ const BuyerContent = ({setSnackBarData}) => {
                 <Typography variant='authInputTitle'>Gender</Typography>
               </Grid>
               <Grid item xs={12}>
-              <FormControl>
+              <FormControl disabled={disabledForm}>
                   <RadioGroup row aria-labelledby="demo-radio-buttons-group-label" defaultValue={"Gelding"}
                       name="radio-buttons-group" onChange={(e)=>{
                           setUserSearchSaveData({...userSearchSaveData,gender:e.target.value})
@@ -210,14 +211,14 @@ const BuyerContent = ({setSnackBarData}) => {
           {/* Color dropdown starts */}
           <Grid item xs={12} sx={{mt:3}}>
             <Typography variant='authInputTitle'>Color</Typography>
-            <ColorsSelect horseData={userSearchSaveData} setHorseData={setUserSearchSaveData}/>
+            <ColorsSelect horseData={userSearchSaveData} setHorseData={setUserSearchSaveData} disabled={disabledForm}/>
           </Grid>
           {/* Color dropdown ends */}
 
           {/* Temperament dropdown starts */}
           <Grid item xs={12} sx={{mt:3}}>
             <Typography variant='authInputTitle'>Temperament</Typography>
-            <TemperamentSelect horseData={userSearchSaveData} setHorseData={setUserSearchSaveData}/>
+            <TemperamentSelect horseData={userSearchSaveData} setHorseData={setUserSearchSaveData} disabled={disabledForm}/>
           </Grid>
           {/* Temperament dropdown ends */}
 
@@ -235,12 +236,12 @@ const BuyerContent = ({setSnackBarData}) => {
                   direction='end' 
                   paddingLeft='5%' 
                   maxLength={100} 
-                  keywordVal={keywordVal}
+                  value={keywordVal}
                   setKeywordVal={setKeywordVal} 
                   placeholder="arabian horse etc..." 
                   onChange={(e)=>{
                         setKeywordVal(e.target.value)
-                  }}/>
+                  }} disabled={disabledForm}/>
               </Grid>
             </Grid>
           </Grid>
@@ -268,7 +269,10 @@ const BuyerContent = ({setSnackBarData}) => {
           {/* Buttons starts */}
           <Grid item xs={12}>
               <Grid container>
-                  <Grid item xs={12} sx={{mt:2,pr:2}}><Button title="save" width="100%" onClick={onSave}/></Grid>
+                  <Grid item xs={9} sx={{mt:2,pr:2}}><Button title="save" width="100%" onClick={onSave}/></Grid>
+                  <Grid item xs={3} sx={{mt:2,pr:2}}><Button title="edit" width="100%" onClick={()=>{
+                    setDisabledForm(false)
+                  }} backgroundColor='#F4F4F4' color="#313033"/></Grid>
                   <Grid item xs={6} sx={{mt:2,pr:2}}><Button title="clear" width="100%" backgroundColor='#F4F4F4' color="#313033" onClick={()=>{
                     setUserSearchSaveData({location_id:"",breed_id:"",min_age:"",max_age:"",min_height:"",max_height:"",min_price:"",max_price:"",discipline_id:"",gender:"",color_id:"",temperament_id:"",keywords_id:[]})
                   }}/></Grid>

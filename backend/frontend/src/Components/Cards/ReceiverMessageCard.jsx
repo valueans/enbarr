@@ -2,18 +2,24 @@ import React from 'react'
 import {Grid,Card,CardContent,Typography,CardMedia,IconButton} from '@mui/material';
 import { useState,useEffect } from 'react';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import { useSelector } from 'react-redux';
 
 
-const ReceiverMessageCard = ({message}) => {
+const ReceiverMessageCard = ({message,pubnub}) => {
+
+    const state = useSelector(state=>state);
 
     const [fileType,setFileType] = useState("");
+
+    const [fileUrl,setFileUrl] = useState("");
 
     const imagesExtentsion = ["jpeg","jpg","png"];
     const videosExtentsion = ['mp4','mov','WEBM'];
 
-
     useEffect(()=>{
         if(message.message.file){
+            const response = pubnub.getFileUrl({ channel: state.SelectedChatId, id: message.message.file.id, name: message.message.file.name });
+            setFileUrl(response)
             let ext = message.message.file.name.split('.');
             ext = ext[ext.length - 1]
             if (imagesExtentsion.includes(ext)){
@@ -53,13 +59,14 @@ const ReceiverMessageCard = ({message}) => {
                         <CardMedia
                         component="img"
                         height="300px"
-                        image={message.message.file.url}
+                        image={fileUrl}
                         alt="add-image"
+                        sx={{objectFit:"fill"}}
                         />:
                         fileType === 'video'?
-                        <CardMedia component='video' height="100%" image={message.message.file.url} alt="add-image" controls autoPlay/>:
+                        <CardMedia component='video' height="100%" image={fileUrl} alt="add-image" controls autoPlay sx={{objectFit:"fill"}}/>:
                         <CardContent sx={{wordBreak:"break-word",p:2,mr:3}} className="justifyContentCenter">
-                            <a href={message.message.file.url} target="_blank" rel="noopener noreferrer">
+                            <a href={fileUrl} target="_blank" rel="noopener noreferrer">
                             <IconButton sx={{border:"1px solid white"}} >
                             <FileDownloadIcon sx={{color:"#FFFFFF"}}/>
                             </IconButton>
@@ -67,7 +74,7 @@ const ReceiverMessageCard = ({message}) => {
                             <Typography variant="characteristicsHeading" sx={{color:"#FFFFFF",ml:3,mt:2}}>{message.message.file.name}</Typography>
                         </CardContent>
                         :<CardContent sx={{wordBreak:"break-word"}}>
-                            <Typography variant="imageDescriptions" sx={{color:"#FFFFFF"}}>{message.message.text}</Typography>
+                            <Typography variant="imageDescriptions" sx={{color:"#FFFFFF"}}>{message.message}</Typography>
                         </CardContent>
                     }
                 </Card>

@@ -5,7 +5,7 @@ from rest_framework import status
 from django.db.models import Q
 from drf_yasg.utils import swagger_auto_schema
 from .serializers import ConversationSerializer
-from chat.models import Messages, Conversation
+from chat.models import Messages, Conversation,DeletedConversationsId
 from datetime import datetime
 from home.helpers import getPagination
 from django.contrib.auth import get_user_model
@@ -71,10 +71,19 @@ def conversationView(request):
             try:
                 instance = Conversation.objects.get(
                     Q(user_one=request.user) & Q(user_two=receiver)
-                    | Q(user_one=receiver) & Q(user_two=request.user)
+                    | Q(user_one=receiver) & Q(user_two=request.user),Q(user_one_deleted=False),Q(user_two_deleted=False)
                 )
             except:
-                channel = f"channel-chat-{request.user.id}-{receiver.id}"
+                try:
+                    deleted_conversation = DeletedConversationsId.objects.filter(Q(user_one=request.user) & Q(user_two=receiver)
+                    | Q(user_one=receiver) & Q(user_two=request.user))
+                    print("deleted_conversation",deleted_conversation)
+                    if deleted_conversation.count() == 0:
+                        channel = f"channel-chat-{request.user.id}-{receiver.id}"
+                    else:
+                        channel = f"channel-chat-{request.user.id}-{receiver.id}-{deleted_conversation.count()+1}"
+                except:
+                    pass
                 instance = Conversation.objects.create(
                     user_one=request.user,
                     user_two=receiver,
@@ -91,21 +100,29 @@ def conversationView(request):
             data = {"status": "ERROR", "message": "conversation-id is required"}
             return Response(data=data, status=status.HTTP_404_NOT_FOUND)
 
+        instance = Conversation.objects.get(id=conversation_id)
+        DeletedConversationsId.objects.create(channel=instance.channel,user_one=instance.user_one,user_two=instance.user_two)
         try:
-            instance = Conversation.objects.get(id=conversation_id)
             if request.user.id == instance.user_one.id:
                 unsubcribeChannel(instance.channel, instance.user_one.email)
+                instance.user_one_deleted = True
             else:
                 unsubcribeChannel(instance.channel, instance.user_two.email)
-
+                instance.user_two_deleted = True
         except:
             data = {"status": "ERROR", "message": "Invalid conversation-id"}
             return Response(data=data, status=status.HTTP_404_NOT_FOUND)
-        try:
-            instance.last_message.delete()
-        except:
-            pass
-        instance.delete()
+        
+        # we will delete the conversation instance only if the both uuser has deleete the conversation otherwise we will just set the user as none
+        
+        if instance.user_one_deleted and instance.user_two_deleted:
+            try:
+                instance.last_message.delete()
+            except:
+                pass
+            instance.delete()
+        else:
+            instance.save()
         data = {"status": "OK", "message": deleted_message}
         return Response(data=data, status=status.HTTP_200_OK)
 
@@ -119,6 +136,7 @@ def pubnub_webhook(request):
     channel = body["event"]["channel"]
     message = body["event"]["eventPayload"]["message"]["text"]
     sender = body["event"]["senderId"]
+    timetoken = body["event"]["timetoken"]
     conversation = Conversation.objects.get(channel=channel)
     try:
         prev_messages = Messages.objects.filter(channel=channel)
@@ -126,7 +144,7 @@ def pubnub_webhook(request):
     except:
         pass
 
-    message_obj = Messages.objects.create(channel=channel, Messages=message)
+    message_obj = Messages.objects.create(channel=channel, Messages=message,timetoken=timetoken,sender=sender)
     conversation.last_message = message_obj
     conversation.save()
     if conversation.user_one.email == sender:

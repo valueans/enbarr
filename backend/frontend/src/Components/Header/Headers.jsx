@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {Toolbar,Box,AppBar,Typography,Grid,Avatar} from '@mui/material';
 import Button from '../Buttons/Button.jsx';
 import logo from '../../assets/logo.svg';
-import SearchIcon from '@mui/icons-material/Search';
+import SearchIcon from '../Svgs/SearchIcon.jsx';
 import { Link,useNavigate } from 'react-router-dom';
 import NotificationMenu from '../Menu/NotificationMenu.jsx';
 import { getUserProfile } from '../../Constants/storage.js';

@@ -1,7 +1,13 @@
 #root{
     background-color: #F5F5F5!important;
 }
+#root{
+    background-color: #F5F5F5!important;
+}
 
+.white-bg{
+    background-color: #FFFFFF!important;
+}
 
 .justifyContentEnd{
     display: flex;
@@ -101,4 +107,8 @@
 .swiper-wrapper{
     margin: auto;
     width: 50%!important;
+}
+
+.control-dots{
+    margin-bottom: 100px!important;
 }

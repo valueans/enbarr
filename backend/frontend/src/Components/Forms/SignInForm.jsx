@@ -36,12 +36,13 @@ const SignInForm = ({setSnackBarData}) => {
                 return navigator('/auth/verify')
             } 
         } catch (error) {
-            if (error.response.status === 400){
-                setSnackBarData({open:true,message:"Invalid email or password",severity:"error"})
-            }
-            else{
-                setSnackBarData({open:true,message:"Something went wrong please try again later",severity:"error"})
-            }
+            console.log("error",error)
+            // if (error.response.status === 400){
+            //     setSnackBarData({open:true,message:"Invalid email or password",severity:"error"})
+            // }
+            // else{
+            //     setSnackBarData({open:true,message:"Something went wrong please try again later",severity:"error"})
+            // }
         }
         },
       });
@@ -49,7 +50,7 @@ const SignInForm = ({setSnackBarData}) => {
 
   return (
     <form onSubmit={handleSubmit}>
-        <Grid container spacing={1}>
+        <Grid container item xs={12} spacing={1}>
             <Grid item xs={12} sx={{width:"100%"}}>
                 <Typography variant="authTitle" component="div">Login</Typography>
             </Grid>

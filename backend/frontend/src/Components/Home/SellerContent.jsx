@@ -153,7 +153,7 @@ const keywordClick = async ()=>{
 
   return (
     // seler page starts
-    <Grid container sx={{minHeight:"calc(100vh - 101px)"}} className="justifyContentCenter">
+    <Grid container sx={{minHeight:"calc(100vh - 101px)"}} className="justifyContentCenter" id="root">
         <CustomSnackBar snackBarData={snackBarData} setSnackBarData={setSnackBarData} />
         <Grid item xs={12} lg={6} sx={{background:"#FFFFFF",borderRadius:"15px",marginTop:"39px",padding:"65px"}}>
             {/* main container starts */}
@@ -317,7 +317,7 @@ const keywordClick = async ()=>{
                                 sx={{height:"100%",width:"100%"}}>
                                 <AddIcon />
                             </IconButton>}
-                            direction='end' paddingLeft='5%' maxLength={100} keywordVal={keywordVal}
+                            direction='end' paddingLeft='5%' maxLength={100} value={keywordVal}
                                 setKeywordVal={setKeywordVal} placeholder="arabian horse etc..." onChange={(e)=>{
                                     setKeywordVal(e.target.value)
                                   }}/>

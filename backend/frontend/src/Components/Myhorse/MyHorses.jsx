@@ -32,7 +32,7 @@ const MyHorses = () => {
       <Grid item xs={12} sx={{minHeight:"200px"}}> 
         {totalHorseCount > 0?
           <HorseCardList adds={myHorse} setAdds={setMyHorse} typeCard="my-horse"/>:
-          <Typography variant='h5' sx={{color:"red"}}>no data found....</Typography>
+          <Typography variant='h5' sx={{color:"#313033"}}>no data found....</Typography>
         }
       </Grid>
       <CustomPagination page={page} totalHorseCount={totalHorseCount} routeUrl="/myhorse/myhorse"/>

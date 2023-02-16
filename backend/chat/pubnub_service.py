@@ -12,6 +12,6 @@ pnconfig.ssl = False
 
 
 def unsubcribeChannel(channel_name, user_id):
-    pnconfig.user_id = str(user_id)
+    pnconfig.uuid = str(user_id)
     pubnub = PubNub(pnconfig)
     response = pubnub.unsubscribe().channels(channel_name).execute()

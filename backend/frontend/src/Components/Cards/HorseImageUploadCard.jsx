@@ -38,8 +38,10 @@ const HorseImageUploadCard = ({image,setFiles,files,horseData,setHorseData}) => 
       height="100%"
       image={imageUrl}
       alt="add-image"
-      controls
+      loop
       autoPlay
+      muted={true}
+      sx={{objectFit:"fill"}}
     />
   </Card>
     </>

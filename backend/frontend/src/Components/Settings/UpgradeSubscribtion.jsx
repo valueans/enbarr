@@ -4,6 +4,7 @@ import SubscriptionCard from '../Cards/SubscriptionCard';
 import PaymentServices from '../../Services/PaymentServices';
 import Button from '../Buttons/Button';
 import { Link } from 'react-router-dom';
+import HorseImage from '../Svgs/HorseImage';
 
 const UpgradeSubscribtion = ({setSnackBarData}) => {
 
@@ -30,16 +31,16 @@ const UpgradeSubscribtion = ({setSnackBarData}) => {
         <Grid item xs={12} sx={{textAlign:"center"}}>
             <Typography variant="landingPageDesc">Subscriptions</Typography>
         </Grid>
-        <Grid container item xs={12} spacing={5}>
+        <Grid container item xs={12}  className="justifyContentCenter" sx={{zIndex:10}}>
             {
             
             plans.map((plan,index)=>{
                 return <Grid item xs={12} lg={4} sx={{textAlign:"center"}}>
                 <Grid container>
                     <Grid item xs={12}>
-                        <Typography variant="myHorseCardTitle" sx={{color:"black"}}>{plan.title}</Typography>
+                        <Typography variant="myHorseCardTitle" sx={{color:"black"}}>{plan.title} offer</Typography>
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid item xs={12} className="justifyContentCenter">
                         <SubscriptionCard backgroundColor={index===0?'#EEEAE7':index===1?'#DBE2E0':'#617D86'} color={index===0||index===1?'#2F3C4C':'#FFFFFF'} buttonColor={index===2?"#FFFFFF":""} title={plan.price} description={plan.description} description_features={plan.description_features}/>
                     </Grid>
                 </Grid>
@@ -47,11 +48,12 @@ const UpgradeSubscribtion = ({setSnackBarData}) => {
             })
             }
         </Grid>
-        <Grid item xs={12} sx={{mt:4}} className="justifyContentCenter">
-            <Link to="/home/seller" style={{textDecoration:"none",width:"50%"}}>
+        <Grid item xs={12} sx={{mt:6}} className="justifyContentCenter">
+            <Link to="/home/seller" style={{textDecoration:"none",width:"30%"}}>
             <Button title="Close" width="100%" />
             </Link>
         </Grid>
+        <HorseImage />
     </Grid>
   )
 }

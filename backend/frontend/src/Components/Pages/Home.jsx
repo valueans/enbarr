@@ -28,7 +28,7 @@ const Home = () => {
     },[isAuthenticated,navigator])
 
   return (
-    <>
+    <div className="white-bg">
         <CustomSnackBar snackBarData={snackBarData} setSnackBarData={setSnackBarData} />
         {/* header when the user will logged in starts */}
         <Headers headerType="home-page" />
@@ -49,7 +49,7 @@ const Home = () => {
             <BlackFooter />
         {/* footer ends */}
 
-    </>
+    </div>
   )
 }
 
