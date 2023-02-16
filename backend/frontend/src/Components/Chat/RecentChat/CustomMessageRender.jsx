@@ -10,7 +10,6 @@ const CustomMessageRender = ({message,pubnub}) => {
   const email = user_profile.user.email;
 
   console.log("message",message)
-
   return (
     message.uuid===email?<ReceiverMessageCard message={message} pubnub={pubnub}/>:<SenderMessageCard message={message} pubnub={pubnub}/>
   )
