@@ -39,6 +39,7 @@ useEffect(()=>{
 
     setHorseDetails(response)
 
+    console.log("response",response)
     if (response.user_location){
       navigator.geolocation.getCurrentPosition(async (position)=> {
         const distance_response = await HorseService.getDistance(`${position.coords.latitude},${position.coords.longitude}`,response.user_location);
@@ -62,7 +63,7 @@ return (
     {/* main container starts */}
     <Grid container>
       {/* carosel starts */}
-      <Grid item xs={12} sx={{height:"500px"}}>
+      <Grid item xs={12} sx={{height:"700px"}}>
         <Carosel images={horseDetails.images}/>
       </Grid>
       {/* carosel ends */}
@@ -90,15 +91,15 @@ return (
           {/* message and like button starts */}
           <Grid item xs={12} lg={6} sx={{height:"103px"}}>
             <Grid container
-              sx={{display:"flex",alignItems:"end",height:"103px",position:"relative",top:"20px",right:"10px",justifyContent:"flex-end"}}>
+              sx={{display:"flex",alignItems:"end",height:"103px",position:"relative",top:"35px",right:"10px",justifyContent:"flex-end"}}>
               <Grid item xs={3}>
-                <IconButton sx={{background:"#FFFFFF",width:"60px",height:"60px",boxShadow:"1px 1px 15px 1px grey"}} disabled={currentLoginUserProfile.id === horseDetails.userprofile.id} onClick={messageOwner}>
-                  <MailOutlineIcon sx={{height:"100%"}} />
+                <IconButton sx={{background:"#FFFFFF",width:"80px",height:"80px",boxShadow:"1px 1px 15px 1px grey"}} disabled={currentLoginUserProfile.id === horseDetails.userprofile.id} onClick={messageOwner}>
+                  <MailOutlineIcon sx={{height:"80%",width:"80%"}} />
                 </IconButton>
               </Grid>
               <Grid item xs={3}>
-                <IconButton sx={{background:"#FFFFFF",width:"60px",height:"60px",boxShadow:"1px 1px 15px 1px grey"}} color={horseDetails.isfav?"error":"primary"} onClick={handleFavClick} disabled={currentLoginUserProfile.id === horseDetails.userprofile.id}>
-                  <FavoriteIcon sx={{height:"100%"}} />
+                <IconButton sx={{background:"#FFFFFF",width:"80px",height:"80px",boxShadow:"1px 1px 15px 1px grey"}} color={horseDetails.isfav?"error":"primary"} onClick={handleFavClick} disabled={currentLoginUserProfile.id === horseDetails.userprofile.id}>
+                  <FavoriteIcon sx={{height:"80%",width:"80%"}} />
                 </IconButton>
               </Grid>
             </Grid>
@@ -123,6 +124,9 @@ return (
             <Grid item xs={3} className="alignContentCenter">
               <LocationOnIcon sx={{color:"#EA0000"}} />
               <Typography variant="imageDescriptions">{distance}</Typography>
+            </Grid>
+            <Grid item xs={9} className="justifyContentEnd">
+              <Typography variant='subscriptionCardTitle' sx={{mt:"40px"}}>${horseDetails.price}</Typography>
             </Grid>
           </Grid>
         </Grid>:""
@@ -182,6 +186,33 @@ return (
 
 
 
+        {/* age starts */}
+
+        <Grid item xs={6} sx={{mt:3}}>
+          <Grid item xs={12}>
+            <Typography variant="imageDescriptions">Age</Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="characteristicsHeading">{horseDetails?.age}</Typography>
+          </Grid>
+        </Grid>
+
+        {/* age ends */}
+        
+        {/* color starts */}
+
+        <Grid item xs={6} sx={{mt:3}}>
+          <Grid item xs={12}>
+            <Typography variant="imageDescriptions">Color</Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="characteristicsHeading">{horseDetails?.color?.color}</Typography>
+          </Grid>
+        </Grid>
+
+        {/* color ends */}
+
+
         {/* Height starts */}
 
         <Grid item xs={6} sx={{mt:3}}>
@@ -189,7 +220,7 @@ return (
             <Typography variant="imageDescriptions">Height</Typography>
           </Grid>
           <Grid item xs={12}>
-            <Typography variant="characteristicsHeading">{horseDetails.height}</Typography>
+            <Typography variant="characteristicsHeading">{horseDetails?.height}</Typography>
           </Grid>
         </Grid>
 
@@ -202,7 +233,7 @@ return (
             <Typography variant="imageDescriptions">Temperament</Typography>
           </Grid>
           <Grid item xs={12}>
-            <Typography variant="characteristicsHeading">{horseDetails.temperament.temperament}</Typography>
+            <Typography variant="characteristicsHeading">{horseDetails?.temperament.temperament}</Typography>
           </Grid>
         </Grid>
 
@@ -215,7 +246,7 @@ return (
             <Typography variant="imageDescriptions">Discipline</Typography>
           </Grid>
           <Grid item xs={12}>
-            <Typography variant="characteristicsHeading">{horseDetails.discipline.discipline}</Typography>
+            <Typography variant="characteristicsHeading">{horseDetails?.discipline.discipline}</Typography>
           </Grid>
         </Grid>
 
@@ -228,7 +259,7 @@ return (
             <Typography variant="imageDescriptions">Price</Typography>
           </Grid>
           <Grid item xs={12}>
-            <Typography variant="characteristicsHeading">${horseDetails.price}</Typography>
+            <Typography variant="characteristicsHeading">${horseDetails?.price}</Typography>
           </Grid>
         </Grid>
 

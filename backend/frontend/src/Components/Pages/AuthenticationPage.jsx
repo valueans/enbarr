@@ -52,9 +52,9 @@ const AuthenticationPage = () => {
   return (
     <>
       <CustomSnackBar snackBarData={snackBarData} setSnackBarData={setSnackBarData} />
-      <Grid container>
+      <Grid container className="white-bg">
         {/* form image right taking 4 column */}
-        <Grid item xs={7} sx={{height:"100vh",p:8}}>
+        <Grid item lg={7} xs={12} sx={{height:"100vh",p:8}}>
           {/* logo grid starts */}
           <Grid item container>
             <Grid item xs={1} sx={{textAlign:"center"}}>
@@ -70,15 +70,15 @@ const AuthenticationPage = () => {
           </Grid>
           {/* logo grids ends */}
           {showTabs?
-          <Grid container >
+          <Grid container sx={{background:"#F4F4F4",borderRadius:"50px"}}>
           {/* login/signup tabs start */}
           <Grid item xs={6}>
             <AuthenticationTabs title="Sign up" isActive={signupActive} onClick={signupRouter}
-              borderRadius="50px 0px 0px 50px" />
+              borderRadius="50px" />
           </Grid>
           <Grid item xs={6}>
             <AuthenticationTabs title="Login" isActive={loginActive} onClick={loginRouter}
-              borderRadius="0px 50px 50px 0px" />
+              borderRadius="50px" />
           </Grid>
           {/* login/signup tabs ends */}
         </Grid>:""
@@ -104,7 +104,7 @@ const AuthenticationPage = () => {
 
         </Grid>
         {/* header image right taking 4 column */}
-        <HeaderImageGrid top="0px" height="100vh" xs={5}/>
+        <HeaderImageGrid top="0px" height="100vh" lg={5} xs={12}/>
       </Grid>
     </>
   )

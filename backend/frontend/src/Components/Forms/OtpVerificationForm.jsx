@@ -78,7 +78,7 @@ const OtpVerificationForm = ({setShowTabs,setSnackBarData,verificationType="norm
                 <Typography variant="authTitle" component="div">Verification</Typography>
             </Grid>
             <Grid item xs={12} sx={{textAlign:"center"}}>
-                <Typography variant="authInputTitle" component="div">Verification Otp is sended to registered email
+                <Typography variant="authInputTitle" component="div">Verification Otp is sent to registered email
                 </Typography>
             </Grid>
             <Grid item xs={12} sx={{mt:4}}>

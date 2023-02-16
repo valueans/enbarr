@@ -29,12 +29,12 @@ const FavoriteHorse = () => {
   return (
     <Grid container>
       <Grid item xs={12}>
-          <Typography variant='authTitle'>Favorite</Typography>
+          <Typography variant='authTitle'>Favorites</Typography>
       </Grid>
       <Grid item xs={12} sx={{minHeight:"200px"}}> 
         {totalHorseCount > 0?
           <HorseCardList adds={favoriteHorse} typeCard="favouriteHorses"/>:
-          <Typography variant='h5' sx={{color:"red"}}>no data found....</Typography>
+          <Typography variant='h5' sx={{color:"#313033"}}>no data found....</Typography>
         }
       </Grid>
       <CustomPagination page={page} totalHorseCount={totalHorseCount} routeUrl="/myhorse/favorites"/>

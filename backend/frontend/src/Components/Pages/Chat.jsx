@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useRef} from 'react'
 import { useNavigate } from 'react-router-dom';
 import { Grid,Typography,IconButton,Menu,MenuItem} from '@mui/material';
 import AuthService from '../../Services/AuthService';
@@ -14,16 +14,36 @@ import CustomMessageRender from '../Chat/RecentChat/CustomMessageRender';
 import {useDispatch,useSelector} from 'react-redux';
 import { setSelectedChannelId,setSelectedChannel } from '../../store/actions';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import CustomMessageInput from '../Inputs/CustomMessageInput';
+import SendButton from '../Buttons/SendButton';
 import Picker from '@emoji-mart/react'
 import emojiData from "@emoji-mart/data";
+import {CircularProgress} from '@mui/material';
+import { getUserProfile } from '../../Constants/storage';
+import PubNub from "pubnub";
+import { PubNubProvider } from "pubnub-react";
 
 
 
-const Chat = ({pubnub}) => {
+const userprofile = getUserProfile();
+  const pubnub = new PubNub({
+    publishKey: "pub-c-17cb7332-770a-4b7b-a4c8-f6aa6e86deb8",
+    subscribeKey: "sub-c-813ba4c4-971e-42d7-a6f7-9a885fa58663",
+    uuid: `${userprofile?.user?.email}`,
+});
+
+const Chat = () => {
 
     const navigator = useNavigate();
     const dispatch = useDispatch();
     const state = useSelector(state=>state);
+
+    const fileRef = useRef(null);
+
+    const [fileInput,setFileInput] = useState(null);
+
+    const [messageInputVal,setMessageInputVal] = useState("");
+    const messagesEndRef = useRef(null)
 
     // set current page for message pagination
     const [currentPage,setCurrentPage] = useState(1);
@@ -40,8 +60,19 @@ const Chat = ({pubnub}) => {
 
     const [filterInput,setFilterInput] = useState("");
 
+    const [allCurrentMessages,setAllCurrentMessages] = useState([]);
+    
+    const [showEmojis, setShowEmojis] = useState(false);
+
+    const [loading, setLoading] = useState(false);
 
     const isAuthenticated = AuthService.checkUserAuthenticated();
+
+    useEffect(() => {
+        if (!isAuthenticated){
+        navigator("/")
+        }
+    },[isAuthenticated,navigator])
     
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
@@ -53,6 +84,10 @@ const Chat = ({pubnub}) => {
         setAnchorEl(null);
       };
     
+
+    const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+    }
 
     const deleteConversation = async ()=>{
         try {
@@ -83,31 +118,93 @@ const Chat = ({pubnub}) => {
         }
     }
 
-    useEffect(() => {
-        if (!isAuthenticated){
-        navigator("/")
-        }
-    },[isAuthenticated,navigator])
-
-
     useEffect(()=>{
         const getAllConversations = async () =>{
             const response = await ChatService.getAllConversations(currentPage)
-            setConversations([...conversations,...response.results])
-            setFilterConversations([...conversations,...response.results])
+            let check_delete = response.results.filter((item)=>item.is_deleted===false)
+            setConversations([...conversations,...check_delete])
+            setFilterConversations([...conversations,...check_delete])
             setTotalConversations(response.count)
-            setUsers([...users,...response.results.map((item)=>{return {...item.user_two_profile,online:false,channel:item.channel}})])
-            if (response.results?.length > 0){
-                let channel_ids = response.results.map((item)=>item.channel)
-                dispatch(setSelectedChannelId(response.results[0].channel))
-                dispatch(setSelectedChannel(response.results[0]))
+            setUsers([...users,...check_delete.map((item)=>{return {...item.user_two_profile,online:false,channel:item.channel}})])
+            if (check_delete?.length > 0){
+                let channel_ids = check_delete.map((item)=>item.channel)
+                dispatch(setSelectedChannelId(check_delete[0].channel))
+                dispatch(setSelectedChannel(check_delete[0]))
                 setAllConversationsIds([...allConversationsIds,...channel_ids])
             }
         }
         getAllConversations()
-        pubnub.subscribe({channels: allConversationsIds,withPresence: true})
+        if (setAllConversationsIds.length > 0){
+            pubnub.subscribe({channels: allConversationsIds,withPresence: true})
+        }
+
     },[currentPage])
 
+
+        const fetchMessages = (end)=>{
+            setLoading(true)
+            pubnub.fetchMessages(
+                {
+                    channels: [state.SelectedChatId],
+                    start: end,
+                    count:100
+                }
+                )
+            .then(result =>{
+                setAllCurrentMessages([...result.channels[state.SelectedChatId],...allCurrentMessages])
+            })
+            .catch(error =>{
+                console.log("error",error.status)
+            })
+        }
+
+        useEffect(()=>{
+        if (state.SelectedChatId){
+            fetchMessages(state.SelectedChat.timetoken)
+            setTimeout(()=>{
+                scrollToBottom();
+                setLoading(false);
+            },2000)
+        }
+
+    },[state.SelectedChatId])
+
+
+    const sendMessage = ()=>{
+
+        if (fileInput){
+            pubnub.sendFile({
+                channel: state.SelectedChatId,
+                file: fileInput,
+            }).then(result =>{
+                console.log("result",result)
+            }).catch(error =>{
+                console.log("error",error.status)
+            });
+        }
+        else{
+            pubnub.publish({
+                message: messageInputVal,
+                channel: state.SelectedChatId,
+              }).then(result =>{
+                console.log("result",result);
+              }).catch(error =>{
+                console.log("result.error",error.status)
+              });
+        }
+        setMessageInputVal("");
+        setFileInput(null);
+        scrollToBottom();
+    }
+
+
+    const addEmoji = (e) => {
+        let sym = e.unified.split("-");
+        let codesArray = [];
+        sym.forEach((el) => codesArray.push("0x" + el));
+        let emoji = String.fromCodePoint(...codesArray);
+        setMessageInputVal(messageInputVal + emoji);
+    };
 
     pubnub.addListener({
         presence : (presenceEvent)=>{
@@ -122,7 +219,19 @@ const Chat = ({pubnub}) => {
                 filteredUser[0]['online'] = false
             }
             setUsers([...filteredUser,...filteredNotUser])
-    }
+        },
+        message: (message) => {
+            // handle message
+            const channelName = message.channel;
+            const publishTimetoken = message.timetoken;
+            const msg = message.message;
+            const publisher = message.publisher;
+            console.log("message is looking me",message)
+
+            if (state.SelectedChatId === channelName){
+                setAllCurrentMessages([...allCurrentMessages,{uuid:publisher,message:msg,timetoken:publishTimetoken}])
+            }
+          }
     })
 
     
@@ -143,6 +252,7 @@ const Chat = ({pubnub}) => {
         {/* header when the user will logged in starts */}
         <Headers headerType="home-page"  currentPage="message"/>
         {/* header when the user will logged in ends */}
+        <PubNubProvider client={pubnub}>
         <PubChat currentChannel={state?.SelectedChatId}>
         <Grid container >
             <Grid item xs={3} sx={{height:"calc(100vh - 101px)",p:2,background:"#FFFFFF"}}>
@@ -222,18 +332,48 @@ const Chat = ({pubnub}) => {
                 {/* message header ends */}
                 
                 {/* message list starts */}
-                
-                <Grid item xs={12} sx={{minHeight:"calc(100vh - 341px)",maxHeight:"calc(100vh - 341px)",overflow:"scroll",boxShadow: "0px -4px 10px rgba(0, 0, 0, 0.1)",p:4}}> 
-                <MessageList fetchMessages={100} messageRenderer={CustomMessageRender}>
-                    <TypingIndicator />
-                </MessageList>
+                        
+
+                <Grid item xs={12} sx={{minHeight:"calc(100vh - 341px)",maxHeight:"calc(100vh - 341px)",overflow:"scroll",boxShadow: "0px -4px 10px rgba(0, 0, 0, 0.1)",p:4}} onScroll={(e)=>{
+                    console.log("e.target.scrollTop",e.target.scrollTop)
+                    if (e.target.scrollTop === 0){
+                        fetchMessages(allCurrentMessages[0].timetoken)
+                    }
+                }}> 
+                {loading?
+                <Grid item xs={12} className="justifyContentCenter">
+                    <CircularProgress sx={{height:"20px",width:"20px"}} />
+                </Grid>:""
+                }
+               
+                {
+                allCurrentMessages?
+                allCurrentMessages.map((message,index)=>{
+                    return <CustomMessageRender message={message} key={index} pubnub={pubnub}/>
+                }):""
+                }
+                <div ref={messagesEndRef} />
                 </Grid>
                 {/* message list ends */}
 
                 {/* message input starts  */}
-                <Grid item container xs={12} sx={{minHeight:"120px",background:"#FFFFFF",p:3}} className="alignContentCenter justifyContentBetween">
-                    <Grid item xs={12}>
-                        <MessageInput typingIndicator={true} senderInfo={true} fileUpload="all" emojiPicker={<Picker data={emojiData}/>} />
+                <Grid item container xs={12} sx={{maxHeight:"120px",minHeight:"120px",background:"#FFFFFF",p:3}} className="alignContentCenter justifyContentBetween">
+                    {
+                    showEmojis?
+                    <div style={{position:"absolute",bottom:"101px"}}><Picker onEmojiSelect={addEmoji} data={emojiData}/></div>:""
+                    }
+                    <input type="file" style={{display:'none'}} ref={fileRef} onChange={(e)=>{
+                        setFileInput(e.target.files[0]);
+                        setMessageInputVal(e.target.files[0].name)
+                    }} accept="*"/>
+                    <Grid item xs={10}>
+                        <CustomMessageInput placeholder="write message here..." file_ref={fileRef} value={messageInputVal} setMessageInputVal={setMessageInputVal} setShowEmojis={setShowEmojis} showEmojis={showEmojis} onChange={(e)=>{
+                            setMessageInputVal(e.target.value);
+                            setFileInput(null);
+                        }} onEnter={sendMessage}/>
+                    </Grid>
+                    <Grid item xs={2} sx={{pl:3}}>
+                        <SendButton width="50%" disabled={messageInputVal.length===0} onClick={sendMessage} />
                     </Grid>
                 </Grid>
                 {/* message input ends  */}
@@ -242,6 +382,7 @@ const Chat = ({pubnub}) => {
             
         </Grid>
         </PubChat>
+        </PubNubProvider>
     </>
   )
 }

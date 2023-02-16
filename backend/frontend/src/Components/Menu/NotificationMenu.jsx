@@ -1,6 +1,6 @@
 import React,{useEffect, useState} from 'react';
 import {Menu,Badge,Grid,Typography,Avatar,IconButton,MenuItem} from '@mui/material';
-import NotificationsIcon from '@mui/icons-material/Notifications';
+import NotificationIcon from '../Svgs/NotificationIcon'
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import NotificationsService from '../../Services/NotificationService';
 import CustomSnackBar from '../SnackBar/CustomSnackBar';
@@ -126,8 +126,8 @@ export default function NotificationMenu() {
         <CustomSnackBar snackBarData={snackBarData} setSnackBarData={setSnackBarData} />
 
         <Badge badgeContent={unReadCount} color="warning" sx={{cursor:"pointer"}}>
-            <NotificationsIcon className="headerIcons" id="basic-button" aria-controls={open ? 'basic-menu' : undefined}
-                aria-haspopup="true" aria-expanded={open ? 'true' : undefined} onClick={handleClick} />
+            <NotificationIcon className="headerIcons" id="basic-button" aria-controls={open ? 'basic-menu' : undefined}
+                aria_haspopup="true" aria_expanded={open ? 'true' : undefined} onClick={handleClick} />
         </Badge>
         <Menu id="basic-menu" anchorEl={anchorEl} open={open} onClose={handleClose} MenuListProps={{
           'aria-labelledby': 'basic-button',

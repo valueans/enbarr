@@ -4,6 +4,7 @@ import {Badge,Grid,Typography } from '@mui/material';
 import CustomAvatar from './CustomAvatar';
 import { useDispatch } from 'react-redux';
 import { setSelectedChannelId,setSelectedChannel } from '../../../store/actions';
+import clip from "text-clipper";
 
 
 const CustomAvatarOnline = ({image,name,online=false,channel}) => {
@@ -40,7 +41,7 @@ const CustomAvatarOnline = ({image,name,online=false,channel}) => {
       }));
 
   return (
-    <Grid xs={2} sx={{ml:2,mr:2,textAlign:"center"}} onClick={()=>{
+    <Grid item xs={2} sx={{ml:2,mr:2,textAlign:"center"}} onClick={()=>{
       dispatch(setSelectedChannelId(channel))
       dispatch(setSelectedChannel({user_two_profile:{profile_photo:image,user:{email:name}}}))
     }}> 
@@ -51,7 +52,7 @@ const CustomAvatarOnline = ({image,name,online=false,channel}) => {
             >
             <CustomAvatar name={name} image={image}/>
         </StyledBadge>
-        <Typography variant='chatUsersTitle'>{name}</Typography>      
+        <Typography variant='chatUsersTitle'>{clip(name,10)}</Typography>      
     </Grid>
   )
 }
