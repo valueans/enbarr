@@ -10,7 +10,6 @@ import { instagramLink,facebookLink,linkedinLink,twitterLink } from '../../Const
 const SocialLinksVertical = () => {
   return (
     <>
-        <Grid item xs={2} sx={{display:"flex",justifyContent:"center",alignItems:"center"}}>
             <Grid container direction="column" sx={{display:"flex",alignContent:"center"}} spacing={3}>
                 <Grid item xs={2} style={{display:"flex",justifyContent:"center"}}>
                     <a href={instagramLink} target="_blank" rel="noreferrer">
@@ -36,7 +35,6 @@ const SocialLinksVertical = () => {
                     <VerticalLineIcon />
                 </Grid>
             </Grid>
-        </Grid>
     </>
   )
 }

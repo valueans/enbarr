@@ -5,10 +5,20 @@ import PaymentServices from '../../Services/PaymentServices';
 import Button from '../Buttons/Button';
 import { Link } from 'react-router-dom';
 import HorseImage from '../Svgs/HorseImage';
+import AuthService from '../../Services/AuthService';
 
 const UpgradeSubscribtion = ({setSnackBarData}) => {
+    
 
     const [plans,setPlans] = useState([]);
+
+    const isAuthenticated = AuthService.checkUserAuthenticated();
+
+    useEffect(() => {
+      if (!isAuthenticated){
+        navigator("/")   
+      }
+    },[isAuthenticated,navigator])
 
 
     useEffect(()=>{

@@ -1,7 +1,18 @@
-import React from 'react';
+import React,{useEffect} from 'react';
 import { Typography } from '@mui/material';
+import AuthService from '../../Services/AuthService';
 
 const TermsAndCondition = () => {
+
+  const isAuthenticated = AuthService.checkUserAuthenticated();
+
+  useEffect(() => {
+    if (!isAuthenticated){
+      navigator("/")   
+    }
+  },[isAuthenticated,navigator])
+
+
   return (
     <div style={{padding:"20px"}}>
     <Typography variant="authTitle">Terms And Condition</Typography>

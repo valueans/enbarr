@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import Headers from '../Header/Headers'
-import BlackFooter from '../Footer/BlackFooter'
 import HomeContent from '../Home/HomeContent'
 import BuyerContent from '../Home/BuyerContent'
 import SellerContent from '../Home/SellerContent'
@@ -20,18 +19,14 @@ const Home = () => {
     const [snackBarData,setSnackBarData] = useState({open:false,message:"",severity:"error"});
     
 
-
-    useEffect(() => {
-        if (!isAuthenticated){
-          navigator("/")   
-        }
-    },[isAuthenticated,navigator])
-
   return (
     <div className="white-bg">
         <CustomSnackBar snackBarData={snackBarData} setSnackBarData={setSnackBarData} />
         {/* header when the user will logged in starts */}
-        <Headers headerType="home-page" />
+        {
+        isAuthenticated?
+        <Headers headerType="home-page" />:<Headers headerType="landing" />
+        }
         {/* header when the user will logged in ends */}
 
         <Routes>
@@ -44,10 +39,6 @@ const Home = () => {
           <Route path="horse" element={<HorseDetailContent/>} />
           <Route path="matchhorses" element={<MatchHorseContent/>} />
         </Routes>
-
-        {/* footer starts */}
-            <BlackFooter />
-        {/* footer ends */}
 
     </div>
   )

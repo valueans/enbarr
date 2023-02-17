@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect,useState } from 'react'
 import { Grid,Typography,IconButton} from '@mui/material';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
@@ -7,7 +7,9 @@ import Button from '../Buttons/Button';
 import CustomSwiper from '../Carosel/CustomSwiper';
 import HorseService from '../../Services/HorseService';
 import { Link } from 'react-router-dom';
-
+import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
+import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
+import AuthService from '../../Services/AuthService';
 
 const MatchHorseContent = () => {
   const [currentHorseId,setCurrentHorseId] = useState(null);
@@ -25,16 +27,34 @@ const MatchHorseContent = () => {
     setIsDisLiked(true)
   }
 
+  const isAuthenticated = AuthService.checkUserAuthenticated();
+
+  useEffect(() => {
+    if (!isAuthenticated){
+      navigator("/")   
+    }
+  },[isAuthenticated,navigator])
+
 
   return (
-    <Grid container sx={{minHeight:"calc(100vh - 101px)"}} className="justifyContentCenter alignContentCenter">
+    <Grid container sx={{minHeight:"calc(100vh - 101px)",border:"1px solid black"}} className="justifyContentCenter alignContentCenter" id="root">
       <Grid item xs={12} lg={6} sx={{background:"#FFFFFF",borderRadius:"15px",marginTop:"39px",padding:"65px",minHeight:"600px"}}>
       <Grid container>
         <Grid item xs={12} className="justifyContentCenter">
           <Typography variant='matchHorseTitle'>ENBARR</Typography>
         </Grid>
         <Grid item xs={12} sx={{mt:3}}>
-          <CustomSwiper currentHorseId={currentHorseId} setCurrentHorseId={setCurrentHorseId} setIsLiked={setIsLiked} setIsDisLiked={setIsDisLiked}/>
+          <Grid container direction="row">
+            <Grid item xs={1} className="justifyContenCenterAlignCenter">
+              <KeyboardDoubleArrowLeftIcon sx={{height:"60px",width:"60px"}}/>
+            </Grid>
+            <Grid item xs={10} >  
+              <CustomSwiper currentHorseId={currentHorseId} setCurrentHorseId={setCurrentHorseId} setIsLiked={setIsLiked} setIsDisLiked={setIsDisLiked} />
+            </Grid>
+            <Grid item xs={1} className="justifyContenCenterAlignCenter">
+              <KeyboardDoubleArrowRightIcon sx={{height:"60px",width:"60px"}}/>
+            </Grid>
+          </Grid>
         </Grid>
         <Grid item xs={12} className="justifyContentCenter" sx={{mt:3}}>
           <Grid container item xs={12} className="justifyContentBetween">

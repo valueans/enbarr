@@ -10,10 +10,12 @@ import HorseService from '../../Services/HorseService'
 import ProfileCard from '../Cards/ProfileCard';
 import { getUserProfile } from '../../Constants/storage';
 import ChatService from '../../Services/ChatService';
+import AuthService from '../../Services/AuthService';
 
 const HorseDetailContent = () => {
 const [searchParam] =useSearchParams();
 const navigate = useNavigate(); 
+const isAuthenticated = AuthService.checkUserAuthenticated();
 const [horseDetails,setHorseDetails] = useState({title:"",description:"",gender:"",height:"",price:"",userprofile:{first_name:"",last_name:"",profile_photo:"",user:{id:""}},breed:{breed:""},temperament:{temperament:""},discipline:{discipline:""}})
 const currentLoginUserProfile = getUserProfile();
 
@@ -39,7 +41,6 @@ useEffect(()=>{
 
     setHorseDetails(response)
 
-    console.log("response",response)
     if (response.user_location){
       navigator.geolocation.getCurrentPosition(async (position)=> {
         const distance_response = await HorseService.getDistance(`${position.coords.latitude},${position.coords.longitude}`,response.user_location);
@@ -89,6 +90,7 @@ return (
           {/* profile picture and uploader name ends */}
 
           {/* message and like button starts */}
+          {isAuthenticated?
           <Grid item xs={12} lg={6} sx={{height:"103px"}}>
             <Grid container
               sx={{display:"flex",alignItems:"end",height:"103px",position:"relative",top:"35px",right:"10px",justifyContent:"flex-end"}}>
@@ -104,6 +106,7 @@ return (
               </Grid>
             </Grid>
           </Grid>
+          :""}
           {/* message and like button ends */}
 
         </Grid>

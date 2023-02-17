@@ -15,6 +15,7 @@ import BreedSelect from '../Selects/BreedSelect';
 import DisciplineSelect from '../Selects/DisciplineSelect';
 import ColorsSelect from '../Selects/ColorsSelect';
 import TemperamentSelect from '../Selects/TemperamentSelect';
+import AuthService from '../../Services/AuthService';
 
 const SellerContent = () => {
 
@@ -41,6 +42,13 @@ const SellerContent = () => {
 
     const navigate = useNavigate();
 
+    const isAuthenticated = AuthService.checkUserAuthenticated();
+
+    useEffect(() => {
+      if (!isAuthenticated){
+        navigator("/")   
+      }
+    },[isAuthenticated,navigator])
 
 
 const uploadImage = async (image)=>{

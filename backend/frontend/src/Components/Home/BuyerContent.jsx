@@ -14,10 +14,19 @@ import ColorsSelect from '../Selects/ColorsSelect';
 import TemperamentSelect from '../Selects/TemperamentSelect';
 import LocationSelect from '../Selects/LocationSelect';
 import { useNavigate } from 'react-router-dom';
+import AuthService from '../../Services/AuthService';
 
 const BuyerContent = ({setSnackBarData}) => {
   
   const navigator = useNavigate();
+
+  const isAuthenticated = AuthService.checkUserAuthenticated();
+
+  useEffect(() => {
+    if (!isAuthenticated){
+      navigator("/")   
+    }
+  },[isAuthenticated,navigator])
 
   const [keywords,setKeywords] = useState([]);
   const [keywordVal,setKeywordVal] = useState("");
