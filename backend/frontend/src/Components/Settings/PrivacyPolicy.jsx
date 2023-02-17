@@ -1,7 +1,16 @@
-import React from 'react';
+import React,{useEffect} from 'react';
 import { Typography } from '@mui/material';
+import AuthService from '../../Services/AuthService';
 
 const PrivacyPolicy = () => {
+
+  const isAuthenticated = AuthService.checkUserAuthenticated();
+
+  useEffect(() => {
+    if (!isAuthenticated){
+      navigator("/")   
+    }
+  },[isAuthenticated,navigator])
   return (
     <div style={{padding:"20px"}}>
     <Typography variant="authTitle">Privacy policy</Typography>

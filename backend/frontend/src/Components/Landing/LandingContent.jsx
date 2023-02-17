@@ -1,6 +1,6 @@
 import React from 'react'
 import Footer from '../Footer/Footer';
-import SocialLinksVertical from '../SocialLinks/SocialLinksVertical';
+import SocialLinkLanding from '../SocialLinks/SocialLinkLanding';
 import StoreLinks from '../SocialLinks/StoreLinks';
 import HorizontalLineIcon from '../Svgs/HorizontalLineIcon';
 import {Grid,Typography} from '@mui/material';
@@ -20,7 +20,7 @@ const LandingContent = () => {
             <Grid item xs={8} sx={{height:"calc(100vh - 101px)"}}>
                 {/* left side of landing page with title description and social LInks starts */}
                 <Grid container sx={{height:"100%"}}>
-                    <SocialLinksVertical />
+                    <SocialLinkLanding />
                     <Grid item xs={10} sx={{display:"flex",alignItems:"center"}}>
                         <Grid container direction="column" sx={{paddingLeft:"40px",paddingRight:"40px"}}
                             spacing={0.5}>

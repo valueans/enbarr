@@ -459,8 +459,7 @@ def KeywordsView(request):
     responses=customDeleteResponse(),
 )
 @api_view(["GET", "POST", "PUT", "DELETE"])
-@permission_classes([IsAuthenticated])
-@authentication_classes([TokenAuthentication])
+@permission_classes([AllowAny])
 def HorseView(request):
     if request.method == "GET":
         horse_id = request.GET.get("horse-id", None)
