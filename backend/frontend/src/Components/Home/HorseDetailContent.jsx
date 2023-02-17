@@ -41,6 +41,7 @@ useEffect(()=>{
 
     setHorseDetails(response)
 
+    console.log("response",response)
     if (response.user_location){
       navigator.geolocation.getCurrentPosition(async (position)=> {
         const distance_response = await HorseService.getDistance(`${position.coords.latitude},${position.coords.longitude}`,response.user_location);

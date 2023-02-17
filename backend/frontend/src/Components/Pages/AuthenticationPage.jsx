@@ -104,7 +104,7 @@ const AuthenticationPage = () => {
 
         </Grid>
         {/* header image right taking 4 column */}
-        <HeaderImageGrid top="0px" height="100vh" xs={5}/>
+        <HeaderImageGrid top="0px" height="100vh" lg={5} xs={12}/>
       </Grid>
     </>
   )

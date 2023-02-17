@@ -36,12 +36,13 @@ const SignInForm = ({setSnackBarData}) => {
                 return navigator('/auth/verify')
             } 
         } catch (error) {
-            if (error.response.status === 400){
-                setSnackBarData({open:true,message:"Invalid email or password",severity:"error"})
-            }
-            else{
-                setSnackBarData({open:true,message:"Something went wrong please try again later",severity:"error"})
-            }
+            console.log("error",error)
+            // if (error.response.status === 400){
+            //     setSnackBarData({open:true,message:"Invalid email or password",severity:"error"})
+            // }
+            // else{
+            //     setSnackBarData({open:true,message:"Something went wrong please try again later",severity:"error"})
+            // }
         }
         },
       });
