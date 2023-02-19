@@ -131,7 +131,7 @@ def conversationView(request):
 def pubnub_webhook(request):
     body = json.loads(request.body)
     channel = body["event"]["channel"]
-    message = body["event"]["eventPayload"]["message"]
+    message = body["event"]["eventPayload"]["message"]['text']
     sender = body["event"]["senderId"]
     timetoken = body["event"]["timetoken"]
     conversation = Conversation.objects.get(channel=channel)

@@ -192,7 +192,7 @@ const Chat = ({pubnub,userprofile}) => {
         }
         else{
             pubnub.publish({
-                message: messageInputVal,
+                message: {text:messageInputVal},
                 channel: state.SelectedChatId,
               }).then(result =>{
                 setLastMessageTimetoken(result.timetoken)

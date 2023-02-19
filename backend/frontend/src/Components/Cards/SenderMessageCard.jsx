@@ -79,7 +79,7 @@ const SenderMessageCard = ({message,pubnub}) => {
                         </CardContent>
                         :
                         <CardContent sx={{wordBreak:"break-word"}}>
-                        <Typography variant="imageDescriptions" sx={{color:"#302F32"}}>{message.message}</Typography>
+                        <Typography variant="imageDescriptions" sx={{color:"#302F32"}}>{message.message.text}</Typography>
                         </CardContent>
                     }
                 </Card>

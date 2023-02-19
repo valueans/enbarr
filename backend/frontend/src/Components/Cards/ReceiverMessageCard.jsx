@@ -74,7 +74,7 @@ const ReceiverMessageCard = ({message,pubnub}) => {
                             <Typography variant="characteristicsHeading" sx={{color:"#FFFFFF",ml:3,mt:2}}>{message.message.file.name}</Typography>
                         </CardContent>
                         :<CardContent sx={{wordBreak:"break-word"}}>
-                            <Typography variant="imageDescriptions" sx={{color:"#FFFFFF"}}>{message.message}</Typography>
+                            <Typography variant="imageDescriptions" sx={{color:"#FFFFFF"}}>{message.message.text}</Typography>
                         </CardContent>
                     }
                 </Card>
