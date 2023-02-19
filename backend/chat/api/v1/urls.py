@@ -4,5 +4,5 @@ from .views import conversationView, pubnub_webhook
 
 urlpatterns = [
     path("conversation/", conversationView, name="conversation"),
-    path("webhook/", pubnub_webhook, name="pubnub_webhook"),
+    path("webhook/", pubnub_webhook, name="pubnub_webhook")
 ]

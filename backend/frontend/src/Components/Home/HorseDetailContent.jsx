@@ -60,12 +60,12 @@ const messageOwner = async ()=>{
 }
 
 return (
-<Grid container sx={{minHeight:"calc(100vh - 101px)"}} className="justifyContentCenter">
+<Grid container sx={{minHeight:"calc(100vh - 101px)"}} className="justifyContentCenter" id="root">
   <Grid item xs={12} lg={6} sx={{background:"#FFFFFF",borderRadius:"15px",marginTop:"39px"}}>
     {/* main container starts */}
     <Grid container>
       {/* carosel starts */}
-      <Grid item xs={12} sx={{height:"700px"}}>
+      <Grid item xs={12} sx={{height:"500px",borderRadius:"15px"}}>
         <Carosel images={horseDetails.images}/>
       </Grid>
       {/* carosel ends */}

@@ -26,20 +26,18 @@ const LandingContent = () => {
                             spacing={0.5}>
                             <Grid item>
                                 <Typography variant='landingPageTitle'>
-                                    ENBARR HORSES
+                                    ENBARR
                                 </Typography>
                                 <HorizontalLineIcon />
                             </Grid>
                             <Grid item>
                                 <Typography variant='landingPageDesc'>
-                                    The history of mankind is carried on the back of a horse.
+                                    It just makes sense.
                                 </Typography>
                             </Grid>
                             <Grid item sx={{mt:2}}>
                                 <Typography variant='landingPageSubDesc'>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Scelerisque in mattis risus
-                                    nam vitae. Facilisis morbi purus vitae in quisque habitant ipsum, sollicitudin
-                                    lacinia.
+                                    Buy, Sell, Ride
                                 </Typography>
                             </Grid>
                             <Grid item sx={{mt:2}}>

@@ -33,10 +33,10 @@ const Carosel = ({images=[]}) => {
     <Carousel showArrows={true} swipeable={true} showThumbs={false} useKeyboardArrows={true} onChange={handlePause} >
         {
             images.map((image)=>{
-                return <div style={{width:"100%",height:"800px"}} onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>
+                return <div style={{width:"100%",height:"600px"}} onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>
                     {image?.file_type === 'IMAGE'?
-                    <img src={image?.file} alt="img" style={{width:"100%",height:"800px",objectFit:"fill"}}/>:
-                    <video src={image?.file} style={{width:"100%",height:"800px",objectFit:"fill"}} ref={videoRef} onEnded={()=>{
+                    <img src={image?.file} alt="img" style={{width:"100%",height:"600px",objectFit:"fill"}}/>:
+                    <video src={image?.file} style={{width:"100%",height:"600px",objectFit:"fill"}} ref={videoRef} onEnded={()=>{
                       setIsPlaying(false);
                     }}/>
                   }

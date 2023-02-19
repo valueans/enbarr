@@ -12,6 +12,7 @@ from django.contrib.auth import get_user_model
 from django.http import HttpResponse
 from notifications.onesignal_service import sendMessageNotification
 from chat.pubnub_service import unsubcribeChannel
+import json
 from rest_framework.decorators import (
     api_view,
     permission_classes,
@@ -125,16 +126,12 @@ def conversationView(request):
             instance.save()
         data = {"status": "OK", "message": deleted_message}
         return Response(data=data, status=status.HTTP_200_OK)
-
-
-import json
-
-
+    
 @api_view(["POST"])
 def pubnub_webhook(request):
     body = json.loads(request.body)
     channel = body["event"]["channel"]
-    message = body["event"]["eventPayload"]["message"]["text"]
+    message = body["event"]["eventPayload"]["message"]
     sender = body["event"]["senderId"]
     timetoken = body["event"]["timetoken"]
     conversation = Conversation.objects.get(channel=channel)

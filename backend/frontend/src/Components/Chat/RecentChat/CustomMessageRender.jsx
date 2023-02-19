@@ -1,17 +1,12 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import SenderMessageCard from '../../Cards/SenderMessageCard'
 import ReceiverMessageCard from '../../Cards/ReceiverMessageCard'
-import { getUserProfile } from '../../../Constants/storage'
 
 
-const CustomMessageRender = ({message,pubnub}) => {
+const CustomMessageRender = ({message,pubnub,isOwn}) => {
 
-  const user_profile = getUserProfile();
-  const email = user_profile.user.email;
-
-  console.log("message",message)
   return (
-    message.uuid===email?<ReceiverMessageCard message={message} pubnub={pubnub}/>:<SenderMessageCard message={message} pubnub={pubnub}/>
+    isOwn?<ReceiverMessageCard message={message} pubnub={pubnub}/>:<SenderMessageCard message={message} pubnub={pubnub}/>
   )
 }
 

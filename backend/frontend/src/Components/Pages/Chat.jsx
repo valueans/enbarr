@@ -1,9 +1,9 @@
-import React, {useEffect, useRef} from 'react'
+import React, {useEffect,useRef} from 'react'
 import { useNavigate } from 'react-router-dom';
 import { Grid,Typography,IconButton,Menu,MenuItem} from '@mui/material';
 import AuthService from '../../Services/AuthService';
 import Headers from '../Header/Headers';
-import { Chat as PubChat,ChannelList,MessageList,MessageInput,TypingIndicator, useChannels } from "@pubnub/react-chat-components";
+import { Chat as PubChat,ChannelList,MessageList,MessageInput,TypingIndicator } from "@pubnub/react-chat-components";
 import CustomChatInput from '../Inputs/CustomChatInput';
 import CustomAvatarOnline from '../Chat/Avatar/CustomAvatarOnline';
 import RecentChat from '../Chat/RecentChat/RecentChat';
@@ -13,37 +13,19 @@ import CustomAvatar from '../Chat/Avatar/CustomAvatar';
 import CustomMessageRender from '../Chat/RecentChat/CustomMessageRender';
 import {useDispatch,useSelector} from 'react-redux';
 import { setSelectedChannelId,setSelectedChannel } from '../../store/actions';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import CustomMessageInput from '../Inputs/CustomMessageInput';
 import SendButton from '../Buttons/SendButton';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import Picker from '@emoji-mart/react'
 import emojiData from "@emoji-mart/data";
-import {CircularProgress} from '@mui/material';
-import { getUserProfile } from '../../Constants/storage';
-import PubNub from "pubnub";
-import { PubNubProvider } from "pubnub-react";
 
 
 
-const userprofile = getUserProfile();
-  const pubnub = new PubNub({
-    publishKey: "pub-c-17cb7332-770a-4b7b-a4c8-f6aa6e86deb8",
-    subscribeKey: "sub-c-813ba4c4-971e-42d7-a6f7-9a885fa58663",
-    uuid: `${userprofile?.user?.email}`,
-});
-
-const Chat = () => {
+const Chat = ({pubnub,userprofile}) => {
 
     const navigator = useNavigate();
     const dispatch = useDispatch();
     const state = useSelector(state=>state);
-
-    const fileRef = useRef(null);
-
-    const [fileInput,setFileInput] = useState(null);
-
-    const [messageInputVal,setMessageInputVal] = useState("");
-    const messagesEndRef = useRef(null)
 
     // set current page for message pagination
     const [currentPage,setCurrentPage] = useState(1);
@@ -59,20 +41,21 @@ const Chat = () => {
     const [allConversationsIds,setAllConversationsIds] = useState([])
 
     const [filterInput,setFilterInput] = useState("");
-
-    const [allCurrentMessages,setAllCurrentMessages] = useState([]);
     
+    const [unreadTimeTokens,setUnreadTimeTokens] = useState([]);
+
+    const fileRef = useRef(null);
+
+    const [fileInput,setFileInput] = useState(null);
+
+    const [messageInputVal,setMessageInputVal] = useState("");
+    const messagesEndRef = useRef(null)
     const [showEmojis, setShowEmojis] = useState(false);
 
-    const [loading, setLoading] = useState(false);
+    const [lastMessageTimetoken,setLastMessageTimetoken] = useState("");
+
 
     const isAuthenticated = AuthService.checkUserAuthenticated();
-
-    useEffect(() => {
-        if (!isAuthenticated){
-        navigator("/")
-        }
-    },[isAuthenticated,navigator])
     
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
@@ -84,10 +67,6 @@ const Chat = () => {
         setAnchorEl(null);
       };
     
-
-    const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-    }
 
     const deleteConversation = async ()=>{
         try {
@@ -118,57 +97,86 @@ const Chat = () => {
         }
     }
 
+    useEffect(() => {
+        if (!isAuthenticated){
+        navigator("/")
+        }
+    },[isAuthenticated,navigator])
+
+
     useEffect(()=>{
         const getAllConversations = async () =>{
             const response = await ChatService.getAllConversations(currentPage)
             let check_delete = response.results.filter((item)=>item.is_deleted===false)
-            setConversations([...conversations,...check_delete])
-            setFilterConversations([...conversations,...check_delete])
+            const all_conversations = [...conversations,...check_delete]
+            setConversations(all_conversations)
+            setFilterConversations(all_conversations)
             setTotalConversations(response.count)
-            setUsers([...users,...check_delete.map((item)=>{return {...item.user_two_profile,online:false,channel:item.channel}})])
-            if (check_delete?.length > 0){
-                let channel_ids = check_delete.map((item)=>item.channel)
-                dispatch(setSelectedChannelId(check_delete[0].channel))
-                dispatch(setSelectedChannel(check_delete[0]))
+            setUsers([...users,...all_conversations.map((item)=>{return {...item.user_two_profile,online:false,channel:item.channel}})])
+            if (response.results?.length > 0){
+                let channel_ids = response.results.map((item)=>item.channel)
+                dispatch(setSelectedChannelId(response.results[0].channel))
+                dispatch(setSelectedChannel(response.results[0]))
                 setAllConversationsIds([...allConversationsIds,...channel_ids])
+                getUnread(all_conversations)
             }
         }
         getAllConversations()
-        if (setAllConversationsIds.length > 0){
-            pubnub.subscribe({channels: allConversationsIds,withPresence: true})
-        }
-
+        pubnub.subscribe({channels: allConversationsIds,withPresence: true})
     },[currentPage])
 
 
-        const fetchMessages = (end)=>{
-            setLoading(true)
-            pubnub.fetchMessages(
-                {
-                    channels: [state.SelectedChatId],
-                    start: end,
-                    count:100
-                }
-                )
-            .then(result =>{
-                setAllCurrentMessages([...result.channels[state.SelectedChatId],...allCurrentMessages])
-            })
-            .catch(error =>{
-                console.log("error",error.status)
-            })
+    
+    pubnub.addListener({
+        presence : (presenceEvent)=>{
+            let event_type = presenceEvent.action
+            let email = presenceEvent.uuid
+            let filteredUser = users.filter((user)=>user.user.email===email)
+            let filteredNotUser = users.filter((user)=>user.user.email!==email)
+            if (filteredUser.length > 0 && event_type==='join'){
+                filteredUser[0]['online'] = true
+            }
+            else if (filteredUser.length > 0 && event_type==='leave'){
+                filteredUser[0]['online'] = false
+            }
+            setUsers([...filteredUser,...filteredNotUser])
+        },
+        // message: (message) => {
+        //     if (unreadTimeTokens.includes(message.timetoken)===false){
+        //         setUnreadTimeTokens(message.timetoken)
+        //         filterConversations.forEach((item)=>{
+        //             if(item.channel === message.channel && item.publisher !== userprofile.user.email){
+        //                 item.unread += 1;
+        //             }
+        //         })
+        //         setFilterConversations(filterConversations)
+        //     }
+        //   }
+    })
+      
+      const handleFilterConversations = (e)=>{
+        let input_val = e.target.value
+        setFilterInput(input_val);
+        if (input_val.length > 0){
+            let filteredConversations = conversations.filter((conversation)=>conversation.user_two_profile.user.email.split('@')[0].startsWith(input_val))
+            setFilterConversations(filteredConversations)
         }
-
-        useEffect(()=>{
-        if (state.SelectedChatId){
-            fetchMessages(state.SelectedChat.timetoken)
-            setTimeout(()=>{
-                scrollToBottom();
-                setLoading(false);
-            },2000)
+        else{
+            setFilterConversations(conversations)
         }
+    }
 
-    },[state.SelectedChatId])
+    const addEmoji = (e) => {
+        let sym = e.unified.split("-");
+        let codesArray = [];
+        sym.forEach((el) => codesArray.push("0x" + el));
+        let emoji = String.fromCodePoint(...codesArray);
+        setMessageInputVal(messageInputVal + emoji);
+    };
 
+    const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+    }
 
     const sendMessage = ()=>{
 
@@ -187,7 +195,8 @@ const Chat = () => {
                 message: messageInputVal,
                 channel: state.SelectedChatId,
               }).then(result =>{
-                console.log("result",result);
+                setLastMessageTimetoken(result.timetoken)
+                setLastRead(result.timetoken);
               }).catch(error =>{
                 console.log("result.error",error.status)
               });
@@ -197,54 +206,73 @@ const Chat = () => {
         scrollToBottom();
     }
 
-
-    const addEmoji = (e) => {
-        let sym = e.unified.split("-");
-        let codesArray = [];
-        sym.forEach((el) => codesArray.push("0x" + el));
-        let emoji = String.fromCodePoint(...codesArray);
-        setMessageInputVal(messageInputVal + emoji);
-    };
-
-    pubnub.addListener({
-        presence : (presenceEvent)=>{
-            let event_type = presenceEvent.action
-            let email = presenceEvent.uuid
-            let filteredUser = users.filter((user)=>user.user.email===email)
-            let filteredNotUser = users.filter((user)=>user.user.email!==email)
-            if (filteredUser.length > 0 && event_type==='join'){
-                filteredUser[0]['online'] = true
+    const getUnread = (conversations)=>{
+        pubnub.objects.getMemberships({
+            include: {
+              customFields: true
             }
-            else if (filteredUser.length > 0 && event_type==='leave'){
-                filteredUser[0]['online'] = false
-            }
-            setUsers([...filteredUser,...filteredNotUser])
-        },
-        message: (message) => {
-            // handle message
-            const channelName = message.channel;
-            const publishTimetoken = message.timetoken;
-            const msg = message.message;
-            const publisher = message.publisher;
-            console.log("message is looking me",message)
-
-            if (state.SelectedChatId === channelName){
-                setAllCurrentMessages([...allCurrentMessages,{uuid:publisher,message:msg,timetoken:publishTimetoken}])
-            }
-          }
-    })
-
+          }).then((response)=>{
     
-    const handleFilterConversations = (e)=>{
-        let input_val = e.target.value
-        setFilterInput(input_val);
-        if (input_val.length > 0){
-            let filteredConversations = conversations.filter((conversation)=>conversation.user_two_profile.user.email.split('@')[0].startsWith(input_val))
-            setFilterConversations(filteredConversations)
-        }
-        else{
-            setFilterConversations(conversations)
-        }
+            let channel_ids = conversations.map((item)=>item.channel)
+            const _allConversationIds = [...allConversationsIds,...channel_ids];
+
+            var _channels = []
+            var _timetokens = []
+
+            response.data.forEach((item)=>{
+                if (_allConversationIds.includes(item.channel.id)){
+                    _channels.push(item.channel.id)
+                }
+            })
+            response.data.forEach((item)=>{
+                if (_allConversationIds.includes(item.channel.id)){
+                    _timetokens.push(item.custom[userprofile.user.id])
+                }
+            })
+            console.log("_channels",_channels)
+            console.log("_timetokens",_timetokens)
+            pubnub.messageCounts({
+                channels: _channels,
+                channelTimetokens: _timetokens,
+              }).then((response) => {
+                  let _keys = Object.keys(response.channels)
+                  let _conversations = [];
+                  conversations.forEach((item)=>{
+                      if (_keys.includes(item.channel)){
+                        console.log("unread response",response)
+                        item['unread'] = response.channels[item.channel]
+                    }
+                    _conversations.push(item)
+                })
+                setConversations(_conversations)
+                setFilterConversations(_conversations)
+              }).catch(error =>{
+                console.log("unread error",error.status)
+            })
+          }).catch(error=>{
+            console.log("error.",error.status)
+          })
+    }
+
+    const setLastRead = (timetoken)=>{
+        pubnub.objects.setMemberships({
+            channels: [{
+                id: state.SelectedChatId,
+                custom: {
+                    [userprofile.user.id]: timetoken?timetoken:lastMessageTimetoken
+                }
+                }]
+            }).then(response =>{
+                console.log("setMemberships",response)
+            }).catch(error =>{
+                console.log("error",error.status);
+            })
+        filterConversations.forEach((item)=>{
+            if (item.channel === state.SelectedChatId){
+                item.unread = 0
+            }
+        })
+        setFilterConversations(filterConversations)
     }
 
   return (
@@ -252,7 +280,6 @@ const Chat = () => {
         {/* header when the user will logged in starts */}
         <Headers headerType="home-page"  currentPage="message"/>
         {/* header when the user will logged in ends */}
-        <PubNubProvider client={pubnub}>
         <PubChat currentChannel={state?.SelectedChatId}>
         <Grid container >
             <Grid item xs={3} sx={{height:"calc(100vh - 101px)",p:2,background:"#FFFFFF"}}>
@@ -275,7 +302,9 @@ const Chat = () => {
                     <Grid item xs={12} sx={{overflow:"scroll",maxHeight:"400px"}}>
                         {
                             filterConversations.length > 0?
-                            <ChannelList channels={filterConversations} channelRenderer={RecentChat}/>:
+                            <ChannelList channels={filterConversations} onS channelRenderer={(props)=>{
+                                return <RecentChat props={props} setLastRead={setLastRead} key={props.channel}/>
+                            }}/>:
                             <Typography variant="chatUsersTitle" sx={{color:"#302F32"}}>no conversation found..</Typography>
                         }
                     </Grid>
@@ -332,31 +361,18 @@ const Chat = () => {
                 {/* message header ends */}
                 
                 {/* message list starts */}
-                        
-
-                <Grid item xs={12} sx={{minHeight:"calc(100vh - 341px)",maxHeight:"calc(100vh - 341px)",overflow:"scroll",boxShadow: "0px -4px 10px rgba(0, 0, 0, 0.1)",p:4}} onScroll={(e)=>{
-                    console.log("e.target.scrollTop",e.target.scrollTop)
-                    if (e.target.scrollTop === 0){
-                        fetchMessages(allCurrentMessages[0].timetoken)
-                    }
-                }}> 
-                {loading?
-                <Grid item xs={12} className="justifyContentCenter">
-                    <CircularProgress sx={{height:"20px",width:"20px"}} />
-                </Grid>:""
-                }
-               
-                {
-                allCurrentMessages?
-                allCurrentMessages.map((message,index)=>{
-                    return <CustomMessageRender message={message} key={index} pubnub={pubnub}/>
-                }):""
-                }
+                
+                <Grid item xs={12} sx={{minHeight:"calc(100vh - 341px)",maxHeight:"calc(100vh - 341px)",overflow:"scroll",boxShadow: "0px -4px 10px rgba(0, 0, 0, 0.1)",p:4}}> 
+                <MessageList fetchMessages={100} onScroll={(e)=>{
+                    console.log("scroll",e)
+                }} messageRenderer={(props)=>{
+                    setLastMessageTimetoken(props.message.timetoken);
+                    return <CustomMessageRender message={props.message} pubnub={pubnub} isOwn={props.isOwn}/>}}>
+                </MessageList>
                 <div ref={messagesEndRef} />
                 </Grid>
                 {/* message list ends */}
 
-                {/* message input starts  */}
                 <Grid item container xs={12} sx={{maxHeight:"120px",minHeight:"120px",background:"#FFFFFF",p:3}} className="alignContentCenter justifyContentBetween">
                     {
                     showEmojis?
@@ -382,7 +398,6 @@ const Chat = () => {
             
         </Grid>
         </PubChat>
-        </PubNubProvider>
     </>
   )
 }
