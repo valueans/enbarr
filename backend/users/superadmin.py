@@ -5,7 +5,7 @@ from feedback.models import *
 from notifications.models import *
 from payments.models import *
 from chat.models import *
-from modules.terms_and_conditions.terms_and_conditions.models import TermAndCondition
+from terms_and_conditions.models import TermAndCondition
 from allauth.account.models import EmailAddress
 from rest_framework.authtoken.models import TokenProxy
 from allauth.socialaccount.models import SocialToken, SocialAccount, SocialApp
@@ -50,7 +50,6 @@ super_admin_site.register(DisLikes)
 super_admin_site.register(Messages)
 super_admin_site.register(Conversation)
 super_admin_site.register(Report)
-super_admin_site.register(PrivacyPolicy)
 
 # feedback models
 super_admin_site.register(FeedBack)

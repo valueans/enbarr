@@ -31,8 +31,6 @@ from rest_framework.decorators import (
     responses=customDeleteResponse(),
 )
 @api_view(["GET", "POST", "PUT", "DELETE"])
-@permission_classes([IsAuthenticated])
-@authentication_classes([TokenAuthentication])
 def feedBackView(request):
     if request.method == "GET":
         feedback = FeedBack.objects.all()
@@ -41,7 +39,7 @@ def feedBackView(request):
     if request.method == "POST":
         serializer = FeedBackSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(user=request.user)
+            serializer.save()
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     if request.method == "PUT":

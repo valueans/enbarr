@@ -2,31 +2,23 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.authentication import TokenAuthentication
 from rest_framework import status
-from modules.terms_and_conditions.terms_and_conditions.models import TermAndCondition
-from django.db.models import Q, F
 from drf_yasg.utils import swagger_auto_schema
-from datetime import datetime, date
-from django.db.models import Q
+from datetime import date
+from django.db.models import Count,F
 from home.helpers import *
-import ast
 from payments.api.v1.helpers import createMonthlySubscriptionCharge
 from django.contrib.auth import get_user_model
 from notifications.onesignal_service import sendLikedHorseNotification
+from home.google_maps_services import getDistance
+import filetype
 from users.models import (
     UserProfile,
     UserSearchSave,
 )
-from home.google_maps_services import getDistance
-import filetype
-
 from rest_framework.decorators import (
     api_view,
     permission_classes,
     authentication_classes,
-)
-
-from modules.terms_and_conditions.terms_and_conditions.serializers import (
-    TermAndConditionSerializer,
 )
 from .swaggerParams import (
     createParam,
@@ -46,7 +38,6 @@ from home.api.v1.serializers import (
     FavouriteSerializer,
     UserSearchSaveSerializer,
     ReportSerializer,
-    PrivacyPolicySerializer,
     TemperamentsSerializer,
     DisciplinesSerializer,
     ColorsSerializer,
@@ -62,7 +53,6 @@ from home.models import (
     Likes,
     DisLikes,
     Report,
-    PrivacyPolicy,
     Temperaments,
     Colors,
     Disciplines,
@@ -98,180 +88,6 @@ def ContactUsView(request):
             serializer.save()
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-@swagger_auto_schema(
-    method="GET", responses={200: TermAndConditionSerializer(many=True)}
-)
-@swagger_auto_schema(method="POST", request_body=TermAndConditionSerializer)
-@swagger_auto_schema(
-    method="PUT",
-    manual_parameters=[
-        createParam(
-            paramName="terms-id",
-            description="to update specific terms and condition",
-        )
-    ],
-    request_body=TermAndConditionSerializer,
-)
-@swagger_auto_schema(
-    method="DELETE",
-    manual_parameters=[
-        createParam(
-            paramName="terms-id",
-            description="to delete specific terms and condition",
-        )
-    ],
-    responses=customDeleteResponse(),
-)
-@api_view(["GET", "POST", "PUT", "DELETE"])
-@permission_classes([AllowAny])
-@authentication_classes([TokenAuthentication])
-def termAndConditionView(request):
-    if request.method == "GET":
-        queryset = TermAndCondition.objects.filter(is_active=True).order_by(
-            "-updated_at"
-        )[0:1]
-        serializer = TermAndConditionSerializer(queryset, many=True)
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
-
-    if request.method == "POST":
-        if request.user.is_authenticated and request.user.is_superuser:
-            serializer = TermAndConditionSerializer(data=request.data)
-            if serializer.is_valid():
-                serializer.save(author=request.user)
-                return Response(data=serializer.data, status=status.HTTP_200_OK)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-        data = {
-            "status": "Error",
-            "message": "Unauthorized",
-        }
-        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
-
-    if request.method == "PUT":
-        terms_id = request.GET.get("terms-id", None)
-        if request.user.is_authenticated and request.user.is_superuser:
-            if terms_id is None:
-                data = {"status": "error", "message": "terms-id is required"}
-                return Response(data=data, status=status.HTTP_404_NOT_FOUND)
-            try:
-                terms_and_condition = TermAndCondition.objects.get(id=terms_id)
-            except:
-                data = {"status": "error", "message": "Invalid terms-id"}
-                return Response(data=data, status=status.HTTP_404_NOT_FOUND)
-            serializer = TermAndConditionSerializer(
-                terms_and_condition, data=request.data
-            )
-            if serializer.is_valid():
-                serializer.save(author=request.user)
-                return Response(data=serializer.data, status=status.HTTP_200_OK)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    if request.method == "DELETE":
-        terms_id = request.GET.get("terms-id", None)
-        if request.user.is_authenticated and request.user.is_superuser:
-            if terms_id is None:
-                data = {"status": "error", "message": "terms-id is required"}
-                return Response(data=data, status=status.HTTP_404_NOT_FOUND)
-            try:
-                terms_and_condition = TermAndCondition.objects.get(id=terms_id)
-            except:
-                data = {"status": "error", "message": "Invalid terms-id"}
-                return Response(data=data, status=status.HTTP_404_NOT_FOUND)
-            terms_and_condition.delete()
-            data = {"status": "OK", "message": deleted_message}
-            return Response(data=data, status=status.HTTP_200_OK)
-
-        data = {
-            "status": "Error",
-            "message": "Unauthorized",
-        }
-        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
-
-
-@swagger_auto_schema(method="GET", responses={200: PrivacyPolicySerializer(many=True)})
-@swagger_auto_schema(method="POST", request_body=PrivacyPolicySerializer)
-@swagger_auto_schema(
-    method="PUT",
-    manual_parameters=[
-        createParam(
-            paramName="privacy-id",
-            description="to update specific privacy policy",
-        )
-    ],
-    request_body=PrivacyPolicySerializer,
-)
-@swagger_auto_schema(
-    method="DELETE",
-    manual_parameters=[
-        createParam(
-            paramName="privacy-id",
-            description="to delete specific privacy policy",
-        )
-    ],
-    responses=customDeleteResponse(),
-)
-@api_view(["GET", "POST", "PUT", "DELETE"])
-@permission_classes([AllowAny])
-@authentication_classes([TokenAuthentication])
-def privacyPolicyView(request):
-    if request.method == "GET":
-        queryset = PrivacyPolicy.objects.filter(is_active=True).order_by("-updated_at")[
-            0:1
-        ]
-        serializer = PrivacyPolicySerializer(queryset, many=True)
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
-
-    if request.method == "POST":
-        if request.user.is_authenticated and request.user.is_superuser:
-            serializer = PrivacyPolicySerializer(data=request.data)
-            if serializer.is_valid():
-                serializer.save(author=request.user)
-                return Response(data=serializer.data, status=status.HTTP_200_OK)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-        data = {
-            "status": "Error",
-            "message": "Unauthorized",
-        }
-        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
-
-    if request.method == "PUT":
-        privacy_id = request.GET.get("privacy-id", None)
-        if request.user.is_authenticated and request.user.is_superuser:
-            if privacy_id is None:
-                data = {"status": "error", "message": "privacy-id is required"}
-                return Response(data=data, status=status.HTTP_404_NOT_FOUND)
-            try:
-                privacy_policy = PrivacyPolicy.objects.get(id=privacy_id)
-            except:
-                data = {"status": "error", "message": "Invalid privacy-id"}
-                return Response(data=data, status=status.HTTP_404_NOT_FOUND)
-            serializer = PrivacyPolicySerializer(privacy_policy, data=request.data)
-            if serializer.is_valid():
-                serializer.save(author=request.user)
-                return Response(data=serializer.data, status=status.HTTP_200_OK)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    if request.method == "DELETE":
-        privacy_id = request.GET.get("privacy-id", None)
-        if request.user.is_authenticated and request.user.is_superuser:
-            if privacy_id is None:
-                data = {"status": "error", "message": "privacy-id is required"}
-                return Response(data=data, status=status.HTTP_404_NOT_FOUND)
-            try:
-                privacy_policy = PrivacyPolicy.objects.get(id=privacy_id)
-            except:
-                data = {"status": "error", "message": "Invalid privacy-id"}
-                return Response(data=data, status=status.HTTP_404_NOT_FOUND)
-            privacy_policy.delete()
-            data = {"status": "OK", "message": deleted_message}
-            return Response(data=data, status=status.HTTP_200_OK)
-
-        data = {
-            "status": "Error",
-            "message": "Unauthorized",
-        }
-        return Response(data=data, status=status.HTTP_401_UNAUTHORIZED)
 
 
 @swagger_auto_schema(
@@ -957,10 +773,6 @@ def getRecentlyAddedHorsesView(request):
 def getTopHorseAddsView(request):
     horses = Horses.objects.all().order_by("total_views").reverse()[:6]
     return getPagination(horses, request, HorsesSerializer)
-
-
-from django.db.models import Count
-
 
 @swagger_auto_schema(
     method="GET",

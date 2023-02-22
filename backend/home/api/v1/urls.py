@@ -3,8 +3,6 @@ from .viewsets import (
     ContactUsView,
     ReportView,
     favouriteView,
-    termAndConditionView,
-    privacyPolicyView,
     HorseImagesView,
     KeywordsView,
     HorseView,
@@ -27,8 +25,6 @@ from .viewsets import (
 
 urlpatterns = [
     path("contactus/", ContactUsView, name="contactus"),
-    path("terms-and-condition/", termAndConditionView, name="terms-and-condition"),
-    path("privacy-policy/", privacyPolicyView, name="privacy-policy"),
     path("horse-images/", HorseImagesView, name="horse-images"),
     path("keywords/", KeywordsView, name="keywords"),
     path("horse/", HorseView, name="horse"),

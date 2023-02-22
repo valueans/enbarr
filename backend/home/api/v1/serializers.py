@@ -14,7 +14,6 @@ from home.models import (
     Likes,
     DisLikes,
     Report,
-    PrivacyPolicy,
     Temperaments,
     Disciplines,
     Colors,
@@ -448,10 +447,4 @@ class DislikesSerializer(serializers.ModelSerializer):
 class ReportSerializer(serializers.ModelSerializer):
     class Meta:
         model = Report
-        fields = "__all__"
-
-
-class PrivacyPolicySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PrivacyPolicy
         fields = "__all__"
