@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom';
 const LandingContent = () => {
     const navigator = useNavigate();
 
+
     const buttonClick = ()=>{
         return navigator('/auth/login')
     }

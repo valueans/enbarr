@@ -302,7 +302,7 @@ const Chat = ({pubnub,userprofile}) => {
                     <Grid item xs={12} sx={{overflow:"scroll",maxHeight:"400px"}}>
                         {
                             filterConversations.length > 0?
-                            <ChannelList channels={filterConversations} onS channelRenderer={(props)=>{
+                            <ChannelList channels={filterConversations} channelRenderer={(props)=>{
                                 return <RecentChat props={props} setLastRead={setLastRead} key={props.channel}/>
                             }}/>:
                             <Typography variant="chatUsersTitle" sx={{color:"#302F32"}}>no conversation found..</Typography>
