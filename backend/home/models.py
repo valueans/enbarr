@@ -180,15 +180,3 @@ class Report(models.Model):
         max_length=1000, choices=REPORT_REASON, null=True, blank=True
     )
     reviewed = models.BooleanField(default=False)
-
-
-class PrivacyPolicy(models.Model):
-    body = models.TextField()
-    author = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
-    is_active = models.BooleanField(default=True)
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-    )
-    updated_at = models.DateTimeField(
-        auto_now=True,
-    )

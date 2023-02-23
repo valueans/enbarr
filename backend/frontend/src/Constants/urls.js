@@ -80,11 +80,8 @@ export const conversationUrl = `${chatUrl}conversation/`;
 export const messageUrl = `${chatUrl}messages/`;
 
 
-
-// social links
-export const facebookLink  = "https://www.facebook.com/";
-export const linkedinLink  = "https://pk.linkedin.com/";
-export const twitterLink  = "https://twitter.com/?lang=en";
-export const instagramLink  = "https://www.instagram.com/";
-export const googlePlayLink  = "https://play.google.com/store/apps/details?id=com.pikpok.hrc.play";
-export const appleStoreLink  = "https://www.apple.com/app-store/";
+export const aboutUsUrl = `${api}aboutus/`;
+export const faqUrl = `${api}FAQ/`;
+export const privacyPolicyUrl = `${api}PrivacyPolicy/`;
+export const termsAndConditionUrl = `${api}terms_and_conditions/`;
+export const socialLinksUrl = `${api}SocialLinks/`;

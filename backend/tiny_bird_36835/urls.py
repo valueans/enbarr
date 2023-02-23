@@ -48,7 +48,6 @@ admin.site.unregister(Group)
 urlpatterns = [
     path("api/v1/payment/", include("payments.api.v1.urls")),
     path("accounts/", include("allauth.urls")),
-    path("modules/", include("modules.urls")),
     path("api/v1/", include("home.api.v1.urls")),
     path("admin/", admin.site.urls),
     path("super-admin/", super_admin_site.urls),
@@ -57,6 +56,11 @@ urlpatterns = [
     path("api/v1/feedback/", include("feedback.api.urls")),
     path("api/v1/chat/", include("chat.api.v1.urls")),
     path("api/v1/notifications/", include("notifications.api.urls")),
+    path("api/v1/aboutus/", include("aboutus.urls")),
+    path("api/v1/SocialLinks/", include("SocialLinks.urls")),
+    path("api/v1/terms_and_conditions/", include("terms_and_conditions.urls")),
+    path("api/v1/FAQ/", include("FAQ.urls")),
+    path("api/v1/PrivacyPolicy/", include("PrivacyPolicy.urls")),
     path("rest-auth/", include("rest_auth.urls")),
     # Override email confirm to use allauth's HTML view instead of rest_auth's API view
     path("rest-auth/registration/account-confirm-email/<str:key>/", confirm_email),

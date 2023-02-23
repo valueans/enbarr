@@ -54,7 +54,7 @@ const AuthenticationPage = () => {
       <CustomSnackBar snackBarData={snackBarData} setSnackBarData={setSnackBarData} />
       <Grid container className="white-bg">
         {/* form image right taking 4 column */}
-        <Grid item lg={7} xs={12} sx={{height:"100vh",p:8}}>
+        <Grid item lg={6} xs={12} sx={{height:"100vh",p:8}}>
           {/* logo grid starts */}
           <Grid item container>
             <Grid item xs={1} sx={{textAlign:"center"}}>
@@ -104,7 +104,7 @@ const AuthenticationPage = () => {
 
         </Grid>
         {/* header image right taking 4 column */}
-        <HeaderImageGrid top="0px" height="100vh" lg={5} xs={12}/>
+        <HeaderImageGrid top="0px" height="100vh" xs={6}/>
       </Grid>
     </>
   )

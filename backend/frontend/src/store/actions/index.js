@@ -21,3 +21,15 @@ export const getSelectedChannel = () =>{
         type:"GET_SELECTED_CHANNEL"
     }
 }
+
+export const setSocialLinks = (link)=>{
+    return {
+        type:"SET_SOCIAL_LINKS",
+        payload: link
+    }
+}
+export const getSocialLinks = () =>{ 
+    return {
+        type:"GET_SOCIAL_LINKS"
+    }
+}

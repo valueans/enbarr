@@ -22,7 +22,6 @@ from google.oauth2 import service_account
 from google.cloud import secretmanager
 from google.auth.exceptions import DefaultCredentialsError
 from google.api_core.exceptions import PermissionDenied
-from modules.manifest import get_modules
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -82,6 +81,11 @@ LOCAL_APPS = [
     "feedback",
     "notifications",
     "chat",
+    "PrivacyPolicy",
+    "SocialLinks",
+    "FAQ",
+    "aboutus",
+    "terms_and_conditions"
 ]
 THIRD_PARTY_APPS = [
     "rest_framework",
@@ -102,9 +106,8 @@ THIRD_PARTY_APPS = [
     "django_celery_beat",
     "django_celery_results",
 ]
-MODULES_APPS = get_modules()
 
-INSTALLED_APPS += LOCAL_APPS + THIRD_PARTY_APPS + MODULES_APPS
+INSTALLED_APPS += LOCAL_APPS + THIRD_PARTY_APPS
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
