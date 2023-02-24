@@ -38,7 +38,7 @@ const editHorse = ()=>{
     let _images = currentAdd.images.map((element)=>{
         return {id:element.id,image:element?.file,file_type:element?.file_type}
     })
-    let horseData = {images_id:_images_id,title:currentAdd.title,year_of_birth:currentAdd.year_of_birth,location_id:currentAdd.location.id,user_location:"",price:currentAdd.price,description:currentAdd.description,breed_id:currentAdd.breed.id,gender:currentAdd.gender,color_id:currentAdd.color.id,height:currentAdd.height,temperament_id:currentAdd.temperament.id,discipline_id:currentAdd.discipline.id,keywords_id:_keywords_id}
+    let horseData = {images_id:_images_id,title:currentAdd.title,year_of_birth:currentAdd.year_of_birth,country:currentAdd.country,user_location:"",price:currentAdd.price,description:currentAdd.description,breed_id:currentAdd.breed.id,gender:currentAdd.gender,color_id:currentAdd.color.id,height:currentAdd.height,temperament_id:currentAdd.temperament.id,discipline_id:currentAdd.discipline.id,keywords_id:_keywords_id,state:currentAdd.state,city:currentAdd.city}
     return navigator(`/home/seller`,{state:{horseData:horseData,editHorse:true,images:_images,keywords:currentAdd.keywords,horse_id:horseAddKey}})
 }
 

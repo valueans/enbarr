@@ -18,6 +18,7 @@ const navigate = useNavigate();
 const isAuthenticated = AuthService.checkUserAuthenticated();
 const [horseDetails,setHorseDetails] = useState({title:"",description:"",gender:"",height:"",price:"",userprofile:{first_name:"",last_name:"",profile_photo:"",user:{id:""}},breed:{breed:""},temperament:{temperament:""},discipline:{discipline:""}})
 const currentLoginUserProfile = getUserProfile();
+const [mobileView, setMobileView] = useState({mobileView: false,});
 
 const [distance,setDistance] = useState("");
 
@@ -34,6 +35,20 @@ const handleFavClick = async ()=>{
   }
 
 }
+
+useEffect(()=>{
+  const setResponsiveness = () => {
+      return window.innerWidth < 900
+        ? setMobileView(true)
+        : setMobileView(false);
+    }
+    setResponsiveness();
+      window.addEventListener("resize", () => setResponsiveness());
+
+      return () => {
+      window.removeEventListener("resize", () => setResponsiveness());
+      }
+},[])
 
 useEffect(()=>{
   const getHorseDetails = async ()=>{
@@ -77,7 +92,7 @@ return (
           {/* profile picture and uploader name starts */}
           <Grid item xs={12} lg={6} sx={{height:"103px"}}>
             <Grid container sx={{display:"flex",alignItems:"center",height:"103px",ml:3}}>
-              <Grid item xs={3} lg={2} sx={{display:"flex",alignItems:"center",zIndex:7}}>
+              <Grid item xs={2} lg={2} sx={{display:"flex",alignItems:"center",zIndex:7,justifyContent:"end"}}>
                 <ProfileCard image={horseDetails.userprofile.profile_photo}/>
               </Grid>
               <Grid item xs={4} lg={3} sx={{display:"flex",alignItems:"center",zIndex:4}}>

@@ -4,9 +4,11 @@ import PaymentServices from '../../Services/PaymentServices'
 import CustomInput from '../Inputs/CustomInput'
 import Button from '../Buttons/Button'
 import { getUserProfile as DefaultUserProfile, setUserProfile } from '../../Constants/storage'
+import { useNavigate } from 'react-router-dom'
 
 const CardForm = ({subscriptionPlanId,setSnackBarData}) => {
   const [paymentMethodDetails,setPaymentMethodDetails] = useState({id:"",last_4:"",exp_month:"",exp_year:"",message:""})
+  const navigator = useNavigate();
 
   const subscriptionPlan  = DefaultUserProfile().subscription_plan;
 
@@ -26,8 +28,11 @@ const CardForm = ({subscriptionPlanId,setSnackBarData}) => {
   const upgradeSubscriptionPlan = async ()=>{
     try{
       const response = await PaymentServices.upgradeSubscription(subscriptionPlanId);
-      setUserProfile(response['data'])
+      setUserProfile(response.data)
       setSnackBarData({open:true,message:"Your subscription plan is successfully updated",severity:"success"})
+      if(response.data.user_subscription.title.toLowerCase() !== "basic"){
+        return navigator('/home/seller')
+      }
     }
     catch(error){
       if (error.response.data.message){

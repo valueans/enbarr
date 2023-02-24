@@ -114,16 +114,12 @@ def conversationView(request):
             data = {"status": "ERROR", "message": "Invalid conversation-id"}
             return Response(data=data, status=status.HTTP_404_NOT_FOUND)
         
-        # we will delete the conversation instance only if the both uuser has deleete the conversation otherwise we will just set the user as none
+        try:
+            instance.last_message.delete()
+        except:
+            pass
+        instance.delete()
         
-        if instance.user_one_deleted and instance.user_two_deleted:
-            try:
-                instance.last_message.delete()
-            except:
-                pass
-            instance.delete()
-        else:
-            instance.save()
         data = {"status": "OK", "message": deleted_message}
         return Response(data=data, status=status.HTTP_200_OK)
     

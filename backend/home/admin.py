@@ -1,14 +1,13 @@
 from django.contrib import admin
 from django.utils.html import format_html
 from .helpers import banUserAppLogin, banUserPosting
-from .models import Horses, Report, Temperaments, Disciplines, Colors, Breeds, Locations
+from .models import Horses, Report, Temperaments, Disciplines, Colors, Breeds
 
 
 admin.site.register(Temperaments)
 admin.site.register(Disciplines)
 admin.site.register(Colors)
 admin.site.register(Breeds)
-admin.site.register(Locations)
 
 
 @admin.register(Horses)
@@ -16,7 +15,6 @@ class HorsesAdmin(admin.ModelAdmin):
     fields = (
         "horse_image_inside",
         "title",
-        "location",
         "price",
         "description",
         "breed",
@@ -53,7 +51,6 @@ class HorsesAdmin(admin.ModelAdmin):
         "created_at",
         "updated_at",
         "keywords",
-        "location",
         "likes",
         "dislikes",
         "uploaded_by",

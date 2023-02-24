@@ -1,27 +1,23 @@
 import React, { useEffect,useState } from 'react';
 import { Select,MenuItem,FormControl } from '@mui/material';
-import HorseService from '../../Services/HorseService';
+import { Country, State, City }  from 'country-state-city';
 
 const LocationSelect = ({horseData,setHorseData,disabled=false}) => {
 
     const [options,setOptions] = useState([])
 
     const handleChange = (event) => {
-        setHorseData({...horseData,location_id:event.target.value})
-    };
-
-    useEffect(()=>{
-        const getAllLocations = async ()=>{
-            const response = await HorseService.getAllLocations()
-            setOptions(response)
-            }
-        getAllLocations()
+        setHorseData({...horseData,country:event.target.value})
+      };
+      
+      useEffect(()=>{
+        setOptions(Country.getAllCountries())
     },[])
   return (
     <FormControl fullWidth disabled={disabled}>
-        <Select value={horseData?.location_id} onChange={handleChange} className="customInput" sx={{minHeight:"60px"}} variant="standard" disableUnderline={true}>
+        <Select value={horseData.country} onChange={handleChange} className="customInput" sx={{minHeight:"60px"}} variant="standard" disableUnderline={true}>
       {options.map((object)=>{
-        return <MenuItem value={object.id} key={object.id}>{object.location}</MenuItem>
+        return <MenuItem value={object.isoCode} key={object.isoCode}>{object.name}</MenuItem>
       })}
     </Select>
     </FormControl>

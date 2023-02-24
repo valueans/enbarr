@@ -1,4 +1,4 @@
-import React, { useEffect,useState } from 'react'
+import React, { useEffect,useState,useRef } from 'react'
 import { Grid,Typography,IconButton} from '@mui/material';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
@@ -15,6 +15,8 @@ const MatchHorseContent = () => {
   const [currentHorseId,setCurrentHorseId] = useState(null);
   const [isLiked,setIsLiked] = useState(false);
   const [isDisLiked,setIsDisLiked] = useState(false);
+
+  const swiperRef = useRef();
   
   const handleLike = async ()=>{
     await HorseService.likeHorse(currentHorseId)
@@ -46,13 +48,13 @@ const MatchHorseContent = () => {
         <Grid item xs={12} sx={{mt:3}}>
           <Grid container direction="row">
             <Grid item xs={1} className="justifyContenCenterAlignCenter">
-              <KeyboardDoubleArrowLeftIcon sx={{height:"60px",width:"60px"}}/>
+              <KeyboardDoubleArrowLeftIcon sx={{height:"60px",width:"60px",cursor:"pointer"}} onClick={() => swiperRef.current?.slidePrev()}/>
             </Grid>
             <Grid item xs={10} >  
-              <CustomSwiper currentHorseId={currentHorseId} setCurrentHorseId={setCurrentHorseId} setIsLiked={setIsLiked} setIsDisLiked={setIsDisLiked} />
+              <CustomSwiper currentHorseId={currentHorseId} setCurrentHorseId={setCurrentHorseId} setIsLiked={setIsLiked} setIsDisLiked={setIsDisLiked} swiperRef={swiperRef}/>
             </Grid>
             <Grid item xs={1} className="justifyContenCenterAlignCenter">
-              <KeyboardDoubleArrowRightIcon sx={{height:"60px",width:"60px"}}/>
+              <KeyboardDoubleArrowRightIcon sx={{height:"60px",width:"60px",cursor:"pointer"}} onClick={() => swiperRef.current?.slideNext()}/>
             </Grid>
           </Grid>
         </Grid>

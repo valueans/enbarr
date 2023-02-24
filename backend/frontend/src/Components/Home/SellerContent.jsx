@@ -16,6 +16,8 @@ import DisciplineSelect from '../Selects/DisciplineSelect';
 import ColorsSelect from '../Selects/ColorsSelect';
 import TemperamentSelect from '../Selects/TemperamentSelect';
 import AuthService from '../../Services/AuthService';
+import StateSelect from '../Selects/StateSelect';
+import CitiesSelect from '../Selects/CitiesSelect';
 
 const SellerContent = () => {
 
@@ -30,7 +32,7 @@ const SellerContent = () => {
     const [loading,setLoading] = useState(false);
     const [keywordLoading,setKeywordLoading] = useState(false);
 
-    const [horseData,setHorseData] = useState({images_id:[],title:"",year_of_birth:"",location_id:"",user_location:"",price:"",description:"",breed_id:"",gender:"",color_id:"",height:"",temperament_id:"",discipline_id:"",keywords_id:[]});
+    const [horseData,setHorseData] = useState({images_id:[],title:"",year_of_birth:"",country:"",user_location:"",price:"",description:"",breed_id:"",gender:"",color_id:"",height:"",temperament_id:"",discipline_id:"",keywords_id:[],state:"",city:""});
     const [files, setFiles] = useState([]);
     const [snackBarData,setSnackBarData] = useState({
         open:false,
@@ -107,8 +109,14 @@ const keywordClick = async ()=>{
     else if (horseData.year_of_birth.length === 0){
         setSnackBarData({...snackBarData,open:true,message:"Year of Birth is required",severity:"error"})
     }
-    else if (horseData.location_id.length === 0){
+    else if (horseData.country.length === 0){
         setSnackBarData({...snackBarData,open:true,message:"Location is required",severity:"error"})
+    }
+    else if (horseData.state.length === 0){
+        setSnackBarData({...snackBarData,open:true,message:"State is required",severity:"error"})
+    }
+    else if (horseData.city.length === 0){
+        setSnackBarData({...snackBarData,open:true,message:"City is required",severity:"error"})
     }
     else if (horseData.price.length === 0){
         setSnackBarData({...snackBarData,open:true,message:"Price is required",severity:"error"})
@@ -147,7 +155,7 @@ const keywordClick = async ()=>{
             }
             setSnackBarData({...snackBarData,open:true,message:"Add posted",severity:"success"})
             if( button_type_click === "add_another"){
-                setHorseData({images_id:[],title:"",year_of_birth:"",location_id:"",user_location:"",price:"",description:"",breed_id:"",gender:"",color_id:"",height:"",temperament_id:"",discipline_id:"",keywords_id:[]})
+                setHorseData({images_id:[],title:"",year_of_birth:"",country:"",user_location:"",price:"",description:"",breed_id:"",gender:"",color_id:"",height:"",temperament_id:"",discipline_id:"",keywords_id:[]})
                 setFiles([])
             }
             else{
@@ -237,42 +245,50 @@ const keywordClick = async ()=>{
                 </Grid>
                 {/* Image upload ends */}
                 <Grid item xs={12} sx={{mt:3}}>
-                    <Typography variant='authInputTitle'>Name of Horse</Typography>
+                    <Typography variant='authInputTitle'>Name of Horse <span style={{color:"red"}}>*</span></Typography>
                     <CustomInput type="text" onChange={(e)=>{
                         setHorseData({...horseData,title:e.target.value})
                         }} value={horseData?.title} placeholder="Enbarr horse"/>
                 </Grid>
 
                 <Grid item xs={12} sx={{mt:3}}>
-                    <Typography variant='authInputTitle'>Location</Typography>
+                    <Typography variant='authInputTitle'>Location <span style={{color:"red"}}>*</span></Typography>
                     <LocationSelect horseData={horseData} setHorseData={setHorseData}/>
+                </Grid>
+                <Grid item xs={12} sx={{mt:3}}>
+                    <Typography variant='authInputTitle'>State <span style={{color:"red"}}>*</span></Typography>
+                    <StateSelect horseData={horseData} setHorseData={setHorseData}/>
+                </Grid>
+                <Grid item xs={12} sx={{mt:3}}>
+                    <Typography variant='authInputTitle'>City <span style={{color:"red"}}>*</span></Typography>
+                    <CitiesSelect horseData={horseData} setHorseData={setHorseData}/>
                 </Grid>
 
                 <Grid item xs={12} sx={{mt:3}}>
-                    <Typography variant='authInputTitle'>Breed</Typography>
+                    <Typography variant='authInputTitle'>Breed <span style={{color:"red"}}>*</span></Typography>
                     <BreedSelect horseData={horseData} setHorseData={setHorseData}/>
                 </Grid>
 
                 <Grid item xs={12} sx={{mt:3}}>
-                    <Typography variant='authInputTitle'>Year of birth</Typography>
+                    <Typography variant='authInputTitle'>Year of birth <span style={{color:"red"}}>*</span></Typography>
                     <CustomInput type="number" onChange={(e)=>{
                         setHorseData({...horseData,year_of_birth:e.target.value})
                         }} value={horseData?.year_of_birth} placeholder="2000"/>
                 </Grid>
                 <Grid item xs={12} sx={{mt:3}}>
-                    <Typography variant='authInputTitle'>Height (Hands)</Typography>
+                    <Typography variant='authInputTitle'>Height (Hands) <span style={{color:"red"}}>*</span></Typography>
                     <CustomInput type="number" onChange={(e)=>{
                         setHorseData({...horseData,height:e.target.value})
                         }} value={horseData?.height} placeholder="5.1"/>
                 </Grid>
                 <Grid item xs={12} sx={{mt:3}}>
-                    <Typography variant='authInputTitle'>Price ($)</Typography>
+                    <Typography variant='authInputTitle'>Price ($) <span style={{color:"red"}}>*</span></Typography>
                     <CustomInput type="number" onChange={(e)=>{
                         setHorseData({...horseData,price:e.target.value})
                         }} value={horseData?.price} placeholder="$5000"/>
                 </Grid>
                 <Grid item xs={12} sx={{mt:3}}>
-                    <Typography variant='authInputTitle'>Discipline</Typography>
+                    <Typography variant='authInputTitle'>Discipline <span style={{color:"red"}}>*</span></Typography>
                     <DisciplineSelect horseData={horseData} setHorseData={setHorseData}/>
                 </Grid>
 
@@ -280,7 +296,7 @@ const keywordClick = async ()=>{
                 <Grid item xs={12} sx={{mt:3}}>
                     <Grid container>
                         <Grid item xs={12}>
-                            <Typography variant='authInputTitle'>Gender</Typography>
+                            <Typography variant='authInputTitle'>Gender <span style={{color:"red"}}>*</span></Typography>
                         </Grid>
                         <Grid item xs={12}>
                             <FormControl>
@@ -300,15 +316,15 @@ const keywordClick = async ()=>{
                 {/* Gender select ends */}
 
                 <Grid item xs={12} sx={{mt:3}}>
-                    <Typography variant='authInputTitle'>Colors</Typography>
+                    <Typography variant='authInputTitle'>Colors <span style={{color:"red"}}>*</span></Typography>
                     <ColorsSelect horseData={horseData} setHorseData={setHorseData}/>
                 </Grid>
                 <Grid item xs={12} sx={{mt:3}}>
-                    <Typography variant='authInputTitle'>Temperaments</Typography>
+                    <Typography variant='authInputTitle'>Temperaments <span style={{color:"red"}}>*</span></Typography>
                     <TemperamentSelect horseData={horseData} setHorseData={setHorseData}/>
                 </Grid>
                 <Grid item xs={12} sx={{mt:3}}>
-                    <Typography variant='authInputTitle'>Describe your Horse</Typography>
+                    <Typography variant='authInputTitle'>Describe your Horse <span style={{color:"red"}}>*</span></Typography>
                     <CustomInput type="text" minRows={10} maxRows={20} multiline={true} maxLength={1000} onChange={(e)=>{
                         setHorseData({...horseData,description:e.target.value})
                         }} value={horseData?.description} placeholder="write your description here..."/>

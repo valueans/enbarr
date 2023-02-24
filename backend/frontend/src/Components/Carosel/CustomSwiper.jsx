@@ -3,13 +3,13 @@ import 'swiper/css';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
 import HorseCard from '../Cards/HorseCard';
-import horseimg from '../../assets/horse.png'
 import { useState } from 'react';
 import { useEffect } from 'react';
 import HorseService from '../../Services/HorseService';
 import { useNavigate } from 'react-router-dom';
 
-const CustomSwiper = ({currentHorseId,setCurrentHorseId,setIsLiked,setIsDisLiked}) => {
+
+const CustomSwiper = ({currentHorseId,setCurrentHorseId,setIsLiked,setIsDisLiked,swiperRef}) => {
 
     const navigator = useNavigate();
 
@@ -48,7 +48,9 @@ const CustomSwiper = ({currentHorseId,setCurrentHorseId,setIsLiked,setIsDisLiked
     // install Swiper modules
         modules={[Navigation, Pagination, Scrollbar, A11y]}
         slidesPerView={1}
-        navigation
+        onBeforeInit={(swiper) => {
+            swiperRef.current = swiper;
+        }}
         pagination={{ clickable: true }}
         scrollbar={{ draggable: true }}
         onSlideChange={(e) => {
@@ -70,6 +72,8 @@ const CustomSwiper = ({currentHorseId,setCurrentHorseId,setIsLiked,setIsDisLiked
                 return <SwiperSlide><HorseCard image={item?.images}/></SwiperSlide>
             })
         }
+        <div className="review-swiper-button-prev "></div>
+        <div className="review-swiper-button-next "></div>
     </Swiper>
   )
 }

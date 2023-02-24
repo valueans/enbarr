@@ -108,7 +108,7 @@ def createMonthlySubscriptionBasic(user):
         )
     user.userprofile.subscription_start_date = now
     user.userprofile.subscription_renew_date = datetime.now() + relativedelta(months=+1)
-    user.userprofile.subscription_adds = 1
+    user.userprofile.subscription_adds = 0
     user.userprofile.save()
     return True
 

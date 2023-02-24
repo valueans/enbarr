@@ -62,7 +62,7 @@ const HomeContent = () => {
         </Grid>
         <Grid container item xs={11} sx={{height:"calc(100vh - 101px)",backgroundImage:`url(${homeImage})`,backgroundSize:"contain",backgroundRepeat:"no-repeat",backgroundPosition:"right",display:"flex",alignContent:"start"}}>
             <Grid item xs={12} sx={{mt:4,height:"80px"}}>
-                <Typography variant='landingPageTitle'>
+                <Typography variant='landingPageTitle' sx={{fontSize:"40px",fontWeight:800}}>
                     Buy, Sell, Ride.
                 </Typography>
             </Grid>

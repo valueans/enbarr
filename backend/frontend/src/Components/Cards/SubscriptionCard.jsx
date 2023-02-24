@@ -3,8 +3,6 @@ import { Grid,Typography } from '@mui/material';
 import LongHorizontalLineIcon from '../Svgs/LongHorizontalLineIcon';
 import Button from '../Buttons/Button';
 import { Link } from 'react-router-dom';
-import TickIcon from '../Svgs/TickIcon';
-import CrossIcon from '../Svgs/CrossIcon';
 
 const SubscriptionCard = ({title="",description="",description_features="",backgroundColor="#DBE2E0",color="#2F3C4C",buttonColor}) => {
   return (
@@ -19,49 +17,8 @@ const SubscriptionCard = ({title="",description="",description_features="",backg
         <Grid item xs={12}>
             <LongHorizontalLineIcon color={color} />
         </Grid>
-        <Grid container item sx={12} spacing={2}>
-        <Grid item xs={1}>
-            <Typography variant="authInputTitle" sx={{color:color}}><TickIcon/></Typography>
-        </Grid>
-        <Grid item xs={11}>
-            <Typography variant="authInputTitle" sx={{color:color}}>Lorem ipsum Enim dolor a vel aliquam.</Typography>
-        </Grid>
-        <Grid item xs={1}>
-            <Typography variant="authInputTitle" sx={{color:color}}><CrossIcon/></Typography>
-        </Grid>
-        <Grid item xs={11}>
-            <Typography variant="authInputTitle" sx={{color:color}}>Lorem ipsum Enim dolor a vel aliquam.</Typography>
-        </Grid>
-        <Grid item xs={1}>
-            <Typography variant="authInputTitle" sx={{color:color}}><CrossIcon/></Typography>
-        </Grid>
-        <Grid item xs={11}>
-            <Typography variant="authInputTitle" sx={{color:color}}>Lorem ipsum Enim dolor a vel aliquam.</Typography>
-        </Grid>
-        <Grid item xs={1}>
-            <Typography variant="authInputTitle" sx={{color:color}}><CrossIcon/></Typography>
-        </Grid>
-        <Grid item xs={11}>
-            <Typography variant="authInputTitle" sx={{color:color}}>Lorem ipsum Enim dolor a vel aliquam.</Typography>
-        </Grid>
-        <Grid item xs={1}>
-            <Typography variant="authInputTitle" sx={{color:color}}><CrossIcon/></Typography>
-        </Grid>
-        <Grid item xs={11}>
-            <Typography variant="authInputTitle" sx={{color:color}}>Lorem ipsum Enim dolor a vel aliquam.</Typography>
-        </Grid>
-        <Grid item xs={1}>
-            <Typography variant="authInputTitle" sx={{color:color}}><CrossIcon/></Typography>
-        </Grid>
-        <Grid item xs={11}>
-            <Typography variant="authInputTitle" sx={{color:color}}>Lorem ipsum Enim dolor a vel aliquam.</Typography>
-        </Grid>
-        <Grid item xs={1}>
-            <Typography variant="authInputTitle" sx={{color:color}}><CrossIcon/></Typography>
-        </Grid>
-        <Grid item xs={11}>
-            <Typography variant="authInputTitle" sx={{color:color}}>Lorem ipsum Enim dolor a vel aliquam.</Typography>
-        </Grid>
+        <Grid item xs={12}>
+            <Typography variant="" sx={{color:color}}>{description_features}</Typography>
         </Grid>
         <Grid item xs={12} sx={{mt:3}}>
             <Link to="/settings" style={{textDecoration:"none"}}>

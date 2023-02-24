@@ -18,7 +18,6 @@ from home.models import (
     Disciplines,
     Colors,
     Breeds,
-    Locations,
 )
 
 User = get_user_model()
@@ -80,10 +79,6 @@ class BreedsSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class LocationsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Locations
-        fields = "__all__"
 
 
 class HorseUpdateSerializer(serializers.ModelSerializer):
@@ -97,8 +92,6 @@ class HorseUpdateSerializer(serializers.ModelSerializer):
     isdisliked = serializers.SerializerMethodField(read_only=True)
     isfav = serializers.SerializerMethodField(read_only=True)
     userprofile = serializers.SerializerMethodField(read_only=True)
-    location = LocationsSerializer(read_only=True)
-    location_id = serializers.IntegerField(write_only=True, required=False)
     breed = BreedsSerializer(read_only=True)
     breed_id = serializers.IntegerField(write_only=True, required=False)
     color = ColorsSerializer(read_only=True)
@@ -158,15 +151,6 @@ class HorseUpdateSerializer(serializers.ModelSerializer):
                     raise serializers.ValidationError(
                         {"status": "error", "message": "Invalid temperament_id"}
                     )
-            elif key == "location_id":
-                try:
-                    location = Locations.objects.get(id=value)
-                    instance.location = location
-                except:
-                    raise serializers.ValidationError(
-                        {"status": "error", "message": "Invalid temperament_id"}
-                    )
-
             else:
                 setattr(instance, key, value)
         instance.save()
@@ -219,8 +203,6 @@ class HorseUpdateSerializer(serializers.ModelSerializer):
 class HorsesSerializer(serializers.ModelSerializer):
     images = serializers.SerializerMethodField("get_images", read_only=True)
     images_id = serializers.ListField(write_only=True, required=False)
-    location = LocationsSerializer(read_only=True)
-    location_id = serializers.IntegerField(write_only=True, required=True)
     keywords = KeywordsSerializer(read_only=True, many=True)
     keywords_id = serializers.ListField(write_only=True, required=False)
     likes = serializers.SerializerMethodField(read_only=True)
@@ -252,7 +234,6 @@ class HorsesSerializer(serializers.ModelSerializer):
         color_id = validated_data.pop("color_id")
         temperament_id = validated_data.pop("temperament_id")
         discipline_id = validated_data.pop("discipline_id")
-        location_id = validated_data.pop("location_id")
 
         try:
             breed = Breeds.objects.get(id=breed_id)
@@ -286,28 +267,21 @@ class HorsesSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 {"status": "error", "message": "Invalid discipline_id"}
             )
-        try:
-            location = Locations.objects.get(id=location_id)
-        except:
-            raise serializers.ValidationError(
-                {"status": "error", "message": "Invalid discipline_id"}
-            )
 
         instance = Horses.objects.create(**validated_data)
         instance.color = color
         instance.temperament = temperament
         instance.discipline = discipline
         instance.breed = breed
-        instance.location = location
 
         # verifying location from google maps api
-        user_location = instance.user_location
-        try:
-            state, country = getAddress(user_location)
-            instance.state = state
-            instance.country = country
-        except:
-            pass
+        # user_location = instance.user_location
+        # try:
+        #     state, country = getAddress(user_location)
+        #     instance.state = state
+        #     instance.country = country
+        # except:
+        #     pass
 
         for id in images_id:
             try:
@@ -409,6 +383,7 @@ class FavouriteSerializer(serializers.ModelSerializer):
 class UserSearchSaveSerializer(serializers.ModelSerializer):
     keywords = KeywordsSerializer(read_only=True, many=True)
     keywords_id = serializers.ListField(write_only=True, required=False)
+    gender_list = serializers.SerializerMethodField()
 
     class Meta:
         model = UserSearchSave
@@ -430,6 +405,10 @@ class UserSearchSaveSerializer(serializers.ModelSerializer):
         instance.keywords.set(keywords)
         instance.save()
         return instance
+    
+    def get_gender_list(self,obj):
+        _gender = obj.gender.split(",")
+        return _gender
 
 
 class LikesSerializer(serializers.ModelSerializer):

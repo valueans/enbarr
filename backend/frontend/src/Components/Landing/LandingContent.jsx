@@ -29,7 +29,6 @@ const LandingContent = () => {
                                 <Typography variant='landingPageTitle'>
                                     ENBARR
                                 </Typography>
-                                <HorizontalLineIcon />
                             </Grid>
                             <Grid item>
                                 <Typography variant='landingPageDesc'>
@@ -37,7 +36,7 @@ const LandingContent = () => {
                                 </Typography>
                             </Grid>
                             <Grid item sx={{mt:2}}>
-                                <Typography variant='landingPageSubDesc'>
+                                <Typography variant='landingPageTitle'>
                                     Buy, Sell, Ride
                                 </Typography>
                             </Grid>

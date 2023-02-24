@@ -15,6 +15,8 @@ import TemperamentSelect from '../Selects/TemperamentSelect';
 import LocationSelect from '../Selects/LocationSelect';
 import { useNavigate } from 'react-router-dom';
 import AuthService from '../../Services/AuthService';
+import StateSelect from '../Selects/StateSelect';
+import CitiesSelect from '../Selects/CitiesSelect';
 
 const BuyerContent = ({setSnackBarData}) => {
   
@@ -30,11 +32,9 @@ const BuyerContent = ({setSnackBarData}) => {
 
   const [keywords,setKeywords] = useState([]);
   const [keywordVal,setKeywordVal] = useState("");
-
-  const [disabledForm,setDisabledForm] = useState(true);
   const [keywordLoading,setKeywordLoading] = useState(false);
 
-  const [userSearchSaveData,setUserSearchSaveData] = useState({location_id:"",breed_id:"",min_age:"",max_age:"",min_height:"",max_height:"",min_price:"",max_price:"",discipline_id:"",gender:"",color_id:"",temperament_id:"",keywords_id:[]});
+  const [userSearchSaveData,setUserSearchSaveData] = useState({country:"",city:"",state:"",breed_id:"",min_age:"",max_age:"",min_height:"",max_height:"",min_price:"",max_price:"",discipline_id:"",gender:[],color_id:"",temperament_id:"",keywords_id:[]});
 
 
   const handleMatch = async ()=>{
@@ -72,6 +72,7 @@ const BuyerContent = ({setSnackBarData}) => {
     const getUserSearchSave = async ()=>{
       try {
         const response = await BuyerService.getSaveBuyersSearch();
+        console.log("response",response)
         if (response.length > 0){
           setUserSearchSaveData(response[0])
           if(response[0].keywords.length > 0){
@@ -90,7 +91,6 @@ const BuyerContent = ({setSnackBarData}) => {
     try {
       await BuyerService.saveSaveBuyersSearch(userSearchSaveData);
       setSnackBarData({open:true,message:"Successfull",severity:"success"})
-      setDisabledForm(true)
     } catch (error) {
         setSnackBarData({open:true,message:"something went wrong",severity:"error"})
     }
@@ -112,15 +112,27 @@ const BuyerContent = ({setSnackBarData}) => {
           </Grid>
           {/* Location dropdown starts */}
           <Grid item xs={12} sx={{mt:3}}>
-            <Typography variant='authInputTitle'>Location</Typography>
-            <LocationSelect horseData={userSearchSaveData} setHorseData={setUserSearchSaveData} disabled={disabledForm}/>
+            <Typography variant='authInputTitle'>Locations</Typography>
+            <LocationSelect horseData={userSearchSaveData} setHorseData={setUserSearchSaveData}/>
+          </Grid>
+          {/* Location dropdown ends */}
+          {/* Location dropdown starts */}
+          <Grid item xs={12} sx={{mt:3}}>
+            <Typography variant='authInputTitle'>States</Typography>
+            <StateSelect horseData={userSearchSaveData} setHorseData={setUserSearchSaveData}/>
+          </Grid>
+          {/* Location dropdown ends */}
+          {/* Location dropdown starts */}
+          <Grid item xs={12} sx={{mt:3}}>
+            <Typography variant='authInputTitle'>Cities</Typography>
+            <CitiesSelect horseData={userSearchSaveData} setHorseData={setUserSearchSaveData}/>
           </Grid>
           {/* Location dropdown ends */}
 
           {/* Breed dropdown starts */}
           <Grid item xs={12} sx={{mt:3}}>
             <Typography variant='authInputTitle'>Breed</Typography>
-            <BreedSelect horseData={userSearchSaveData} setHorseData={setUserSearchSaveData} disabled={disabledForm}/>
+            <BreedSelect horseData={userSearchSaveData} setHorseData={setUserSearchSaveData}/>
           </Grid>
           {/* Breed dropdown ends */}
 
@@ -133,12 +145,12 @@ const BuyerContent = ({setSnackBarData}) => {
               <Grid item xs={6} sx={{pr:2}}>
                 <CustomInputBox title="Min" dis type="number" onChange={(e)=>{
                         setUserSearchSaveData({...userSearchSaveData,min_age:e.target.value})
-                  }} value={userSearchSaveData.min_age} placeholder="5.1" disabled={disabledForm}/>
+                  }} value={userSearchSaveData.min_age} placeholder="5.1"/>
               </Grid>
               <Grid item xs={6} sx={{pl:2}}>
                 <CustomInputBox title="Max" type="number" onChange={(e)=>{
                         setUserSearchSaveData({...userSearchSaveData,max_age:e.target.value})
-                  }} value={userSearchSaveData.max_age} placeholder="5.1" disabled={disabledForm}/>
+                  }} value={userSearchSaveData.max_age} placeholder="5.1"/>
               </Grid>
             </Grid>
           </Grid>
@@ -147,19 +159,19 @@ const BuyerContent = ({setSnackBarData}) => {
 
           {/* Height Inputs starts */}
           <Grid item xs={12} sx={{mt:3}}>
-            <Typography variant='authInputTitle'>Height</Typography>
+            <Typography variant='authInputTitle'>Height (Hands)</Typography>
           </Grid>
           <Grid item xs={12}>
             <Grid container sx={{maxHeight:"60px"}}>
               <Grid item xs={6} sx={{pr:2}}>
               <CustomInputBox title="Min" type="number" onChange={(e)=>{
                         setUserSearchSaveData({...userSearchSaveData,min_height:e.target.value})
-                  }} value={userSearchSaveData.min_height} placeholder="5.1" disabled={disabledForm}/>
+                  }} value={userSearchSaveData.min_height} placeholder="5.1"/>
               </Grid>
               <Grid item xs={6} sx={{pl:2}}>
                 <CustomInputBox title="Max" type="number" onChange={(e)=>{
                         setUserSearchSaveData({...userSearchSaveData,max_height:e.target.value})
-                  }} value={userSearchSaveData.max_height} placeholder="5.1" disabled={disabledForm}/>
+                  }} value={userSearchSaveData.max_height} placeholder="5.1"/>
               </Grid>
             </Grid>
           </Grid>
@@ -175,12 +187,12 @@ const BuyerContent = ({setSnackBarData}) => {
               <Grid item xs={6} sx={{pr:2}}>
                 <CustomInputBox title="Min" type="number" placeholder="$3000" maxLength={10} onChange={(e)=>{
                         setUserSearchSaveData({...userSearchSaveData,min_price:e.target.value})
-                  }} value={userSearchSaveData.min_price} disabled={disabledForm}/>
+                  }} value={userSearchSaveData.min_price}/>
               </Grid>
               <Grid item xs={6} sx={{pl:2}}>
               <CustomInputBox title="Max" type="number" placeholder="$5000" maxLength={10} onChange={(e)=>{
                         setUserSearchSaveData({...userSearchSaveData,max_price:e.target.value})
-                  }} value={userSearchSaveData.max_price} disabled={disabledForm}/>
+                  }} value={userSearchSaveData.max_price}/>
               </Grid>
             </Grid>
           </Grid>
@@ -190,7 +202,7 @@ const BuyerContent = ({setSnackBarData}) => {
           {/* Discipline dropdown starts */}
           <Grid item xs={12} sx={{mt:3}}>
             <Typography variant='authInputTitle'>Discipline</Typography>
-            <DisciplineSelect horseData={userSearchSaveData} setHorseData={setUserSearchSaveData} disabled={disabledForm}/>
+            <DisciplineSelect horseData={userSearchSaveData} setHorseData={setUserSearchSaveData}/>
           </Grid>
           {/* Discipline dropdown ends */}
 
@@ -201,14 +213,24 @@ const BuyerContent = ({setSnackBarData}) => {
                 <Typography variant='authInputTitle'>Gender</Typography>
               </Grid>
               <Grid item xs={12}>
-              <FormControl disabled={disabledForm}>
+              <FormControl>
                   <RadioGroup row aria-labelledby="demo-radio-buttons-group-label" defaultValue={"Gelding"}
-                      name="radio-buttons-group" onChange={(e)=>{
-                          setUserSearchSaveData({...userSearchSaveData,gender:e.target.value})
+                      name="radio-buttons-group" onClick={(e)=>{
+                        console.log("userSearchSaveData",userSearchSaveData)
+                          var _genderlist = userSearchSaveData?.gender_list;
+                          var _gender = "";
+                          if (_genderlist?.includes(e.target.value)){
+                            _genderlist = _genderlist.filter((item)=>item!=e.target.value);
+                          }
+                          else{
+                            _genderlist.push(e.target.value)
+                          }
+                          _gender = _genderlist.join(",");
+                          setUserSearchSaveData({...userSearchSaveData,gender:_gender,gender_list:_genderlist})
                       }}>
-                      <FormControlLabel value="Gelding" control={<Radio checked={userSearchSaveData.gender==="Gelding"}/>} label="Gelding" />
-                      <FormControlLabel value="Mare" control={<Radio checked={userSearchSaveData.gender==="Mare"}/>} label="Mare" />
-                      <FormControlLabel value="Stallion" control={<Radio checked={userSearchSaveData.gender==="Stallion"}/>} label="Stallion" />
+                      <FormControlLabel value="Gelding" control={<Radio checked={userSearchSaveData.gender_list?.includes("Gelding")}/>} label="Gelding" />
+                      <FormControlLabel value="Mare" control={<Radio checked={userSearchSaveData.gender_list?.includes("Mare")}/>} label="Mare" />
+                      <FormControlLabel value="Stallion" control={<Radio checked={userSearchSaveData.gender_list?.includes("Stallion")}/>} label="Stallion" />
                   </RadioGroup>
               </FormControl>
               </Grid>
@@ -220,14 +242,14 @@ const BuyerContent = ({setSnackBarData}) => {
           {/* Color dropdown starts */}
           <Grid item xs={12} sx={{mt:3}}>
             <Typography variant='authInputTitle'>Color</Typography>
-            <ColorsSelect horseData={userSearchSaveData} setHorseData={setUserSearchSaveData} disabled={disabledForm}/>
+            <ColorsSelect horseData={userSearchSaveData} setHorseData={setUserSearchSaveData}/>
           </Grid>
           {/* Color dropdown ends */}
 
           {/* Temperament dropdown starts */}
           <Grid item xs={12} sx={{mt:3}}>
             <Typography variant='authInputTitle'>Temperament</Typography>
-            <TemperamentSelect horseData={userSearchSaveData} setHorseData={setUserSearchSaveData} disabled={disabledForm}/>
+            <TemperamentSelect horseData={userSearchSaveData} setHorseData={setUserSearchSaveData}/>
           </Grid>
           {/* Temperament dropdown ends */}
 
@@ -250,7 +272,7 @@ const BuyerContent = ({setSnackBarData}) => {
                   placeholder="arabian horse etc..." 
                   onChange={(e)=>{
                         setKeywordVal(e.target.value)
-                  }} disabled={disabledForm}/>
+                  }}/>
               </Grid>
             </Grid>
           </Grid>
@@ -278,10 +300,7 @@ const BuyerContent = ({setSnackBarData}) => {
           {/* Buttons starts */}
           <Grid item xs={12}>
               <Grid container>
-                  <Grid item xs={9} sx={{mt:2,pr:2}}><Button title="save" width="100%" onClick={onSave}/></Grid>
-                  <Grid item xs={3} sx={{mt:2,pr:2}}><Button title="edit" width="100%" onClick={()=>{
-                    setDisabledForm(false)
-                  }} backgroundColor='#F4F4F4' color="#313033"/></Grid>
+                  <Grid item xs={12} sx={{mt:2,pr:2}}><Button title="save" width="100%" onClick={onSave}/></Grid>
                   <Grid item xs={6} sx={{mt:2,pr:2}}><Button title="clear" width="100%" backgroundColor='#F4F4F4' color="#313033" onClick={()=>{
                     setUserSearchSaveData({location_id:"",breed_id:"",min_age:"",max_age:"",min_height:"",max_height:"",min_price:"",max_price:"",discipline_id:"",gender:"",color_id:"",temperament_id:"",keywords_id:[]})
                   }}/></Grid>

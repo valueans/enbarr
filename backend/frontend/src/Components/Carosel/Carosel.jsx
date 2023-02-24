@@ -35,8 +35,8 @@ const Carosel = ({images=[]}) => {
             images.map((image)=>{
                 return <div style={{width:"100%",height:"600px"}} onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>
                     {image?.file_type === 'IMAGE'?
-                    <img src={image?.file} alt="img" style={{width:"100%",height:"600px",objectFit:"fill"}}/>:
-                    <video src={image?.file} style={{width:"100%",height:"600px",objectFit:"fill"}} ref={videoRef} onEnded={()=>{
+                    <img src={image?.file} alt="img" style={{width:"100%",height:"600px",objectFit:"contain"}}/>:
+                    <video src={image?.file} style={{width:"100%",height:"600px",objectFit:"contain"}} ref={videoRef} onEnded={()=>{
                       setIsPlaying(false);
                     }}/>
                   }

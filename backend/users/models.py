@@ -57,7 +57,7 @@ class UserProfile(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     subscription_start_date = models.DateTimeField(null=True, blank=True)
     subscription_renew_date = models.DateTimeField(null=True, blank=True)
-    promotion_adds = models.IntegerField(default=100)
+    promotion_adds = models.IntegerField(default=5)
     subscription_adds = models.IntegerField(default=0)
 
     ban_user_from_posting = models.BooleanField(default=False)
@@ -75,9 +75,9 @@ class UserProfile(models.Model):
 
 class UserSearchSave(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
-    location_id = models.ForeignKey(
-        "home.Locations", on_delete=models.CASCADE, null=True, blank=True
-    )
+    country = models.CharField(max_length=1000,null=True,blank=True)
+    city = models.CharField(max_length=1000,null=True,blank=True)
+    state = models.CharField(max_length=1000,null=True,blank=True)
     breed_id = models.ForeignKey(
         "home.Breeds", on_delete=models.CASCADE, null=True, blank=True
     )

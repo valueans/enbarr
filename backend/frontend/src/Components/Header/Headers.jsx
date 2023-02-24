@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {Toolbar,Box,AppBar,Typography,Grid,Avatar} from '@mui/material';
 import Button from '../Buttons/Button.jsx';
 import logo from '../../assets/logo.svg';
@@ -22,6 +22,23 @@ export default function ButtonAppBar({headerType="landing",currentPage="home"}) 
     const [messageActive,setMessageActive] = useState(currentPage==="message"?true:false);
     const [myHorseActive,setMyHorseActive] = useState(currentPage==="my-horse"?true:false);
     const [settingsActive,setSettingsActive] = useState(currentPage==="settings"?true:false);
+
+    const [mobileView, setMobileView] = useState({mobileView: false,});
+
+
+    useEffect(()=>{
+        const setResponsiveness = () => {
+            return window.innerWidth < 900
+              ? setMobileView(true)
+              : setMobileView(false);
+          }
+          setResponsiveness();
+            window.addEventListener("resize", () => setResponsiveness());
+
+            return () => {
+            window.removeEventListener("resize", () => setResponsiveness());
+            }
+    },[])
 
 
     const setActiveLink = (clickedButton)=>{
@@ -63,14 +80,14 @@ export default function ButtonAppBar({headerType="landing",currentPage="home"}) 
                     <AppBar position="relative"
                         sx={{height:"101px",background: "rgba(0, 0, 0, 0.1)",backdropFilter:"blur(15px)",zIndex:10}}>
                         <Grid item xs={12}>
-                            <Toolbar style={{paddingLeft:"100px",paddingRight:"100px"}}>
+                            <Toolbar style={{paddingLeft:`${mobileView?'10px':"100px"}`,paddingRight:`${mobileView?'10px':"100px"}`}}>
                                 <Grid item lg={1} sx={{textAlign:"center"}}>
                                     <Link to="/" variant="logo">
                                     <img src={logo} alt="logo"
                                         style={{height:"85px",width:"35.36px",marginTop:"7px"}} />
                                     </Link>
                                 </Grid>
-                                <Grid item xs={1}>
+                                <Grid item xs={1} >
                                     <Typography variant="logo" component="div">
                                         <Link to="/" className='linkBlack'>ENBARR</Link>
                                     </Typography>
@@ -79,7 +96,7 @@ export default function ButtonAppBar({headerType="landing",currentPage="home"}) 
                                 headerType === "landing"?
                                 (
                                 <>
-                                    <Grid container item xs={6} direction="row">
+                                    {!mobileView?  <Grid container item xs={6} direction="row">
                                         <Grid item xs={4}>
                                             <Link to='/aboutus' style={{textDecoration:"none"}}>
                                             <Typography variant="headerLinks" component="div">
@@ -101,8 +118,9 @@ export default function ButtonAppBar({headerType="landing",currentPage="home"}) 
                                             </Typography>
                                             </Link>
                                         </Grid>
-                                    </Grid>
-                                    <Grid item xs={4} className="justifyContentEnd">
+                                    </Grid>:""
+                                    }
+                                    <Grid item xs={mobileView?11:4} className="justifyContentEnd">
                                         <Button title="Sign up/Login" onClick={buttonClick} />
                                     </Grid>
                                 </>

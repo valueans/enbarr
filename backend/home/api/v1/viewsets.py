@@ -42,7 +42,6 @@ from home.api.v1.serializers import (
     DisciplinesSerializer,
     ColorsSerializer,
     BreedsSerializer,
-    LocationsSerializer,
 )
 from home.models import (
     ContactUs,
@@ -57,7 +56,6 @@ from home.models import (
     Colors,
     Disciplines,
     Breeds,
-    Locations,
 )
 
 
@@ -457,10 +455,15 @@ def searchHorseView(request):
             .all()
             .exclude(uploaded_by__id=request.user.id)
         )
+        
         filter_queryset = []
 
-        if user_search_history.location_id:
-            filter_queryset += queryset.filter(location=user_search_history.location_id)
+        if user_search_history.country:
+            filter_queryset += queryset.filter(country=user_search_history.country)
+        if user_search_history.state:
+            filter_queryset += queryset.filter(state=user_search_history.state)
+        if user_search_history.city:
+            filter_queryset += queryset.filter(city=user_search_history.city)
         if user_search_history.breed_id:
             filter_queryset += queryset.filter(breed=user_search_history.breed_id)
         if user_search_history.min_age:
@@ -484,7 +487,8 @@ def searchHorseView(request):
                 discipline=user_search_history.discipline_id
             )
         if user_search_history.gender:
-            filter_queryset += queryset.filter(gender=user_search_history.gender)
+            genders = user_search_history.gender.split(",")
+            filter_queryset += queryset.filter(gender__in=genders)
         if user_search_history.color_id:
             filter_queryset += queryset.filter(color=user_search_history.color_id)
         if user_search_history.temperament_id:
@@ -738,20 +742,6 @@ def BreedView(request):
     if request.method == "GET":
         instance = Breeds.objects.all()
         serializer = BreedsSerializer(instance, many=True)
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
-
-
-@swagger_auto_schema(
-    method="GET",
-    responses={200: LocationsSerializer(many=True)},
-)
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
-@authentication_classes([TokenAuthentication])
-def LocationView(request):
-    if request.method == "GET":
-        instance = Locations.objects.all()
-        serializer = LocationsSerializer(instance, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 

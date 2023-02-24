@@ -15,7 +15,6 @@ from .viewsets import (
     disciplineView,
     colorView,
     BreedView,
-    LocationView,
     getRecentlyAddedHorsesView,
     getTopHorseAddsView,
     getTrendingHorseAddsView,
@@ -39,7 +38,6 @@ urlpatterns = [
     path("disciplines/", disciplineView, name="discipline"),
     path("colors/", colorView, name="colors"),
     path("breeds/", BreedView, name="breeds"),
-    path("locations/", LocationView, name="locations"),
     path("get-distance/", getDistanceBetweenUserAndHorseView, name="get-distance"),
     path(
         "recently-added-horses/",
