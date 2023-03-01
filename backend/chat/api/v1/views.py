@@ -141,8 +141,8 @@ def pubnub_webhook(request):
     conversation.last_message = message_obj
     conversation.save()
     if conversation.user_one.email == sender:
-        sendMessageNotification(conversation.user_two, message, conversation.user_one)
+        sendMessageNotification(conversation.user_two, message, conversation.user_one,conversation.channel)
     else:
-        sendMessageNotification(conversation.user_one, message, conversation.user_two)
+        sendMessageNotification(conversation.user_one, message, conversation.user_two,conversation.channel)
 
     return HttpResponse(200)

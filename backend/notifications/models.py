@@ -22,6 +22,8 @@ class Notifications(models.Model):
     description = models.TextField(max_length=1000, null=True, blank=True)
     message_profile_url = models.TextField(null=True, blank=True)
     type = models.CharField(max_length=100,choices=NOTIFICATION_TYPE,default="MESSAGE")
+    channel_id = models.CharField(max_length=1000,null=True,blank=True)
+    horse_id = models.CharField(max_length=1000,null=True,blank=True)
     read_status = models.BooleanField(default=False)
 
     def __str__(self):

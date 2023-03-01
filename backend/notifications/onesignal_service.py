@@ -39,7 +39,7 @@ def sendAdminNotification(notificationTo, message):
     response = requests.post(url, json=payload, headers=headers)
 
 
-def sendMessageNotification(notificationTo, message, message_from):
+def sendMessageNotification(notificationTo, message, message_from,channel):
     if notificationTo.userprofile.receive_notifications:
         name = f"You have received a new message from {message_from.email}"
         if message_from.userprofile.profile_photo:
@@ -50,7 +50,8 @@ def sendMessageNotification(notificationTo, message, message_from):
             user=notificationTo,
             description=name,
             message_profile_url=message_profile_url,
-            type="MESSAGE"
+            type="MESSAGE",
+            channel_id=channel
         )
         payload = {
             "include_email_tokens": [notificationTo.email],
@@ -65,7 +66,7 @@ def sendMessageNotification(notificationTo, message, message_from):
 def sendLikedHorseNotification(notificationTo, horse, message_from):
     if notificationTo.userprofile.receive_notifications:
         message = f"{message_from.email} has liked {horse.title}"
-        Notifications.objects.create(user=notificationTo, description=message,type="HORSE LIKE")
+        Notifications.objects.create(user=notificationTo, description=message,type="HORSE LIKE",horse_id=horse.id)
         payload = {"include_email_tokens": [notificationTo.email], "name": message}
         response = requests.post(url, json=payload, headers=headers)
     else:
