@@ -14,6 +14,9 @@ class NotificationsSerializer(serializers.ModelSerializer):
             "message_profile_url",
             "read_status",
             "user_profile",
+            "type",
+            "channel_id",
+            "horse_id"
         )
         read_only_fields = ["id"]
 
