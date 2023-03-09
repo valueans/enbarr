@@ -42,14 +42,10 @@ def sendAdminNotification(notificationTo, message):
 def sendMessageNotification(notificationTo, message, message_from,channel):
     if notificationTo.userprofile.receive_notifications:
         name = f"You have received a new message from {message_from.email}"
-        if message_from.userprofile.profile_photo:
-            message_profile_url = message_from.userprofile.profile_photo.url
-        else:
-            message_profile_url = ""
         Notifications.objects.create(
             user=notificationTo,
             description=name,
-            message_profile_url=message_profile_url,
+            user_two=message_from,
             type="MESSAGE",
             channel_id=channel
         )

@@ -13,7 +13,6 @@ class NotificationsSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "description",
-            "message_profile_url",
             "read_status",
             "user_profile",
             "user_two_profile",
@@ -29,16 +28,9 @@ class NotificationsSerializer(serializers.ModelSerializer):
         return serializer.data
 
     def get_user_two_profile(self,obj):
-        if obj.channel_id:
-            try:
-                conversations = Conversation.objects.get(channel=obj.channel_id)
-                if conversations.user_one.id != obj.user.id:
-                    instance = conversations.user_one
-                else:
-                    instance = conversations.user_two
-                serializer = UserProfileSerializer(instance)
-                return serializer.data
-            except:
-                return None
-        else:
+        try:
+            instance = obj.user_two.userprofile
+            serializer = UserProfileSerializer(instance)
+            return serializer.data
+        except:
             return None
