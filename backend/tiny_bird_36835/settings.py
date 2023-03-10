@@ -378,7 +378,12 @@ SOCIALACCOUNT_PROVIDERS = {
             "client_id": env.str("SOCIAL_AUTH_APPLE_CLIENT_ID", ""),
             "secret": env.str("SOCIAL_AUTH_APPLE_SECRET", ""),
             "key": env.str("SOCIAL_AUTH_APPLE_KEY", ""),
-            "certificate_key": env.str("SOCIAL_AUTH_APPLE_CERTIFICATE_KEY", ""),
+            "certificate_key": """-----BEGIN PRIVATE KEY-----
+MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgBsjvdUTQb4rck17O
+ciwhA6/ANplESDTfGzB8txVoy0SgCgYIKoZIzj0DAQehRANCAAT8DzC3wdbPiX1U
+Z8Rjq3XdeLq2tDwfUC9vktz7IK4cH7TpPciVpoZuL3cOmyj7t5+SW+4ZL8APjLc5
+XYLqREhX
+-----END PRIVATE KEY-----""",
         }
     },
     "google": {

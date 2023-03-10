@@ -113,10 +113,10 @@ class LoginViewSet(ViewSet):
         return Response(data=data, status=status.HTTP_200_OK)
 
 
-class FacebookLogin(SocialLoginView):
+class FacebookLogin(AppleLoginView):
     adapter_class = FacebookOAuth2Adapter
     serializer_class = SocialLoginSerializer
-    callback_url = "http://localhost:8000/"
+    callback_url = "https://tiny-bird-36835.botics.co"
     client_class = OAuth2Client
 
     def get_serializer(self, *args, **kwargs):
@@ -125,10 +125,10 @@ class FacebookLogin(SocialLoginView):
         return serializer_class(*args, **kwargs)
 
 
-class GoogleLogin(SocialLoginView):
+class GoogleLogin(AppleLoginView):
     adapter_class = GoogleOAuth2Adapter
     serializer_class = SocialLoginSerializer
-    callback_url = "http://localhost:8000/"
+    callback_url = "https://tiny-bird-36835.botics.co"
     client_class = OAuth2Client
 
     def get_serializer(self, *args, **kwargs):
@@ -139,7 +139,7 @@ class GoogleLogin(SocialLoginView):
 
 class AppleLogin(AppleLoginView):
     adapter_class = AppleOAuth2Adapter
-    callback_url = "http://tiny-bird-36835.botics.co"
+    callback_url = "https://tiny-bird-36835.botics.co"
     client_class = AppleOAuth2Client
 
 
