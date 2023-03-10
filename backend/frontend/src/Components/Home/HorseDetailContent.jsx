@@ -55,8 +55,6 @@ useEffect(()=>{
     const response = await HorseService.getHorseDetails(id);
 
     setHorseDetails(response)
-
-    console.log("response",response)
     if (response.user_location){
       navigator.geolocation.getCurrentPosition(async (position)=> {
         const distance_response = await HorseService.getDistance(`${position.coords.latitude},${position.coords.longitude}`,response.user_location);
@@ -252,7 +250,7 @@ return (
             <Typography variant="imageDescriptions">Temperament</Typography>
           </Grid>
           <Grid item xs={12}>
-            <Typography variant="characteristicsHeading">{horseDetails?.temperament.temperament}</Typography>
+            <Typography variant="characteristicsHeading">{horseDetails?.temperament?.temperament}</Typography>
           </Grid>
         </Grid>
 
@@ -265,7 +263,7 @@ return (
             <Typography variant="imageDescriptions">Discipline</Typography>
           </Grid>
           <Grid item xs={12}>
-            <Typography variant="characteristicsHeading">{horseDetails?.discipline.discipline}</Typography>
+            <Typography variant="characteristicsHeading">{horseDetails?.discipline?.discipline}</Typography>
           </Grid>
         </Grid>
 

@@ -12,7 +12,6 @@ const CitiesSelect = ({horseData,setHorseData,disabled=false}) => {
 
     useEffect(()=>{
         const _cities = City.getCitiesOfState(horseData.country,horseData.state)
-        console.log("_cities",_cities)
         setOptions(_cities)
     },[horseData.state])
 

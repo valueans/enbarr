@@ -364,7 +364,6 @@ const Chat = ({pubnub,userprofile}) => {
                 
                 <Grid item xs={12} sx={{minHeight:"calc(100vh - 341px)",maxHeight:"calc(100vh - 341px)",overflow:"scroll",boxShadow: "0px -4px 10px rgba(0, 0, 0, 0.1)",p:4}}> 
                 <MessageList fetchMessages={100} onScroll={(e)=>{
-                    console.log("scroll",e)
                 }} messageRenderer={(props)=>{
                     setLastMessageTimetoken(props.message.timetoken);
                     return <CustomMessageRender message={props.message} pubnub={pubnub} isOwn={props.isOwn}/>}}>

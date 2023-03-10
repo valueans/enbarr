@@ -34,7 +34,7 @@ const BuyerContent = ({setSnackBarData}) => {
   const [keywordVal,setKeywordVal] = useState("");
   const [keywordLoading,setKeywordLoading] = useState(false);
 
-  const [userSearchSaveData,setUserSearchSaveData] = useState({country:"",city:"",state:"",breed_id:"",min_age:"",max_age:"",min_height:"",max_height:"",min_price:"",max_price:"",discipline_id:"",gender:[],color_id:"",temperament_id:"",keywords_id:[]});
+  const [userSearchSaveData,setUserSearchSaveData] = useState({country:"",city:"",state:"",breed_id:"",min_age:"",max_age:"",min_height:"",max_height:"",min_price:"",max_price:"",discipline_id:"",gender:[],gender_list:[],color_id:"",temperament_id:"",keywords_id:[]});
 
 
   const handleMatch = async ()=>{
@@ -51,14 +51,14 @@ const BuyerContent = ({setSnackBarData}) => {
     setKeywordLoading(true)
     try {
       const response = await HorseService.saveHorseKeyword(keywordVal)
-      let user_keywords = [...userSearchSaveData.keywords]
-      user_keywords.push(response.id)
-      setUserSearchSaveData({...userSearchSaveData,keywords_id:user_keywords})
+      let user_keywords_ids = userSearchSaveData.keywords_id?userSearchSaveData.keywords_id:[]
+      user_keywords_ids.push(response.id)
+      setUserSearchSaveData({...userSearchSaveData,keywords_id:user_keywords_ids})
       setKeywords([...keywords,{id:response.id,keyword:keywordVal}])
       setKeywordLoading(false)
       setKeywordVal("") 
     } catch (error) {
-      if (error.response.data.message){
+      if (error.response?.data.message){
         setSnackBarData({open:true,message:error.response.data.message,severity:"error"})
       }
       else{
@@ -72,7 +72,6 @@ const BuyerContent = ({setSnackBarData}) => {
     const getUserSearchSave = async ()=>{
       try {
         const response = await BuyerService.getSaveBuyersSearch();
-        console.log("response",response)
         if (response.length > 0){
           setUserSearchSaveData(response[0])
           if(response[0].keywords.length > 0){
@@ -216,17 +215,16 @@ const BuyerContent = ({setSnackBarData}) => {
               <FormControl>
                   <RadioGroup row aria-labelledby="demo-radio-buttons-group-label" defaultValue={"Gelding"}
                       name="radio-buttons-group" onClick={(e)=>{
-                        console.log("userSearchSaveData",userSearchSaveData)
-                          var _genderlist = userSearchSaveData?.gender_list;
+                          var _genderlist = userSearchSaveData.gender_list?userSearchSaveData.gender_list:[];
                           var _gender = "";
-                          if (_genderlist?.includes(e.target.value)){
+                          if (_genderlist.includes(e.target.value)){
                             _genderlist = _genderlist.filter((item)=>item!=e.target.value);
                           }
                           else{
                             _genderlist.push(e.target.value)
                           }
                           _gender = _genderlist.join(",");
-                          setUserSearchSaveData({...userSearchSaveData,gender:_gender,gender_list:_genderlist})
+                          setUserSearchSaveData({...userSearchSaveData,gender:_gender?_gender:"",gender_list:_genderlist})
                       }}>
                       <FormControlLabel value="Gelding" control={<Radio checked={userSearchSaveData.gender_list?.includes("Gelding")}/>} label="Gelding" />
                       <FormControlLabel value="Mare" control={<Radio checked={userSearchSaveData.gender_list?.includes("Mare")}/>} label="Mare" />
