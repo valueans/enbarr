@@ -54,7 +54,6 @@ class TestHomeAPI(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_favourite_post_400(self):
-
         payload = {
             "horses": 10,
         }
@@ -63,7 +62,6 @@ class TestHomeAPI(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_favourite_post_201(self):
-
         payload = {
             "horses": self.horse.id,
         }

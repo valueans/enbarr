@@ -2,6 +2,7 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 from rest_framework.pagination import PageNumberPagination
 
+
 # method to ban user from posting adds on admin call
 def banUserPosting(userprofile, months):
     ban_date = date.today() + relativedelta(months=+months)

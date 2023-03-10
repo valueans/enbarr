@@ -5,128 +5,261 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Breeds',
+            name="Breeds",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('breed', models.CharField(max_length=1000, unique=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("breed", models.CharField(max_length=1000, unique=True)),
             ],
             options={
-                'verbose_name_plural': 'Breeds',
+                "verbose_name_plural": "Breeds",
             },
         ),
         migrations.CreateModel(
-            name='Colors',
+            name="Colors",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('color', models.CharField(max_length=1000, unique=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("color", models.CharField(max_length=1000, unique=True)),
             ],
             options={
-                'verbose_name_plural': 'Colors',
+                "verbose_name_plural": "Colors",
             },
         ),
         migrations.CreateModel(
-            name='ContactUs',
+            name="ContactUs",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('first_name', models.CharField(blank=True, max_length=100, null=True)),
-                ('last_name', models.CharField(blank=True, max_length=100, null=True)),
-                ('email', models.EmailField(blank=True, max_length=254, null=True)),
-                ('query', models.TextField(blank=True, max_length=1000, null=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("first_name", models.CharField(blank=True, max_length=100, null=True)),
+                ("last_name", models.CharField(blank=True, max_length=100, null=True)),
+                ("email", models.EmailField(blank=True, max_length=254, null=True)),
+                ("query", models.TextField(blank=True, max_length=1000, null=True)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
             ],
         ),
         migrations.CreateModel(
-            name='Disciplines',
+            name="Disciplines",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('discipline', models.CharField(max_length=1000, unique=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("discipline", models.CharField(max_length=1000, unique=True)),
             ],
             options={
-                'verbose_name_plural': 'Disciplines',
+                "verbose_name_plural": "Disciplines",
             },
         ),
         migrations.CreateModel(
-            name='DisLikes',
+            name="DisLikes",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Favourite',
+            name="Favourite",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='HorseImages',
+            name="HorseImages",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('file', models.FileField(upload_to='')),
-                ('file_type', models.CharField(choices=[('IMAGE', 'IMAGE'), ('VIDEO', 'VIDEO')], default='IMAGES', max_length=10)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("file", models.FileField(upload_to="")),
+                (
+                    "file_type",
+                    models.CharField(
+                        choices=[("IMAGE", "IMAGE"), ("VIDEO", "VIDEO")],
+                        default="IMAGES",
+                        max_length=10,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Horses',
+            name="Horses",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(blank=True, max_length=300, null=True)),
-                ('user_location', models.CharField(blank=True, max_length=500, null=True)),
-                ('state', models.CharField(blank=True, max_length=1000, null=True)),
-                ('city', models.CharField(blank=True, max_length=1000, null=True)),
-                ('country', models.CharField(blank=True, max_length=1000, null=True)),
-                ('zip_code', models.CharField(blank=True, max_length=100, null=True)),
-                ('price', models.FloatField(blank=True, null=True)),
-                ('description', models.TextField(blank=True, max_length=2000, null=True)),
-                ('gender', models.CharField(blank=True, max_length=100, null=True)),
-                ('year_of_birth', models.IntegerField(blank=True, null=True)),
-                ('height', models.FloatField(blank=True, null=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('approved', models.BooleanField(default=False)),
-                ('total_views', models.BigIntegerField(default=0)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("title", models.CharField(blank=True, max_length=300, null=True)),
+                (
+                    "user_location",
+                    models.CharField(blank=True, max_length=500, null=True),
+                ),
+                ("state", models.CharField(blank=True, max_length=1000, null=True)),
+                ("city", models.CharField(blank=True, max_length=1000, null=True)),
+                ("country", models.CharField(blank=True, max_length=1000, null=True)),
+                ("zip_code", models.CharField(blank=True, max_length=100, null=True)),
+                ("price", models.FloatField(blank=True, null=True)),
+                (
+                    "description",
+                    models.TextField(blank=True, max_length=2000, null=True),
+                ),
+                ("gender", models.CharField(blank=True, max_length=100, null=True)),
+                ("year_of_birth", models.IntegerField(blank=True, null=True)),
+                ("height", models.FloatField(blank=True, null=True)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                ("approved", models.BooleanField(default=False)),
+                ("total_views", models.BigIntegerField(default=0)),
             ],
             options={
-                'verbose_name_plural': 'Horses',
+                "verbose_name_plural": "Horses",
             },
         ),
         migrations.CreateModel(
-            name='Keywords',
+            name="Keywords",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('keyword', models.CharField(max_length=100)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("keyword", models.CharField(max_length=100)),
             ],
         ),
         migrations.CreateModel(
-            name='Likes',
+            name="Likes",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Temperaments',
+            name="Temperaments",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('temperament', models.CharField(max_length=1000, unique=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("temperament", models.CharField(max_length=1000, unique=True)),
             ],
             options={
-                'verbose_name_plural': 'Temperaments',
+                "verbose_name_plural": "Temperaments",
             },
         ),
         migrations.CreateModel(
-            name='Report',
+            name="Report",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('reason', models.CharField(blank=True, choices=[('Spam', 'Spam'), ('Pornography', 'Pornography'), ('Self-harm', 'Self-harm'), ('Not for children', 'Not for children'), ('Illegal activities (e.g. drug selling)', 'Illegal activities (e.g. drug selling)'), ('Deceptive content', 'Deceptive content')], max_length=1000, null=True)),
-                ('reviewed', models.BooleanField(default=False)),
-                ('horse', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='home.Horses')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "reason",
+                    models.CharField(
+                        blank=True,
+                        choices=[
+                            ("Spam", "Spam"),
+                            ("Pornography", "Pornography"),
+                            ("Self-harm", "Self-harm"),
+                            ("Not for children", "Not for children"),
+                            (
+                                "Illegal activities (e.g. drug selling)",
+                                "Illegal activities (e.g. drug selling)",
+                            ),
+                            ("Deceptive content", "Deceptive content"),
+                        ],
+                        max_length=1000,
+                        null=True,
+                    ),
+                ),
+                ("reviewed", models.BooleanField(default=False)),
+                (
+                    "horse",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="home.Horses",
+                    ),
+                ),
             ],
         ),
     ]

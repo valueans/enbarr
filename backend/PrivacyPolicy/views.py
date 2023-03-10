@@ -4,8 +4,7 @@ from rest_framework.permissions import AllowAny
 from .serializers import *
 from .models import *
 from rest_framework import status
-from rest_framework.decorators import permission_classes,api_view
-
+from rest_framework.decorators import permission_classes, api_view
 
 
 @swagger_auto_schema(method="GET", responses={200: PrivacyPolicySerializer(many=True)})

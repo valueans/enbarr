@@ -4,15 +4,23 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('notifications', '0002_notifications_user'),
+        ("notifications", "0002_notifications_user"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='notifications',
-            name='type',
-            field=models.CharField(choices=[('MESSAGE', 'MESSAGE'), ('HORSE LIKE', 'HORSE LIKE'), ('HORSE REPORT', 'HORSE REPORT'), ('HORSE REVIEW', 'HORSE REVIEW')], default='MESSAGE', max_length=100),
+            model_name="notifications",
+            name="type",
+            field=models.CharField(
+                choices=[
+                    ("MESSAGE", "MESSAGE"),
+                    ("HORSE LIKE", "HORSE LIKE"),
+                    ("HORSE REPORT", "HORSE REPORT"),
+                    ("HORSE REVIEW", "HORSE REVIEW"),
+                ],
+                default="MESSAGE",
+                max_length=100,
+            ),
         ),
     ]

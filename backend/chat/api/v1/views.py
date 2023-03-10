@@ -5,7 +5,7 @@ from rest_framework import status
 from django.db.models import Q
 from drf_yasg.utils import swagger_auto_schema
 from .serializers import ConversationSerializer
-from chat.models import Messages, Conversation,DeletedConversationsId
+from chat.models import Messages, Conversation, DeletedConversationsId
 from datetime import datetime
 from home.helpers import getPagination
 from django.contrib.auth import get_user_model
@@ -72,13 +72,17 @@ def conversationView(request):
             try:
                 instance = Conversation.objects.get(
                     Q(user_one=request.user) & Q(user_two=receiver)
-                    | Q(user_one=receiver) & Q(user_two=request.user),Q(user_one_deleted=False),Q(user_two_deleted=False)
+                    | Q(user_one=receiver) & Q(user_two=request.user),
+                    Q(user_one_deleted=False),
+                    Q(user_two_deleted=False),
                 )
             except:
                 try:
-                    deleted_conversation = DeletedConversationsId.objects.filter(Q(user_one=request.user) & Q(user_two=receiver)
-                    | Q(user_one=receiver) & Q(user_two=request.user))
-                    print("deleted_conversation",deleted_conversation)
+                    deleted_conversation = DeletedConversationsId.objects.filter(
+                        Q(user_one=request.user) & Q(user_two=receiver)
+                        | Q(user_one=receiver) & Q(user_two=request.user)
+                    )
+                    print("deleted_conversation", deleted_conversation)
                     if deleted_conversation.count() == 0:
                         channel = f"channel-chat-{request.user.id}-{receiver.id}"
                     else:
@@ -102,7 +106,11 @@ def conversationView(request):
             return Response(data=data, status=status.HTTP_404_NOT_FOUND)
 
         instance = Conversation.objects.get(id=conversation_id)
-        DeletedConversationsId.objects.create(channel=instance.channel,user_one=instance.user_one,user_two=instance.user_two)
+        DeletedConversationsId.objects.create(
+            channel=instance.channel,
+            user_one=instance.user_one,
+            user_two=instance.user_two,
+        )
         try:
             if request.user.id == instance.user_one.id:
                 unsubcribeChannel(instance.channel, instance.user_one.email)
@@ -113,21 +121,22 @@ def conversationView(request):
         except:
             data = {"status": "ERROR", "message": "Invalid conversation-id"}
             return Response(data=data, status=status.HTTP_404_NOT_FOUND)
-        
+
         try:
             instance.last_message.delete()
         except:
             pass
         instance.delete()
-        
+
         data = {"status": "OK", "message": deleted_message}
         return Response(data=data, status=status.HTTP_200_OK)
-    
+
+
 @api_view(["POST"])
 def pubnub_webhook(request):
     body = json.loads(request.body)
     channel = body["event"]["channel"]
-    message = body["event"]["eventPayload"]["message"]['text']
+    message = body["event"]["eventPayload"]["message"]["text"]
     sender = body["event"]["senderId"]
     timetoken = body["event"]["timetoken"]
     conversation = Conversation.objects.get(channel=channel)
@@ -137,12 +146,18 @@ def pubnub_webhook(request):
     except:
         pass
 
-    message_obj = Messages.objects.create(channel=channel, Messages=message,timetoken=timetoken,sender=sender)
+    message_obj = Messages.objects.create(
+        channel=channel, Messages=message, timetoken=timetoken, sender=sender
+    )
     conversation.last_message = message_obj
     conversation.save()
     if conversation.user_one.email == sender:
-        sendMessageNotification(conversation.user_two, message, conversation.user_one,conversation.channel)
+        sendMessageNotification(
+            conversation.user_two, message, conversation.user_one, conversation.channel
+        )
     else:
-        sendMessageNotification(conversation.user_one, message, conversation.user_two,conversation.channel)
+        sendMessageNotification(
+            conversation.user_one, message, conversation.user_two, conversation.channel
+        )
 
     return HttpResponse(200)

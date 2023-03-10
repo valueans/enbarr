@@ -14,7 +14,7 @@ class ConversationSerializer(serializers.ModelSerializer):
     user_one_profile = serializers.SerializerMethodField(read_only=True)
     user_two_profile = serializers.SerializerMethodField(read_only=True)
     last_message = MessagesSerializer(read_only=True)
-    is_deleted = serializers.SerializerMethodField("get_is_deleted",read_only=True)
+    is_deleted = serializers.SerializerMethodField("get_is_deleted", read_only=True)
 
     class Meta:
         model = Conversation
@@ -46,8 +46,8 @@ class ConversationSerializer(serializers.ModelSerializer):
             profile = UserProfile.objects.get(user=obj.user_two)
         serializer = UserProfileSerializer(profile)
         return serializer.data
-    
-    def get_is_deleted(self,obj):
+
+    def get_is_deleted(self, obj):
         current_user = self.context["request"].user
         if current_user.id == obj.user_one.id and obj.user_one_deleted:
             return True
@@ -55,6 +55,3 @@ class ConversationSerializer(serializers.ModelSerializer):
             return True
         else:
             return False
-            
-        
-

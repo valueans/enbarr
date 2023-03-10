@@ -4,20 +4,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('notifications', '0003_notifications_type'),
+        ("notifications", "0003_notifications_type"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='notifications',
-            name='channel_id',
+            model_name="notifications",
+            name="channel_id",
             field=models.CharField(blank=True, max_length=1000, null=True),
         ),
         migrations.AddField(
-            model_name='notifications',
-            name='horse_id',
+            model_name="notifications",
+            name="horse_id",
             field=models.CharField(blank=True, max_length=1000, null=True),
         ),
     ]

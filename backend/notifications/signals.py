@@ -9,7 +9,6 @@ import json
 def set_push_notifications(sender, instance, created, **kwargs):
     schedule = instance.run_at
     if created == True:
-
         PeriodicTask.objects.create(
             crontab=schedule,
             name=instance.name,

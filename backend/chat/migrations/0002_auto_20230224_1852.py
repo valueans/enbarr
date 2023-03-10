@@ -6,38 +6,67 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
-        ('chat', '0001_initial'),
+        ("chat", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='deletedconversationsid',
-            name='user_one',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='deleted_Conversation_userone', to=settings.AUTH_USER_MODEL),
+            model_name="deletedconversationsid",
+            name="user_one",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="deleted_Conversation_userone",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AddField(
-            model_name='deletedconversationsid',
-            name='user_two',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='deleted_Conversation_usertwo', to=settings.AUTH_USER_MODEL),
+            model_name="deletedconversationsid",
+            name="user_two",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="deleted_Conversation_usertwo",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AddField(
-            model_name='conversation',
-            name='last_message',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='messages', to='chat.Messages'),
+            model_name="conversation",
+            name="last_message",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="messages",
+                to="chat.Messages",
+            ),
         ),
         migrations.AddField(
-            model_name='conversation',
-            name='user_one',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='userone', to=settings.AUTH_USER_MODEL),
+            model_name="conversation",
+            name="user_one",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="userone",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AddField(
-            model_name='conversation',
-            name='user_two',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='usertwo', to=settings.AUTH_USER_MODEL),
+            model_name="conversation",
+            name="user_two",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="usertwo",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
     ]

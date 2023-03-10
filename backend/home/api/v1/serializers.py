@@ -79,8 +79,6 @@ class BreedsSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-
-
 class HorseUpdateSerializer(serializers.ModelSerializer):
     images = HorseImagesSerializer(read_only=True, many=True)
     keywords = KeywordsSerializer(read_only=True, many=True)
@@ -405,8 +403,8 @@ class UserSearchSaveSerializer(serializers.ModelSerializer):
         instance.keywords.set(keywords)
         instance.save()
         return instance
-    
-    def get_gender_list(self,obj):
+
+    def get_gender_list(self, obj):
         _gender = obj.gender.split(",")
         return _gender
 

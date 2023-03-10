@@ -23,6 +23,7 @@ class SuperAdminSite(admin.AdminSite):
 
 super_admin_site = SuperAdminSite(name="super_admin")
 
+
 # user models
 class UserAdmin(auth_admin.UserAdmin):
     form = UserChangeForm

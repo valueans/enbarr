@@ -31,13 +31,21 @@ class Conversation(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     user_one_deleted = models.BooleanField(default=False)
     user_two_deleted = models.BooleanField(default=False)
-    
+
 
 class DeletedConversationsId(models.Model):
     channel = models.CharField(max_length=100, null=False, blank=False)
     user_one = models.ForeignKey(
-        User, on_delete=models.CASCADE, null=True, blank=True, related_name="deleted_Conversation_userone"
+        User,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="deleted_Conversation_userone",
     )
     user_two = models.ForeignKey(
-        User, on_delete=models.CASCADE, null=True, blank=True, related_name="deleted_Conversation_usertwo"
+        User,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="deleted_Conversation_usertwo",
     )

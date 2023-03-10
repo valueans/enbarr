@@ -11,19 +11,26 @@ SEND_PUSH_NOTIFICATION_USER_GROUP = (
 )
 
 NOTIFICATION_TYPE = (
-    ("MESSAGE","MESSAGE"),
-    ("HORSE LIKE","HORSE LIKE"),
-    ("HORSE REPORT","HORSE REPORT"),
-    ("HORSE REVIEW","HORSE REVIEW"),
+    ("MESSAGE", "MESSAGE"),
+    ("HORSE LIKE", "HORSE LIKE"),
+    ("HORSE REPORT", "HORSE REPORT"),
+    ("HORSE REVIEW", "HORSE REVIEW"),
 )
 
+
 class Notifications(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True,related_name="receiver")
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, null=True, blank=True, related_name="receiver"
+    )
     description = models.TextField(max_length=1000, null=True, blank=True)
-    type = models.CharField(max_length=100,choices=NOTIFICATION_TYPE,default="MESSAGE")
-    channel_id = models.CharField(max_length=1000,null=True,blank=True)
-    user_two = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True,related_name="sender")
-    horse_id = models.CharField(max_length=1000,null=True,blank=True)
+    type = models.CharField(
+        max_length=100, choices=NOTIFICATION_TYPE, default="MESSAGE"
+    )
+    channel_id = models.CharField(max_length=1000, null=True, blank=True)
+    user_two = models.ForeignKey(
+        User, on_delete=models.CASCADE, null=True, blank=True, related_name="sender"
+    )
+    horse_id = models.CharField(max_length=1000, null=True, blank=True)
     read_status = models.BooleanField(default=False)
 
     def __str__(self):

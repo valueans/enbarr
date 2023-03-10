@@ -85,7 +85,7 @@ LOCAL_APPS = [
     "SocialLinks",
     "FAQ",
     "aboutus",
-    "terms_and_conditions"
+    "terms_and_conditions",
 ]
 THIRD_PARTY_APPS = [
     "rest_framework",
@@ -93,6 +93,7 @@ THIRD_PARTY_APPS = [
     "rest_framework.authtoken",
     "rest_auth",
     "rest_auth.registration",
+    "dj_rest_auth",
     "bootstrap4",
     "allauth",
     "allauth.account",
@@ -333,7 +334,7 @@ SOCIAL_AUTH_GOOGLE_KEY = env.str("SOCIAL_AUTH_GOOGLE_KEY", "")
 SOCIAL_AUTH_GOOGLE_SECRET = env.str("SOCIAL_AUTH_GOOGLE_SECRET", "")
 
 # Google MAPS
-GOOGLE_MAPS_API_KEY = env.str("GOOGLE_MAPS_API_KEY", "")
+GOOGLE_MAPS_API_KEY = env.str("GOOGLE_MAPS_API_KEY", "")  # type: ignore
 
 LOGIN_REDIRECT_URL = "/"
 SOCIALACCOUNT_QUERY_EMAIL = True
@@ -369,4 +370,27 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.AllowAny",
     ],
+}
+
+SOCIALACCOUNT_PROVIDERS = {
+    "apple": {
+        "APP": {
+            "client_id": env.str("SOCIAL_AUTH_APPLE_CLIENT_ID", ""),
+            "secret": env.str("SOCIAL_AUTH_APPLE_SECRET", ""),
+            "key": env.str("SOCIAL_AUTH_APPLE_KEY", ""),
+            "certificate_key": env.str("SOCIAL_AUTH_APPLE_CERTIFICATE_KEY", ""),
+        }
+    },
+    "google": {
+        "APP": {
+            "client_id": env.str("SOCIAL_AUTH_GOOGLE_CLIENT_ID", ""),
+            "secret": env.str("SOCIAL_AUTH_GOOGLE_SECRET", ""),
+        }
+    },
+    "facebook": {
+        "APP": {
+            "client_id": env.str("SOCIAL_AUTH_FACEBOOK_CLIENT_ID", ""),
+            "secret": env.str("SOCIAL_AUTH_FACEBOOK_SECRET", ""),
+        }
+    },
 }

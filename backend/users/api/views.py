@@ -18,7 +18,7 @@ from rest_framework.authtoken.models import Token
 from rest_auth.registration.views import SocialLoginView
 from rest_auth.registration.serializers import SocialLoginSerializer
 from datetime import date
-
+from dj_rest_auth.registration.views import SocialLoginView as AppleLoginView
 
 from rest_framework.decorators import (
     api_view,
@@ -137,11 +137,10 @@ class GoogleLogin(SocialLoginView):
         return serializer_class(*args, **kwargs)
 
 
-class AppleLogin(SocialLoginView):
+class AppleLogin(AppleLoginView):
     adapter_class = AppleOAuth2Adapter
-    callback_url = "http://localhost:8000/"
+    callback_url = "http://tiny-bird-36835.botics.co"
     client_class = AppleOAuth2Client
-    serializer_class = SocialLoginSerializer
 
 
 @swagger_auto_schema(method="get", responses=customOtpResponse())

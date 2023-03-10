@@ -4,7 +4,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
 from datetime import date
-from django.db.models import Count,F
+from django.db.models import Count, F
 from home.helpers import *
 from payments.api.v1.helpers import createMonthlySubscriptionCharge
 from django.contrib.auth import get_user_model
@@ -439,7 +439,6 @@ def favouriteView(request):
 @authentication_classes([TokenAuthentication])
 def searchHorseView(request):
     if request.method == "GET":
-
         try:
             user_search_history = UserSearchSave.objects.get(user=request.user)
         except:
@@ -455,7 +454,7 @@ def searchHorseView(request):
             .all()
             .exclude(uploaded_by__id=request.user.id)
         )
-        
+
         filter_queryset = []
 
         if user_search_history.country:
@@ -763,6 +762,7 @@ def getRecentlyAddedHorsesView(request):
 def getTopHorseAddsView(request):
     horses = Horses.objects.all().order_by("total_views").reverse()[:6]
     return getPagination(horses, request, HorsesSerializer)
+
 
 @swagger_auto_schema(
     method="GET",

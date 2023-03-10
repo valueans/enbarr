@@ -18,7 +18,7 @@ class NotificationsSerializer(serializers.ModelSerializer):
             "user_two_profile",
             "type",
             "channel_id",
-            "horse_id"
+            "horse_id",
         )
         read_only_fields = ["id"]
 
@@ -27,7 +27,7 @@ class NotificationsSerializer(serializers.ModelSerializer):
         serializer = UserProfileSerializer(instance)
         return serializer.data
 
-    def get_user_two_profile(self,obj):
+    def get_user_two_profile(self, obj):
         try:
             instance = obj.user_two.userprofile
             serializer = UserProfileSerializer(instance)

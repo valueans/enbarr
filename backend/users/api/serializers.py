@@ -82,7 +82,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
         read_only_fields = ["id"]
 
     def validate_email(self, email):
-
         user = User.objects.filter(email=email)
         if user.count() > 0:
             raise serializers.ValidationError("Email Already Exist")

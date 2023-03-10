@@ -2,5 +2,5 @@ from django.apps import AppConfig
 
 
 class PrivacypolicyConfig(AppConfig):
-    name = 'PrivacyPolicy'
+    name = "PrivacyPolicy"
     verbose_name = "Privacy Policy"

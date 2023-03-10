@@ -4,13 +4,15 @@ from rest_framework.permissions import AllowAny
 from .serializers import *
 from .models import *
 from rest_framework import status
-from rest_framework.decorators import permission_classes,api_view
+from rest_framework.decorators import permission_classes, api_view
 
 
-@swagger_auto_schema(method="GET", responses={200: TermAndConditionSerializer(many=True)})
+@swagger_auto_schema(
+    method="GET", responses={200: TermAndConditionSerializer(many=True)}
+)
 @api_view(["GET"])
 @permission_classes([AllowAny])
 def termsAndConditionView(request):
     obj = TermAndCondition.objects.all()
-    serializer = TermAndConditionSerializer(obj,many=True)
-    return Response(data=serializer.data,status=status.HTTP_200_OK)
+    serializer = TermAndConditionSerializer(obj, many=True)
+    return Response(data=serializer.data, status=status.HTTP_200_OK)

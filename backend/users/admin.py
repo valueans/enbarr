@@ -7,6 +7,7 @@ from .forms import UserCreationForm
 
 User = get_user_model()
 
+
 # list filter by month
 class UserSubscriptionFilter(admin.SimpleListFilter):
     title = "Subscription Month"  # a label for our filter
@@ -68,7 +69,6 @@ class NewUserFilter(admin.SimpleListFilter):
 
 @admin.register(UserProfile)
 class UserProfile(admin.ModelAdmin):
-
     list_display = [
         "get_username",
         "get_email",

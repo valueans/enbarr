@@ -2,5 +2,5 @@ from django.apps import AppConfig
 
 
 class AboutusConfig(AppConfig):
-    name = 'aboutus'
+    name = "aboutus"
     verbose_name = "About Us"

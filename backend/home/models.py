@@ -101,7 +101,7 @@ class Horses(models.Model):
     state = models.CharField(max_length=1000, null=True, blank=True)
     city = models.CharField(max_length=1000, null=True, blank=True)
     country = models.CharField(max_length=1000, null=True, blank=True)
-    zip_code = models.CharField(max_length=100,null=True, blank=True)
+    zip_code = models.CharField(max_length=100, null=True, blank=True)
     price = models.FloatField(null=True, blank=True)
     description = models.TextField(max_length=2000, null=True, blank=True)
     breed = models.ForeignKey(Breeds, on_delete=models.CASCADE, null=True, blank=True)

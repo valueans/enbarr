@@ -7,14 +7,12 @@ User = get_user_model()
 
 
 class UserDetailView(LoginRequiredMixin, DetailView):
-
     model = User
     slug_field = "username"
     slug_url_kwarg = "username"
 
 
 class UserUpdateView(LoginRequiredMixin, UpdateView):
-
     model = User
     fields = ["name"]
 
@@ -26,7 +24,6 @@ class UserUpdateView(LoginRequiredMixin, UpdateView):
 
 
 class UserRedirectView(LoginRequiredMixin, RedirectView):
-
     permanent = False
 
     def get_redirect_url(self):

@@ -4,26 +4,62 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='SocialLinks',
+            name="SocialLinks",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('facebook', models.CharField(blank=True, default='', max_length=1000, null=True)),
-                ('instagram', models.CharField(blank=True, default='', max_length=1000, null=True)),
-                ('twitter', models.CharField(blank=True, default='', max_length=1000, null=True)),
-                ('linkedIn', models.CharField(blank=True, default='', max_length=1000, null=True)),
-                ('appleStoreLink', models.CharField(blank=True, default='', max_length=1000, null=True)),
-                ('googleStoreLink', models.CharField(blank=True, default='', max_length=1000, null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "facebook",
+                    models.CharField(
+                        blank=True, default="", max_length=1000, null=True
+                    ),
+                ),
+                (
+                    "instagram",
+                    models.CharField(
+                        blank=True, default="", max_length=1000, null=True
+                    ),
+                ),
+                (
+                    "twitter",
+                    models.CharField(
+                        blank=True, default="", max_length=1000, null=True
+                    ),
+                ),
+                (
+                    "linkedIn",
+                    models.CharField(
+                        blank=True, default="", max_length=1000, null=True
+                    ),
+                ),
+                (
+                    "appleStoreLink",
+                    models.CharField(
+                        blank=True, default="", max_length=1000, null=True
+                    ),
+                ),
+                (
+                    "googleStoreLink",
+                    models.CharField(
+                        blank=True, default="", max_length=1000, null=True
+                    ),
+                ),
             ],
             options={
-                'verbose_name_plural': 'Social Media Platform Links',
+                "verbose_name_plural": "Social Media Platform Links",
             },
         ),
     ]

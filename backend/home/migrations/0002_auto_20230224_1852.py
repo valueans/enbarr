@@ -6,83 +6,138 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('home', '0001_initial'),
+        ("home", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='report',
-            name='user',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+            model_name="report",
+            name="user",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AddField(
-            model_name='likes',
-            name='user',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+            model_name="likes",
+            name="user",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AddField(
-            model_name='horses',
-            name='breed',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='home.Breeds'),
+            model_name="horses",
+            name="breed",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="home.Breeds",
+            ),
         ),
         migrations.AddField(
-            model_name='horses',
-            name='color',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='home.Colors'),
+            model_name="horses",
+            name="color",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="home.Colors",
+            ),
         ),
         migrations.AddField(
-            model_name='horses',
-            name='discipline',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='home.Disciplines'),
+            model_name="horses",
+            name="discipline",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="home.Disciplines",
+            ),
         ),
         migrations.AddField(
-            model_name='horses',
-            name='dislikes',
-            field=models.ManyToManyField(blank=True, related_name='dislikes', to='home.DisLikes'),
+            model_name="horses",
+            name="dislikes",
+            field=models.ManyToManyField(
+                blank=True, related_name="dislikes", to="home.DisLikes"
+            ),
         ),
         migrations.AddField(
-            model_name='horses',
-            name='images',
-            field=models.ManyToManyField(related_name='horse_images', to='home.HorseImages'),
+            model_name="horses",
+            name="images",
+            field=models.ManyToManyField(
+                related_name="horse_images", to="home.HorseImages"
+            ),
         ),
         migrations.AddField(
-            model_name='horses',
-            name='keywords',
-            field=models.ManyToManyField(related_name='keywords', to='home.Keywords'),
+            model_name="horses",
+            name="keywords",
+            field=models.ManyToManyField(related_name="keywords", to="home.Keywords"),
         ),
         migrations.AddField(
-            model_name='horses',
-            name='likes',
-            field=models.ManyToManyField(blank=True, related_name='likes', to='home.Likes'),
+            model_name="horses",
+            name="likes",
+            field=models.ManyToManyField(
+                blank=True, related_name="likes", to="home.Likes"
+            ),
         ),
         migrations.AddField(
-            model_name='horses',
-            name='temperament',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='home.Temperaments'),
+            model_name="horses",
+            name="temperament",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="home.Temperaments",
+            ),
         ),
         migrations.AddField(
-            model_name='horses',
-            name='uploaded_by',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+            model_name="horses",
+            name="uploaded_by",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AddField(
-            model_name='favourite',
-            name='horses',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='home.Horses'),
+            model_name="favourite",
+            name="horses",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="home.Horses",
+            ),
         ),
         migrations.AddField(
-            model_name='favourite',
-            name='user',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+            model_name="favourite",
+            name="user",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AddField(
-            model_name='dislikes',
-            name='user',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+            model_name="dislikes",
+            name="user",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
     ]
