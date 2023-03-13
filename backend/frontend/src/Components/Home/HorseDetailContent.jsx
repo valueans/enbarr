@@ -26,11 +26,11 @@ const id = searchParam.get('id')
 
 const handleFavClick = async ()=>{
   if (horseDetails.isfav === false){
-    const response = await HorseService.addHorseToFav(horseDetails.id)
+    const response = await HorseService.addHorseToFav(id)
     setHorseDetails({...horseDetails,isfav:true})
   }
   else{
-    const response = await HorseService.deleteHorseFromFav(horseDetails.id)
+    const response = await HorseService.deleteHorseFromFav(id)
     setHorseDetails({...horseDetails,isfav:false})
   }
 
@@ -52,15 +52,10 @@ useEffect(()=>{
 
 useEffect(()=>{
   const getHorseDetails = async ()=>{
-    const response = await HorseService.getHorseDetails(id);
-
-    setHorseDetails(response)
-    if (response.user_location){
-      navigator.geolocation.getCurrentPosition(async (position)=> {
-        const distance_response = await HorseService.getDistance(`${position.coords.latitude},${position.coords.longitude}`,response.user_location);
-        setDistance(distance_response.distance)
-      });
-    }
+    navigator.geolocation.getCurrentPosition(async (position)=> {
+      const response = await HorseService.getHorseDetails(id,`POINT(${position.coords.latitude} ${position.coords.longitude})`);
+      setHorseDetails(response)
+    });
   }
   getHorseDetails()
   window.scrollTo(0, 0);
@@ -135,12 +130,12 @@ return (
 
         {/* horse location starts */}
         {
-          distance?
+          horseDetails.distance?
           <Grid item xs={12}>
           <Grid container>
             <Grid item xs={3} className="alignContentCenter">
               <LocationOnIcon sx={{color:"#EA0000"}} />
-              <Typography variant="imageDescriptions">{distance}</Typography>
+              <Typography variant="imageDescriptions">{parseInt(horseDetails.distance)} miles</Typography>
             </Grid>
             <Grid item xs={9} className="justifyContentEnd">
               <Typography variant='subscriptionCardTitle' sx={{mt:"40px"}}>${horseDetails.price}</Typography>

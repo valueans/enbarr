@@ -17,6 +17,7 @@ import { useNavigate } from 'react-router-dom';
 import AuthService from '../../Services/AuthService';
 import StateSelect from '../Selects/StateSelect';
 import CitiesSelect from '../Selects/CitiesSelect';
+import RadiusSelect from '../Selects/RadiusSelect';
 
 const BuyerContent = ({setSnackBarData}) => {
   
@@ -34,7 +35,7 @@ const BuyerContent = ({setSnackBarData}) => {
   const [keywordVal,setKeywordVal] = useState("");
   const [keywordLoading,setKeywordLoading] = useState(false);
 
-  const [userSearchSaveData,setUserSearchSaveData] = useState({country:"",city:"",state:"",breed_id:"",min_age:"",max_age:"",min_height:"",max_height:"",min_price:"",max_price:"",discipline_id:"",gender:[],gender_list:[],color_id:"",temperament_id:"",keywords_id:[]});
+  const [userSearchSaveData,setUserSearchSaveData] = useState({country:"",city:"",state:"",breed_id:"",min_age:"",max_age:"",min_height:"",max_height:"",min_price:"",max_price:"",discipline_id:"",gender:[],gender_list:[],color_id:"",temperament_id:"",keywords_id:[],radius:20});
 
 
   const handleMatch = async ()=>{
@@ -109,6 +110,12 @@ const BuyerContent = ({setSnackBarData}) => {
           <Grid item xs={12}>
             <Typography variant='authInputTitle'>My preferences</Typography>
           </Grid>
+          {/* search radius input starts */}
+          <Grid item xs={12} sx={{mt:3}}>
+            <Typography variant='authInputTitle'>Search Radius</Typography>
+            <RadiusSelect userSearchSaveData={userSearchSaveData} setUserSearchSaveData={setUserSearchSaveData}/>
+          </Grid>
+          {/* search radius input ends */}
           {/* Location dropdown starts */}
           <Grid item xs={12} sx={{mt:3}}>
             <Typography variant='authInputTitle'>Locations</Typography>
@@ -218,7 +225,7 @@ const BuyerContent = ({setSnackBarData}) => {
                           var _genderlist = userSearchSaveData.gender_list?userSearchSaveData.gender_list:[];
                           var _gender = "";
                           if (_genderlist.includes(e.target.value)){
-                            _genderlist = _genderlist.filter((item)=>item!=e.target.value);
+                            _genderlist = _genderlist.filter((item)=>item!==e.target.value);
                           }
                           else{
                             _genderlist.push(e.target.value)

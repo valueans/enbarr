@@ -106,10 +106,11 @@ const HorseService = {
         });
         return response
     },
-    getHorseDetails : async (id) =>{
+    getHorseDetails : async (id,location) =>{
         const {data:response} = await axios.get(myHorsesUrl,{
             params:{
                 "horse-id":id,
+                "user_location":location
             }
         });
         return response
@@ -132,10 +133,11 @@ const HorseService = {
         });
         return response
     },
-    getMatchHorse : async (page=1) =>{
+    getMatchHorse : async (page=1,location) =>{
         const {data:response} = await axios.get(matchHorseUrl,{
             params:{
-                "page":page
+                "page":page,
+                "user_location":location
             }
         });
         return response

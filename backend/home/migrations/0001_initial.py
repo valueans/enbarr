@@ -2,7 +2,7 @@
 
 from django.db import migrations, models
 import django.db.models.deletion
-
+from django.contrib.postgres.operations import CreateExtension
 
 class Migration(migrations.Migration):
     initial = True
@@ -10,6 +10,7 @@ class Migration(migrations.Migration):
     dependencies = []
 
     operations = [
+        CreateExtension('postgis'),
         migrations.CreateModel(
             name="Breeds",
             fields=[

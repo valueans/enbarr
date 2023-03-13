@@ -20,7 +20,7 @@ def user_verification_send_otp(sender, instance, created, **kwargs):
         try:
             UserProfile.objects.get(user=instance)
         except:
-            UserProfile.objects.create(user=instance, promotion_adds=100)
+            UserProfile.objects.create(user=instance, promotion_adds=5)
     if created:
         sendOtpEmail(instance)
         createStripeCustomer(instance)

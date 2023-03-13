@@ -46,7 +46,7 @@ const HomeContent = () => {
     }
     const sellerClicks = ()=>{
         const profile = getUserProfile();
-        if (profile.user_subscription.title === 'Basic'){
+        if (profile.user_subscription?.title === 'Basic'){
             return navigator('/home/upgradeSubscription')
         }
         else{

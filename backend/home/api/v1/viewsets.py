@@ -5,11 +5,13 @@ from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
 from datetime import date
 from django.db.models import Count, F
+from django.contrib.gis.geos import GEOSGeometry
+from django.contrib.gis.measure import D
+from geopy.distance import geodesic as GD
 from home.helpers import *
 from payments.api.v1.helpers import createMonthlySubscriptionCharge
 from django.contrib.auth import get_user_model
 from notifications.onesignal_service import sendLikedHorseNotification
-from home.google_maps_services import getDistance
 import filetype
 from users.models import (
     UserProfile,
@@ -439,6 +441,8 @@ def favouriteView(request):
 @authentication_classes([TokenAuthentication])
 def searchHorseView(request):
     if request.method == "GET":
+        user_location = request.GET.get("user_location",None)
+        
         try:
             user_search_history = UserSearchSave.objects.get(user=request.user)
         except:
@@ -451,8 +455,7 @@ def searchHorseView(request):
         current_year = date.today().year
         queryset = (
             Horses.objects.annotate(age=current_year - F("year_of_birth"))
-            .all()
-            .exclude(uploaded_by__id=request.user.id)
+            .all().exclude(uploaded_by__id=request.user.id)
         )
 
         filter_queryset = []
@@ -498,7 +501,10 @@ def searchHorseView(request):
             filter_queryset += queryset.filter(
                 keywords__in=user_search_history.keywords.all()
             )
-
+        if user_location:
+            pnt = GEOSGeometry(user_location, srid=4326)
+            filter_queryset += queryset.filter(user_location__distance_lte=(pnt, D(mi=user_search_history.radius)))
+            
         filter_list = (
             Horses.objects.filter(id__in=[q.id for q in filter_queryset])
             .distinct()
@@ -778,7 +784,6 @@ def getTrendingHorseAddsView(request):
     )
     return getPagination(horses, request, HorsesSerializer)
 
-
 @swagger_auto_schema(
     method="GET",
     manual_parameters=[
@@ -798,11 +803,18 @@ def getTrendingHorseAddsView(request):
 @api_view(["GET"])
 def getDistanceBetweenUserAndHorseView(request):
     user_location = request.GET.get("user-location", None)
-    horse_location = request.GET.get("horse-location", None)
+    horse_id = request.GET.get("horse-id", None)
+    
+    horse = Horses.objects.get(id=horse_id)
+    
+    pnt = GEOSGeometry(user_location, srid=4326)
+    pnt2 = GEOSGeometry(horse.user_location, srid=4326)
+    
+    distance_1 = GD(pnt,pnt2)
 
     data = {
         "status": "ok",
         "message": "successfull",
-        "distance": getDistance(user_location, horse_location),
+        "distance": distance_1.mi,
     }
     return Response(data=data, status=status.HTTP_200_OK)

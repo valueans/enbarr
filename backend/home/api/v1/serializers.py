@@ -3,7 +3,9 @@ from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 from users.models import UserSearchSave
 from users.api.serializers import UserProfileSerializer
-from home.google_maps_services import getAddress, getDistance
+from django.contrib.gis.geos import GEOSGeometry,Point
+from geopy.distance import geodesic as GD
+
 from datetime import date
 from home.models import (
     ContactUs,
@@ -99,6 +101,7 @@ class HorseUpdateSerializer(serializers.ModelSerializer):
     discipline = DisciplinesSerializer(read_only=True)
     discipline_id = serializers.IntegerField(write_only=True, required=False)
     age = serializers.SerializerMethodField(read_only=True)
+    distance = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Horses
@@ -196,6 +199,14 @@ class HorseUpdateSerializer(serializers.ModelSerializer):
         except:
             year = ""
         return year
+    
+    def get_distance(self,obj):
+        user_location = self.context['request'].GET.get('user_location',None)
+        if user_location:
+            pnt = GEOSGeometry(user_location, srid=4326)
+            distance = GD(pnt,obj.user_location)
+            return distance.mi
+        return None
 
 
 class HorsesSerializer(serializers.ModelSerializer):
@@ -218,6 +229,7 @@ class HorsesSerializer(serializers.ModelSerializer):
     discipline = DisciplinesSerializer(read_only=True)
     discipline_id = serializers.IntegerField(write_only=True, required=True)
     age = serializers.SerializerMethodField(read_only=True)
+    distance = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Horses
@@ -271,15 +283,6 @@ class HorsesSerializer(serializers.ModelSerializer):
         instance.temperament = temperament
         instance.discipline = discipline
         instance.breed = breed
-
-        # verifying location from google maps api
-        # user_location = instance.user_location
-        # try:
-        #     state, country = getAddress(user_location)
-        #     instance.state = state
-        #     instance.country = country
-        # except:
-        #     pass
 
         for id in images_id:
             try:
@@ -349,6 +352,14 @@ class HorsesSerializer(serializers.ModelSerializer):
         images = obj.images.all().order_by("id")
         serializer = HorseImagesSerializer(images, many=True)
         return serializer.data
+    
+    def get_distance(self,obj):
+        user_location = self.context['request'].GET.get('user_location',None)
+        if user_location:
+            pnt = GEOSGeometry(user_location, srid=4326)
+            distance = GD(pnt,obj.user_location)
+            return distance.mi
+        return None
 
 
 class FavouriteSerializer(serializers.ModelSerializer):

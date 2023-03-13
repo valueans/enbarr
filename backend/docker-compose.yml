@@ -2,36 +2,13 @@ version: "3.9"
 
 services:
   web:
-    depends_on:
-      - postgres
-      - redis
-  postgres:
-    image: postgres:12
-  redis:
-    image: redis:5
-
-  celeryworker:
     build:
       context: .
-      dockerfile: ./Dockerfile
-    depends_on:
-      - redis
-      - postgres
-    command: celery -A tiny_bird_36835 worker -l INFO
-
-  celerybeat:
-    build:
-      context: .
-      dockerfile: ./Dockerfile
-    depends_on:
-      - redis
-    ports: []
-    command: celery -A tiny_bird_36835 beat -l INFO
-  
-  flower:
-    build:
-      context: .
-      dockerfile: ./Dockerfile
+      args:
+        SECRET_KEY: ${SECRET_KEY}
     env_file: .env
+    volumes:
+      - ./:/opt/webapp
     ports:
-      - "5555:5555"
+      - "8000:${PORT}"
+

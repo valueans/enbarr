@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 
 const CustomSwiper = ({currentHorseId,setCurrentHorseId,setIsLiked,setIsDisLiked,swiperRef}) => {
 
-    const navigator = useNavigate();
+    const navigation = useNavigate();
 
     const [matchList,setMatchList] = useState([]);
     const [currentPage,setCurrentPage] = useState(1);
@@ -22,14 +22,16 @@ const CustomSwiper = ({currentHorseId,setCurrentHorseId,setIsLiked,setIsDisLiked
     useEffect(()=>{
         const getMatchHorse = async () =>{
             try{
-                const response = await HorseService.getMatchHorse(currentPage);  
-                setTotalAddsCount(response?.count)
-                setMatchList([...matchList,...response?.results])
-                if (response.count > 0){
-                    setCurrentHorseId(response?.results[0].id)
-                    setIsLiked(response?.results[0].isliked)
-                    setIsDisLiked(response?.results[0].isdisliked)
-                } 
+                navigator.geolocation.getCurrentPosition(async (position)=> {
+                    const response = await HorseService.getMatchHorse(currentPage,`POINT(${position.coords.latitude} ${position.coords.longitude})`);
+                    setTotalAddsCount(response?.count)
+                    setMatchList([...matchList,...response?.results])
+                    if (response.count > 0){
+                        setCurrentHorseId(response?.results[0].id)
+                        setIsLiked(response?.results[0].isliked)
+                        setIsDisLiked(response?.results[0].isdisliked)
+                    }
+                });
             }
             catch(error){
                 console.log("error",error)
@@ -39,7 +41,7 @@ const CustomSwiper = ({currentHorseId,setCurrentHorseId,setIsLiked,setIsDisLiked
     },[currentPage])
 
     const handleClick = ()=>{
-        return navigator(`/home/horse?id=${currentHorseId}`)
+        return navigation(`/home/horse?id=${currentHorseId}`)
     }
 
 

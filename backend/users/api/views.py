@@ -139,8 +139,13 @@ class GoogleLogin(AppleLoginView):
 
 class AppleLogin(AppleLoginView):
     adapter_class = AppleOAuth2Adapter
-    callback_url = "https://tiny-bird-36835.botics.co"
+    callback_url = "https://c954-111-119-177-44.in.ngrok.io"
     client_class = AppleOAuth2Client
+    
+    def get_serializer(self, *args, **kwargs):
+        serializer_class = self.get_serializer_class()
+        kwargs["context"] = self.get_serializer_context()
+        return serializer_class(*args, **kwargs)
 
 
 @swagger_auto_schema(method="get", responses=customOtpResponse())

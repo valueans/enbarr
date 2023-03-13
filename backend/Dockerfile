@@ -1,7 +1,5 @@
 FROM crowdbotics/cb-django:3.8-slim-buster AS build
 
-# RUN apt-get update && apt-get install -y binutils libproj-dev gdal-bin
-
 # Copy dependency management files and install app packages to /.venv
 COPY ./Pipfile ./Pipfile.lock /
 RUN PIPENV_VENV_IN_PROJECT=1 pipenv install --deploy
@@ -9,6 +7,10 @@ RUN PIPENV_VENV_IN_PROJECT=1 pipenv install --deploy
 
 FROM crowdbotics/cb-django:3.8-slim-buster AS release
 ARG SECRET_KEY
+
+
+RUN apt-get update && apt-get install -y netcat gcc
+RUN apt-get update && apt-get install -y binutils libproj-dev gdal-bin python-gdal python3-gdal
 
 # Set Working directory
 WORKDIR /opt/webapp

@@ -76,6 +76,7 @@ class UserProfile(models.Model):
 class UserSearchSave(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     country = models.CharField(max_length=1000, null=True, blank=True)
+    radius = models.IntegerField(default=20)
     city = models.CharField(max_length=1000, null=True, blank=True)
     state = models.CharField(max_length=1000, null=True, blank=True)
     breed_id = models.ForeignKey(

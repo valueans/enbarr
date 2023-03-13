@@ -23,6 +23,7 @@ from google.cloud import secretmanager
 from google.auth.exceptions import DefaultCredentialsError
 from google.api_core.exceptions import PermissionDenied
 
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -73,6 +74,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.sites",
+    "django.contrib.gis",
 ]
 LOCAL_APPS = [
     "home",
@@ -89,6 +91,7 @@ LOCAL_APPS = [
 ]
 THIRD_PARTY_APPS = [
     "rest_framework",
+    "rest_framework_gis",
     "corsheaders",
     "rest_framework.authtoken",
     "rest_auth",
@@ -156,6 +159,7 @@ DATABASES = {
 
 if env.str("DATABASE_URL", default=None):
     DATABASES = {"default": env.db()}
+    DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
 
 
 # Password validation

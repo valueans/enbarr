@@ -80,7 +80,7 @@ const keywordClick = async ()=>{
 
   useEffect(()=>{
     navigator.geolocation.getCurrentPosition(function (position) {
-        setHorseData({...horseData,user_location:`${position.coords.latitude},${position.coords.longitude}`})
+        setHorseData({...horseData,user_location:`POINT(${position.coords.latitude} ${position.coords.longitude})`})
     });
   },[horseData.user_location])
 
