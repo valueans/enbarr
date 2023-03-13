@@ -22,6 +22,8 @@ from google.oauth2 import service_account
 from google.cloud import secretmanager
 from google.auth.exceptions import DefaultCredentialsError
 from google.api_core.exceptions import PermissionDenied
+import dj_database_url
+
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -158,7 +160,7 @@ DATABASES = {
 }
 
 if env.str("DATABASE_URL", default=None):
-    DATABASES = {"default": env.db()}
+    DATABASES['default'] = dj_database_url.config()
     DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
 
 
