@@ -152,24 +152,11 @@ WSGI_APPLICATION = "tiny_bird_36835.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
-    }
-}
+DATABASES = {}
+DATABASES['default'] = dj_database_url.config()
+DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
 
-database_credentials = dj_database_url.config()
-DATABASES = {
-'default': {
-    'ENGINE': 'django.contrib.gis.db.backends.postgis',
-    'NAME': database_credentials['NAME'],
-    'USER': database_credentials['USER'],
-    'PASSWORD': database_credentials['PASSWORD'],
-    'HOST': database_credentials['HOST'],
-    'PORT': database_credentials['PORT'],
-    }
-}
+print("DATABASES",DATABASES)
 
 
 # Password validation
