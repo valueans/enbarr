@@ -159,18 +159,17 @@ DATABASES = {
     }
 }
 
-if env.str("DATABASE_URL", default=None):
-    database_credentials = dj_database_url.config()
-    DATABASES = {
-    'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': database_credentials['NAME'],
-        'USER': database_credentials['USER'],
-        'PASSWORD': database_credentials['PASSWORD'],
-        'HOST': database_credentials['HOST'],
-        'PORT': database_credentials['PORT'],
-        }
+database_credentials = dj_database_url.config()
+DATABASES = {
+'default': {
+    'ENGINE': 'django.contrib.gis.db.backends.postgis',
+    'NAME': database_credentials['NAME'],
+    'USER': database_credentials['USER'],
+    'PASSWORD': database_credentials['PASSWORD'],
+    'HOST': database_credentials['HOST'],
+    'PORT': database_credentials['PORT'],
     }
+}
 
 
 # Password validation
