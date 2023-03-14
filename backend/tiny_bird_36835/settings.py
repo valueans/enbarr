@@ -160,9 +160,9 @@ DATABASES = {
 }
 
 if env.str("DATABASE_URL", default=None):
-    DATABASES = {"default": dj_database_url.config()}
-    DATABASES['default']['ENGINE'] = "django.contrib.gis.db.backends.postgis"
-    print("DATABASES,DATABASES",DATABASES)
+    DATABASES = {
+        'default': env.db_url(engine='django.contrib.gis.db.backends.postgis')
+    }
 
 
 # Password validation
