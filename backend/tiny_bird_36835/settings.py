@@ -22,6 +22,7 @@ from google.oauth2 import service_account
 from google.cloud import secretmanager
 from google.auth.exceptions import DefaultCredentialsError
 from google.api_core.exceptions import PermissionDenied
+import dj_database_url
 
 
 
@@ -151,10 +152,17 @@ WSGI_APPLICATION = "tiny_bird_36835.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-DATABASES = {"default": env.db()}
-# DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+    }
+}
 
-print("DATABASES",DATABASES)
+if env.str("DATABASE_URL", default=None):
+    DATABASES = {"default": dj_database_url.config()}
+    DATABASES['default']['ENGINE'] = "django.contrib.gis.db.backends.postgis"
+    print("DATABASES,DATABASES",DATABASES)
 
 
 # Password validation
