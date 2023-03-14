@@ -152,7 +152,7 @@ WSGI_APPLICATION = "tiny_bird_36835.wsgi.application"
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {"default": env.db()}
-DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
+# DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
 
 print("DATABASES",DATABASES)
 
