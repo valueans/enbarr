@@ -509,6 +509,22 @@ def searchHorseView(request):
         return getPagination(filter_queryset, request, HorsesSerializer)
 
 
+@swagger_auto_schema(method="get", responses={200: HorsesSerializer(many=True)})
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+@authentication_classes([TokenAuthentication])
+def searchHorsesByNameView(request):
+    search_param = request.GET.get("search_param",None)
+    if search_param is None:
+        data={
+            "status":"error",
+            "message":"search_param is required"
+        }
+        return Response(data=data,status=status.HTTP_404_NOT_FOUND)
+    search_param = search_param.capitalize()
+    horses = Horses.objects.filter(title__icontains=search_param).exclude(uploaded_by__id=request.user.id).order_by("id").reverse()
+    return getPagination(horses, request, HorsesSerializer)
+
 @swagger_auto_schema(method="GET", responses={200: UserSearchSaveSerializer(many=True)})
 @swagger_auto_schema(
     method="POST",
