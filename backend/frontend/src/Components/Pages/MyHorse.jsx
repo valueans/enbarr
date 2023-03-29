@@ -50,7 +50,7 @@ return (
                     borderRadius="50px 50px 50px 50px" />
             </Grid>
             <Grid item xs={6}>
-                <AuthenticationTabs title="My Horse" isActive={myHorseActive} onClick={myHorseRoute}
+                <AuthenticationTabs title="My Horses" isActive={myHorseActive} onClick={myHorseRoute}
                     borderRadius="50px 50px 50px 50px" />
             </Grid>
         </Grid>

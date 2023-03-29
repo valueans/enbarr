@@ -461,57 +461,52 @@ def searchHorseView(request):
         filter_queryset = []
 
         if user_search_history.country:
-            filter_queryset += queryset.filter(country=user_search_history.country)
+            filter_queryset = queryset.filter(country=user_search_history.country)
         if user_search_history.state:
-            filter_queryset += queryset.filter(state=user_search_history.state)
+            filter_queryset = filter_queryset.filter(state=user_search_history.state)
         if user_search_history.city:
-            filter_queryset += queryset.filter(city=user_search_history.city)
+            filter_queryset = filter_queryset.filter(city=user_search_history.city)
         if user_search_history.breed_id:
-            filter_queryset += queryset.filter(breed=user_search_history.breed_id)
+            filter_queryset = filter_queryset.filter(breed=user_search_history.breed_id)
         if user_search_history.min_age:
-            filter_queryset += queryset.filter(age__gte=user_search_history.min_age)
+            filter_queryset = filter_queryset.filter(age__gte=user_search_history.min_age)
         if user_search_history.max_age:
-            filter_queryset += queryset.filter(age__lte=user_search_history.max_age)
+            filter_queryset = filter_queryset.filter(age__lte=user_search_history.max_age)
         if user_search_history.min_height:
-            filter_queryset += queryset.filter(
+            filter_queryset = filter_queryset.filter(
                 height__gte=user_search_history.min_height
             )
         if user_search_history.max_height:
-            filter_queryset += queryset.filter(
+            filter_queryset = filter_queryset.filter(
                 height__lte=user_search_history.max_height
             )
         if user_search_history.min_price:
-            filter_queryset += queryset.filter(price__gte=user_search_history.min_price)
+            filter_queryset = filter_queryset.filter(price__gte=user_search_history.min_price)
         if user_search_history.max_price:
-            filter_queryset += queryset.filter(price__lte=user_search_history.max_price)
+            filter_queryset = filter_queryset.filter(price__lte=user_search_history.max_price)
         if user_search_history.discipline_id:
-            filter_queryset += queryset.filter(
+            filter_queryset = filter_queryset.filter(
                 discipline=user_search_history.discipline_id
             )
         if user_search_history.gender:
             genders = user_search_history.gender.split(",")
-            filter_queryset += queryset.filter(gender__in=genders)
+            filter_queryset = filter_queryset.filter(gender__in=genders)
         if user_search_history.color_id:
-            filter_queryset += queryset.filter(color=user_search_history.color_id)
+            filter_queryset = filter_queryset.filter(color=user_search_history.color_id)
         if user_search_history.temperament_id:
-            filter_queryset += queryset.filter(
+            filter_queryset = filter_queryset.filter(
                 temperament=user_search_history.temperament_id
             )
         if user_search_history.keywords.all().count() > 0:
-            filter_queryset += queryset.filter(
+            filter_queryset = filter_queryset.filter(
                 keywords__in=user_search_history.keywords.all()
             )
         if user_location:
             pnt = GEOSGeometry(user_location, srid=4326)
-            filter_queryset += queryset.filter(user_location__distance_lte=(pnt, D(mi=user_search_history.radius)))
-            
-        filter_list = (
-            Horses.objects.filter(id__in=[q.id for q in filter_queryset])
-            .distinct()
-            .order_by("id")
-            .reverse()
-        )
-        return getPagination(filter_list, request, HorsesSerializer)
+            filter_queryset = filter_queryset.filter(user_location__distance_lte=(pnt, D(mi=user_search_history.radius)))
+
+        filter_queryset = filter_queryset.distinct().order_by("id").reverse()
+        return getPagination(filter_queryset, request, HorsesSerializer)
 
 
 @swagger_auto_schema(method="GET", responses={200: UserSearchSaveSerializer(many=True)})

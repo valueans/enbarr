@@ -239,7 +239,7 @@ class HorsesSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         images_id = validated_data.pop("images_id")
-        keywords_id = validated_data.pop("keywords_id")
+        keywords_id = validated_data.pop("keywords_id",None)
         breed_id = validated_data.pop("breed_id")
         color_id = validated_data.pop("color_id")
         temperament_id = validated_data.pop("temperament_id")
@@ -293,14 +293,15 @@ class HorsesSerializer(serializers.ModelSerializer):
                 )
             instance.images.add(image_instance)
 
-        for id in keywords_id:
-            try:
-                keyword_instance = Keywords.objects.get(id=id)
-            except:
-                raise serializers.ValidationError(
-                    {"status": "error", "message": "Invalid keyword-id"}
-                )
-            instance.keywords.add(keyword_instance)
+        if keywords_id:
+            for id in keywords_id:
+                try:
+                    keyword_instance = Keywords.objects.get(id=id)
+                except:
+                    raise serializers.ValidationError(
+                        {"status": "error", "message": "Invalid keyword-id"}
+                    )
+                instance.keywords.add(keyword_instance)
 
         instance.save()
         return instance
@@ -400,18 +401,20 @@ class UserSearchSaveSerializer(serializers.ModelSerializer):
         read_only_fields = ["id"]
 
     def create(self, validated_data):
-        keywords_id = validated_data.pop("keywords_id")
-        try:
-            keywords = Keywords.objects.filter(id__in=keywords_id)
-        except:
-            raise serializers.ValidationError(
-                {"status": "error", "message": "Invalid keyword id"}
-            )
         user = self.context["request"].user
         instance, created = UserSearchSave.objects.get_or_create(user=user)
+        
+        keywords_id = validated_data.pop("keywords_id",None)
+        if keywords_id:
+            try:
+                keywords = Keywords.objects.filter(id__in=keywords_id)
+                instance.keywords.set(keywords)
+            except:
+                raise serializers.ValidationError(
+                    {"status": "error", "message": "Invalid keyword id"}
+                )
         for key, value in validated_data.items():
             setattr(instance, key, value)
-        instance.keywords.set(keywords)
         instance.save()
         return instance
 
