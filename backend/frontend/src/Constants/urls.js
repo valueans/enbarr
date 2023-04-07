@@ -30,6 +30,8 @@ export const favouriteHorsesUrl = `${api}favourite/`
 // my horses
 export const myHorsesUrl = `${api}horse/`
 
+export const allHorsesLatLngUrl = `${api}all-horses-lat-lng/`
+
 
 export const getDistanceUrl = `${api}get-distance/`
 

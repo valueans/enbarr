@@ -14,9 +14,18 @@ import TermsAndCondition from '../Settings/TermsAndCondition'
 
 const Home = () => {
 
-    const navigator = useNavigate();
     const isAuthenticated = AuthService.checkUserAuthenticated();
     const [snackBarData,setSnackBarData] = useState({open:false,message:"",severity:"error"});
+
+    const [lat,setLat] = useState(null);
+    const [lng,setLng] = useState(null);
+
+    useEffect(()=>{
+        navigator.geolocation.getCurrentPosition(function (position) {
+            setLat(position.coords.latitude)
+            setLng(position.coords.longitude)
+        })
+    },[navigator.geolocation])
     
 
   return (
@@ -33,9 +42,9 @@ const Home = () => {
           <Route path="" element={<HomeContent />} />
           <Route path="privacypolicy" element={<PrivacyPolicy />} />
           <Route path="termsAndCondition" element={<TermsAndCondition />} />
-          <Route path="buyer" element={<BuyerContent setSnackBarData={setSnackBarData}/>} />
+          <Route path="buyer" element={<BuyerContent setSnackBarData={setSnackBarData} lat={lat} lng={lng}/>} />
           <Route path="upgradeSubscription" element={<UpgradeSubscribtion/>} />
-          <Route path="seller" element={<SellerContent/>} />
+          <Route path="seller" element={<SellerContent lat={lat} lng={lng} setLat={setLat} setLng={setLng}/>} />
           <Route path="horse" element={<HorseDetailContent/>} />
           <Route path="matchhorses" element={<MatchHorseContent/>} />
         </Routes>

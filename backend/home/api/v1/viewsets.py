@@ -44,6 +44,7 @@ from home.api.v1.serializers import (
     DisciplinesSerializer,
     ColorsSerializer,
     BreedsSerializer,
+    AllHorsesSerializer
 )
 from home.models import (
     ContactUs,
@@ -315,7 +316,7 @@ def HorseView(request):
             user_profile.subscription_renew_date is None
             and user_profile.promotion_adds == 0
         ):
-            response = createMonthlySubscriptionCharge(user_profile.user)
+            response = createMonthlySubscriptionCharge(user_profile.user,user_profile.subscription_plan)
             if response:
                 pass
             else:
@@ -380,6 +381,8 @@ def HorseView(request):
         return Response(data=data, status=status.HTTP_200_OK)
 
 
+
+
 @swagger_auto_schema(
     method="get",
     responses={200: HorsesSerializer(many=True)},
@@ -391,6 +394,17 @@ def HorsesView(request):
     querset = Horses.objects.all().order_by("id").reverse()
     return getPagination(querset, request, HorsesSerializer)
 
+@swagger_auto_schema(
+    method="get",
+    responses={200: HorsesSerializer(many=True)},
+)
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+@authentication_classes([TokenAuthentication])
+def AllHorsesView(request):
+    querset = Horses.objects.all().order_by("id").reverse()
+    serializer = AllHorsesSerializer(querset,many=True)
+    return Response(data=serializer.data,status=status.HTTP_200_OK)
 
 @swagger_auto_schema(method="get", responses={200: FavouriteSerializer(many=True)})
 @swagger_auto_schema(method="post", request_body=FavouriteSerializer)

@@ -112,3 +112,13 @@
 .control-dots{
     margin-bottom: 100px!important;
 }
+
+.cluster-marker {
+  color: #fff;
+  background: #1978c8;
+  border-radius: 50%;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

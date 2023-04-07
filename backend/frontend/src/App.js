@@ -9,7 +9,6 @@ import CommonServices from "./Services/CommonServices";
 import { setSocialLinks } from "./store/actions";
 
 function App() {
-
   const dispatch = useDispatch();
 
   useEffect(()=>{

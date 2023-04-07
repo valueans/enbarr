@@ -19,7 +19,8 @@ from .viewsets import (
     getTopHorseAddsView,
     getTrendingHorseAddsView,
     getDistanceBetweenUserAndHorseView,
-    searchHorsesByNameView
+    searchHorsesByNameView,
+    AllHorsesView
 )
 
 
@@ -29,6 +30,7 @@ urlpatterns = [
     path("keywords/", KeywordsView, name="keywords"),
     path("horse/", HorseView, name="horse"),
     path("horses/", HorsesView, name="horses"),
+    path("all-horses-lat-lng/", AllHorsesView, name="AllHorsesView"),
     path("favourite/", favouriteView, name="favourite"),
     path("search-horse/", searchHorseView, name="search-horse"),
     path("user-saved-search/", userSearchView, name="user-saved-search"),

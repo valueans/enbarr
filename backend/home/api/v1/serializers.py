@@ -80,6 +80,19 @@ class BreedsSerializer(serializers.ModelSerializer):
         model = Breeds
         fields = "__all__"
 
+class AllHorsesSerializer(serializers.ModelSerializer):
+    lat = serializers.SerializerMethodField(read_only=True)
+    lng = serializers.SerializerMethodField(read_only=True)
+    class Meta:
+        model = Horses
+        fields = ("lat","lng","id",)
+    
+    def get_lat(self,obj):
+        return obj.user_location[1]
+    def get_lng(self,obj):
+        return obj.user_location[0]
+    
+
 
 class HorseUpdateSerializer(serializers.ModelSerializer):
     images = HorseImagesSerializer(read_only=True, many=True)

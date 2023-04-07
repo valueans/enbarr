@@ -18,8 +18,9 @@ import TemperamentSelect from '../Selects/TemperamentSelect';
 import AuthService from '../../Services/AuthService';
 import StateSelect from '../Selects/StateSelect';
 import CitiesSelect from '../Selects/CitiesSelect';
+import SellerGoogleMaps from '../Maps/SellerGoogleMaps';
 
-const SellerContent = () => {
+const SellerContent = ({lat,lng,setLat,setLng}) => {
 
     const [editHorse,setEditHorse] = useState(false)
     const [editHorseId,setEditHorseId] = useState(null)
@@ -32,7 +33,7 @@ const SellerContent = () => {
     const [loading,setLoading] = useState(false);
     const [keywordLoading,setKeywordLoading] = useState(false);
 
-    const [horseData,setHorseData] = useState({images_id:[],title:"",year_of_birth:"",country:"",user_location:"",price:"",description:"",breed_id:"",gender:"",color_id:"",height:"",temperament_id:"",discipline_id:"",keywords_id:[],state:"",city:""});
+    const [horseData,setHorseData] = useState({images_id:[],title:"",year_of_birth:"",country:"",user_location:"",price:"",description:"",breed_id:"",gender:"",color_id:"",height:"",temperament_id:"",discipline_id:"",keywords_id:[],state:"",city:"",user_location:`POINT(${lat} ${lng})`});
     const [files, setFiles] = useState([]);
     const [snackBarData,setSnackBarData] = useState({
         open:false,
@@ -48,10 +49,14 @@ const SellerContent = () => {
 
     useEffect(() => {
       if (!isAuthenticated){
-        navigator("/")   
+        navigate("/")   
       }
-    },[isAuthenticated,navigator])
+    },[isAuthenticated,navigate])
 
+
+    useEffect(()=>{
+        setHorseData({...horseData,user_location:`POINT(${lat} ${lng})`})
+    },[lat,lng])
 
 const uploadImage = async (image)=>{
     setLoading(true)
@@ -77,12 +82,6 @@ const keywordClick = async ()=>{
     setKeywordLoading(false)
     setKeywordVal("")
   }
-
-  useEffect(()=>{
-    navigator.geolocation.getCurrentPosition(function (position) {
-        setHorseData({...horseData,user_location:`POINT(${position.coords.latitude} ${position.coords.longitude})`})
-    });
-  },[horseData.user_location])
 
   useEffect(()=>{
     if (location?.state?.editHorse){
@@ -185,8 +184,14 @@ const keywordClick = async ()=>{
                 </Grid>
                 {/* line ends */}
 
-                {/* Sub heading starts */}
+                {/* line starts */}
                 <Grid item xs={12}>
+                    <SellerGoogleMaps lat={lat} lng={lng} setLat={setLat} setLng={setLng}/>
+                </Grid>
+                {/* line ends */}
+
+                {/* Sub heading starts */}
+                <Grid item xs={12} sx={{mt:3}}>
                     <Typography variant='authInputTitle'>Add a horse</Typography>
                 </Grid>
                 {/* Sub heading ends */}
@@ -244,6 +249,7 @@ const keywordClick = async ()=>{
                     </Grid>
                 </Grid>
                 {/* Image upload ends */}
+
                 <Grid item xs={12} sx={{mt:3}}>
                     <Typography variant='authInputTitle'>Name of Horse <span style={{color:"red"}}>*</span></Typography>
                     <CustomInput type="text" onChange={(e)=>{
