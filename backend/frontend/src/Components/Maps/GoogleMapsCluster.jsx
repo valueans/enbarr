@@ -37,7 +37,7 @@ const GoogleMapsCluster = ({lat,lng,allHorseLatLng}) => {
   return (
     <div style={{ height: '400px', width: '100%' }}>
       <GoogleMapReact
-        bootstrapURLKeys={{ key: process.env.REACT_APP_GOOGLE_MAPS_API_KEY }}
+        bootstrapURLKeys={{ key: "AIzaSyCQvzbqxgZniOMoHPDNd_Qw9c87CKT0KUA" }}
         defaultCenter={{lat:lat,lng:lng}}
         defaultZoom={12}
         yesIWantToUseGoogleMapApiInternals
