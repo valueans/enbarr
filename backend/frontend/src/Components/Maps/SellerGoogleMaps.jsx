@@ -4,16 +4,18 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 
 const AnyReactComponent = ({ text }) => <div><LocationOnIcon sx={{color:"red",fontSize:"20px"}}/></div>;
 
-const SellerGoogleMaps = ({lat,lng,setLat,setLng}) => {
+const SellerGoogleMaps = ({lat,lng,setLat,setLng,disabled=false,defaultZoom=12}) => {
     const [markers, setMarkers] = useState([{lat:lat,lng:lng}]);
 
     const onMapClick = (e) => {
+      if (!disabled){
         setLat(e.lat);
         setLng(e.lng);
         setMarkers([{
             lat: e.lat,
             lng: e.lng
           }]);
+      }
       };
 
   return (
@@ -21,7 +23,7 @@ const SellerGoogleMaps = ({lat,lng,setLat,setLng}) => {
       <GoogleMapReact
         bootstrapURLKeys={{ key: "AIzaSyCQvzbqxgZniOMoHPDNd_Qw9c87CKT0KUA" }}
         defaultCenter={{lat:lat,lng:lng}}
-        defaultZoom={12}
+        defaultZoom={defaultZoom}
         onClick={onMapClick}
       >
         {markers.map((marker) => (

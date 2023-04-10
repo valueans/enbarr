@@ -11,6 +11,7 @@ import ProfileCard from '../Cards/ProfileCard';
 import { getUserProfile } from '../../Constants/storage';
 import ChatService from '../../Services/ChatService';
 import AuthService from '../../Services/AuthService';
+import SellerGoogleMaps from '../Maps/SellerGoogleMaps';
 
 const HorseDetailContent = () => {
 const [searchParam] =useSearchParams();
@@ -60,7 +61,6 @@ useEffect(()=>{
   getHorseDetails()
   window.scrollTo(0, 0);
 },[])
-
 
 const messageOwner = async ()=>{
     await ChatService.generateConversations(horseDetails.userprofile.user.id)
@@ -144,6 +144,15 @@ return (
         </Grid>:""
         }
         {/* horse location ends */}
+
+        {/* google maps starts */}
+        {
+          horseDetails.user_location?
+          <Grid item xs={12}>
+            <SellerGoogleMaps lat={horseDetails.user_location.coordinates[1]} lng={horseDetails.user_location.coordinates[0]} disabled={true} defaultZoom={9}/>
+          </Grid>:""
+        }
+        {/* google maps ends */}
 
 
         {/* horse description starts */}
