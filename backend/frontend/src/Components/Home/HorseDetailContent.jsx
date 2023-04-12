@@ -149,7 +149,7 @@ return (
         {
           horseDetails.user_location?
           <Grid item xs={12}>
-            <SellerGoogleMaps lat={horseDetails.user_location.coordinates[1]} lng={horseDetails.user_location.coordinates[0]} disabled={true} defaultZoom={9}/>
+            <SellerGoogleMaps lat={horseDetails.user_location.coordinates[0]} lng={horseDetails.user_location.coordinates[1]} disabled={true} defaultZoom={9}/>
           </Grid>:""
         }
         {/* google maps ends */}
