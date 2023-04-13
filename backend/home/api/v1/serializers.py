@@ -418,22 +418,28 @@ class UserSearchSaveSerializer(serializers.ModelSerializer):
         instance, created = UserSearchSave.objects.get_or_create(user=user)
         
         keywords_id = validated_data.pop("keywords_id",None)
+        print("keywords_id",keywords_id)
         if keywords_id:
             try:
                 keywords = Keywords.objects.filter(id__in=keywords_id)
+                print("keywords",keywords)
                 instance.keywords.set(keywords)
             except:
                 raise serializers.ValidationError(
                     {"status": "error", "message": "Invalid keyword id"}
                 )
+        elif len(keywords_id) == 0:
+            instance.keywords.set([])
         for key, value in validated_data.items():
             setattr(instance, key, value)
         instance.save()
         return instance
 
     def get_gender_list(self, obj):
-        _gender = obj.gender.split(",")
-        return _gender
+        if obj.gender:
+            _gender = obj.gender.split(",")
+            return _gender
+        return None
 
 
 class LikesSerializer(serializers.ModelSerializer):

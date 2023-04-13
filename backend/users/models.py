@@ -99,7 +99,7 @@ class UserSearchSave(models.Model):
         "home.Temperaments", on_delete=models.CASCADE, null=True, blank=True
     )
     keywords = models.ManyToManyField(
-        "home.Keywords", related_name="user_search_keywords"
+        "home.Keywords", related_name="user_search_keywords",blank=True
     )
 
 
