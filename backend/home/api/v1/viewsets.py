@@ -472,55 +472,54 @@ def searchHorseView(request):
             .all().exclude(uploaded_by__id=request.user.id)
         )
 
-        filter_queryset = []
-
         if user_search_history.country:
-            filter_queryset = queryset.filter(country=user_search_history.country)
+            queryset = queryset.filter(country=user_search_history.country)
         if user_search_history.state:
-            filter_queryset = filter_queryset.filter(state=user_search_history.state)
+            queryset = queryset.filter(state=user_search_history.state)
         if user_search_history.city:
-            filter_queryset = filter_queryset.filter(city=user_search_history.city)
+            queryset = queryset.filter(city=user_search_history.city)
         if user_search_history.breed_id:
-            filter_queryset = filter_queryset.filter(breed=user_search_history.breed_id)
+            queryset = queryset.filter(breed=user_search_history.breed_id)
         if user_search_history.min_age:
-            filter_queryset = filter_queryset.filter(age__gte=user_search_history.min_age)
+            queryset = queryset.filter(age__gte=user_search_history.min_age)
         if user_search_history.max_age:
-            filter_queryset = filter_queryset.filter(age__lte=user_search_history.max_age)
+            queryset = queryset.filter(age__lte=user_search_history.max_age)
         if user_search_history.min_height:
-            filter_queryset = filter_queryset.filter(
+            queryset = queryset.filter(
                 height__gte=user_search_history.min_height
             )
         if user_search_history.max_height:
-            filter_queryset = filter_queryset.filter(
+            queryset = queryset.filter(
                 height__lte=user_search_history.max_height
             )
         if user_search_history.min_price:
-            filter_queryset = filter_queryset.filter(price__gte=user_search_history.min_price)
+            queryset = queryset.filter(price__gte=user_search_history.min_price)
         if user_search_history.max_price:
-            filter_queryset = filter_queryset.filter(price__lte=user_search_history.max_price)
+            queryset = queryset.filter(price__lte=user_search_history.max_price)
         if user_search_history.discipline_id:
-            filter_queryset = filter_queryset.filter(
+            queryset = queryset.filter(
                 discipline=user_search_history.discipline_id
             )
         if user_search_history.gender:
             genders = user_search_history.gender.split(",")
-            filter_queryset = filter_queryset.filter(gender__in=genders)
+            queryset = queryset.filter(gender__in=genders)
         if user_search_history.color_id:
-            filter_queryset = filter_queryset.filter(color=user_search_history.color_id)
+            queryset = queryset.filter(color=user_search_history.color_id)
         if user_search_history.temperament_id:
-            filter_queryset = filter_queryset.filter(
+            queryset = queryset.filter(
                 temperament=user_search_history.temperament_id
             )
         if user_search_history.keywords.all().count() > 0:
-            filter_queryset = filter_queryset.filter(
+            queryset = queryset.filter(
                 keywords__in=user_search_history.keywords.all()
             )
-        if user_location:
+        if user_location and user_search_history.radius:
             pnt = GEOSGeometry(user_location, srid=4326)
-            filter_queryset = filter_queryset.filter(user_location__distance_lte=(pnt, D(mi=user_search_history.radius)))
-
-        filter_queryset = filter_queryset.distinct().order_by("id").reverse()
-        return getPagination(filter_queryset, request, HorsesSerializer)
+            queryset = queryset.filter(user_location__distance_lte=(pnt, D(mi=user_search_history.radius)))
+        
+        queryset = queryset.distinct().order_by("id").reverse()
+        return getPagination(queryset, request, HorsesSerializer)
+            
 
 
 @swagger_auto_schema(method="get", responses={200: HorsesSerializer(many=True)})
