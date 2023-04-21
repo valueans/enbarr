@@ -26,7 +26,7 @@ def createStripeProductPricing(instance):
 @receiver(post_save, sender=SubscriptionPlans)
 def create_notification_report(sender, instance, created, **kwargs):
     if created:
-        if instance.title != "Basic":
+        if instance.title != "FREE":
             product_response = createStripeProduct(instance.title)
             instance.stripe_product_id = product_response.id
             price_response = createStripeProductPricing(instance)

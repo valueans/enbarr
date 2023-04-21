@@ -26,12 +26,12 @@ const LandingContent = () => {
                         <Grid container direction="column" sx={{paddingLeft:"40px",paddingRight:"40px"}}
                             spacing={0.5}>
                             <Grid item>
-                                <Typography variant='landingPageTitle'>
+                                <Typography variant='landingPageTitle' sx={{fontSize:"70px",fontWeight:900}}>
                                     ENBARR
                                 </Typography>
                             </Grid>
                             <Grid item>
-                                <Typography variant='landingPageDesc'>
+                                <Typography variant='landingPageDesc' sx={{fontSize:"40px",fontWeight:900}}>
                                     It just makes sense.
                                 </Typography>
                             </Grid>
