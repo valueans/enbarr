@@ -535,7 +535,7 @@ def searchHorsesByNameView(request):
         }
         return Response(data=data,status=status.HTTP_404_NOT_FOUND)
     search_param = search_param.capitalize()
-    horses = Horses.objects.filter(title__icontains=search_param).exclude(uploaded_by__id=request.user.id).order_by("id").reverse()
+    horses = Horses.objects.filter(keywords__keyword__icontains=search_param).exclude(uploaded_by__id=request.user.id).order_by("id").reverse()
     return getPagination(horses, request, HorsesSerializer)
 
 @swagger_auto_schema(method="GET", responses={200: UserSearchSaveSerializer(many=True)})
