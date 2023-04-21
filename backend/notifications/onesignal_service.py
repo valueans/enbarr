@@ -28,15 +28,22 @@ def sendAdminNotification(notificationTo, message):
             Q(receive_notifications=True),
         )
 
+    
+    user_ids = []
+    for user in users:
+        if user.one_signal_play_id:
+            user_ids.append(user.one_signal_play_id)
     Notifications.objects.bulk_create(
         [Notifications(user=user.user, description=message) for user in users]
     )
     payload = {
-        "included_segments": [notificationTo],
+        "include_player_ids": user_ids,
         "contents": {"en": message},
         "name": "Notification from Enbarr",
+        "app_id":settings.ONESIGNAL_APPID,
     }
     response = requests.post(url, json=payload, headers=headers)
+    return response
 
 
 def sendMessageNotification(notificationTo, message, message_from, channel):
@@ -51,8 +58,10 @@ def sendMessageNotification(notificationTo, message, message_from, channel):
         )
         payload = {
             "include_email_tokens": [notificationTo.email],
+            "include_player_ids":[notificationTo.userprofile.one_signal_play_id],
             "contents": {"en": message},
             "name": name,
+            "app_id":settings.ONESIGNAL_APPID,
         }
         response = requests.post(url, json=payload, headers=headers)
     else:
@@ -68,7 +77,12 @@ def sendLikedHorseNotification(notificationTo, horse, message_from):
             type="HORSE LIKE",
             horse_id=horse.id,
         )
-        payload = {"include_email_tokens": [notificationTo.email], "name": message}
+        payload = {
+            "include_email_tokens": [notificationTo.email],
+            "include_player_ids":[notificationTo.userprofile.one_signal_play_id],
+            "name": message,
+            "app_id":settings.ONESIGNAL_APPID
+            }
         response = requests.post(url, json=payload, headers=headers)
     else:
         pass

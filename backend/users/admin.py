@@ -80,6 +80,7 @@ class UserProfile(admin.ModelAdmin):
         "ban_user_from_posting",
         "ban_user_from_app",
     ]
+    fields=("user","phone_number","profile_photo","first_name","last_name","bio","address","city","zipcode","state","country","subscription_plan","subscription_start_date","subscription_renew_date","promotion_adds","subscription_adds","ban_user_from_posting","ban_user_from_posting_date","ban_user_from_app","ban_user_from_app_date","receive_notifications",)
     list_filter = (
         "subscription_plan__title",
         "user__is_superuser",

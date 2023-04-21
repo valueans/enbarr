@@ -65,6 +65,7 @@ class UserProfile(models.Model):
     ban_user_from_app = models.BooleanField(default=False)
     ban_user_from_app_date = models.DateField(null=True, blank=True)
     receive_notifications = models.BooleanField(default=True)
+    one_signal_play_id = models.CharField(max_length=1000,null=True,blank=True)
 
     def __str__(self):
         return self.user.email
