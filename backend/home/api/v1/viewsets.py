@@ -4,7 +4,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
 from datetime import date
-from django.db.models import Count, F
+from django.db.models import Count, F,Q
 from django.contrib.gis.geos import GEOSGeometry
 from django.contrib.gis.measure import D
 from geopy.distance import geodesic as GD
@@ -534,8 +534,7 @@ def searchHorsesByNameView(request):
             "message":"search_param is required"
         }
         return Response(data=data,status=status.HTTP_404_NOT_FOUND)
-    search_param = search_param.capitalize()
-    horses = Horses.objects.filter(keywords__keyword__icontains=search_param).exclude(uploaded_by__id=request.user.id).order_by("id").reverse()
+    horses = Horses.objects.filter(Q(keywords__keyword__icontains=search_param) | Q(title__startswith=search_param) | Q(description__icontains=search_param)).distinct().exclude(uploaded_by__id=request.user.id).order_by("id").reverse()
     return getPagination(horses, request, HorsesSerializer)
 
 @swagger_auto_schema(method="GET", responses={200: UserSearchSaveSerializer(many=True)})
