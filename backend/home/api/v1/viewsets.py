@@ -429,7 +429,21 @@ def favouriteView(request):
             data=request.data, context={"request": request}
         )
         if serializer.is_valid():
-            serializer.save(user=request.user)
+            obj = serializer.save(user=request.user)
+            horse = obj.horses
+            instance, created = Likes.objects.get_or_create(user=request.user)
+
+            horse.likes.add(instance)
+
+            try:
+                get_dislike = horse.dislikes.get(user=request.user)
+                horse.dislikes.remove(get_dislike)
+            except:
+                pass
+
+            horse.save()
+            if request.user != horse.uploaded_by:
+                sendLikedHorseNotification(horse.uploaded_by, horse, request.user)
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
         return Response(data=serializer.errors, status=status.HTTP_200_OK)
 
@@ -443,7 +457,7 @@ def favouriteView(request):
         except:
             data = {"status": "error", "message": "Invalid horse-id"}
             return Response(data=data, status=status.HTTP_404_NOT_FOUND)
-
+        print("deel")
         instance.delete()
         data = {"status": "ok", "message": deleted_message}
         return Response(data=data, status=status.HTTP_200_OK)
@@ -469,7 +483,7 @@ def searchHorseView(request):
         current_year = date.today().year
         queryset = (
             Horses.objects.annotate(age=current_year - F("year_of_birth"))
-            .all().exclude(uploaded_by__id=request.user.id)
+            .all()
         )
 
         if user_search_history.country:
