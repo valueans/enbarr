@@ -243,6 +243,8 @@ class HorsesSerializer(serializers.ModelSerializer):
     discipline_id = serializers.IntegerField(write_only=True, required=True)
     age = serializers.SerializerMethodField(read_only=True)
     distance = serializers.SerializerMethodField(read_only=True)
+    lat = serializers.SerializerMethodField(read_only=True)
+    lng = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Horses
@@ -375,6 +377,10 @@ class HorsesSerializer(serializers.ModelSerializer):
             return distance.mi
         return None
 
+    def get_lat(self,obj):
+        return obj.user_location[1]
+    def get_lng(self,obj):
+        return obj.user_location[0]
 
 class FavouriteSerializer(serializers.ModelSerializer):
     horses = HorsesSerializer(read_only=True)
@@ -428,7 +434,7 @@ class UserSearchSaveSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError(
                     {"status": "error", "message": "Invalid keyword id"}
                 )
-        elif len(keywords_id) == 0:
+        elif keywords_id and len(keywords_id) == 0:
             instance.keywords.set([])
         for key, value in validated_data.items():
             setattr(instance, key, value)

@@ -42,11 +42,11 @@ const Home = () => {
           <Route path="" element={<HomeContent />} />
           <Route path="privacypolicy" element={<PrivacyPolicy />} />
           <Route path="termsAndCondition" element={<TermsAndCondition />} />
-          <Route path="buyer" element={<BuyerContent setSnackBarData={setSnackBarData} lat={lat} lng={lng}/>} />
+          <Route path="buyer" element={<BuyerContent setSnackBarData={setSnackBarData}/>} />
           <Route path="upgradeSubscription" element={<UpgradeSubscribtion/>} />
           <Route path="seller" element={<SellerContent lat={lat} lng={lng} setLat={setLat} setLng={setLng}/>} />
           <Route path="horse" element={<HorseDetailContent/>} />
-          <Route path="matchhorses" element={<MatchHorseContent/>} />
+          <Route path="matchhorses" element={<MatchHorseContent lat={lat} lng={lng}/>} />
         </Routes>
 
     </div>

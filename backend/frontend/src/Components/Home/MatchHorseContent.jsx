@@ -10,11 +10,16 @@ import { Link } from 'react-router-dom';
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import AuthService from '../../Services/AuthService';
+import GoogleMapsCluster from '../Maps/GoogleMapsCluster';
+import AuthenticationTabs from '../Buttons/AuthenticationTabs';
 
-const MatchHorseContent = () => {
+const MatchHorseContent = ({lat,lng}) => {
+  const [allHorseLatLng,setAllHorseLatLng] = useState([]);
   const [currentHorseId,setCurrentHorseId] = useState(null);
   const [isLiked,setIsLiked] = useState(false);
   const [isDisLiked,setIsDisLiked] = useState(false);
+  const [matchTab,setMatchTab] = useState(true);
+  const [mapTab,setMapTab] = useState(false);
 
   const swiperRef = useRef();
   
@@ -27,6 +32,15 @@ const MatchHorseContent = () => {
     await HorseService.dislikeHorse(currentHorseId)
     setIsLiked(false)
     setIsDisLiked(true)
+  }
+
+  const handleMatch = () =>{
+    setMatchTab(true)
+    setMapTab(false)
+  }
+  const handleMap = () =>{
+    setMatchTab(false)
+    setMapTab(true)
   }
 
   const isAuthenticated = AuthService.checkUserAuthenticated();
@@ -45,13 +59,22 @@ const MatchHorseContent = () => {
         <Grid item xs={12} className="justifyContentCenter">
           <Typography variant='matchHorseTitle'>ENBARR</Typography>
         </Grid>
-        <Grid item xs={12} sx={{mt:3}}>
+        <Grid item xs={6}>
+              <AuthenticationTabs title="Match" isActive={matchTab} onClick={handleMatch}
+                  borderRadius="50px 50px 50px 50px" />
+          </Grid>
+          <Grid item xs={6}>
+              <AuthenticationTabs title="See on Maps" isActive={mapTab} onClick={handleMap}
+                  borderRadius="50px 50px 50px 50px" />
+          </Grid>
+        {
+          matchTab?<><Grid item xs={12} sx={{mt:6}}>
           <Grid container direction="row">
             <Grid item xs={1} className="justifyContenCenterAlignCenter">
               <KeyboardDoubleArrowLeftIcon sx={{height:"60px",width:"60px",cursor:"pointer"}} onClick={() => swiperRef.current?.slidePrev()}/>
             </Grid>
             <Grid item xs={10} >  
-              <CustomSwiper currentHorseId={currentHorseId} setCurrentHorseId={setCurrentHorseId} setIsLiked={setIsLiked} setIsDisLiked={setIsDisLiked} swiperRef={swiperRef}/>
+              <CustomSwiper currentHorseId={currentHorseId} setCurrentHorseId={setCurrentHorseId} setIsLiked={setIsLiked} setIsDisLiked={setIsDisLiked} swiperRef={swiperRef} setAllHorseLatLng={setAllHorseLatLng}/>
             </Grid>
             <Grid item xs={1} className="justifyContenCenterAlignCenter">
               <KeyboardDoubleArrowRightIcon sx={{height:"60px",width:"60px",cursor:"pointer"}} onClick={() => swiperRef.current?.slideNext()}/>
@@ -80,7 +103,10 @@ const MatchHorseContent = () => {
           <Link to='/' style={{width:"50%",textDecoration:"none"}}>
             <Button title="close" width="100%"/>
           </Link>
-        </Grid>
+        </Grid></>:<Grid item xs={12} sx={{mt:3}}>
+              <GoogleMapsCluster lat={lat} lng={lng} allHorseLatLng={allHorseLatLng}/>
+          </Grid>
+        }
       </Grid>
       </Grid>
     </Grid>

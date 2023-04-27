@@ -18,9 +18,8 @@ import AuthService from '../../Services/AuthService';
 import StateSelect from '../Selects/StateSelect';
 import CitiesSelect from '../Selects/CitiesSelect';
 import RadiusSelect from '../Selects/RadiusSelect';
-import GoogleMapsCluster from '../Maps/GoogleMapsCluster';
 
-const BuyerContent = ({setSnackBarData,lat,lng}) => {
+const BuyerContent = ({setSnackBarData}) => {
   
   const navigator = useNavigate();
 
@@ -32,7 +31,6 @@ const BuyerContent = ({setSnackBarData,lat,lng}) => {
     }
   },[isAuthenticated,navigator])
 
-  const [allHorseLatLng,setAllHorseLatLng] = useState([]);
   const [keywords,setKeywords] = useState([]);
   const [keywordVal,setKeywordVal] = useState("");
   const [keywordLoading,setKeywordLoading] = useState(false);
@@ -86,16 +84,7 @@ const BuyerContent = ({setSnackBarData,lat,lng}) => {
           setSnackBarData({open:true,message:"something went wrong",severity:"error"})
       }
     }
-    const getAllHorsesLatLng = async ()=>{
-      try {
-        const response = await HorseService.getAllHorsesLatLng();
-        setAllHorseLatLng(response) 
-      } catch (error) {
-        setSnackBarData({open:true,message:"something went wrong",severity:"error"})
-      }
-    }
     getUserSearchSave()
-    getAllHorsesLatLng()
   },[])
 
   const onSave = async ()=>{
@@ -121,11 +110,6 @@ const BuyerContent = ({setSnackBarData,lat,lng}) => {
           <Grid item xs={12}>
             <Typography variant='authInputTitle'>My preferences</Typography>
           </Grid>
-          {/* Google Maps starts */}
-          <Grid item xs={12} sx={{mt:3}}>
-            <GoogleMapsCluster lat={lat} lng={lng} allHorseLatLng={allHorseLatLng}/>
-          </Grid>
-          {/* Google Maps ends */}
           {/* search radius input starts */}
           <Grid item xs={12} sx={{mt:3}}>
             <Typography variant='authInputTitle'>Search Radius</Typography>
