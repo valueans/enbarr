@@ -411,7 +411,7 @@ class FavouriteSerializer(serializers.ModelSerializer):
 
 class UserSearchSaveSerializer(serializers.ModelSerializer):
     keywords = KeywordsSerializer(read_only=True, many=True)
-    keywords_id = serializers.ListField(write_only=True, required=False)
+    keywords_id = serializers.ListField(write_only=True, required=False,default=[])
     gender_list = serializers.SerializerMethodField()
 
     class Meta:
@@ -424,18 +424,17 @@ class UserSearchSaveSerializer(serializers.ModelSerializer):
         instance, created = UserSearchSave.objects.get_or_create(user=user)
         
         keywords_id = validated_data.pop("keywords_id",None)
-        print("keywords_id",keywords_id)
         if keywords_id:
             try:
                 keywords = Keywords.objects.filter(id__in=keywords_id)
-                print("keywords",keywords)
                 instance.keywords.set(keywords)
             except:
                 raise serializers.ValidationError(
                     {"status": "error", "message": "Invalid keyword id"}
-                )
-        elif keywords_id and len(keywords_id) == 0:
+                )        
+        elif keywords_id is None or len(keywords_id) == 0:
             instance.keywords.set([])
+            
         for key, value in validated_data.items():
             setattr(instance, key, value)
         instance.save()
