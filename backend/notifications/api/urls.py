@@ -8,4 +8,9 @@ urlpatterns = [
         readAllnotificationView,
         name="read-all-notifications",
     ),
+    path(
+        "unread-all-notifications/",
+        unreadAllnotificationView,
+        name="unread-all-notifications",
+    ),
 ]
