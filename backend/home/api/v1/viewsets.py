@@ -532,7 +532,7 @@ def searchHorseView(request):
             queryset = queryset.filter(user_location__distance_lte=(pnt, D(mi=user_search_history.radius)))
         
         queryset = queryset.distinct().order_by("id").reverse()
-        return getPagination(queryset, request, HorsesSerializer)
+        return getPagination(queryset, request, HorsesSerializer,many=True,_filter=True)
             
 
 
@@ -548,7 +548,7 @@ def searchHorsesByNameView(request):
             "message":"search_param is required"
         }
         return Response(data=data,status=status.HTTP_404_NOT_FOUND)
-    horses = Horses.objects.filter(Q(keywords__keyword__icontains=search_param) | Q(title__startswith=search_param) | Q(description__icontains=search_param)).distinct().exclude(uploaded_by__id=request.user.id).order_by("id").reverse()
+    horses = Horses.objects.filter(Q(keywords__keyword__icontains=search_param) | Q(title=search_param) | Q(description__icontains=search_param)).distinct().order_by("id").reverse()
     return getPagination(horses, request, HorsesSerializer)
 
 @swagger_auto_schema(method="GET", responses={200: UserSearchSaveSerializer(many=True)})

@@ -34,7 +34,7 @@ def sendAdminNotification(notificationTo, message):
         if user.one_signal_play_id:
             user_ids.append(user.one_signal_play_id)
     Notifications.objects.bulk_create(
-        [Notifications(user=user.user, description=message) for user in users]
+        [Notifications(user=user.user, description=message,type="ADMIN") for user in users]
     )
     payload = {
         "include_player_ids": user_ids,

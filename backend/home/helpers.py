@@ -20,7 +20,9 @@ def banUserAppLogin(userprofile, months):
 
 
 # method to get the pagination for specific queryset
-def getPagination(queryset, request, serializerClass, many=True):
+def getPagination(queryset, request, serializerClass, many=True,_filter=False):
+    if _filter:
+        queryset = queryset.order_by("id").reverse()
     paginator = PageNumberPagination()
     paginator.page_size = 20
     result_page = paginator.paginate_queryset(queryset, request)

@@ -235,8 +235,16 @@ def resetEmailView(request):
 @authentication_classes([TokenAuthentication])
 def resetPasswordView(request):
     if request.method == "POST":
+        current_password = request.POST.get("current_password", None)
         password1 = request.POST.get("password1", None)
         password2 = request.POST.get("password2", None)
+        
+        if current_password:
+            if request.user.check_password(current_password):
+                pass
+            else:
+                data = {"status": "ERROR", "message": "invalid old password"}
+                return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
         if password1 is None or password2 is None:
             data = {"status": "ERROR", "message": "password1 and password2 is required"}
