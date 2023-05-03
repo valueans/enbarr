@@ -33,7 +33,7 @@ const SellerContent = ({lat,lng,setLat,setLng}) => {
     const [loading,setLoading] = useState(false);
     const [keywordLoading,setKeywordLoading] = useState(false);
 
-    const [horseData,setHorseData] = useState({images_id:[],title:"",year_of_birth:"",country:"",user_location:"",price:"",description:"",breed_id:"",gender:"",color_id:"",height:"",temperament_id:"",discipline_id:"",keywords_id:[],state:"",city:"",user_location:`POINT(${lat} ${lng})`});
+    const [horseData,setHorseData] = useState({images_id:[],title:"",year_of_birth:"",country:"",user_location:"",price:"",description:"",breed_id:"",gender:"",color_id:"",height:"",temperament_id:"",discipline_id:"",keywords_id:[],state:"",city:"",user_location:`POINT(${lng} ${lat})`});
     const [files, setFiles] = useState([]);
     const [snackBarData,setSnackBarData] = useState({
         open:false,
@@ -55,7 +55,7 @@ const SellerContent = ({lat,lng,setLat,setLng}) => {
 
 
     useEffect(()=>{
-        setHorseData({...horseData,user_location:`POINT(${lat} ${lng})`})
+        setHorseData({...horseData,user_location:`POINT(${lng} ${lat})`})
     },[lat,lng])
 
 const uploadImage = async (image)=>{

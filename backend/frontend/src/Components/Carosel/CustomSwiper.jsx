@@ -23,7 +23,7 @@ const CustomSwiper = ({currentHorseId,setCurrentHorseId,setIsLiked,setIsDisLiked
         const getMatchHorse = async () =>{
             try{
                 navigator.geolocation.getCurrentPosition(async (position)=> {
-                    const response = await HorseService.getMatchHorse(currentPage,`POINT(${position.coords.latitude} ${position.coords.longitude})`);
+                    const response = await HorseService.getMatchHorse(currentPage,`${position.coords.longitude} POINT(${position.coords.latitude})`);
                     setTotalAddsCount(response?.count)
                     setMatchList([...matchList,...response?.results])
                     setAllHorseLatLng(response.results)
