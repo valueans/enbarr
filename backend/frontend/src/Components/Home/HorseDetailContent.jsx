@@ -54,7 +54,7 @@ useEffect(()=>{
 useEffect(()=>{
   const getHorseDetails = async ()=>{
     navigator.geolocation.getCurrentPosition(async (position)=> {
-      const response = await HorseService.getHorseDetails(id,`POINT(${position.coords.longitude} ${position.coords.latitude})`);
+      const response = await HorseService.getHorseDetails(id,position.coords.latitude,position.coords.longitude);
       setHorseDetails(response)
     });
   }

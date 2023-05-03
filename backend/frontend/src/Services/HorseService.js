@@ -110,11 +110,12 @@ const HorseService = {
         });
         return response
     },
-    getHorseDetails : async (id,location) =>{
+    getHorseDetails : async (id,lat,lng) =>{
         const {data:response} = await axios.get(myHorsesUrl,{
             params:{
                 "horse-id":id,
-                "user_location":location
+                "lat":lat,
+                "lng":lng,
             }
         });
         return response
@@ -137,11 +138,12 @@ const HorseService = {
         });
         return response
     },
-    getMatchHorse : async (page=1,location) =>{
+    getMatchHorse : async (page=1,lat,lng) =>{
         const {data:response} = await axios.get(matchHorseUrl,{
             params:{
                 "page":page,
-                "user_location":location
+                "lat":lat,
+                "lng":lng
             }
         });
         return response

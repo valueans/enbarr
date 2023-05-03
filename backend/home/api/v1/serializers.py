@@ -4,6 +4,7 @@ from rest_framework import serializers
 from users.models import UserSearchSave
 from users.api.serializers import UserProfileSerializer
 from django.contrib.gis.geos import GEOSGeometry,Point
+from geopy.distance import distance as geopy_distance
 from geopy.distance import geodesic as GD
 
 from datetime import date
@@ -214,11 +215,13 @@ class HorseUpdateSerializer(serializers.ModelSerializer):
         return year
     
     def get_distance(self,obj):
-        user_location = self.context['request'].GET.get('user_location',None)
-        if user_location:
-            pnt = GEOSGeometry(user_location, srid=4326)
-            distance = GD(pnt,obj.user_location)
-            return distance.mi
+        lat = self.context['request'].GET.get('lat',None)
+        lng = self.context['request'].GET.get('lng',None)
+        if lat and lng:
+            p1 = (lat,lng)
+            p2 = (obj.user_location[1],obj.user_location[0])
+            d = geopy_distance(p1, p2)
+            return d.mi
         return None
 
 
@@ -370,11 +373,13 @@ class HorsesSerializer(serializers.ModelSerializer):
         return serializer.data
     
     def get_distance(self,obj):
-        user_location = self.context['request'].GET.get('user_location',None)
-        if user_location:
-            pnt = GEOSGeometry(user_location, srid=4326)
-            distance = GD(pnt,obj.user_location)
-            return distance.mi
+        lat = self.context['request'].GET.get('lat',None)
+        lng = self.context['request'].GET.get('lng',None)
+        if lat and lng:
+            p1 = (lat,lng)
+            p2 = (obj.user_location[1],obj.user_location[0])
+            d = geopy_distance(p1, p2)
+            return d.mi
         return None
 
     def get_lat(self,obj):
