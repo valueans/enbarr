@@ -88,9 +88,9 @@ class AllHorsesSerializer(serializers.ModelSerializer):
         fields = ("lat","lng","id",)
     
     def get_lat(self,obj):
-        return obj.user_location[1]
-    def get_lng(self,obj):
         return obj.user_location[0]
+    def get_lng(self,obj):
+        return obj.user_location[1]
     
 
 
@@ -378,9 +378,9 @@ class HorsesSerializer(serializers.ModelSerializer):
         return None
 
     def get_lat(self,obj):
-        return obj.user_location[1]
-    def get_lng(self,obj):
         return obj.user_location[0]
+    def get_lng(self,obj):
+        return obj.user_location[1]
 
 class FavouriteSerializer(serializers.ModelSerializer):
     horses = HorsesSerializer(read_only=True)
