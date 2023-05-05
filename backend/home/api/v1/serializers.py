@@ -3,7 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 from users.models import UserSearchSave
 from users.api.serializers import UserProfileSerializer
-from django.contrib.gis.geos import GEOSGeometry,Point
+from django.contrib.gis.geos import GEOSGeometry, Point
 from geopy.distance import distance as geopy_distance
 from geopy.distance import geodesic as GD
 
@@ -81,18 +81,24 @@ class BreedsSerializer(serializers.ModelSerializer):
         model = Breeds
         fields = "__all__"
 
+
 class AllHorsesSerializer(serializers.ModelSerializer):
     lat = serializers.SerializerMethodField(read_only=True)
     lng = serializers.SerializerMethodField(read_only=True)
+
     class Meta:
         model = Horses
-        fields = ("lat","lng","id",)
-    
-    def get_lat(self,obj):
+        fields = (
+            "lat",
+            "lng",
+            "id",
+        )
+
+    def get_lat(self, obj):
         return obj.user_location[1]
-    def get_lng(self,obj):
+
+    def get_lng(self, obj):
         return obj.user_location[0]
-    
 
 
 class HorseUpdateSerializer(serializers.ModelSerializer):
@@ -213,13 +219,13 @@ class HorseUpdateSerializer(serializers.ModelSerializer):
         except:
             year = ""
         return year
-    
-    def get_distance(self,obj):
-        lat = self.context['request'].GET.get('lat',None)
-        lng = self.context['request'].GET.get('lng',None)
+
+    def get_distance(self, obj):
+        lat = self.context["request"].GET.get("lat", None)
+        lng = self.context["request"].GET.get("lng", None)
         if lat and lng:
-            p1 = (lat,lng)
-            p2 = (obj.user_location[1],obj.user_location[0])
+            p1 = (lat, lng)
+            p2 = (obj.user_location[1], obj.user_location[0])
             d = geopy_distance(p1, p2)
             return d.mi
         return None
@@ -257,7 +263,7 @@ class HorsesSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         images_id = validated_data.pop("images_id")
-        keywords_id = validated_data.pop("keywords_id",None)
+        keywords_id = validated_data.pop("keywords_id", None)
         breed_id = validated_data.pop("breed_id")
         color_id = validated_data.pop("color_id")
         temperament_id = validated_data.pop("temperament_id")
@@ -371,21 +377,23 @@ class HorsesSerializer(serializers.ModelSerializer):
         images = obj.images.all().order_by("id")
         serializer = HorseImagesSerializer(images, many=True)
         return serializer.data
-    
-    def get_distance(self,obj):
-        lat = self.context['request'].GET.get('lat',None)
-        lng = self.context['request'].GET.get('lng',None)
+
+    def get_distance(self, obj):
+        lat = self.context["request"].GET.get("lat", None)
+        lng = self.context["request"].GET.get("lng", None)
         if lat and lng:
-            p1 = (lat,lng)
-            p2 = (obj.user_location[1],obj.user_location[0])
+            p1 = (lat, lng)
+            p2 = (obj.user_location[1], obj.user_location[0])
             d = geopy_distance(p1, p2)
             return d.mi
         return None
 
-    def get_lat(self,obj):
+    def get_lat(self, obj):
         return obj.user_location[1]
-    def get_lng(self,obj):
+
+    def get_lng(self, obj):
         return obj.user_location[0]
+
 
 class FavouriteSerializer(serializers.ModelSerializer):
     horses = HorsesSerializer(read_only=True)
@@ -416,7 +424,7 @@ class FavouriteSerializer(serializers.ModelSerializer):
 
 class UserSearchSaveSerializer(serializers.ModelSerializer):
     keywords = KeywordsSerializer(read_only=True, many=True)
-    keywords_id = serializers.ListField(write_only=True, required=False,default=[])
+    keywords_id = serializers.ListField(write_only=True, required=False, default=[])
     gender_list = serializers.SerializerMethodField()
 
     class Meta:
@@ -427,8 +435,8 @@ class UserSearchSaveSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = self.context["request"].user
         instance, created = UserSearchSave.objects.get_or_create(user=user)
-        
-        keywords_id = validated_data.pop("keywords_id",None)
+
+        keywords_id = validated_data.pop("keywords_id", None)
         if keywords_id:
             try:
                 keywords = Keywords.objects.filter(id__in=keywords_id)
@@ -436,10 +444,10 @@ class UserSearchSaveSerializer(serializers.ModelSerializer):
             except:
                 raise serializers.ValidationError(
                     {"status": "error", "message": "Invalid keyword id"}
-                )        
+                )
         elif keywords_id is None or len(keywords_id) == 0:
             instance.keywords.set([])
-            
+
         for key, value in validated_data.items():
             setattr(instance, key, value)
         instance.save()

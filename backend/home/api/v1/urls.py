@@ -20,7 +20,7 @@ from .viewsets import (
     getTrendingHorseAddsView,
     getDistanceBetweenUserAndHorseView,
     searchHorsesByNameView,
-    AllHorsesView
+    AllHorsesView,
 )
 
 

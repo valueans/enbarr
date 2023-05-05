@@ -93,13 +93,15 @@ def readAllnotificationView(request):
         instances.update(read_status=True)
         data = {"status": "ok", "message": "successfull"}
         return Response(data=data, status=status.HTTP_200_OK)
-    
-    
+
+
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 @authentication_classes([TokenAuthentication])
 def unreadAllnotificationView(request):
     if request.method == "GET":
-        instances = Notifications.objects.filter(user=request.user,read_status=False).count()
-        data = {"status": "ok", "message": "successfull","count":instances}
+        instances = Notifications.objects.filter(
+            user=request.user, read_status=False
+        ).count()
+        data = {"status": "ok", "message": "successfull", "count": instances}
         return Response(data=data, status=status.HTTP_200_OK)

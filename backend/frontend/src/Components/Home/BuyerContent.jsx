@@ -307,7 +307,7 @@ const BuyerContent = ({setSnackBarData}) => {
               <Grid container>
                   <Grid item xs={12} sx={{mt:2,pr:2}}><Button title="save" width="100%" onClick={onSave}/></Grid>
                   <Grid item xs={6} sx={{mt:2,pr:2}}><Button title="clear" width="100%" backgroundColor='#F4F4F4' color="#313033" onClick={()=>{
-                    setUserSearchSaveData({location_id:"",breed_id:"",min_age:"",max_age:"",min_height:"",max_height:"",min_price:"",max_price:"",discipline_id:"",gender:"",color_id:"",temperament_id:"",keywords_id:[]})
+                    setUserSearchSaveData({country:null,state:null,city:null,breed_id:null,min_age:null,max_age:null,min_height:null,max_height:null,min_price:null,max_price:null,discipline_id:null,gender:null,color_id:null,temperament_id:null,keywords_id:[],radius:null})
                   }}/></Grid>
                   <Grid item xs={6} sx={{mt:2,pl:2}}>
                     <Button title="match" width="100%" onClick={handleMatch}/>

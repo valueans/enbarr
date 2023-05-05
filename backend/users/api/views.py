@@ -141,7 +141,7 @@ class AppleLogin(AppleLoginView):
     adapter_class = AppleOAuth2Adapter
     callback_url = "http://tiny-bird-36835.botics.co"
     client_class = AppleOAuth2Client
-    
+
     def get_serializer(self, *args, **kwargs):
         serializer_class = self.get_serializer_class()
         kwargs["context"] = self.get_serializer_context()
@@ -238,7 +238,7 @@ def resetPasswordView(request):
         current_password = request.POST.get("current_password", None)
         password1 = request.POST.get("password1", None)
         password2 = request.POST.get("password2", None)
-        
+
         if current_password:
             if request.user.check_password(current_password):
                 pass
@@ -309,7 +309,7 @@ def userProfileView(request):
         try:
             instance = UserProfile.objects.get(user=request.user)
             serializer = UserProfileSerializer(
-                instance, data=request.data, context={"request": request},partial=True
+                instance, data=request.data, context={"request": request}, partial=True
             )
         except:
             serializer = UserProfileSerializer(

@@ -1,7 +1,7 @@
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from .helpers import sendOtpEmail, subscribeUserToFreeSubscription
-from .models import User, UserProfile, DeletedUsers
+from .models import User, UserProfile, DeletedUsers, UserSearchSave
 from payments.api.v1.helpers import createStripeCustomer
 
 
@@ -25,6 +25,7 @@ def user_verification_send_otp(sender, instance, created, **kwargs):
         sendOtpEmail(instance)
         createStripeCustomer(instance)
         subscribeUserToFreeSubscription(instance)
+        obj, created = UserSearchSave.objects.get_or_create(user=instance)
 
 
 @receiver(post_delete, sender=UserProfile)

@@ -24,7 +24,6 @@ from google.auth.exceptions import DefaultCredentialsError
 from google.api_core.exceptions import PermissionDenied
 
 
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -159,9 +158,7 @@ DATABASES = {
 }
 
 if env.str("DATABASE_URL", default=None):
-    DATABASES = {
-        'default': env.db_url(engine='django.contrib.gis.db.backends.postgis')
-    }
+    DATABASES = {"default": env.db_url(engine="django.contrib.gis.db.backends.postgis")}
 
 
 # Password validation
@@ -253,7 +250,7 @@ AWS_ACCESS_KEY_ID = env.str("AWS_ACCESS_KEY_ID", "")
 AWS_SECRET_ACCESS_KEY = env.str("AWS_SECRET_ACCESS_KEY", "")
 AWS_STORAGE_BUCKET_NAME = env.str("AWS_STORAGE_BUCKET_NAME", "")
 AWS_STORAGE_REGION = env.str("AWS_STORAGE_REGION", "")
-AWS_S3_SIGNATURE_VERSION = 's3v4'
+AWS_S3_SIGNATURE_VERSION = "s3v4"
 AWS_S3_ENDPOINT_URL = f"https://s3.{AWS_STORAGE_REGION}.amazonaws.com"
 AWS_S3_REGION_NAME = env.str("AWS_STORAGE_REGION", "")
 
@@ -404,3 +401,7 @@ XYLqREhX
         }
     },
 }
+
+
+# Google MAPS
+GOOGLE_MAPS_API_KEY = env.str("GOOGLE_MAPS_API_KEY", "")

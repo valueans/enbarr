@@ -55,6 +55,8 @@ const SellerContent = ({lat,lng,setLat,setLng}) => {
 
 
     useEffect(()=>{
+        console.log("lng",lng)
+        console.log("lat",lat)
         setHorseData({...horseData,user_location:`POINT(${lng} ${lat})`})
     },[lat,lng])
 

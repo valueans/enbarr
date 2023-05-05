@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('users', '0001_initial'),
+        ("users", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='usersearchsave',
-            name='radius',
+            model_name="usersearchsave",
+            name="radius",
             field=models.IntegerField(default=20),
         ),
     ]

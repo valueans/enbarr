@@ -4,10 +4,11 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
 from datetime import date
-from django.db.models import Count, F,Q
-from django.contrib.gis.geos import GEOSGeometry
+from django.db.models import Count, F, Q
+from django.contrib.gis.geos import GEOSGeometry, Point
 from django.contrib.gis.measure import D
 from geopy.distance import geodesic as GD
+from home.googlemaps_services import extract_lat_long_via_address
 from home.helpers import *
 from payments.api.v1.helpers import createMonthlySubscriptionCharge
 from django.contrib.auth import get_user_model
@@ -44,7 +45,7 @@ from home.api.v1.serializers import (
     DisciplinesSerializer,
     ColorsSerializer,
     BreedsSerializer,
-    AllHorsesSerializer
+    AllHorsesSerializer,
 )
 from home.models import (
     ContactUs,
@@ -316,7 +317,9 @@ def HorseView(request):
             user_profile.subscription_renew_date is None
             and user_profile.promotion_adds == 0
         ):
-            response = createMonthlySubscriptionCharge(user_profile.user,user_profile.subscription_plan)
+            response = createMonthlySubscriptionCharge(
+                user_profile.user, user_profile.subscription_plan
+            )
             if response:
                 pass
             else:
@@ -381,8 +384,6 @@ def HorseView(request):
         return Response(data=data, status=status.HTTP_200_OK)
 
 
-
-
 @swagger_auto_schema(
     method="get",
     responses={200: HorsesSerializer(many=True)},
@@ -394,6 +395,7 @@ def HorsesView(request):
     querset = Horses.objects.all().order_by("id").reverse()
     return getPagination(querset, request, HorsesSerializer)
 
+
 @swagger_auto_schema(
     method="get",
     responses={200: HorsesSerializer(many=True)},
@@ -403,8 +405,9 @@ def HorsesView(request):
 @authentication_classes([TokenAuthentication])
 def AllHorsesView(request):
     querset = Horses.objects.all().order_by("id").reverse()
-    serializer = AllHorsesSerializer(querset,many=True)
-    return Response(data=serializer.data,status=status.HTTP_200_OK)
+    serializer = AllHorsesSerializer(querset, many=True)
+    return Response(data=serializer.data, status=status.HTTP_200_OK)
+
 
 @swagger_auto_schema(method="get", responses={200: FavouriteSerializer(many=True)})
 @swagger_auto_schema(method="post", request_body=FavouriteSerializer)
@@ -469,8 +472,6 @@ def favouriteView(request):
 @authentication_classes([TokenAuthentication])
 def searchHorseView(request):
     if request.method == "GET":
-        user_location = request.GET.get("user_location",None)
-        
         try:
             user_search_history = UserSearchSave.objects.get(user=request.user)
         except:
@@ -481,11 +482,18 @@ def searchHorseView(request):
             return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
 
         current_year = date.today().year
-        queryset = (
-            Horses.objects.annotate(age=current_year - F("year_of_birth"))
-            .all()
-        )
+        queryset = Horses.objects.annotate(age=current_year - F("year_of_birth")).all()
 
+        user_location = None
+        if (
+            user_search_history.country
+            and user_search_history.state
+            and user_search_history.city
+        ):
+            user_location = {}
+            user_location["lat"], user_location["lng"] = extract_lat_long_via_address(
+                f"{user_search_history.city} {user_search_history.state},{user_search_history.country}"
+            )
         if user_search_history.country:
             queryset = queryset.filter(country=user_search_history.country)
         if user_search_history.state:
@@ -499,45 +507,38 @@ def searchHorseView(request):
         if user_search_history.max_age:
             queryset = queryset.filter(age__lte=user_search_history.max_age)
         if user_search_history.min_height:
-            queryset = queryset.filter(
-                height__gte=user_search_history.min_height
-            )
+            queryset = queryset.filter(height__gte=user_search_history.min_height)
         if user_search_history.max_height:
-            queryset = queryset.filter(
-                height__lte=user_search_history.max_height
-            )
+            queryset = queryset.filter(height__lte=user_search_history.max_height)
         if user_search_history.min_price:
             queryset = queryset.filter(price__gte=user_search_history.min_price)
         if user_search_history.max_price:
             queryset = queryset.filter(price__lte=user_search_history.max_price)
         if user_search_history.discipline_id:
-            queryset = queryset.filter(
-                discipline=user_search_history.discipline_id
-            )
+            queryset = queryset.filter(discipline=user_search_history.discipline_id)
         if user_search_history.gender:
             genders = user_search_history.gender.split(",")
             queryset = queryset.filter(gender__in=genders)
         if user_search_history.color_id:
             queryset = queryset.filter(color=user_search_history.color_id)
         if user_search_history.temperament_id:
-            queryset = queryset.filter(
-                temperament=user_search_history.temperament_id
-            )
+            queryset = queryset.filter(temperament=user_search_history.temperament_id)
         if user_search_history.keywords.all().count() > 0:
-            queryset = queryset.filter(
-                keywords__in=user_search_history.keywords.all()
-            )
+            queryset = queryset.filter(keywords__in=user_search_history.keywords.all())
         if user_location and user_search_history.radius:
-            pnt = GEOSGeometry(user_location, srid=4326)
-            queryset = queryset.filter(user_location__distance_lte=(pnt, D(mi=user_search_history.radius)))
-        
+            pnt = Point(user_location["lng"], user_location["lat"])
+            queryset = queryset.filter(
+                user_location__distance_lte=(pnt, D(mi=user_search_history.radius))
+            )
+
         queryset = queryset.distinct().order_by("id").reverse()
         paginator = PageNumberPagination()
         paginator.page_size = 20
         result_page = paginator.paginate_queryset(queryset, request)
-        serializer = HorsesSerializer(result_page, many=True, context={"request": request})
+        serializer = HorsesSerializer(
+            result_page, many=True, context={"request": request}
+        )
         return paginator.get_paginated_response(serializer.data)
-            
 
 
 @swagger_auto_schema(method="get", responses={200: HorsesSerializer(many=True)})
@@ -545,19 +546,22 @@ def searchHorseView(request):
 @permission_classes([IsAuthenticated])
 @authentication_classes([TokenAuthentication])
 def searchHorsesByNameView(request):
-    search_param = request.GET.get("search_param",None)
+    search_param = request.GET.get("search_param", None)
     if search_param is None:
-        data={
-            "status":"error",
-            "message":"search_param is required"
-        }
-        return Response(data=data,status=status.HTTP_404_NOT_FOUND)
-    horses = Horses.objects.filter(Q(keywords__keyword=search_param) | Q(title=search_param)).distinct().order_by("id").reverse()
+        data = {"status": "error", "message": "search_param is required"}
+        return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+    horses = (
+        Horses.objects.filter(Q(keywords__keyword=search_param) | Q(title=search_param))
+        .distinct()
+        .order_by("id")
+        .reverse()
+    )
     paginator = PageNumberPagination()
     paginator.page_size = 20
     result_page = paginator.paginate_queryset(horses, request)
     serializer = HorsesSerializer(result_page, many=True, context={"request": request})
     return paginator.get_paginated_response(serializer.data)
+
 
 @swagger_auto_schema(method="GET", responses={200: UserSearchSaveSerializer(many=True)})
 @swagger_auto_schema(
@@ -829,6 +833,7 @@ def getTrendingHorseAddsView(request):
     )
     return getPagination(horses, request, HorsesSerializer)
 
+
 @swagger_auto_schema(
     method="GET",
     manual_parameters=[
@@ -849,13 +854,13 @@ def getTrendingHorseAddsView(request):
 def getDistanceBetweenUserAndHorseView(request):
     user_location = request.GET.get("user-location", None)
     horse_id = request.GET.get("horse-id", None)
-    
+
     horse = Horses.objects.get(id=horse_id)
-    
+
     pnt = GEOSGeometry(user_location, srid=4326)
     pnt2 = GEOSGeometry(horse.user_location, srid=4326)
-    
-    distance_1 = GD(pnt,pnt2)
+
+    distance_1 = GD(pnt, pnt2)
 
     data = {
         "status": "ok",

@@ -4,15 +4,16 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('users', '0003_auto_20230406_1525'),
+        ("users", "0003_auto_20230406_1525"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='usersearchsave',
-            name='keywords',
-            field=models.ManyToManyField(blank=True, related_name='user_search_keywords', to='home.Keywords'),
+            model_name="usersearchsave",
+            name="keywords",
+            field=models.ManyToManyField(
+                blank=True, related_name="user_search_keywords", to="home.Keywords"
+            ),
         ),
     ]

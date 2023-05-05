@@ -98,7 +98,9 @@ class Breeds(models.Model):
 class Horses(models.Model):
     images = models.ManyToManyField(HorseImages, related_name="horse_images")
     title = models.CharField(max_length=300, null=True, blank=True)
-    user_location = models.PointField(geography=True, dim=2, srid=4326,null=True,blank=True)
+    user_location = models.PointField(
+        geography=True, dim=2, srid=4326, null=True, blank=True
+    )
     state = models.CharField(max_length=1000, null=True, blank=True)
     city = models.CharField(max_length=1000, null=True, blank=True)
     country = models.CharField(max_length=1000, null=True, blank=True)

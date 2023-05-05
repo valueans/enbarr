@@ -65,7 +65,7 @@ class UserProfile(models.Model):
     ban_user_from_app = models.BooleanField(default=False)
     ban_user_from_app_date = models.DateField(null=True, blank=True)
     receive_notifications = models.BooleanField(default=True)
-    one_signal_play_id = models.CharField(max_length=1000,null=True,blank=True)
+    one_signal_play_id = models.CharField(max_length=1000, null=True, blank=True)
 
     def __str__(self):
         return self.user.email
@@ -77,7 +77,7 @@ class UserProfile(models.Model):
 class UserSearchSave(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     country = models.CharField(max_length=1000, null=True, blank=True)
-    radius = models.IntegerField(null=True,blank=True)
+    radius = models.IntegerField(null=True, blank=True)
     city = models.CharField(max_length=1000, null=True, blank=True)
     state = models.CharField(max_length=1000, null=True, blank=True)
     breed_id = models.ForeignKey(
@@ -100,7 +100,7 @@ class UserSearchSave(models.Model):
         "home.Temperaments", on_delete=models.CASCADE, null=True, blank=True
     )
     keywords = models.ManyToManyField(
-        "home.Keywords", related_name="user_search_keywords",blank=True
+        "home.Keywords", related_name="user_search_keywords", blank=True
     )
 
 
