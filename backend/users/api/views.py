@@ -309,7 +309,7 @@ def userProfileView(request):
         try:
             instance = UserProfile.objects.get(user=request.user)
             serializer = UserProfileSerializer(
-                instance, data=request.data, context={"request": request}
+                instance, data=request.data, context={"request": request},partial=True
             )
         except:
             serializer = UserProfileSerializer(
