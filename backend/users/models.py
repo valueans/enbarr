@@ -58,7 +58,7 @@ class UserProfile(models.Model):
     subscription_start_date = models.DateTimeField(null=True, blank=True)
     subscription_renew_date = models.DateTimeField(null=True, blank=True)
     promotion_adds = models.IntegerField(default=5)
-    subscription_adds = models.IntegerField(default=0)
+    subscription_adds = models.BigIntegerField(default=0)
 
     ban_user_from_posting = models.BooleanField(default=False)
     ban_user_from_posting_date = models.DateField(null=True, blank=True)

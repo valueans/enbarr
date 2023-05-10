@@ -31,7 +31,7 @@ const CardForm = ({subscriptionPlanId,setSnackBarData}) => {
       setUserProfile(response.data)
       setSnackBarData({open:true,message:"Your subscription plan is successfully updated",severity:"success"})
       if(response.data.user_subscription.title.toLowerCase() !== "basic"){
-        return navigator('/home/seller')
+        return navigator('/settings')
       }
     }
     catch(error){

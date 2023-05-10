@@ -274,31 +274,32 @@ def stripe_webhook(request):
         elif event.type == "customer.subscription.created":
             return HttpResponse(status=200)
         elif event.type == "charge.succeeded":
-            try:
-                response = event.data.object
-                invoice_id = response["invoice"]
-                payment, created = PaymentsHistory.objects.get_or_create(
-                    stripe_invoice_id=invoice_id
-                )
-                card = Cards.objects.get(payment_id=response["payment_method"])
-                payment.card = card
-                payment.user = card.user
-                payment.stripe_receipt_link = response["receipt_url"]
-                payment.amount = float(response["amount"]) / 100
-                payment.payment_intent_id = response["payment_intent"]
-                if response["status"] == "succeeded":
-                    payment.status = True
-                else:
-                    payment.status = False
-                payment.save()
-                if card.user.userprofile.subscription_plan.title == "Premium":
-                    card.user.userprofile.subscription_adds = 10
-                elif card.user.userprofile.subscription_plan == "Platinum":
-                    card.user.userprofile.subscription_adds = 10000000
+            # try:
+            response = event.data.object
+            invoice_id = response["invoice"]
+            payment, created = PaymentsHistory.objects.get_or_create(
+                stripe_invoice_id=invoice_id
+            )
+            card = Cards.objects.get(payment_id=response["payment_method"])
+            payment.card = card
+            payment.user = card.user
+            payment.stripe_receipt_link = response["receipt_url"]
+            payment.amount = float(response["amount"]) / 100
+            payment.payment_intent_id = response["payment_intent"]
+            if response["status"] == "succeeded":
+                payment.status = True
+            else:
+                payment.status = False
+            payment.save()
+            if card.user.userprofile.subscription_plan.title == "Premium":
+                card.user.userprofile.subscription_adds = 10
                 card.user.userprofile.save()
-                return HttpResponse(status=200)
-            except:
-                return HttpResponse(status=400)
+            if card.user.userprofile.subscription_plan.title == "Platinum":
+                card.user.userprofile.subscription_adds = 1000000
+                card.user.userprofile.save()
+            return HttpResponse(status=200)
+            # except:
+            #     return HttpResponse(status=400)
         elif event.type == "invoice.created":
             return HttpResponse(status=200)
         elif event.type == "invoice.paid":
