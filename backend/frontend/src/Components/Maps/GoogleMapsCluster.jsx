@@ -22,7 +22,7 @@ const GoogleMapsCluster = ({lat,lng,allHorseLatLng}) => {
         },
         "geometry":{
             "type":"Point",
-            "coordinates":[item.lat,item.lng]
+            "coordinates":[item.lng,item.lat]
         }
     }))
 
