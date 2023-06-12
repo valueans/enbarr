@@ -7,10 +7,11 @@ from .models import FeedBack
 
 @receiver(post_save, sender=FeedBack)
 def send_feedback_response(sender, instance, created, **kwargs):
-    send_mail(
-        f"Feedback Response",
-        f"{instance.response}",
-        settings.SENDGRID_EMAIL,
-        [instance.email],
-        fail_silently=False,
-    )
+    if instance.response:
+        send_mail(
+            f"Feedback Response",
+            f"{instance.response}",
+            settings.SENDGRID_EMAIL,
+            [instance.email],
+            fail_silently=False,
+        )
