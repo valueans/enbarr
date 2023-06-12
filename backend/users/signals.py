@@ -30,5 +30,8 @@ def user_verification_send_otp(sender, instance, created, **kwargs):
 
 @receiver(post_delete, sender=UserProfile)
 def user_delete(sender, instance, **kwargs):
-    user = instance.user
-    user.delete()
+    try:
+        user = instance.user
+        user.delete()
+    except:
+        pass

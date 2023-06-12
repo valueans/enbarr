@@ -1,6 +1,7 @@
 from datetime import date
 from dateutil.relativedelta import relativedelta
 from rest_framework.pagination import PageNumberPagination
+from geopy.geocoders import Nominatim
 
 
 # method to ban user from posting adds on admin call
@@ -28,3 +29,9 @@ def getPagination(queryset, request, serializerClass, many=True, _filter=False):
     result_page = paginator.paginate_queryset(queryset, request)
     serializer = serializerClass(result_page, many=many, context={"request": request})
     return paginator.get_paginated_response(serializer.data)
+
+
+def getUserLocationAddress(lat,lng):
+    geolocator = Nominatim(user_agent="http")
+    location = geolocator.reverse(f"{lat},{lng}",exactly_one=True)
+    return location.raw['address']

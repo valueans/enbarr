@@ -38,7 +38,7 @@ const editHorse = ()=>{
     let _images = currentAdd.images.map((element)=>{
         return {id:element.id,image:element?.file,file_type:element?.file_type}
     })
-    let horseData = {images_id:_images_id,title:currentAdd.title,year_of_birth:currentAdd.year_of_birth,country:currentAdd.country,user_location:"",price:currentAdd.price,description:currentAdd.description,breed_id:currentAdd.breed.id,gender:currentAdd.gender,color_id:currentAdd.color.id,height:currentAdd.height,temperament_id:currentAdd.temperament.id,discipline_id:currentAdd.discipline.id,keywords_id:_keywords_id,state:currentAdd.state,city:currentAdd.city}
+    let horseData = {images_id:_images_id,title:currentAdd.title,year_of_birth:currentAdd.year_of_birth,user_location:`POINT(${currentAdd.user_location.coordinates[1]} ${currentAdd.user_location.coordinates[0]})`,price:currentAdd.price,description:currentAdd.description,breed_id:currentAdd.breed.id,gender:currentAdd.gender,color_id:currentAdd.color.id,height:currentAdd.height,temperament_id:currentAdd.temperament.id,discipline_id:currentAdd.discipline.id,keywords_id:_keywords_id,lat:currentAdd.user_location.coordinates[1],lng:currentAdd.user_location.coordinates[0]}
     return navigator(`/home/seller`,{state:{horseData:horseData,editHorse:true,images:_images,keywords:currentAdd.keywords,horse_id:horseAddKey}})
 }
 
@@ -51,7 +51,7 @@ const detailsClicked = ()=>{
     <>
     <CustomSnackBar snackBarData={snackBarData} setSnackBarData={setSnackBarData}/>
     <Card sx={{height:"500px",width:"340px",boxShadow:"0px 10px 10px rgba(0, 0, 0, 0.1)",borderRadius:"30px"}}>
-        <CardMedia component={image?.file_type==='IMAGE'?'img':'video'} height="100%" image={image?.file} alt="add-image" controls autoPlay loop sx={{objectFit:"fill",borderRadius:"30px"}} muted={true}/>
+        <CardMedia component={image?.file_type==='IMAGE'?'img':'video'} height="100%" image={image?.file} alt="add-image" controls autoPlay loop sx={{objectFit:"contain",borderRadius:"30px"}} muted={true}/>
     </Card>
     <Grid container>
         <Grid item xs={10} sx={{position:"relative",top:"-126px",zIndex:8}} className="justifyContentEnd">

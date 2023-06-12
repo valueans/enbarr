@@ -10,14 +10,11 @@ import HorseImageUploadCard from '../Cards/HorseImageUploadCard';
 import HorseService from '../../Services/HorseService';
 import CustomSnackBar from '../SnackBar/CustomSnackBar';
 import { useLocation, useNavigate } from 'react-router-dom';
-import LocationSelect from '../Selects/LocationSelect';
 import BreedSelect from '../Selects/BreedSelect';
 import DisciplineSelect from '../Selects/DisciplineSelect';
 import ColorsSelect from '../Selects/ColorsSelect';
 import TemperamentSelect from '../Selects/TemperamentSelect';
 import AuthService from '../../Services/AuthService';
-import StateSelect from '../Selects/StateSelect';
-import CitiesSelect from '../Selects/CitiesSelect';
 import SellerGoogleMaps from '../Maps/SellerGoogleMaps';
 
 const SellerContent = ({lat,lng,setLat,setLng}) => {
@@ -33,7 +30,10 @@ const SellerContent = ({lat,lng,setLat,setLng}) => {
     const [loading,setLoading] = useState(false);
     const [keywordLoading,setKeywordLoading] = useState(false);
 
-    const [horseData,setHorseData] = useState({images_id:[],title:"",year_of_birth:"",country:"",user_location:"",price:"",description:"",breed_id:"",gender:"",color_id:"",height:"",temperament_id:"",discipline_id:"",keywords_id:[],state:"",city:"",user_location:`POINT(${lng} ${lat})`});
+    const [innerLat,setInnerLat] = useState(lat);
+    const [innerLng,setInnerLng] = useState(lng);
+
+    const [horseData,setHorseData] = useState({images_id:[],title:"",year_of_birth:"",country:"",price:"",description:"",breed_id:"",gender:"",color_id:"",height:"",temperament_id:"",discipline_id:"",keywords_id:[],user_location:`POINT(${lng} ${lat})`});
     const [files, setFiles] = useState([]);
     const [snackBarData,setSnackBarData] = useState({
         open:false,
@@ -55,10 +55,10 @@ const SellerContent = ({lat,lng,setLat,setLng}) => {
 
 
     useEffect(()=>{
-        console.log("lng",lng)
-        console.log("lat",lat)
-        setHorseData({...horseData,user_location:`POINT(${lng} ${lat})`})
-    },[lat,lng])
+        setHorseData({...horseData,user_location:`POINT(${innerLng} ${innerLat})`})
+        setLat(innerLat)
+        setLng(innerLng)
+    },[innerLat,innerLng])
 
 const uploadImage = async (image)=>{
     setLoading(true)
@@ -91,6 +91,8 @@ const keywordClick = async ()=>{
         setEditHorse(true)
         setEditHorseId(location.state.horse_id)
         setLoading(true)
+        setInnerLat(location.state.horseData.lat)
+        setInnerLng(location.state.horseData.lng)
         setTimeout(()=>{
             setHorseData(location.state.horseData)
             setKeywords(location.state.keywords)
@@ -109,15 +111,6 @@ const keywordClick = async ()=>{
     }
     else if (horseData.year_of_birth.length === 0){
         setSnackBarData({...snackBarData,open:true,message:"Year of Birth is required",severity:"error"})
-    }
-    else if (horseData.country.length === 0){
-        setSnackBarData({...snackBarData,open:true,message:"Location is required",severity:"error"})
-    }
-    else if (horseData.state.length === 0){
-        setSnackBarData({...snackBarData,open:true,message:"State is required",severity:"error"})
-    }
-    else if (horseData.city.length === 0){
-        setSnackBarData({...snackBarData,open:true,message:"City is required",severity:"error"})
     }
     else if (horseData.price.length === 0){
         setSnackBarData({...snackBarData,open:true,message:"Price is required",severity:"error"})
@@ -188,7 +181,7 @@ const keywordClick = async ()=>{
 
                 {/* line starts */}
                 <Grid item xs={12}>
-                    <SellerGoogleMaps lat={lat} lng={lng} setLat={setLat} setLng={setLng}/>
+                    <SellerGoogleMaps lat={innerLat} lng={innerLng} setLat={setInnerLat} setLng={setInnerLng}/>
                 </Grid>
                 {/* line ends */}
 
@@ -256,20 +249,7 @@ const keywordClick = async ()=>{
                     <Typography variant='authInputTitle'>Name of Horse <span style={{color:"red"}}>*</span></Typography>
                     <CustomInput type="text" onChange={(e)=>{
                         setHorseData({...horseData,title:e.target.value})
-                        }} value={horseData?.title} placeholder="Enbarr horse"/>
-                </Grid>
-
-                <Grid item xs={12} sx={{mt:3}}>
-                    <Typography variant='authInputTitle'>Location <span style={{color:"red"}}>*</span></Typography>
-                    <LocationSelect horseData={horseData} setHorseData={setHorseData}/>
-                </Grid>
-                <Grid item xs={12} sx={{mt:3}}>
-                    <Typography variant='authInputTitle'>State <span style={{color:"red"}}>*</span></Typography>
-                    <StateSelect horseData={horseData} setHorseData={setHorseData}/>
-                </Grid>
-                <Grid item xs={12} sx={{mt:3}}>
-                    <Typography variant='authInputTitle'>City <span style={{color:"red"}}>*</span></Typography>
-                    <CitiesSelect horseData={horseData} setHorseData={setHorseData}/>
+                        }} value={horseData?.title} />
                 </Grid>
 
                 <Grid item xs={12} sx={{mt:3}}>
@@ -281,19 +261,19 @@ const keywordClick = async ()=>{
                     <Typography variant='authInputTitle'>Year of birth <span style={{color:"red"}}>*</span></Typography>
                     <CustomInput type="number" onChange={(e)=>{
                         setHorseData({...horseData,year_of_birth:e.target.value})
-                        }} value={horseData?.year_of_birth} placeholder="2000"/>
+                        }} value={horseData?.year_of_birth}/>
                 </Grid>
                 <Grid item xs={12} sx={{mt:3}}>
                     <Typography variant='authInputTitle'>Height (Hands) <span style={{color:"red"}}>*</span></Typography>
                     <CustomInput type="number" onChange={(e)=>{
                         setHorseData({...horseData,height:e.target.value})
-                        }} value={horseData?.height} placeholder="5.1"/>
+                        }} value={horseData?.height} />
                 </Grid>
                 <Grid item xs={12} sx={{mt:3}}>
                     <Typography variant='authInputTitle'>Price ($) <span style={{color:"red"}}>*</span></Typography>
                     <CustomInput type="number" onChange={(e)=>{
                         setHorseData({...horseData,price:e.target.value})
-                        }} value={horseData?.price} placeholder="$5000"/>
+                        }} value={horseData?.price} />
                 </Grid>
                 <Grid item xs={12} sx={{mt:3}}>
                     <Typography variant='authInputTitle'>Discipline <span style={{color:"red"}}>*</span></Typography>
@@ -335,7 +315,7 @@ const keywordClick = async ()=>{
                     <Typography variant='authInputTitle'>Describe your Horse <span style={{color:"red"}}>*</span></Typography>
                     <CustomInput type="text" minRows={10} maxRows={20} multiline={true} maxLength={1000} onChange={(e)=>{
                         setHorseData({...horseData,description:e.target.value})
-                        }} value={horseData?.description} placeholder="write your description here..."/>
+                        }} value={horseData?.description}/>
                 </Grid>
 
                 {/* Input Keywords starts */}
@@ -350,7 +330,7 @@ const keywordClick = async ()=>{
                                 <AddIcon />
                             </IconButton>}
                             direction='end' paddingLeft='5%' maxLength={100} value={keywordVal}
-                                setKeywordVal={setKeywordVal} placeholder="arabian horse etc..." onChange={(e)=>{
+                                setKeywordVal={setKeywordVal} onChange={(e)=>{
                                     setKeywordVal(e.target.value)
                                   }}/>
                         </Grid>

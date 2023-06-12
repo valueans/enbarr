@@ -5,10 +5,12 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import NotificationsService from '../../Services/NotificationService';
 import CustomSnackBar from '../SnackBar/CustomSnackBar';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
+import { useNavigate } from 'react-router-dom';
 
 export default function NotificationMenu() {
 
 // variable define for menu to open and close
+  const navigator = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
   const [anchorSingleNotiEl, setAnchorSingleNotiEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -99,6 +101,7 @@ export default function NotificationMenu() {
   useEffect(()=>{
     const getNotifications = async ()=>{
         const response = await NotificationsService.getMyNotifications(page);
+        console.log("response",response)
         setNotifications([...notifications,...response.results])
         setToalNotificationsCount(response.count)
     }
@@ -157,7 +160,14 @@ export default function NotificationMenu() {
                         <Grid item xs={2} className="alignContentCenter">
                             <Avatar alt="Remy Sharp" sx={{width:"70px",height:"70px"}} src={element?.message_profile_url}/>
                         </Grid>
-                        <Grid item xs={7} className="alignContentCenter">
+                        <Grid item xs={7} className="alignContentCenter" onClick={()=>{
+                          if(element.type === "MESSAGE"){
+                            navigator("/messages")
+                          }
+                          if(element.type === "LIKE" || element.type==="HORSE LIKE"){
+                            navigator("/myhorse/myhorses?page=1")
+                          }
+                        }}>
                             <Typography variant="notificationMessage">{element.description}</Typography>
                         </Grid>
                         <Grid item xs={2} className="justifyContentEndAlignCenter">

@@ -216,7 +216,7 @@ const BuyerContent = ({setSnackBarData}) => {
           <Grid item xs={12} sx={{mt:3}}>
             <Grid container>
               <Grid item xs={12}>
-                <Typography variant='authInputTitle'>Gender</Typography>
+                <Typography variant='authInputTitle'>Gender (Select all that apply)</Typography>
               </Grid>
               <Grid item xs={12}>
               <FormControl>

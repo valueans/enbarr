@@ -21,7 +21,7 @@ const HorseCard = ({image}) => {
         height="100%"
         image={firstImage?.file}
         alt="add-image"
-        sx={{objectFit:"fill",borderRadius:"30px"}}
+        sx={{objectFit:"contain",borderRadius:"30px"}}
         loop
         autoPlay
         muted={true}
