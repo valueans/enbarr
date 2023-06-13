@@ -406,5 +406,5 @@ XYLqREhX
 # Google MAPS
 GOOGLE_MAPS_API_KEY = env.str("GOOGLE_MAPS_API_KEY", "")
 
-GDAL_LIBRARY_PATH = '/opt/homebrew/Cellar/gdal/3.6.4_4/lib/libgdal.32.dylib'
-GEOS_LIBRARY_PATH = '/opt/homebrew/Cellar/gdal/3.6.4_4/lib/libgdal.32.dylib'
+# GDAL_LIBRARY_PATH = '/opt/homebrew/Cellar/gdal/3.6.4_4/lib/libgdal.32.dylib'
+# GEOS_LIBRARY_PATH = '/opt/homebrew/Cellar/gdal/3.6.4_4/lib/libgdal.32.dylib'
