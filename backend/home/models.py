@@ -102,6 +102,7 @@ class Horses(models.Model):
         geography=True, dim=2, srid=4326, null=True, blank=True
     )
     state = models.CharField(max_length=1000, null=True, blank=True)
+    state_code = models.CharField(max_length=2, null=True, blank=True)
     city = models.CharField(max_length=1000, null=True, blank=True)
     country = models.CharField(max_length=1000, null=True, blank=True)
     zip_code = models.CharField(max_length=100, null=True, blank=True)

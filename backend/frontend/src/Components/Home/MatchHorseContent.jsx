@@ -6,7 +6,7 @@ import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp
 import Button from '../Buttons/Button';
 import CustomSwiper from '../Carosel/CustomSwiper';
 import HorseService from '../../Services/HorseService';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import AuthService from '../../Services/AuthService';
@@ -14,6 +14,9 @@ import GoogleMapsCluster from '../Maps/GoogleMapsCluster';
 import AuthenticationTabs from '../Buttons/AuthenticationTabs';
 
 const MatchHorseContent = ({lat,lng}) => {
+
+  const navigator = useNavigate();
+
   const [allHorseLatLng,setAllHorseLatLng] = useState([]);
   const [currentHorseId,setCurrentHorseId] = useState(null);
   const [isLiked,setIsLiked] = useState(false);
@@ -27,6 +30,8 @@ const MatchHorseContent = ({lat,lng}) => {
     await HorseService.likeHorse(currentHorseId)
     setIsLiked(true)
     setIsDisLiked(false)
+    return navigator("/myhorse/favorites?page=1")
+
   }
   const handleDisLike = async ()=>{
     await HorseService.dislikeHorse(currentHorseId)

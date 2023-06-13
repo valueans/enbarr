@@ -160,7 +160,7 @@ export default function NotificationMenu() {
                         <Grid item xs={2} className="alignContentCenter">
                             <Avatar alt="Remy Sharp" sx={{width:"70px",height:"70px"}} src={element?.message_profile_url}/>
                         </Grid>
-                        <Grid item xs={7} className="alignContentCenter" onClick={()=>{
+                        <Grid item xs={7} sx={{cursor:"pointer"}} className="alignContentCenter" onClick={()=>{
                           if(element.type === "MESSAGE"){
                             navigator("/messages")
                           }

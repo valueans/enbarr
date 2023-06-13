@@ -15,7 +15,7 @@ const SellerGoogleMaps = ({lat,lng,setLat,setLng,disabled=false,defaultZoom=12})
       };
 
       console.log("lat",lat)
-      console.log("lng",lng)
+      console.log("lat",lng)
   return (
     <div style={{ height: '400px', width: '100%' }}>
       <GoogleMapReact

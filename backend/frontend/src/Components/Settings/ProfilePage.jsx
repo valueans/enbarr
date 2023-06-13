@@ -74,7 +74,12 @@ const ProfilePage = ({setSnackBarData}) => {
         </Grid>
         <Grid container sx={{p:5,mt:5}} spacing={5}>
             <Grid item xs={12}>
-                <Typography variant="authInputTitle" component="div">Full Name</Typography>
+            <Grid item xs={12}>
+                <Button title={disableEdit?"Edit":"Save"} backgroundColor={disableEdit?'#E1E1E1':'#313033'} color={disableEdit?'#313033':'#FFFFFF'} border={disableEdit?'1px solid #868686':"none"}
+                    width="100%" onClick={editProfile}></Button>
+                </Grid>
+
+                <Typography variant="authInputTitle" component="div" sx={{mt:3}}>Full Name</Typography>
                 <CustomInput type="text" value={`${userProfile.first_name===null?"":userProfile.first_name} ${userProfile.last_name===null?"":userProfile.last_name}`} disabled={disableEdit} onChange={(e)=>{
                     let _first_name = e.target.value.split(' ').slice(0, -1).join(' ')
                     let _last_name = e.target.value.split(' ').slice(-1).join(' ');
@@ -122,10 +127,6 @@ const ProfilePage = ({setSnackBarData}) => {
                 <CustomInput type="text" value={userProfile.country===null?"":userProfile.country} disabled={disableEdit} onChange={(e)=>{
                     setUserProfile({...userProfile,country:e.target.value})
                 }}/>
-            </Grid>
-            <Grid item xs={12}>
-                <Button title={disableEdit?"Edit":"Save"} backgroundColor={disableEdit?'#E1E1E1':'#313033'} color={disableEdit?'#313033':'#FFFFFF'} border={disableEdit?'1px solid #868686':"none"}
-                    width="100%" onClick={editProfile}></Button>
             </Grid>
         </Grid>
     </Grid>

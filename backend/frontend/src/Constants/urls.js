@@ -42,7 +42,11 @@ export const matchHorseUrl = `${api}search-horse/`;
 // like horse
 export const likeHorseUrl = `${api}like-horse/`;
 
+
 export const disLikeHorseUrl = `${api}dislike-horse/`;
+
+// search horse
+export const searchHorseUrl = `${api}user-search-by-name/`;
 // notifications
 export const myNotificationsUrl = `${api}notifications/notifications/`;
 

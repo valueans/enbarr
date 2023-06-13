@@ -1,5 +1,5 @@
 import axios from '../Constants/requests';
-import { recentlyAddedHorsesUrl,topHorsesUrl,trendingHorsesUrl,favouriteHorsesUrl, myHorsesUrl,locationsUrl,breedsUrl, disciplineUrl, colorsUrl, temperamentsUrl, horseImage, horseKeywords, matchHorseUrl, likeHorseUrl, disLikeHorseUrl, getDistanceUrl, allHorsesLatLngUrl } from '../Constants/urls';
+import { recentlyAddedHorsesUrl,topHorsesUrl,trendingHorsesUrl,favouriteHorsesUrl, myHorsesUrl,locationsUrl,breedsUrl, disciplineUrl, colorsUrl, temperamentsUrl, horseImage, horseKeywords, matchHorseUrl, likeHorseUrl, disLikeHorseUrl, getDistanceUrl, allHorsesLatLngUrl, searchHorseUrl } from '../Constants/urls';
 
 const HorseService = {
 
@@ -160,6 +160,15 @@ const HorseService = {
         const {data:response} = await axios.get(disLikeHorseUrl,{
             params:{
                 "horse-id":horseId
+            }
+        });
+        return response
+    },
+    searchHorse : async (query,page=1) =>{
+        const {data:response} = await axios.get(searchHorseUrl,{
+            params:{
+                "search_param":query,
+                "page":page
             }
         });
         return response

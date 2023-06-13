@@ -1,8 +1,10 @@
 from django.contrib.auth import get_user_model
-from users.models import Notifications
+from notifications.models import Notifications
 from .models import Report, Horses
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save,pre_save
 from django.dispatch import receiver
+from .helpers import getUserLocationAddress
+
 
 User = get_user_model()
 
@@ -23,3 +25,22 @@ def create_notification_horse_approval(sender, instance, created, **kwargs):
     Notifications.objects.create(
         user=user, description=description, type="HORSE REVIEW"
     )
+    
+    
+@receiver(pre_save, sender=Horses)
+def saveAddress(sender, instance, *args, **kwargs):
+    try:
+        address = getUserLocationAddress(instance.user_location[1],instance.user_location[0])
+        instance.state = address['state']
+        instance.state_code = address['ISO3166-2-lvl4'].split("-")[1]
+        instance.country = address['country_code'].upper()
+        
+        if "city" in address:
+            instance.city = address['city']
+        if "town" in address:
+            instance.city = address['town']
+        
+        if address['postcode']:
+            instance.zip_code = address['postcode']
+    except:
+        pass

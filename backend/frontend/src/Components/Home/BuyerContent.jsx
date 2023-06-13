@@ -34,11 +34,14 @@ const BuyerContent = ({setSnackBarData}) => {
   const [keywords,setKeywords] = useState([]);
   const [keywordVal,setKeywordVal] = useState("");
   const [keywordLoading,setKeywordLoading] = useState(false);
+  const [matchLoading,setMatchLoading] = useState(false);
+
 
   const [userSearchSaveData,setUserSearchSaveData] = useState({country:"",city:"",state:"",breed_id:"",min_age:"",max_age:"",min_height:"",max_height:"",min_price:"",max_price:"",discipline_id:"",gender:[],gender_list:[],color_id:"",temperament_id:"",keywords_id:[],radius:20});
 
 
   const handleMatch = async ()=>{
+    setMatchLoading(true)
     try {
       await HorseService.getMatchHorse(); 
       return navigator('/home/matchhorses')
@@ -310,7 +313,7 @@ const BuyerContent = ({setSnackBarData}) => {
                     setUserSearchSaveData({country:null,state:null,city:null,breed_id:null,min_age:null,max_age:null,min_height:null,max_height:null,min_price:null,max_price:null,discipline_id:null,gender:null,color_id:null,temperament_id:null,keywords_id:[],radius:null})
                   }}/></Grid>
                   <Grid item xs={6} sx={{mt:2,pl:2}}>
-                    <Button title="match" width="100%" onClick={handleMatch}/>
+                    <Button title="match" width="100%" onClick={handleMatch} loading={matchLoading}/>
                     </Grid>
               </Grid>
           </Grid>

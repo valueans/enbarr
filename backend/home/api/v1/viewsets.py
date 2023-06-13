@@ -497,9 +497,9 @@ def searchHorseView(request):
         if user_search_history.country:
             queryset = queryset.filter(country=user_search_history.country)
         if user_search_history.state:
-            queryset = queryset.filter(state=user_search_history.state)
+            queryset = queryset.filter(Q(state=user_search_history.state)|Q(state_code=user_search_history.state))
         if user_search_history.city:
-            queryset = queryset.filter(city=user_search_history.city)
+            queryset = queryset.filter(city__icontains=user_search_history.city)
         if user_search_history.breed_id:
             queryset = queryset.filter(breed=user_search_history.breed_id)
         if user_search_history.min_age:
@@ -639,6 +639,9 @@ def likeHorseView(request):
     instance, created = Likes.objects.get_or_create(user=request.user)
 
     horse.likes.add(instance)
+    
+    if horse.uploaded_by != request.user:
+        obj,created = Favourite.objects.get_or_create(user=request.user,horses=horse)
 
     try:
         get_dislike = horse.dislikes.get(user=request.user)
@@ -686,6 +689,11 @@ def dislikeHorseView(request):
         pass
 
     horse.save()
+    try:
+        obj = Favourite.objects.get(user=request.user,horses=horse)
+        obj.delete()
+    except:
+        pass
 
     dislikes = horse.dislikes.all().count()
     data = {"status": "OK", "message": "Successfull", "dislikes": dislikes}

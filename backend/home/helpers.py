@@ -33,5 +33,5 @@ def getPagination(queryset, request, serializerClass, many=True, _filter=False):
 
 def getUserLocationAddress(lat,lng):
     geolocator = Nominatim(user_agent="http")
-    location = geolocator.reverse(f"{lat},{lng}",exactly_one=True)
+    location = geolocator.reverse(f"{lat},{lng}",exactly_one=True,language="en")
     return location.raw['address']

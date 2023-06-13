@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom'
 
 const CardForm = ({subscriptionPlanId,setSnackBarData}) => {
   const [paymentMethodDetails,setPaymentMethodDetails] = useState({id:"",last_4:"",exp_month:"",exp_year:"",message:""})
-  const navigator = useNavigate();
+  const navigation = useNavigate();
 
   const subscriptionPlan  = DefaultUserProfile().subscription_plan;
 
@@ -30,9 +30,11 @@ const CardForm = ({subscriptionPlanId,setSnackBarData}) => {
       const response = await PaymentServices.upgradeSubscription(subscriptionPlanId);
       setUserProfile(response.data)
       setSnackBarData({open:true,message:"Your subscription plan is successfully updated",severity:"success"})
-      if(response.data.user_subscription.title.toLowerCase() !== "basic"){
-        return navigator('/settings')
-      }
+      setTimeout(()=>{
+        navigator.geolocation.getCurrentPosition(function (position) {
+          return navigation('/home/seller',{state:{lat:position.coords.latitude,lng:position.coords.longitude}})
+        })
+      },1000)
     }
     catch(error){
       if (error.response.data.message){

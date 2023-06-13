@@ -30,8 +30,8 @@ const SellerContent = ({lat,lng,setLat,setLng}) => {
     const [loading,setLoading] = useState(false);
     const [keywordLoading,setKeywordLoading] = useState(false);
 
-    const [innerLat,setInnerLat] = useState(lat);
-    const [innerLng,setInnerLng] = useState(lng);
+    const [innerLat,setInnerLat] = useState(lat?lat:location?.state?.lat);
+    const [innerLng,setInnerLng] = useState(lng?lng:location.state?.lng);
 
     const [horseData,setHorseData] = useState({images_id:[],title:"",year_of_birth:"",country:"",price:"",description:"",breed_id:"",gender:"",color_id:"",height:"",temperament_id:"",discipline_id:"",keywords_id:[],user_location:`POINT(${lng} ${lat})`});
     const [files, setFiles] = useState([]);
@@ -58,6 +58,12 @@ const SellerContent = ({lat,lng,setLat,setLng}) => {
         setHorseData({...horseData,user_location:`POINT(${innerLng} ${innerLat})`})
         setLat(innerLat)
         setLng(innerLng)
+
+        if (location?.state?.editHorse ===undefined || location?.state?.editHorse ===null){
+            console.log("location.state",location.state)
+
+            
+        }
     },[innerLat,innerLng])
 
 const uploadImage = async (image)=>{

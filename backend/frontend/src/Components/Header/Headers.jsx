@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import {Toolbar,Box,AppBar,Typography,Grid,Avatar} from '@mui/material';
 import Button from '../Buttons/Button.jsx';
 import logo from '../../assets/logo.svg';
-import SearchIcon from '../Svgs/SearchIcon.jsx';
 import { Link,useNavigate } from 'react-router-dom';
 import NotificationMenu from '../Menu/NotificationMenu.jsx';
 import { getUserProfile } from '../../Constants/storage.js';
 import ProfileCard from '../Cards/ProfileCard.jsx';
+import SearchMenu from '../Menu/SearchMenu.jsx'
 
 
 export default function ButtonAppBar({headerType="landing",currentPage="home"}) {
@@ -178,12 +178,10 @@ export default function ButtonAppBar({headerType="landing",currentPage="home"}) 
                                     <Grid item xs={3}>
                                         <Grid container>
                                             <Grid item xs={4} className="justifyContentEndAlignCenter">
-                                                <Link to='/home/buyer'>
-                                                <SearchIcon className="headerIcons" sx={{cursor:"pointer"}}/>
-                                                </Link>
+                                                <SearchMenu/>
                                             </Grid>
                                             <Grid item xs={4} className="justifyContentEndAlignCenter">
-                                                <NotificationMenu sx={{cursor:"pointer"}}/>
+                                                <NotificationMenu/>
                                             </Grid>
                                             <Grid item xs={4} className="justifyContentEndAlignCenter">
                                                 <Link to='/settings/profile'>

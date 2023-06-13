@@ -7,7 +7,4 @@ class HomeConfig(AppConfig):
     verbose_name = _("home")
 
     def ready(self):
-        try:
-            import home.signals
-        except ImportError:
-            pass
+        import home.signals
