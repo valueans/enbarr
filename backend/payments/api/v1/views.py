@@ -27,6 +27,7 @@ from rest_framework.decorators import (
     permission_classes,
     authentication_classes,
 )
+from users.mixpanel import trackUpgradeSubscription
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -172,6 +173,8 @@ def upgradeSubscriptionView(request):
 
         plan = SubscriptionPlans.objects.get(id=upgrade_plan_id)
         cards = Cards.objects.filter(user=user, active=True)
+        
+        trackUpgradeSubscription(user.userprofile)
         if cards.count() == 0 and plan.title != "Basic":
             data = {
                 "status": "ERROR",

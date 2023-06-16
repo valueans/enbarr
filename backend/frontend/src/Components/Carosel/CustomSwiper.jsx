@@ -73,7 +73,7 @@ const CustomSwiper = ({currentHorseId,setCurrentHorseId,setIsLiked,setIsDisLiked
     >
         {
             matchList.map((item)=>{
-                return <SwiperSlide><HorseCard image={item?.images}/></SwiperSlide>
+                return <SwiperSlide><HorseCard image={item?.images} horse={item}/></SwiperSlide>
             })
         }
         <div className="review-swiper-button-prev "></div>

@@ -18,13 +18,13 @@ def create_notification_report(sender, instance, created, **kwargs):
     )
 
 
-@receiver(post_save, sender=Horses)
-def create_notification_horse_approval(sender, instance, created, **kwargs):
-    user = User.objects.filter(is_superuser=True).first()
-    description = f"{instance.uploaded_by.email} has posted a add for review"
-    Notifications.objects.create(
-        user=user, description=description, type="HORSE REVIEW"
-    )
+# @receiver(post_save, sender=Horses)
+# def create_notification_horse_approval(sender, instance, created, **kwargs):
+#     user = User.objects.filter(is_superuser=True).first()
+#     description = f"{instance.uploaded_by.email} has posted a add for review"
+#     Notifications.objects.create(
+#         user=user, description=description, type="HORSE REVIEW"
+#     )
     
     
 @receiver(pre_save, sender=Horses)

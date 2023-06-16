@@ -30,7 +30,6 @@ const MatchHorseContent = ({lat,lng}) => {
     await HorseService.likeHorse(currentHorseId)
     setIsLiked(true)
     setIsDisLiked(false)
-    return navigator("/myhorse/favorites?page=1")
 
   }
   const handleDisLike = async ()=>{

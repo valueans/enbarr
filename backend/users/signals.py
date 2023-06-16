@@ -3,7 +3,7 @@ from django.dispatch import receiver
 from .helpers import sendOtpEmail, subscribeUserToFreeSubscription
 from .models import User, UserProfile, DeletedUsers, UserSearchSave
 from payments.api.v1.helpers import createStripeCustomer
-
+from .mixpanel import trackSignUp
 
 @receiver(post_save, sender=User)
 def user_verification_send_otp(sender, instance, created, **kwargs):
@@ -22,6 +22,7 @@ def user_verification_send_otp(sender, instance, created, **kwargs):
         except:
             UserProfile.objects.create(user=instance, promotion_adds=5)
     if created:
+        trackSignUp(instance.userprofile)
         sendOtpEmail(instance)
         createStripeCustomer(instance)
         subscribeUserToFreeSubscription(instance)
