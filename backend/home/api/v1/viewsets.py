@@ -551,7 +551,7 @@ def searchHorsesByNameView(request):
         data = {"status": "error", "message": "search_param is required"}
         return Response(data=data, status=status.HTTP_404_NOT_FOUND)
     horses = (
-        Horses.objects.filter(Q(keywords__keyword=search_param) | Q(title=search_param))
+        Horses.objects.filter(Q(keywords__keyword__iexact=search_param) | Q(title__iexact=search_param))
         .distinct()
         .order_by("id")
         .reverse()
