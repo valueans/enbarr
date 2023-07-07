@@ -409,6 +409,6 @@ GOOGLE_MAPS_API_KEY = env.str("GOOGLE_MAPS_API_KEY", "")
 # Mix Panel
 MIXPANEL_API_KEY = env.str("MIXPANEL_API_KEY", "")
 
-GDAL_LIBRARY_PATH = '/opt/homebrew/Cellar/gdal/3.6.4_6/lib/libgdal.32.dylib'
-GEOS_LIBRARY_PATH = '/opt/homebrew/Cellar/gdal/3.6.4_6/lib/libgdal.32.dylib'
+# GDAL_LIBRARY_PATH = '/opt/homebrew/Cellar/gdal/3.6.4_6/lib/libgdal.32.dylib'
+# GEOS_LIBRARY_PATH = '/opt/homebrew/Cellar/gdal/3.6.4_6/lib/libgdal.32.dylib'
 
