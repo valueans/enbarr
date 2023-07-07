@@ -1,10 +1,8 @@
 from email.policy import default
 from django.contrib.auth.models import AbstractUser
-from django.db import models
+from django.contrib.gis.db import models
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
-from datetime import datetime
-from django.utils import timezone
 
 
 class User(AbstractUser):
@@ -80,6 +78,9 @@ class UserSearchSave(models.Model):
     radius = models.IntegerField(null=True, blank=True)
     city = models.CharField(max_length=1000, null=True, blank=True)
     state = models.CharField(max_length=1000, null=True, blank=True)
+    address_location = models.PointField(
+        geography=True, dim=2, srid=4326, null=True, blank=True
+    )
     breed_id = models.ForeignKey(
         "home.Breeds", on_delete=models.CASCADE, null=True, blank=True
     )

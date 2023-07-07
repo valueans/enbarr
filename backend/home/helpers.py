@@ -35,3 +35,9 @@ def getUserLocationAddress(lat,lng):
     geolocator = Nominatim(user_agent="http")
     location = geolocator.reverse(f"{lat},{lng}",exactly_one=True,language="en")
     return location.raw['address']
+
+
+def getLatLongFromAddress(location):
+    geolocator = Nominatim(user_agent="http")
+    location = geolocator.geocode(location)
+    return location.latitude,location.longitude

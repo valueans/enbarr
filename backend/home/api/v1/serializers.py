@@ -3,9 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 from users.models import UserSearchSave
 from users.api.serializers import UserProfileSerializer
-from django.contrib.gis.geos import GEOSGeometry, Point
 from geopy.distance import distance as geopy_distance
-from geopy.distance import geodesic as GD
 
 from datetime import date
 from home.models import (
@@ -426,7 +424,8 @@ class UserSearchSaveSerializer(serializers.ModelSerializer):
     keywords = KeywordsSerializer(read_only=True, many=True)
     keywords_id = serializers.ListField(write_only=True, required=False, default=[])
     gender_list = serializers.SerializerMethodField()
-
+    lat = serializers.SerializerMethodField("get_lat")
+    lng = serializers.SerializerMethodField("get_lng")
     class Meta:
         model = UserSearchSave
         fields = "__all__"
@@ -458,6 +457,19 @@ class UserSearchSaveSerializer(serializers.ModelSerializer):
             _gender = obj.gender.split(",")
             return _gender
         return None
+    
+    def get_lat(self, obj):
+        try:
+            return obj.address_location[1]
+        except:
+            return None
+
+    def get_lng(self, obj):
+        try:
+            return obj.address_location[0]
+        except:
+            return None
+        
 
 
 class LikesSerializer(serializers.ModelSerializer):

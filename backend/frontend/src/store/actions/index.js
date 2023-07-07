@@ -33,3 +33,16 @@ export const getSocialLinks = () =>{
         type:"GET_SOCIAL_LINKS"
     }
 }
+
+export const setBuyerSearchLocation = (lat,lng) =>{ 
+    return {
+        type:"SET_BUYER_SEARCH_LOCATION",
+        payload: {lat:lat,lng:lng}
+    }
+}
+
+export const getBuyerSearchLocation = () =>{ 
+    return {
+        type:"GET_BUYER_SEARCH_LOCATION"
+    }
+}

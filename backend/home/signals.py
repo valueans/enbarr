@@ -3,8 +3,9 @@ from notifications.models import Notifications
 from .models import Report, Horses
 from django.db.models.signals import post_save,pre_save
 from django.dispatch import receiver
-from .helpers import getUserLocationAddress
-
+from .helpers import getUserLocationAddress,getLatLongFromAddress
+from users.models import UserSearchSave
+from django.contrib.gis.geos import Point
 
 User = get_user_model()
 
@@ -16,15 +17,6 @@ def create_notification_report(sender, instance, created, **kwargs):
     Notifications.objects.create(
         user=user, description=description, type="HORSE REPORT"
     )
-
-
-# @receiver(post_save, sender=Horses)
-# def create_notification_horse_approval(sender, instance, created, **kwargs):
-#     user = User.objects.filter(is_superuser=True).first()
-#     description = f"{instance.uploaded_by.email} has posted a add for review"
-#     Notifications.objects.create(
-#         user=user, description=description, type="HORSE REVIEW"
-#     )
     
     
 @receiver(pre_save, sender=Horses)
@@ -44,3 +36,11 @@ def saveAddress(sender, instance, *args, **kwargs):
             instance.zip_code = address['postcode']
     except:
         pass
+
+
+@receiver(pre_save, sender=UserSearchSave)
+def saveLatLngFromAddress(sender, instance, *args, **kwargs):
+    if instance.country and instance.state and instance.city:
+        lat,lng = getLatLongFromAddress(f"{instance.city} {instance.state} {instance.country}")
+        instance.address_location = Point(lng,lat)
+    

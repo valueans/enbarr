@@ -483,17 +483,6 @@ def searchHorseView(request):
 
         current_year = date.today().year
         queryset = Horses.objects.annotate(age=current_year - F("year_of_birth")).all()
-
-        user_location = None
-        if (
-            user_search_history.country
-            and user_search_history.state
-            and user_search_history.city
-        ):
-            user_location = {}
-            user_location["lat"], user_location["lng"] = extract_lat_long_via_address(
-                f"{user_search_history.city} {user_search_history.state},{user_search_history.country}"
-            )
         if user_search_history.country:
             queryset = queryset.filter(country=user_search_history.country)
         if user_search_history.state:
@@ -525,10 +514,9 @@ def searchHorseView(request):
             queryset = queryset.filter(temperament=user_search_history.temperament_id)
         if user_search_history.keywords.all().count() > 0:
             queryset = queryset.filter(keywords__in=user_search_history.keywords.all())
-        if user_location and user_search_history.radius:
-            pnt = Point(user_location["lng"], user_location["lat"])
+        if user_search_history.address_location and user_search_history.radius:
             queryset = queryset.filter(
-                user_location__distance_lte=(pnt, D(mi=user_search_history.radius))
+                user_location__distance_lte=(user_search_history.address_location, D(mi=user_search_history.radius))
             )
 
         queryset = queryset.distinct().order_by("id").reverse()

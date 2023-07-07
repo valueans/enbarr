@@ -18,6 +18,8 @@ import AuthService from '../../Services/AuthService';
 import StateSelect from '../Selects/StateSelect';
 import CitiesSelect from '../Selects/CitiesSelect';
 import RadiusSelect from '../Selects/RadiusSelect';
+import { useDispatch } from 'react-redux';
+import { setBuyerSearchLocation } from '../../store/actions';
 
 const BuyerContent = ({setSnackBarData}) => {
   
@@ -36,6 +38,7 @@ const BuyerContent = ({setSnackBarData}) => {
   const [keywordLoading,setKeywordLoading] = useState(false);
   const [matchLoading,setMatchLoading] = useState(false);
 
+  const dispatch = useDispatch();
 
   const [userSearchSaveData,setUserSearchSaveData] = useState({country:"",city:"",state:"",breed_id:"",min_age:"",max_age:"",min_height:"",max_height:"",min_price:"",max_price:"",discipline_id:"",gender:[],gender_list:[],color_id:"",temperament_id:"",keywords_id:[],radius:20});
 
@@ -76,8 +79,12 @@ const BuyerContent = ({setSnackBarData}) => {
     const getUserSearchSave = async ()=>{
       try {
         const response = await BuyerService.getSaveBuyersSearch();
+        console.log("response",response)
         if (response.length > 0){
           setUserSearchSaveData(response[0])
+          if (response[0].lat && response[0].lng){
+            dispatch(setBuyerSearchLocation(response[0].lat,response[0].lng))
+          }
           if(response[0].keywords.length > 0){
             setUserSearchSaveData({...response[0],keywords_id:response[0].keywords.map((object)=>object.id)})
           }
@@ -92,7 +99,8 @@ const BuyerContent = ({setSnackBarData}) => {
 
   const onSave = async ()=>{
     try {
-      await BuyerService.saveSaveBuyersSearch(userSearchSaveData);
+      const response = await BuyerService.saveSaveBuyersSearch(userSearchSaveData);
+      dispatch(setBuyerSearchLocation(response.lat,response.lng))
       setSnackBarData({open:true,message:"Successfull",severity:"success"})
     } catch (error) {
         setSnackBarData({open:true,message:"something went wrong",severity:"error"})

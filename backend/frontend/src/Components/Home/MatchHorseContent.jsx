@@ -12,11 +12,12 @@ import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArro
 import AuthService from '../../Services/AuthService';
 import GoogleMapsCluster from '../Maps/GoogleMapsCluster';
 import AuthenticationTabs from '../Buttons/AuthenticationTabs';
+import { useSelector } from 'react-redux';
 
-const MatchHorseContent = ({lat,lng}) => {
+const MatchHorseContent = () => {
 
   const navigator = useNavigate();
-
+  const state = useSelector(state=>state);
   const [allHorseLatLng,setAllHorseLatLng] = useState([]);
   const [currentHorseId,setCurrentHorseId] = useState(null);
   const [isLiked,setIsLiked] = useState(false);
@@ -108,7 +109,7 @@ const MatchHorseContent = ({lat,lng}) => {
             <Button title="close" width="100%"/>
           </Link>
         </Grid></>:<Grid item xs={12} sx={{mt:3}}>
-              <GoogleMapsCluster lat={lat} lng={lng} allHorseLatLng={allHorseLatLng}/>
+              <GoogleMapsCluster lat={state.BuyerSearchLocation.lat} lng={state.BuyerSearchLocation.lng} allHorseLatLng={allHorseLatLng}/>
           </Grid>
         }
       </Grid>
