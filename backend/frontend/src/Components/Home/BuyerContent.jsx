@@ -23,15 +23,15 @@ import { setBuyerSearchLocation } from '../../store/actions';
 
 const BuyerContent = ({setSnackBarData}) => {
   
-  const navigator = useNavigate();
+  const navigation = useNavigate();
 
   const isAuthenticated = AuthService.checkUserAuthenticated();
 
   useEffect(() => {
     if (!isAuthenticated){
-      navigator("/")   
+      navigation("/")   
     }
-  },[isAuthenticated,navigator])
+  },[isAuthenticated,navigation])
 
   const [keywords,setKeywords] = useState([]);
   const [keywordVal,setKeywordVal] = useState("");
@@ -47,7 +47,7 @@ const BuyerContent = ({setSnackBarData}) => {
     setMatchLoading(true)
     try {
       await HorseService.getMatchHorse(); 
-      return navigator('/home/matchhorses')
+      return navigation('/home/matchhorses')
     } catch (error) {
       setSnackBarData({open:true,message:error.response.data.message,severity:"error"})
     }
@@ -85,6 +85,11 @@ const BuyerContent = ({setSnackBarData}) => {
           if (response[0].lat && response[0].lng){
             dispatch(setBuyerSearchLocation(response[0].lat,response[0].lng))
           }
+          else{
+            navigator.geolocation.getCurrentPosition(async (position)=> {
+              dispatch(setBuyerSearchLocation(position.coords.latitude,position.coords.longitude))
+            });
+          }
           if(response[0].keywords.length > 0){
             setUserSearchSaveData({...response[0],keywords_id:response[0].keywords.map((object)=>object.id)})
           }
@@ -100,7 +105,14 @@ const BuyerContent = ({setSnackBarData}) => {
   const onSave = async ()=>{
     try {
       const response = await BuyerService.saveSaveBuyersSearch(userSearchSaveData);
-      dispatch(setBuyerSearchLocation(response.lat,response.lng))
+      if (response.lat && response.lng){
+        dispatch(setBuyerSearchLocation(response.lat,response.lng))
+      }
+      else{
+        navigator.geolocation.getCurrentPosition(async (position)=> {
+          dispatch(setBuyerSearchLocation(position.coords.latitude,position.coords.longitude))
+        });
+      }
       setSnackBarData({open:true,message:"Successfull",severity:"success"})
     } catch (error) {
         setSnackBarData({open:true,message:"something went wrong",severity:"error"})
