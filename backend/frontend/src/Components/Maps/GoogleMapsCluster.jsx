@@ -3,6 +3,7 @@ import GoogleMapReact from 'google-map-react';
 import horseImg from '../../assets/horse.png';
 import useSupercluster from 'use-supercluster';
 import { useNavigate } from 'react-router-dom';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 
 const Marker = ({ children }) => children;
 
@@ -26,6 +27,7 @@ const GoogleMapsCluster = ({lat,lng,allHorseLatLng}) => {
         }
     }))
 
+    const AnyReactComponent = ({ text }) => <div><LocationOnIcon sx={{color:"red",fontSize:"20px"}}/></div>;
 
     const { clusters,supercluster } = useSupercluster({
         points: points,
@@ -100,6 +102,11 @@ const GoogleMapsCluster = ({lat,lng,allHorseLatLng}) => {
             )
         })
         }
+        <AnyReactComponent
+        lat={lat}
+        lng={lng}
+        text="Selected Location"
+      />
       </GoogleMapReact>
     </div>
   )
