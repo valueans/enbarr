@@ -9,7 +9,7 @@ import HorseService from '../../Services/HorseService';
 import { useNavigate } from 'react-router-dom';
 
 
-const CustomSwiper = ({currentHorseId,setCurrentHorseId,setIsLiked,setIsDisLiked,swiperRef,setAllHorseLatLng}) => {
+const CustomSwiper = ({currentHorseId,setCurrentHorseId,setIsLiked,setIsDisLiked,swiperRef}) => {
 
     const navigation = useNavigate();
 
@@ -25,9 +25,7 @@ const CustomSwiper = ({currentHorseId,setCurrentHorseId,setIsLiked,setIsDisLiked
                 navigator.geolocation.getCurrentPosition(async (position)=> {
                     const response = await HorseService.getMatchHorse(currentPage,position.coords.latitude,position.coords.longitude);
                     setTotalAddsCount(response?.count)
-                    setMatchList([...matchList,...response?.results])
-                    setAllHorseLatLng(response.results)
-                    
+                    setMatchList([...matchList,...response?.results])                    
                     if (response.count > 0){
                         setCurrentHorseId(response?.results[0].id)
                         setIsLiked(response?.results[0].isliked)

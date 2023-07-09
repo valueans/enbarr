@@ -101,7 +101,6 @@ export default function NotificationMenu() {
   useEffect(()=>{
     const getNotifications = async ()=>{
         const response = await NotificationsService.getMyNotifications(page);
-        console.log("response",response)
         setNotifications([...notifications,...response.results])
         setToalNotificationsCount(response.count)
     }

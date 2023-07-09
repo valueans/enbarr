@@ -58,12 +58,6 @@ const SellerContent = ({lat,lng,setLat,setLng}) => {
         setHorseData({...horseData,user_location:`POINT(${innerLng} ${innerLat})`})
         setLat(innerLat)
         setLng(innerLng)
-
-        if (location?.state?.editHorse ===undefined || location?.state?.editHorse ===null){
-            console.log("location.state",location.state)
-
-            
-        }
     },[innerLat,innerLng])
 
 const uploadImage = async (image)=>{

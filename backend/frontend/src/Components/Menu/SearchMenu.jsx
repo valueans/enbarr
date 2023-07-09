@@ -11,7 +11,6 @@ const SearchMenu = () => {
     const open = Boolean(anchorEl);
 
     const handleClick = (event) => {
-        console.log("clicked")
         setAnchorEl(event.currentTarget);
       };
       //   function to close main notification dailog or menu

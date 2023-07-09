@@ -79,7 +79,6 @@ const BuyerContent = ({setSnackBarData}) => {
     const getUserSearchSave = async ()=>{
       try {
         const response = await BuyerService.getSaveBuyersSearch();
-        console.log("response",response)
         if (response.length > 0){
           setUserSearchSaveData(response[0])
           if (response[0].lat && response[0].lng){

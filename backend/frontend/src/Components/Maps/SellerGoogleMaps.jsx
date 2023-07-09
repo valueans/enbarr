@@ -13,9 +13,6 @@ const SellerGoogleMaps = ({lat,lng,setLat,setLng,disabled=false,defaultZoom=12})
         setLng(e.lng);
       }
       };
-
-      console.log("lat",lat)
-      console.log("lat",lng)
   return (
     <div style={{ height: '400px', width: '100%' }}>
       <GoogleMapReact

@@ -54,6 +54,11 @@ const MatchHorseContent = () => {
     if (!isAuthenticated){
       navigator("/")   
     }
+    const getallHorsesLatLng = async ()=>{
+      const response = await HorseService.getAllHorsesLatLng();
+      setAllHorseLatLng(response)
+    }
+    getallHorsesLatLng()
   },[isAuthenticated,navigator])
 
 
@@ -79,7 +84,7 @@ const MatchHorseContent = () => {
               <KeyboardDoubleArrowLeftIcon sx={{height:"60px",width:"60px",cursor:"pointer"}} onClick={() => swiperRef.current?.slidePrev()}/>
             </Grid>
             <Grid item xs={10} >  
-              <CustomSwiper currentHorseId={currentHorseId} setCurrentHorseId={setCurrentHorseId} setIsLiked={setIsLiked} setIsDisLiked={setIsDisLiked} swiperRef={swiperRef} setAllHorseLatLng={setAllHorseLatLng}/>
+              <CustomSwiper currentHorseId={currentHorseId} setCurrentHorseId={setCurrentHorseId} setIsLiked={setIsLiked} setIsDisLiked={setIsDisLiked} swiperRef={swiperRef}/>
             </Grid>
             <Grid item xs={1} className="justifyContenCenterAlignCenter">
               <KeyboardDoubleArrowRightIcon sx={{height:"60px",width:"60px",cursor:"pointer"}} onClick={() => swiperRef.current?.slideNext()}/>

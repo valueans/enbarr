@@ -229,8 +229,6 @@ const Chat = ({pubnub,userprofile}) => {
                     _timetokens.push(item.custom[userprofile.user.id])
                 }
             })
-            console.log("_channels",_channels)
-            console.log("_timetokens",_timetokens)
             pubnub.messageCounts({
                 channels: _channels,
                 channelTimetokens: _timetokens,
@@ -239,7 +237,6 @@ const Chat = ({pubnub,userprofile}) => {
                   let _conversations = [];
                   conversations.forEach((item)=>{
                       if (_keys.includes(item.channel)){
-                        console.log("unread response",response)
                         item['unread'] = response.channels[item.channel]
                     }
                     _conversations.push(item)
