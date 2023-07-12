@@ -487,8 +487,8 @@ def searchHorseView(request):
             queryset = queryset.filter(country=user_search_history.country)
         if user_search_history.state:
             queryset = queryset.filter(Q(state=user_search_history.state)|Q(state_code=user_search_history.state))
-        if user_search_history.city:
-            queryset = queryset.filter(city__icontains=user_search_history.city)
+        # if user_search_history.city:
+        #     queryset = queryset.filter(city__icontains=user_search_history.city)
         if user_search_history.breed_id:
             queryset = queryset.filter(breed=user_search_history.breed_id)
         if user_search_history.min_age:
