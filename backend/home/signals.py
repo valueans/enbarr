@@ -4,6 +4,7 @@ from .models import Report, Horses
 from django.db.models.signals import post_save,pre_save
 from django.dispatch import receiver
 from .helpers import getUserLocationAddress,getLatLongFromAddress
+from .googlemaps_services import extract_lat_long_via_address
 from users.models import UserSearchSave
 from django.contrib.gis.geos import Point
 
@@ -41,6 +42,8 @@ def saveAddress(sender, instance, *args, **kwargs):
 @receiver(pre_save, sender=UserSearchSave)
 def saveLatLngFromAddress(sender, instance, *args, **kwargs):
     if instance.country and instance.state and instance.city:
-        lat,lng = getLatLongFromAddress(f"{instance.city} {instance.state} {instance.country}")
+        lat,lng = extract_lat_long_via_address(f"{instance.city} {instance.state} {instance.country}")
+        print("lat",lat)
+        print("lng",lng)
         instance.address_location = Point(lng,lat)
     
