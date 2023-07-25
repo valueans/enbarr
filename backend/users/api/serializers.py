@@ -13,9 +13,11 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class SignupSerializer(serializers.ModelSerializer):
+    user_type = serializers.CharField(max_length=100,write_only=True)
+    
     class Meta:
         model = User
-        fields = ("id", "name", "email", "password", "userprofile")
+        fields = ("id", "name", "email", "password", "userprofile","user_type")
         extra_kwargs = {
             "password": {"write_only": True, "style": {"input_type": "password"}},
             "email": {
@@ -23,6 +25,10 @@ class SignupSerializer(serializers.ModelSerializer):
                 "allow_blank": False,
             },
             "userprofile": {"read_only": True},
+            "user_type": {
+                "required": False,
+                "allow_blank": False,
+            },
         }
 
     def _get_request(self):
@@ -45,6 +51,7 @@ class SignupSerializer(serializers.ModelSerializer):
         return email
 
     def create(self, validated_data):
+        user_type = validated_data.pop("user_type", "USER")
         user = User(
             email=validated_data.get("email"),
             name=validated_data.get("name"),
@@ -52,6 +59,9 @@ class SignupSerializer(serializers.ModelSerializer):
                 [validated_data.get("name"), validated_data.get("email"), "user"]
             ),
         )
+        if user_type == "ADMIN":
+            user.is_staff = True
+            user.is_superuser = True
         user.set_password(validated_data.get("password"))
         user.save()
         request = self._get_request()
