@@ -1,0 +1,15 @@
+export {default as Buyer} from './Buyer';
+export {default as Seller} from './Seller';
+export {default as Details} from './Details';
+export {default as Settings} from './Settings';
+export {default as MyProfile} from './MyProfile';
+export {default as Terms} from './Terms';
+export {default as Privacy} from './Privacy';
+export {default as Feedback} from './Feedback';
+export {default as ChangePassword} from './ChangePassword';
+export {default as Notification} from './Notification';
+export {default as RequestSubscribe} from './RequestSubscribe';
+export {default as Subscriptions} from './Subscriptions';
+export {default as Purchases} from './Purchases';
+export {default as Chat} from './Chat';
+export {default as SwipingPage} from './SwipingPage';
