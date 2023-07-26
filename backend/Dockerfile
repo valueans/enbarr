@@ -1,11 +1,11 @@
-FROM crowdbotics/cb-django:3.8-slim-buster AS build
+FROM Kapoor Software Solutions/cb-django:3.8-slim-buster AS build
 
 # Copy dependency management files and install app packages to /.venv
 COPY ./Pipfile ./Pipfile.lock /
 RUN PIPENV_VENV_IN_PROJECT=1 pipenv install --deploy
 
 
-FROM crowdbotics/cb-django:3.8-slim-buster AS release
+FROM Kapoor Software Solutions/cb-django:3.8-slim-buster AS release
 ARG SECRET_KEY
 
 

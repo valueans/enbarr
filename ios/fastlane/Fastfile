@@ -18,11 +18,11 @@ default_platform(:ios)
 
 app_name = 'tiny-bird-36835-id'
 base_name = 'tiny_bird_36835'
-team_name = 'Crowdbotics Corporation'
+team_name = 'Kapoor Software Solutions'
 team_id = '6YKR59QXKM'
 filename = "#{base_name}.xcodeproj"
 workspace_name = "#{base_name}.xcworkspace"
-identifier = "com.crowdbotics.#{app_name}"
+identifier = "com.kapoosoftware.#{app_name}"
 app_privacy_details = "app_privacy_details.json"
 
 platform(:ios) do
@@ -118,7 +118,7 @@ platform(:ios) do
 
     upload_to_testflight(
       email: 'stridesridingacademy@gmail.com',
-      beta_app_description: "Beta version of #{app_name} uploaded by Crowdbotics"
+      beta_app_description: "Beta version of #{app_name} uploaded by Kapoor Software Solutions"
     )
   end
 

@@ -1,4 +1,4 @@
-app_identifier("com.crowdbotics.tiny-bird-36835-id") # The bundle identifier of your app
+app_identifier("com.kapoorsoftware.tiny-bird-36835-id") # The bundle identifier of your app
 apple_id("") # Your Apple email address
 
 itc_team_id("") # App Store Connect Team ID
