@@ -6,5 +6,4 @@ set -o nounset
 
 
 python /app/manage.py migrate
-python /app/manage.py collectstatic --noinput
 gunicorn tiny_bird_36835.wsgi --bind 0.0.0.0:8000
