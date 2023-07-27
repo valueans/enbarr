@@ -42,7 +42,7 @@ RUN pip install numpy
 RUN pip install GDAL==2.4.4
 
 # Requirements are installed here to ensure they will be cached.
-COPY ./staticfiles /staticfiles
+COPY ./staticfiles/* /staticfiles
 COPY ./requirements.txt /requirements.txt
 RUN pip install -r /requirements.txt
 
