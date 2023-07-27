@@ -13,7 +13,7 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class SignupSerializer(serializers.ModelSerializer):
-    user_type = serializers.CharField(max_length=100,write_only=True)
+    user_type = serializers.CharField(max_length=100,write_only=True,required=False)
     
     class Meta:
         model = User

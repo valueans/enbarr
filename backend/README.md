@@ -1,116 +1,80 @@
-# tiny_bird_36835
+# [Kapoor Software Solutions](https://kapoorsoftware.com)
 
-This is a repository for a web application developed with Django, built with [Kapoor Software Solutions](https://Kapoor Software Solutions.com)
 
-## Table of Contents
+Enbarr
 
-1. [Project Structure](#project-structure)
-2. [Features](#features)
-3. [Getting Started: Backend](#getting-started-backend)
-   - [Docker Setup (recommended)](#docker-setup-recommended)
-   - [Local Setup](#local-setup-alternative-to-docker)
-4. [Usage](#usage)
-   - [Admin Panel](#admin-panel)
-   - [API Documentation](#api-documentation)
+License: MIT
 
-## Project Structure
+## How to start this project
 
-    ..
-    ├── home                           # Starter home app
-    ├── modules                        # Kapoor Software Solutions Modules app
-    ├── tiny_bird_36835  # Django project configurations
-    ├── static                         # Static assets
-    ├── users                          # Starter users app
-    ├── web_build                      # React Native Web build
-    ├── ...
-    ├── README.md
-    └── ...
+### using virtualenv
+1. pip install virtualenv
+2. virtualenv venv
+3. source venv/bin/activate (on linux and mac)
+4. source venv/Script/activate (on windows)
+5. pip install -r requirement/base.txt
+6. pip install -r requirement/local.txt
 
-## Features
+### using docker
+1. cd kapoor_software
+2. docker-compose -f local.yml up --build -d
+3. docker-compose -f local.yml run --rm django
+if you want to create a superuser you can run 
+4. docker-compose -f local.yml run --rm django python manage.py createsuperuser
 
-1. **Local Authentication** using email and password with [allauth](https://pypi.org/project/django-allauth/)
-2. **Rest API** using [django rest framework](http://www.django-rest-framework.org/)
-3. **Forgot Password**
-4. [Bootstrap4](https://getbootstrap.com/docs/4.0/getting-started/introduction/)
-5. Toast Notification
-6. Inline content editor in homepage
+## Basic Commands
 
-# Getting Started: Backend
+### Setting Up Your Users
 
-Following are instructions on setting up your development environment.
+-   To create a **normal user account**, just go to Sign Up and fill out the form. Once you submit it, you'll see a "Verify Your E-mail Address" page. Go to your console to see a simulated email verification message. Copy the link into your browser. Now the user's email should be verified and ready to go.
 
-The recommended way for running the project locally and for development is using Docker.
+-   To create a **superuser account**, use this command:
 
-It's possible to also run the project without Docker.
+        $ python manage.py createsuperuser
 
-## Docker Setup (Recommended)
+For convenience, you can keep your normal user logged in on Chrome and your superuser logged in on Firefox (or similar), so that you can see how the site behaves for both kinds of users.
 
-This project is set up to run using [Docker Compose](https://docs.docker.com/compose/) by default. It is the recommended way. You can also use existing Docker Compose files as basis for custom deployment, e.g. [Docker Swarm](https://docs.docker.com/engine/swarm/), [kubernetes](https://kubernetes.io/), etc.
+### Type checks
 
-1. Install Docker:
-   - Linux - [get.docker.com](https://get.docker.com/)
-   - Windows or MacOS - [Docker Desktop](https://www.docker.com/products/docker-desktop)
-1. Clone this repo and `cd tiny_bird_36835`
-1. Make sure `Pipfile.lock` exists. If it doesn't, generate it with:
-   ```sh
-   $ docker run -it --rm -v "$PWD":/django -w /django python:3.7 pip3 install --no-cache-dir -q pipenv && pipenv lock
-   ```
-1. Use `.env.example` to create `.env`:
-   ```sh
-   $ cp .env.example .env
-   ```
-1. Update `.env` and `docker-compose.override.yml` replacing all `<placeholders>`
-   1. Use `python -c 'from secrets import token_urlsafe; print("SECRET_KEY=" + token_urlsafe(50))'` to generate the random `SECRET_KEY`
-1. Start up the containers:
+Running type checks with mypy:
 
-   ```sh
-   $ docker-compose up
-   ```
+    $ mypy kapoor_software
 
-   This will build the necessary containers and start them, including the web server on the host and port you specified in `.env`.
+### Test coverage
 
-   Current (project) directory will be mapped with the container meaning any edits you make will be picked up by the container.
+To run the tests, check your test coverage, and generate an HTML coverage report:
 
-1. Seed the Postgres DB (in a separate terminal):
-   ```sh
-   $ docker-compose exec web python3 manage.py makemigrations
-   $ docker-compose exec web python3 manage.py migrate
-   ```
-1. Create a superuser if required:
-   ```sh
-   $ docker-compose exec web python3 manage.py createsuperuser
-   ```
-   You will find an activation link in the server log output.
+    $ coverage run -m pytest
+    $ coverage html
+    $ open htmlcov/index.html
 
-## Local Setup (Alternative to Docker)
+#### Running tests with pytest
 
-1. [Postgresql](https://www.postgresql.org/download/)
-2. [Python](https://www.python.org/downloads/release/python-365/)
+    $ pytest
 
-### Installation
+### Live reloading and Sass CSS compilation
 
-1. Install [pipenv](https://pypi.org/project/pipenv/)
-2. Clone this repo and `cd tiny_bird_36835`
-3. Run `pip install --user --upgrade pipenv` to get the latest pipenv version.
-4. Run `pipenv --python 3.6`
-5. Run `pipenv install`
-6. Run `cp .env.example .env`
-7. Update .env file `DATABASE_URL` with your `database_name`, `database_user`, `database_password`, if you use postgresql.
-   Can alternatively set it to `sqlite:////tmp/my-tmp-sqlite.db`, if you want to use sqlite for local development.
+Moved to [Live reloading and SASS compilation](https://cookiecutter-django.readthedocs.io/en/latest/developing-locally.html#sass-compilation-live-reloading).
 
-### Getting Started
+### Celery
 
-1. Run `pipenv shell`
-2. Run `python manage.py makemigrations`
-3. Run `python manage.py migrate`
-4. Run `python manage.py runserver`
+This app comes with Celery.
 
-# Usage
+To run a celery worker:
 
-## Admin Panel
+``` bash
+cd kapoor_software
+celery -A config.celery_app worker -l info
+```
 
-Admin Panel can be accessed through http://localhost:8000/admin/. If you are the Project Owner, admin credentials can be generated from App > Settings on [Kapoor Software Solutions App Dashboard](https://app.Kapoor Software Solutions.com/). If not, please request your PM or Project Owner to generate admin credentials and share with you.
+To run a celery  beat:
 
-## API Documentation
+``` bash
+cd kapoor_software
+celery -A config.celery_app beat -l info
+```
 
-API Documentation is generated automatically and can be access through http://localhost:8000/api-docs/. Please make sure you are signed in to the admin panel before navigating to this page.
+Please note: For Celery's import magic to work, it is important *where* the celery commands are run. If you are in the same folder with *manage.py*, you should be right.
+
+
+### Docker

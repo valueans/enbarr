@@ -13,6 +13,14 @@ app.conf.update(timezone=settings.TIME_ZONE)
 
 app.config_from_object(settings, namespace="CELERY")
 
+app.conf.beat_schedule = {
+    # daily database backup
+    "database-backup": {
+        "task": "users.tasks.databaseBackupDaily",
+        "schedule": crontab(hour=5, minute=00),
+    }
+}
+
 
 app.autodiscover_tasks()
 

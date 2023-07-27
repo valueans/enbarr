@@ -54,8 +54,7 @@ except (DefaultCredentialsError, PermissionDenied):
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env.str("SECRET_KEY")
 
-# ALLOWED_HOSTS = env.list("HOST", default=["*"])
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = env.list("HOST", default=["*"])
 SITE_ID = 1
 
 
@@ -152,13 +151,17 @@ WSGI_APPLICATION = "tiny_bird_36835.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+        "ENGINE": os.environ.get("POSTGRES_ENGINE", "django.contrib.gis.db.backends.postgis"),
+        "NAME": os.environ.get("POSTGRES_DB", ""),
+        "USER": os.environ.get("POSTGRES_USER", ""),
+        "PASSWORD": os.environ.get("POSTGRES_PASSWORD", ""),
+        "HOST": os.environ.get("POSTGRES_HOST", ""),
+        "PORT": os.environ.get("POSTGRES_PORT", ""),
     }
 }
 
-if env.str("DATABASE_URL", default=None):
-    DATABASES = {"default": env.db_url(engine="django.contrib.gis.db.backends.postgis")}
+DBBACKUP_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+DBBACKUP_STORAGE_OPTIONS = {'location':'database/backup/'}
 
 
 # Password validation
@@ -246,24 +249,22 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
 # AWS S3 config
-AWS_ACCESS_KEY_ID = env.str("AWS_ACCESS_KEY_ID", "")
-AWS_SECRET_ACCESS_KEY = env.str("AWS_SECRET_ACCESS_KEY", "")
-AWS_STORAGE_BUCKET_NAME = env.str("AWS_STORAGE_BUCKET_NAME", "")
-AWS_STORAGE_REGION = env.str("AWS_STORAGE_REGION", "")
-AWS_S3_SIGNATURE_VERSION = "s3v4"
-AWS_S3_ENDPOINT_URL = f"https://s3.{AWS_STORAGE_REGION}.amazonaws.com"
-AWS_S3_REGION_NAME = env.str("AWS_STORAGE_REGION", "")
+AWS_ACCESS_KEY_ID = env.str("AWS_ACCESS_KEY_ID","")
+AWS_SECRET_ACCESS_KEY = env.str("AWS_SECRET_ACCESS_KEY","")
+AWS_STORAGE_BUCKET_NAME = env.str("AWS_STORAGE_BUCKET_NAME","")
+AWS_S3_ENDPOINT_URL = env.str("AWS_S3_ENDPOINT_URL","")
+AWS_S3_CUSTOM_DOMAIN = env.str("AWS_S3_CUSTOM_DOMAIN","")
+AWS_LOCATION = env.str("AWS_LOCATION","")
+AWS_S3_SIGNATURE_VERSION = 's3v4'
 
 USE_S3 = (
     AWS_ACCESS_KEY_ID
     and AWS_SECRET_ACCESS_KEY
     and AWS_STORAGE_BUCKET_NAME
-    and AWS_STORAGE_REGION
 )
 
 if USE_S3:
-    AWS_S3_CUSTOM_DOMAIN = env.str("AWS_S3_CUSTOM_DOMAIN", "")
-    AWS_S3_OBJECT_PARAMETERS = {"CacheControl": "max-age=86400"}
+    AWS_S3_OBJECT_PARAMETERS = {"CacheControl": "max-age=86400","ACL": "public-read"}
     AWS_DEFAULT_ACL = env.str("AWS_DEFAULT_ACL", "public-read")
     AWS_MEDIA_LOCATION = env.str("AWS_MEDIA_LOCATION", "media")
     AWS_AUTO_CREATE_BUCKET = env.bool("AWS_AUTO_CREATE_BUCKET", True)
@@ -410,7 +411,7 @@ GOOGLE_MAPS_API_KEY = env.str("GOOGLE_MAPS_API_KEY", "")
 MIXPANEL_API_KEY = env.str("MIXPANEL_API_KEY", "")
 
 
-if env.str("GDAL_LIBRARY_PATH", None):
-    GDAL_LIBRARY_PATH = env.str("GDAL_LIBRARY_PATH", None)
-    GEOS_LIBRARY_PATH = env.str("GEOS_LIBRARY_PATH", None)
+# if env.str("GDAL_LIBRARY_PATH", None):
+#     GDAL_LIBRARY_PATH = env.str("GDAL_LIBRARY_PATH", None)
+#     GEOS_LIBRARY_PATH = env.str("GEOS_LIBRARY_PATH", None)
 
