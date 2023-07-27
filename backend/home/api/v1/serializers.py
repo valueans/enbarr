@@ -4,6 +4,7 @@ from rest_framework import serializers
 from users.models import UserSearchSave
 from users.api.serializers import UserProfileSerializer
 from geopy.distance import distance as geopy_distance
+from django.db.models import Q
 
 from datetime import date
 from home.models import (
@@ -130,9 +131,12 @@ class HorseUpdateSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         for key, value in validated_data.items():
             if key == "images_id":
+                
                 for id in value:
-                    obj = HorseImages.objects.get(id=id)
-                    instance.images.add(obj)
+                    objs = HorseImages.objects.filter(id__in=value)
+                    images = instance.images.filter(~Q(id__in=value))
+                    images.delete()
+                    instance.images.set(objs)
             elif key == "keywords_id":
                 instance.keywords.clear()
                 for id in value:
