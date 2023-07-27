@@ -50,7 +50,7 @@ def sendAdminNotification(notificationTo, message):
 
 def sendMessageNotification(notificationTo, message, message_from, channel):
     if notificationTo.userprofile.receive_notifications:
-        name = f"You have received a new message from {message_from.email}"
+        name = f"You have received a new message from {message_from.userprofile.first_name} {message_from.userprofile.last_name}"
         Notifications.objects.create(
             user=notificationTo,
             description=name,
@@ -72,7 +72,7 @@ def sendMessageNotification(notificationTo, message, message_from, channel):
 
 def sendLikedHorseNotification(notificationTo, horse, message_from):
     if notificationTo.userprofile.receive_notifications:
-        message = f"{message_from.email} has liked {horse.title}"
+        message = f"{message_from.userprofile.first_name} {message_from.userprofile.last_name} has liked {horse.title}"
         Notifications.objects.create(
             user=notificationTo,
             description=message,
