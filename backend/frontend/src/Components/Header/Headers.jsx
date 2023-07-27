@@ -87,7 +87,7 @@ export default function ButtonAppBar({headerType="landing",currentPage="home"}) 
                                         style={{height:"85px",width:"35.36px",marginTop:"7px"}} />
                                     </Link>
                                 </Grid>
-                                <Grid item xs={1} >
+                                <Grid item xs={1} sx={{ml:2}}>
                                     <Typography variant="logo" component="div">
                                         <Link to="/" className='linkBlack'>ENBARR</Link>
                                     </Typography>
@@ -121,7 +121,7 @@ export default function ButtonAppBar({headerType="landing",currentPage="home"}) 
                                     </Grid>:""
                                     }
                                     <Grid item xs={mobileView?11:4} className="justifyContentEnd">
-                                        <Button title="Sign up/Login" onClick={buttonClick} />
+                                        <Button title="Sign up/Login" onClick={buttonClick} width={mobileView?"150px":"200px"}/>
                                     </Grid>
                                 </>
                                 ):(<>

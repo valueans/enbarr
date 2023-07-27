@@ -7,12 +7,12 @@ import LinkedInSocialIcon from '../Svgs/LinkedInSocialIcon';
 import VerticalLineIcon from '../Svgs/VerticalLineIcon';
 import { useSelector } from 'react-redux';
 
-const SocialLinkLanding = () => {
+const SocialLinkLanding = ({mobileView=false,xs=1}) => {
     const socialLinks = useSelector(state=>state.SocialLinks);
 
   return (
     <>
-        <Grid item xs={1} sx={{display:"flex",justifyContent:"center",alignItems:"center"}}>
+        <Grid item xs={xs} sx={{display:"flex",justifyContent:"center",alignItems:"center",height:mobileView?"75%":"100%"}}>
             <Grid container direction="column" sx={{display:"flex",alignContent:"center"}} spacing={3}>
                 <Grid item xs={2} style={{display:"flex",justifyContent:"center"}}>
                     <a href={socialLinks?.instagram} target="_blank" rel="noreferrer">
