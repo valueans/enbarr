@@ -2,7 +2,6 @@
 env/
 .terraform
 .env
-staticfiles/
 postgres-data/
 venv/
 db.sqlite3
