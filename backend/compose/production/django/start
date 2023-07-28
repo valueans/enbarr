@@ -6,4 +6,6 @@ set -o nounset
 
 
 python /app/manage.py migrate
-gunicorn tiny_bird_36835.wsgi --bind 0.0.0.0:8000
+python /app/manage.py collectstatic --noinput
+
+gunicorn --workers=5 --worker-class=gevent --worker-connections=1000 tiny_bird_36835.wsgi --bind 0.0.0.0:8000
