@@ -36,7 +36,7 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>fb450929960465142</string>
-				<string>com.googleusercontent.apps.968378738153-00p57ilsamv24td5710mbndfkm0p3u9j</string>
+				<string>com.googleusercontent.apps.968378738153-mvtaacnb9rtci0nl2a7dav3klcr7bgfr</string>
 			</array>
 		</dict>
 		<dict>
@@ -69,12 +69,16 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Enbarr would like to use your photos so that we can get your photo</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Enbarr would like to use your location so that we can show accurate address on map</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Enbarr would like to use your location so that we can show accurate address on map</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Enbarr would like to use your location so that we can show accurate address on map</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Enbarr need the audio for video recording</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Enbarr would like to use your photos so that we can get your photo</string>
 	<key>UIAppFonts</key>

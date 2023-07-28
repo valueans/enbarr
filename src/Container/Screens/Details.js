@@ -193,7 +193,7 @@ const Details = props => {
   const onSharePressed = async () => {
     try {
       const result = await Share.share({
-        message: `https://tiny-bird-36835.botics.co/home/horse?id=${props?.route?.params?.item?.id}`,
+        message: `https://enbarrapp.com/home/horse?id=${props?.route?.params?.item?.id}`,
       });
       if (result.action === Share.sharedAction) {
         if (result.activityType) {

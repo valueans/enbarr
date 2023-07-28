@@ -1,7 +1,9 @@
-const App_Domain = 'https://tiny-bird-36835.botics.co';
+// const App_Domain = 'https://tiny-bird-36835.botics.co';
+const App_Domain = 'https://enbarrapp.com';
+
 
 export async function fetchWithTimeout(url, options = {}) {
-  const {timeout = 30000} = options;
+  const { timeout = 30000 } = options;
 
   const controller = new AbortController();
   const id = setTimeout(() => controller.abort(), timeout);
@@ -14,7 +16,7 @@ export async function fetchWithTimeout(url, options = {}) {
       const statusCode = response.status;
       const data = response.json();
       clearTimeout(id);
-      return Promise.all([{code: statusCode}, data]);
+      return Promise.all([{ code: statusCode }, data]);
     })
     .catch(error => {
       console.error(error);

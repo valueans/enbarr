@@ -12,27 +12,27 @@ import {
   Platform,
   PermissionsAndroid,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {globalStyle} from '../../utils/GlobalStyle';
-import COLORS, {ColorShade} from '../../utils/colors';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import React, { useEffect, useState } from 'react';
+import { globalStyle } from '../../utils/GlobalStyle';
+import COLORS, { ColorShade } from '../../utils/colors';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import fonts from '../../utils/fonts';
 import backIcon from '../../assets/images/arrowLeft_white.png';
-import {profile_img} from '../../utils/data';
+import { profile_img } from '../../utils/data';
 import cameraIcon from '../../assets/images/camera_white.png';
 import Input from '../../components/Input/Input';
 import TextField from '../../components/Input/TextField';
 import RoundBtn from '../../components/Button/RoundBtn';
-import {getMyDetail, updateMyDetail} from '../../APIs/api';
+import { getMyDetail, updateMyDetail } from '../../APIs/api';
 import ImagePicker from 'react-native-image-crop-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {BarIndicator} from 'react-native-indicators';
+import { BarIndicator } from 'react-native-indicators';
 
-const {width, height} = Dimensions.get('screen');
+const { width, height } = Dimensions.get('screen');
 
 const DEFAULT_IMAGE = require('../../assets/images/user.png');
 
-const MyProfile = ({navigation}) => {
+const MyProfile = ({ navigation }) => {
   // const [fullName, setFullName] = useState('');
   const [lastName, setLastName] = useState('');
   const [firstName, setFirstName] = useState('');
@@ -107,7 +107,7 @@ const MyProfile = ({navigation}) => {
           console.log(file);
           setIsUploading(true);
           //so lets upload profile image
-          var url = `https://tiny-bird-36835.botics.co/api/v1/users/userprofile/`;
+          var url = `https://enbarrapp.com/users/userprofile/`;
           console.log('qwqwqw', file.sourceURL);
           var photo = {
             uri:
@@ -158,7 +158,7 @@ const MyProfile = ({navigation}) => {
   };
 
   return (
-    <View style={[globalStyle.container, {backgroundColor: 'white'}]}>
+    <View style={[globalStyle.container, { backgroundColor: 'white' }]}>
       <StatusBar barStyle={'light-content'} />
 
       {isLoadingDetail ? (
@@ -167,7 +167,7 @@ const MyProfile = ({navigation}) => {
         <KeyboardAvoidingView behavior="padding" style={styles.container}>
           <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
             <View style={styles.header}>
-              <View style={[styles.row, {marginTop: safeArea.top}]}>
+              <View style={[styles.row, { marginTop: safeArea.top }]}>
                 <TouchableOpacity
                   style={styles.backBtn}
                   onPress={() => navigation.goBack()}>
@@ -182,14 +182,14 @@ const MyProfile = ({navigation}) => {
             </View>
 
             <View style={styles.contentContainer}>
-              <View style={[globalStyle.row, {justifyContent: 'center'}]}>
+              <View style={[globalStyle.row, { justifyContent: 'center' }]}>
                 <View style={styles.imgContainer}>
-                  <View style={{position: 'relative'}}>
+                  <View style={{ position: 'relative' }}>
                     <View style={styles.avatar}>
                       {myImage ? (
                         <>
                           <Image
-                            source={{uri: myImage}}
+                            source={{ uri: myImage }}
                             resizeMode="cover"
                             style={styles.avatarImg}
                             onLoad={() => setIsUploading(true)}
@@ -227,7 +227,7 @@ const MyProfile = ({navigation}) => {
                   </View>
                 </View>
               </View>
-              <View style={{paddingTop: 0}}>
+              <View style={{ paddingTop: 0 }}>
                 <Input
                   value={firstName}
                   title="First Name"
@@ -372,6 +372,6 @@ const styles = StyleSheet.create({
     marginTop: 60,
     marginBottom: 60,
   },
-  avatarImg: {width: 120, height: 120, borderRadius: 60},
-  avatarImg1: {width: 110, height: 110, borderRadius: 60},
+  avatarImg: { width: 120, height: 120, borderRadius: 60 },
+  avatarImg1: { width: 110, height: 110, borderRadius: 60 },
 });
