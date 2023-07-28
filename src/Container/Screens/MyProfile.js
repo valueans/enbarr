@@ -107,7 +107,7 @@ const MyProfile = ({navigation}) => {
           console.log(file);
           setIsUploading(true);
           //so lets upload profile image
-          var url = `https://tiny-bird-36835.botics.co/api/v1/users/userprofile/`;
+          var url = `https://enbarrapp.com/api/v1/users/userprofile/`;
           console.log('qwqwqw', file.sourceURL);
           var photo = {
             uri:
