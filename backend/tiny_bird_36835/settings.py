@@ -115,6 +115,7 @@ INSTALLED_APPS += LOCAL_APPS + THIRD_PARTY_APPS
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -210,7 +211,7 @@ STATICFILES_DIRS = [
     os.path.join(REACT_APP_DIR, "build/static"),
     os.path.join(BASE_DIR, "static"),
 ]
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 MEDIA_URL = "/mediafiles/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "mediafiles")
@@ -409,9 +410,3 @@ GOOGLE_MAPS_API_KEY = env.str("GOOGLE_MAPS_API_KEY", "")
 
 # Mix Panel
 MIXPANEL_API_KEY = env.str("MIXPANEL_API_KEY", "")
-
-
-# if env.str("GDAL_LIBRARY_PATH", None):
-#     GDAL_LIBRARY_PATH = env.str("GDAL_LIBRARY_PATH", None)
-#     GEOS_LIBRARY_PATH = env.str("GEOS_LIBRARY_PATH", None)
-
