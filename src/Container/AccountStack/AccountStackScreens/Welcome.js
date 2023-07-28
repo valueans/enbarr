@@ -16,10 +16,10 @@ import {
   ImageBackground,
   NativeModule,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import COLORS, {ColorShade} from '../../../utils/colors';
+import React, { useEffect, useState } from 'react';
+import COLORS, { ColorShade } from '../../../utils/colors';
 import LinearGradient from 'react-native-linear-gradient';
-const {width, height} = Dimensions.get('screen');
+const { width, height } = Dimensions.get('screen');
 import ImgToBase64 from 'react-native-image-base64';
 import RNFS from 'react-native-fs';
 import bg from '../../../assets/images/welcomeBackground.png';
@@ -27,40 +27,40 @@ import logo from '../../../assets/images/logo_white_sm.png';
 import facebook from '../../../assets/images/facebook.png';
 import google from '../../../assets/images/google.png';
 import apple from '../../../assets/images/apple.png';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {fetchWithTimeout} from '../../../Shared/fetchData';
-import {BarIndicator} from 'react-native-indicators';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { fetchWithTimeout } from '../../../Shared/fetchData';
+import { BarIndicator } from 'react-native-indicators';
 import fonts from '../../../utils/fonts';
 // import CheckBox from 'react-native-check-box';
 import CheckBox from '../../../components/Button/CheckBox';
-import {useDispatch} from 'react-redux';
-import {login} from '../../../redux/login';
-import {trueRemember, falseRemember} from '../../../redux/isRemember';
-import {setUserDetail} from '../../../redux/userDetail';
+import { useDispatch } from 'react-redux';
+import { login } from '../../../redux/login';
+import { trueRemember, falseRemember } from '../../../redux/isRemember';
+import { setUserDetail } from '../../../redux/userDetail';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import appleAuth from '@invertase/react-native-apple-authentication';
 
 import jwt_decode from 'jwt-decode';
 import auth from '@react-native-firebase/auth';
-import {SignUpWithGoogle, SignUpWithApple} from '../../../APIs/api';
-import {LoginManager, AccessToken} from 'react-native-fbsdk-next';
+import { SignUpWithGoogle, SignUpWithApple } from '../../../APIs/api';
+import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
 
 GoogleSignin.configure({
   webClientId:
-    '91230648983-4leie8j780tt1uoid5bahe4j0mbr9m29.apps.googleusercontent.com',
+    '968378738153-00p57ilsamv24td5710mbndfkm0p3u9j.apps.googleusercontent.com',
 });
 
 GoogleSignin.configure({
   scopes: ['https://www.googleapis.com/auth/drive.readonly'], // what API you want to access on behalf of the user, default is email and profile
   webClientId:
-    '91230648983-4leie8j780tt1uoid5bahe4j0mbr9m29.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
+    '968378738153-00p57ilsamv24td5710mbndfkm0p3u9j.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
   offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
   hostedDomain: '', // specifies a hosted domain restriction
   forceCodeForRefreshToken: true, // [Android] related to `serverAuthCode`, read the docs link below *.
   accountName: '', // [Android] specifies an account name on the device that should be used
   iosClientId:
-    '91230648983-44bn77aguoi56ek1er401daluilm6r2g.apps.googleusercontent.com', // [iOS] if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
+    '968378738153-00p57ilsamv24td5710mbndfkm0p3u9j.apps.googleusercontent.com', // [iOS] if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
   googleServicePlistPath: '', // [iOS] if you renamed your GoogleService-Info file, new name here, e.g. GoogleService-Info-Staging
   openIdRealm: '', // [iOS] The OpenID2 realm of the home web server. This allows Google to include the user's OpenID Identifier in the OpenID Connect ID token.
   profileImageSize: 120, // [iOS] The desired height (and width) of the profile image. Defaults to 120px
@@ -114,9 +114,9 @@ const Welcome = props => {
 
   async function onGoogleButtonPress() {
     // Check if your device supports Google Play
-    await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
+    await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
     // Get the users ID token
-    const {idToken} = await GoogleSignin.signIn();
+    const { idToken } = await GoogleSignin.signIn();
 
     // Create a Google credential with the token
     const googleCredential = auth.GoogleAuthProvider.credential(idToken);
@@ -144,7 +144,7 @@ const Welcome = props => {
 
     console.log('main result', appleAuthRequestResponse);
     console.log('main result nonce', appleAuthRequestResponse.nonce);
-    const {email, email_verified, is_private_email, sub} = jwt_decode(
+    const { email, email_verified, is_private_email, sub } = jwt_decode(
       appleAuthRequestResponse.identityToken,
     );
     const data = await SignUpWithApple(
@@ -156,8 +156,8 @@ const Welcome = props => {
     dispatch(
       setUserDetail({
         token: data[1].key,
-        user: {email: email},
-        'user-profile': {'profile-photo': ''},
+        user: { email: email },
+        'user-profile': { 'profile-photo': '' },
       }),
     );
 
@@ -178,9 +178,9 @@ const Welcome = props => {
     if (step == 0) {
       return (
         <>
-          <Text style={[styles.inputLabel, {marginTop: -8}]}>Email</Text>
+          <Text style={[styles.inputLabel, { marginTop: -8 }]}>Email</Text>
           <TextInput
-            style={[styles.input, {marginBottom: !isEmailCorrect ? 5 : 10}]}
+            style={[styles.input, { marginBottom: !isEmailCorrect ? 5 : 10 }]}
             onChangeText={e => {
               if (!e) {
                 setIsEmailCorrect(true);
@@ -200,17 +200,17 @@ const Welcome = props => {
               Invalid Email
             </Text>
           ) : (
-            <View style={{marginBottom: 10}} />
+            <View style={{ marginBottom: 10 }} />
           )}
           <Text style={styles.inputLabel}>Password</Text>
 
           <View
             style={[
               styles.input,
-              {flexDirection: 'row', alignItems: 'center'},
+              { flexDirection: 'row', alignItems: 'center' },
             ]}>
             <TextInput
-              style={{flex: 1, color: COLORS.white}}
+              style={{ flex: 1, color: COLORS.white }}
               onChangeText={e => setLoginPass1(e)}
               autoCapitalize={'none'}
               secureTextEntry={!isShowPassword}></TextInput>
@@ -234,11 +234,11 @@ const Welcome = props => {
                 }}
                 value={isCheckedRemember}
               />
-              <Text style={[styles.sText, {marginLeft: 8}]}>Remember me</Text>
+              <Text style={[styles.sText, { marginLeft: 8 }]}>Remember me</Text>
             </View>
 
             <TouchableOpacity
-              style={{alignSelf: 'center'}}
+              style={{ alignSelf: 'center' }}
               onPress={goToForgotPassword}>
               <Text style={styles.sText}>Forgot password</Text>
             </TouchableOpacity>
@@ -248,11 +248,11 @@ const Welcome = props => {
     } else if (step == 1) {
       return (
         <>
-          <Text style={[styles.inputLabel, {marginTop: -23}]}>Email</Text>
+          <Text style={[styles.inputLabel, { marginTop: -23 }]}>Email</Text>
           <TextInput
             style={[
               styles.input,
-              {height: 40, marginBottom: !isEmailCorrect ? 5 : 10},
+              { height: 40, marginBottom: !isEmailCorrect ? 5 : 10 },
             ]}
             onChangeText={e => {
               if (!e) {
@@ -273,16 +273,16 @@ const Welcome = props => {
               Invalid Email
             </Text>
           ) : (
-            <View style={{marginBottom: 10}} />
+            <View style={{ marginBottom: 10 }} />
           )}
           <Text style={styles.inputLabel}>Create password</Text>
           <View
             style={[
               styles.input,
-              {flexDirection: 'row', alignItems: 'center', height: 40},
+              { flexDirection: 'row', alignItems: 'center', height: 40 },
             ]}>
             <TextInput
-              style={{flex: 1, color: COLORS.white}}
+              style={{ flex: 1, color: COLORS.white }}
               onChangeText={e => setsignUpPass(e)}
               autoCapitalize={'none'}
               secureTextEntry={!isShowPassword}></TextInput>
@@ -303,10 +303,10 @@ const Welcome = props => {
           <View
             style={[
               styles.input,
-              {flexDirection: 'row', alignItems: 'center', height: 40},
+              { flexDirection: 'row', alignItems: 'center', height: 40 },
             ]}>
             <TextInput
-              style={{flex: 1, color: COLORS.white}}
+              style={{ flex: 1, color: COLORS.white }}
               onChangeText={e => setSignUpPassConfirm(e)}
               autoCapitalize={'none'}
               secureTextEntry={!isShowPassword}></TextInput>
@@ -323,7 +323,7 @@ const Welcome = props => {
           </View>
 
           <View
-            style={[styles.sFooterContainer, {justifyContent: 'flex-start'}]}>
+            style={[styles.sFooterContainer, { justifyContent: 'flex-start' }]}>
             <View style={styles.row}>
               <CheckBox
                 onChange={e => {
@@ -331,8 +331,8 @@ const Welcome = props => {
                 }}
                 value={isCheckedTerms}
               />
-              <View style={{flexDirection: 'row', flexWrap: 'wrap', flex: 1}}>
-                <Text style={[styles.sText, {marginLeft: 8}]}>
+              <View style={{ flexDirection: 'row', flexWrap: 'wrap', flex: 1 }}>
+                <Text style={[styles.sText, { marginLeft: 8 }]}>
                   {'I have read '}
                   <Text
                     style={[
@@ -349,7 +349,7 @@ const Welcome = props => {
                     {'Terms and Conditions'}
                   </Text>
                 </Text>
-                <Text style={[styles.sText, {marginLeft: 8}]}>
+                <Text style={[styles.sText, { marginLeft: 8 }]}>
                   {'and '}
                   <Text
                     style={[
@@ -473,7 +473,7 @@ const Welcome = props => {
         console.log(data);
         if (data[0].code == 200) {
           dispatch(setUserDetail(data[1]));
-          props.navigation.navigate('Passcode', {source: 'SIGNUP', data});
+          props.navigation.navigate('Passcode', { source: 'SIGNUP', data });
         } else if (data[0].code == 400 && data[1].email) {
           Alert.alert('This email is already registered with a user');
         }
@@ -513,7 +513,7 @@ const Welcome = props => {
           console.log('fffffff', result);
           console.log(
             'Login success with permissions: ' +
-              result.grantedPermissions.toString(),
+            result.grantedPermissions.toString(),
           );
         }
       },
@@ -541,8 +541,8 @@ const Welcome = props => {
           dispatch(
             setUserDetail({
               token: ress[1].key,
-              user: {email: email},
-              'user-profile': {'profile-photo': photo},
+              user: { email: email },
+              'user-profile': { 'profile-photo': photo },
             }),
           );
 
@@ -579,7 +579,7 @@ const Welcome = props => {
 
   return (
     <TouchableWithoutFeedback
-      style={{flex: 1}}
+      style={{ flex: 1 }}
       onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>
         <StatusBar
@@ -596,17 +596,17 @@ const Welcome = props => {
         <LinearGradient
           style={[
             styles.overlay,
-            {paddingTop: safeArea.top, paddingBottom: safeArea.bottom},
+            { paddingTop: safeArea.top, paddingBottom: safeArea.bottom },
           ]}
-          start={{x: 0, y: 0}}
-          end={{x: 0, y: 1}}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 0, y: 1 }}
           locations={[0, 0.65]}
           colors={['transparent', ColorShade(COLORS.color3, 100)]}>
           <View style={[styles.logoContainer]}>
             <Image style={[styles.logo]} source={logo} resizeMode="contain" />
           </View>
           <View style={[styles.contentContainer]}>
-            <View style={{overflow: 'hidden', borderRadius: 30}}>
+            <View style={{ overflow: 'hidden', borderRadius: 30 }}>
               <ImageBackground style={styles.glassBox} blurRadius={30}>
                 <View style={styles.tabContainer}>
                   <View style={styles.btnContainer}>
@@ -635,7 +635,7 @@ const Welcome = props => {
                     </TouchableOpacity>
                   </View>
                 </View>
-                <View style={{flex: 1, paddingTop: 32, paddingHorizontal: 16}}>
+                <View style={{ flex: 1, paddingTop: 32, paddingHorizontal: 16 }}>
                   {RenderStep(step)}
                 </View>
                 <TouchableOpacity

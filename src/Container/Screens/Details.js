@@ -11,20 +11,20 @@ import {
   Platform,
   PermissionsAndroid,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
-import {globalStyle} from '../../utils/GlobalStyle';
-import COLORS, {ColorShade} from '../../utils/colors';
+import React, { useState, useEffect } from 'react';
+import { globalStyle } from '../../utils/GlobalStyle';
+import COLORS, { ColorShade } from '../../utils/colors';
 import fonts from '../../utils/fonts';
 import HomeHeader from '../../components/Common/HomeHeader';
 import message from '../../assets/images/envelope.png';
 import heart from '../../assets/images/heart.png';
 import heartFill from '../../assets/images/heart_fill.png';
 import locationIcon from '../../assets/images/location.png';
-const {width, height} = Dimensions.get('screen');
+const { width, height } = Dimensions.get('screen');
 import profileImage from '../../assets/images/user.png';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {BlurView} from '@react-native-community/blur';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { BlurView } from '@react-native-community/blur';
 import ScreenTitle from '../../components/Text/ScreenTitle';
 import Seprator from '../../components/Layout/Seprator';
 import Feature from '../../components/Text/Feature';
@@ -33,7 +33,7 @@ import shareIcon from '../../assets/images/share.png';
 import blockIcon from '../../assets/images/block.png';
 import CustomTab from '../../components/Layout/CustomTab';
 import Geolocation from 'react-native-geolocation-service';
-import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import arrowLeft from '../../assets/images/arrowLeft.png';
 
 import {
@@ -229,7 +229,7 @@ const Details = props => {
     setMyImage(myBase64ProfileImage);
   };
 
-  const FooterWrapper = ({children}) => {
+  const FooterWrapper = ({ children }) => {
     return Platform.OS == 'android' ? (
       <View style={styles.ViewAndroid}>{children}</View>
     ) : (
@@ -239,7 +239,7 @@ const Details = props => {
     );
   };
   return (
-    <View style={[globalStyle.container, {backgroundColor: COLORS.white}]}>
+    <View style={[globalStyle.container, { backgroundColor: COLORS.white }]}>
       <StatusBar barStyle={'light-content'} />
 
       <ReportModal
@@ -248,11 +248,11 @@ const Details = props => {
         horseID={item?.id}
       />
       <View
-        style={[styles.headerContainer, {top: safeArea.top + 12, zIndex: 10}]}>
+        style={[styles.headerContainer, { top: safeArea.top + 12, zIndex: 10 }]}>
         <TouchableOpacity
-          style={{marginLeft: 10, marginBottom: 10}}
+          style={{ marginLeft: 10, marginBottom: 10 }}
           onPress={() => props.navigation.goBack()}>
-          <Image source={arrowLeft} style={{height: 20, width: 20}} />
+          <Image source={arrowLeft} style={{ height: 20, width: 20 }} />
         </TouchableOpacity>
         <HomeHeader
           avatar={myImage}
@@ -263,7 +263,7 @@ const Details = props => {
       </View>
 
       <ScrollView
-        contentContainerStyle={{paddingBottom: 120}}
+        contentContainerStyle={{ paddingBottom: 120 }}
         showsVerticalScrollIndicator={false}>
         <View style={styles.albumContainer}>
           <Carousel items={horseImages}>
@@ -279,9 +279,9 @@ const Details = props => {
                     {item?.userprofile?.first_name
                       ? item?.userprofile?.first_name
                       : item?.userprofile?.user?.email.substring(
-                          0,
-                          item?.userprofile?.user?.email.lastIndexOf('@'),
-                        )}
+                        0,
+                        item?.userprofile?.user?.email.lastIndexOf('@'),
+                      )}
                   </Text>
                 </View>
               </View>
@@ -293,7 +293,7 @@ const Details = props => {
           <View style={[styles.row, styles.circleBtnContainer]}>
             <TouchableOpacity
               activeOpacity={0.9}
-              style={[styles.circleBtn, {marginRight: 12}]}
+              style={[styles.circleBtn, { marginRight: 12 }]}
               onPress={() => onReportPress()}>
               <Image
                 source={blockIcon}
@@ -303,7 +303,7 @@ const Details = props => {
             </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={0.9}
-              style={[styles.circleBtn, {marginRight: 12}]}
+              style={[styles.circleBtn, { marginRight: 12 }]}
               onPress={() => onSharePressed()}>
               <Image
                 source={shareIcon}
@@ -314,7 +314,7 @@ const Details = props => {
             <TouchableOpacity
               onPress={() => gotoChat()}
               activeOpacity={0.9}
-              style={[styles.circleBtn, {marginRight: 12}]}>
+              style={[styles.circleBtn, { marginRight: 12 }]}>
               <Image
                 source={message}
                 resizeMode="contain"
@@ -332,10 +332,10 @@ const Details = props => {
               />
             </TouchableOpacity>
           </View>
-          <ScreenTitle size={20} style={{marginVertical: 12, marginBottom: 6}}>
+          <ScreenTitle size={20} style={{ marginVertical: 12, marginBottom: 6 }}>
             {item?.title}
           </ScreenTitle>
-          <View style={[styles.row, {justifyContent: 'space-between'}]}>
+          <View style={[styles.row, { justifyContent: 'space-between' }]}>
             <View style={styles.row}>
               <Image
                 source={locationIcon}
@@ -344,7 +344,7 @@ const Details = props => {
               />
               <Text style={styles.distance}>{distance.toFixed(1)} miles</Text>
             </View>
-            <ScreenTitle size={20} marginVertical={0} style={{marginTop: 4}}>
+            <ScreenTitle size={20} marginVertical={0} style={{ marginTop: 4 }}>
               $
               {item?.price
                 ?.toString()
@@ -355,16 +355,16 @@ const Details = props => {
           <View
             style={[
               styles.row,
-              {marginTop: 6, marginBottom: 12, alignItems: 'baseline'},
+              { marginTop: 6, marginBottom: 12, alignItems: 'baseline' },
             ]}>
             <ScreenTitle size={12}>Characteristics</ScreenTitle>
-            <View style={{flex: 1, marginLeft: 8}}>
+            <View style={{ flex: 1, marginLeft: 8 }}>
               <Seprator left={false} />
             </View>
           </View>
           {/* features */}
           <View style={styles.row}>
-            <View style={{flex: 2}}>
+            <View style={{ flex: 2 }}>
               <Feature
                 style={styles.feature}
                 title={'Breed'}
@@ -382,7 +382,7 @@ const Details = props => {
                 value={item?.discipline?.discipline}
               />
             </View>
-            <View style={{flex: 3}}>
+            <View style={{ flex: 3 }}>
               <Feature
                 style={styles.feature}
                 title={'Gender'}

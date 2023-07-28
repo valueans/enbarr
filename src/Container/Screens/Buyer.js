@@ -13,11 +13,11 @@ import {
   Alert,
   TextInput,
 } from 'react-native';
-import React, {useState, useRef, useEffect} from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Background from '../../components/Layout/Background';
 import HomeHeader from '../../components/Common/HomeHeader';
-import {profile_img} from '../../utils/data';
-import {globalStyle} from '../../utils/GlobalStyle';
+import { profile_img } from '../../utils/data';
+import { globalStyle } from '../../utils/GlobalStyle';
 import ScreenTitle from '../../components/Text/ScreenTitle';
 import DropDown from '../../components/Button/DropDown';
 import RangeInput from '../../components/Input/RangeInput';
@@ -42,13 +42,13 @@ import {
   getAllHorseLatandLong,
 } from '../../APIs/api';
 import fonts from '../../utils/fonts';
-import {BarIndicator} from 'react-native-indicators';
+import { BarIndicator } from 'react-native-indicators';
 import Sheet from '../../components/Common/Sheet';
 import TextButton from '../../components/Button/TextButton';
-import {BottomSheetView} from '@gorhom/bottom-sheet';
-const {width, height} = Dimensions.get('screen');
+import { BottomSheetView } from '@gorhom/bottom-sheet';
+const { width, height } = Dimensions.get('screen');
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Country, State, City} from 'country-state-city';
+import { Country, State, City } from 'country-state-city';
 
 global.firstTime = true;
 const Buyer = props => {
@@ -112,13 +112,13 @@ const Buyer = props => {
 
   const [radius, setRadius] = useState(20);
   const [radiusOptions, setRadiusOptions] = useState([
-    {value: 20},
-    {value: 50},
-    {value: 100},
-    {value: 150},
-    {value: 200},
-    {value: 250},
-    {value: 300},
+    { value: 20 },
+    { value: 50 },
+    { value: 100 },
+    { value: 150 },
+    { value: 200 },
+    { value: 250 },
+    { value: 300 },
   ]);
   useEffect(() => {
     // getAllCountries();
@@ -161,17 +161,19 @@ const Buyer = props => {
     const data = await getSavedSearchDetal();
     if (data[1]?.length !== 0 && data.length !== 0) {
       console.log('qqqqqq', data[1][0]);
-      setCityy({name: data[1][0].city});
+      setCityy({ name: data[1][0].city });
       // setLocation({name: data[1][0].country});
+      setStatee({ name: data[1][0].state });
 
-      setStatee({name: data[1][0].state});
       setMaxAge(data[1][0].max_age);
       setMinAge(data[1][0].min_age);
       setMinHeight(data[1][0].min_height);
       setMaxHeight(data[1][0].max_height);
       setMinPrice(data[1][0].min_price);
       setMaxPrice(data[1][0].max_price);
-      setLocation({name: data[1][0].country});
+
+      setLocation({ name: data[1][0].country });
+      
       setRadius(data[1][0].radius);
       // setSelectedIndex(
       //   data[1][0].gender === 'Gelding'
@@ -308,11 +310,15 @@ const Buyer = props => {
 
     if (data[0].code == 200) {
       if (data[1].id) {
+
+        console.log('RESP FROM SERVER --=== ', data, " AND THIS IS LAT LONG ", props.route.params.myLat, props.route.params.myLong)
+
         props.navigation.navigate('SwipingPage', {
           pubnub: props.route.params.pubnub,
           myLat: props.route.params.myLat,
           myLong: props.route.params.myLong,
         });
+
       } else {
         Alert.alert('Error', 'Please Try Again');
       }
@@ -405,7 +411,7 @@ const Buyer = props => {
     <Background>
       <SafeAreaView style={globalStyle.container}>
         <KeyboardAvoidingView
-          style={{flex: 1, marginBottom: 90}}
+          style={{ flex: 1, marginBottom: 90 }}
           behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
           keyboardVerticalOffset={10}>
           <View style={globalStyle.innerContainer}>
@@ -414,7 +420,7 @@ const Buyer = props => {
             ) : (
               <ScrollView
                 showsVerticalScrollIndicator={false}
-                contentContainerStyle={{paddingBottom: 100}}>
+                contentContainerStyle={{ paddingBottom: 100 }}>
                 <HomeHeader
                   avatar={myImage}
                   navigation={props.navigation}
@@ -560,7 +566,7 @@ const Buyer = props => {
 
                 <View style={styles.btnContainer}>
                   <View style={styles.row}>
-                    <RoundBtn style={{flex: 1}} onPress={() => savedBtnPress()}>
+                    <RoundBtn style={{ flex: 1 }} onPress={() => savedBtnPress()}>
                       Save
                     </RoundBtn>
 
@@ -583,7 +589,7 @@ const Buyer = props => {
                     </RoundBtn>
 
                     <RoundBtn
-                      style={{flex: 1, marginLeft: 4}}
+                      style={{ flex: 1, marginLeft: 4 }}
                       onPress={showResult}>
                       Result
                     </RoundBtn>
@@ -622,8 +628,8 @@ const Buyer = props => {
               data={filterLocations}
               extraData={filterLocations}
               keyExtractor={(item, index) => index}
-              contentContainerStyle={{paddingTop: 32}}
-              renderItem={({item, index}) => {
+              contentContainerStyle={{ paddingTop: 32 }}
+              renderItem={({ item, index }) => {
                 return (
                   <TouchableOpacity
                     key={index}
@@ -635,7 +641,7 @@ const Buyer = props => {
                       // setLocationID(item.id);
                       locationSheetRef.current.close();
                     }}>
-                    <Text style={[styles.textItem, {textAlign: 'left'}]}>
+                    <Text style={[styles.textItem, { textAlign: 'left' }]}>
                       {item?.name}
                     </Text>
                   </TouchableOpacity>
@@ -673,8 +679,8 @@ const Buyer = props => {
               data={filterStatesitems}
               extraData={filterStatesitems}
               keyExtractor={(item, index) => index}
-              contentContainerStyle={{paddingTop: 32}}
-              renderItem={({item, index}) => {
+              contentContainerStyle={{ paddingTop: 32 }}
+              renderItem={({ item, index }) => {
                 return (
                   <TouchableOpacity
                     key={index}
@@ -685,7 +691,7 @@ const Buyer = props => {
                       // setLocationID(item.id);
                       stateSheetRef.current.close();
                     }}>
-                    <Text style={[styles.textItem, {textAlign: 'left'}]}>
+                    <Text style={[styles.textItem, { textAlign: 'left' }]}>
                       {item?.name}
                     </Text>
                   </TouchableOpacity>
@@ -711,8 +717,8 @@ const Buyer = props => {
               data={radiusOptions}
               extraData={radiusOptions}
               keyExtractor={(item, index) => index}
-              contentContainerStyle={{paddingTop: 32}}
-              renderItem={({item, index}) => {
+              contentContainerStyle={{ paddingTop: 32 }}
+              renderItem={({ item, index }) => {
                 return (
                   <TouchableOpacity
                     key={index}
@@ -723,7 +729,7 @@ const Buyer = props => {
                       // setLocationID(item.id);
                       radiusSheetRef.current.close();
                     }}>
-                    <Text style={[styles.textItem, {textAlign: 'left'}]}>
+                    <Text style={[styles.textItem, { textAlign: 'left' }]}>
                       {item?.value} {' Miles'}
                     </Text>
                   </TouchableOpacity>
@@ -761,8 +767,8 @@ const Buyer = props => {
               data={filterCitiesitems}
               extraData={filterCitiesitems}
               keyExtractor={(item, index) => index}
-              contentContainerStyle={{paddingTop: 32}}
-              renderItem={({item, index}) => {
+              contentContainerStyle={{ paddingTop: 32 }}
+              renderItem={({ item, index }) => {
                 return (
                   <TouchableOpacity
                     key={index}
@@ -774,7 +780,7 @@ const Buyer = props => {
                       // setLocationID(item.id);
                       citySheetRef.current.close();
                     }}>
-                    <Text style={[styles.textItem, {textAlign: 'left'}]}>
+                    <Text style={[styles.textItem, { textAlign: 'left' }]}>
                       {item?.name}
                     </Text>
                   </TouchableOpacity>
@@ -795,13 +801,13 @@ const Buyer = props => {
             height: height * 0.8,
           }}>
           <ScreenTitle size={18}>Select breed</ScreenTitle>
-          <BottomSheetView style={[styles.listContainer, {height: 200}]}>
+          <BottomSheetView style={[styles.listContainer, { height: 200 }]}>
             <FlatList
               data={breedList}
               extraData={breedList}
               keyExtractor={(item, index) => item.breed}
-              contentContainerStyle={{paddingTop: 32}}
-              renderItem={({item, index}) => {
+              contentContainerStyle={{ paddingTop: 32 }}
+              renderItem={({ item, index }) => {
                 return (
                   <TouchableOpacity
                     style={styles.listItem}
@@ -828,13 +834,13 @@ const Buyer = props => {
             height: height * 0.8,
           }}>
           <ScreenTitle size={18}>Select breed</ScreenTitle>
-          <BottomSheetView style={[styles.listContainer, {height: 200}]}>
+          <BottomSheetView style={[styles.listContainer, { height: 200 }]}>
             <FlatList
               data={disciplineList}
               extraData={disciplineList}
               keyExtractor={(item, index) => item.breed}
-              contentContainerStyle={{paddingTop: 32}}
-              renderItem={({item, index}) => {
+              contentContainerStyle={{ paddingTop: 32 }}
+              renderItem={({ item, index }) => {
                 return (
                   <TouchableOpacity
                     style={styles.listItem}
@@ -860,13 +866,13 @@ const Buyer = props => {
             height: height * 0.8,
           }}>
           <ScreenTitle size={18}>Select breed</ScreenTitle>
-          <BottomSheetView style={[styles.listContainer, {height: 200}]}>
+          <BottomSheetView style={[styles.listContainer, { height: 200 }]}>
             <FlatList
               data={colorList}
               extraData={colorList}
               keyExtractor={(item, index) => item.breed}
-              contentContainerStyle={{paddingTop: 32}}
-              renderItem={({item, index}) => {
+              contentContainerStyle={{ paddingTop: 32 }}
+              renderItem={({ item, index }) => {
                 return (
                   <TouchableOpacity
                     style={styles.listItem}
@@ -892,13 +898,13 @@ const Buyer = props => {
             height: height * 0.8,
           }}>
           <ScreenTitle size={18}>Select breed</ScreenTitle>
-          <BottomSheetView style={[styles.listContainer, {height: 200}]}>
+          <BottomSheetView style={[styles.listContainer, { height: 200 }]}>
             <FlatList
               data={temperamentList}
               extraData={temperamentList}
               keyExtractor={(item, index) => item.temperament}
-              contentContainerStyle={{paddingTop: 32}}
-              renderItem={({item, index}) => {
+              contentContainerStyle={{ paddingTop: 32 }}
+              renderItem={({ item, index }) => {
                 return (
                   <TouchableOpacity
                     style={styles.listItem}
@@ -965,5 +971,5 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: COLORS.color10,
   },
-  listContainer: {flex: 1, height: 600, width},
+  listContainer: { flex: 1, height: 600, width },
 });

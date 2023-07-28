@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Alert} from 'react-native';
+import { Alert } from 'react-native';
 
-import {fetchWithTimeout} from '../Shared/fetchData';
+import { fetchWithTimeout } from '../Shared/fetchData';
 
 export async function getAlhorses(pageNumber) {
   var myHeaders = new Headers();
@@ -504,6 +504,7 @@ export async function sendHorseToServer(
   };
   console.log('HorsesssBody', raw);
   const data = await fetchWithTimeout('/api/v1/horse/', requestOptions);
+  console.log('response ', data);
 
   console.log('eeeeee', data[1].user_location);
   if (data[0].code == 201) {
@@ -677,7 +678,7 @@ export async function forgetPasswordEmailCheck(email) {
   if (data[0].code == 200) {
     return data;
   } else {
-    return [{code: 400}];
+    return [{ code: 400 }];
   }
 }
 
@@ -741,8 +742,7 @@ export async function getMyCardDetail() {
   );
 
   // console.log('bbbbb', data);
-
-  // console.log('aaaaa', data);
+  console.log('aaaaa', data);
   if (data[0].code == 200) {
     return data;
   } else {
@@ -997,7 +997,7 @@ export async function getOrCreateNewChannel(reciver_id) {
   if (data[0].code == 200) {
     return data[1];
   } else {
-    return {data: null};
+    return { data: null };
   }
 }
 

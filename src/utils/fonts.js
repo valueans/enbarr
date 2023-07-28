@@ -1,4 +1,4 @@
-import {Platform} from 'react-native';
+import { Platform } from 'react-native';
 
 const fonts = {
   regular: Platform.OS == 'ios' ? 'Poppins-Regular' : 'PoppinsRegular',

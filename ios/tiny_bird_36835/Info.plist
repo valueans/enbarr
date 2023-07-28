@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>tiny-bird-36835</string>
+	<string>Enbarr</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -13,15 +13,49 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>$(PRODUCT_NAME)</string>
+	<string>Enbarr</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.tiny_bird_36835</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb450929960465142</string>
+				<string>com.googleusercontent.apps.968378738153-00p57ilsamv24td5710mbndfkm0p3u9j</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string></string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>FacebookAppID</key>
+	<string>450929960465142</string>
+	<key>FacebookClientToken</key>
+	<string>a7b361bfce3f003d85ae769d4faa5158</string>
+	<key>FacebookDisplayName</key>
+	<string>Enbarr</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -35,12 +69,22 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Enbarr would like to use your location so that we can show accurate address on map</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Enbarr would like to use your location so that we can show accurate address on map</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string>Enbarr would like to use your location so that we can show accurate address on map</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Enbarr would like to use your photos so that we can get your photo</string>
 	<key>UIAppFonts</key>
 	<array>
-		<string>Poppins-Bold.ttf</string>
-		<string>Poppins-Regular.ttf</string>
+		<string>PoppinsBold.ttf</string>
+		<string>PoppinsRegular.ttf</string>
+		<string>bookman old style.ttf</string>
+		<string>PoppinsSemiBold.ttf</string>
+		<string>PoppinsMedium.ttf</string>
+		<string>PoppinsLight.ttf</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

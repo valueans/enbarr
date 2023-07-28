@@ -2,20 +2,25 @@
  * @format
  */
 
-import {AppRegistry} from 'react-native';
+import { AppRegistry } from 'react-native';
 import App from './App';
-import {name as appName} from './app.json';
+import { name as appName } from './app.json';
 import 'react-native-gesture-handler';
-import {useEffect} from 'react';
-import {Provider} from 'react-redux';
+import { useEffect } from 'react';
+import { Provider } from 'react-redux';
 import 'react-native-gesture-handler';
-import store, {persistor} from './src/redux/store';
+import store, { persistor } from './src/redux/store';
 import OneSignal from 'react-native-onesignal';
-import {PersistGate} from 'redux-persist/integration/react';
-import {Settings} from 'react-native-fbsdk-next';
-import {sendPlayerIDToServer} from './src/APIs/api';
+import { PersistGate } from 'redux-persist/integration/react';
+import { Settings } from 'react-native-fbsdk-next';
+import { sendPlayerIDToServer } from './src/APIs/api';
+import { LogBox } from 'react-native';
+LogBox.ignoreLogs(['Warning: ...', 'Error']); // Ignore log notification by message
+LogBox.ignoreAllLogs();//Ignore all log notifications
+
 // persistor={persistor}
-Settings.setAppID('1276833139846568');
+
+Settings.setAppID('450929960465142');
 Settings.initializeSDK();
 
 const RNRedux = () => {

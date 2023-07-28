@@ -11,8 +11,8 @@ import {
   PermissionsAndroid,
 } from 'react-native';
 import MapView from 'react-native-map-clustering';
-import React, {useState, useRef, useEffect} from 'react';
-import {globalStyle} from '../../utils/GlobalStyle';
+import React, { useState, useRef, useEffect } from 'react';
+import { globalStyle } from '../../utils/GlobalStyle';
 import COLORS from '../../utils/colors';
 import CustomTab from '../../components/Layout/CustomTab';
 import logoWriting from '../../assets/images/logo_writing.png';
@@ -23,7 +23,7 @@ import fonts from '../../utils/fonts';
 import Swiper from 'react-native-deck-swiper';
 import MainItem from '../../components/ListItem/MainItem';
 import Geolocation from 'react-native-geolocation-service';
-import {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
+import { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import horseImg from '../../assets/images/horseMap.png';
 import backIcon from '../../assets/images/arrowLeft.png';
 import {
@@ -38,8 +38,8 @@ import PubNub from 'pubnub';
 // import * as PubNubKeys from './pubNubKeys';
 import * as PubNubKeys from '../Tabs/Chat/PubNubKeys';
 const [allHorseLatandLon, setAllHorseLatandLon] = useState([]);
-import {BarIndicator} from 'react-native-indicators';
-const {width, height} = Dimensions.get('screen');
+import { BarIndicator } from 'react-native-indicators';
+const { width, height } = Dimensions.get('screen');
 global.pag = 2;
 const SwipingPage = props => {
   const swiperRef = useRef(null);
@@ -51,8 +51,11 @@ const SwipingPage = props => {
   const [allHorseLatandLon, setAllHorseLatandLon] = useState([]);
   //swipper or map
   const [whichPage, setWichPage] = useState('swipper');
+
   const [detailLat, setDetailLat] = useState(props.route.params.myLat);
   const [detailLng, setDetailLng] = useState(props.route.params.myLong);
+
+  console.log('%%%#### THIS IS LAT ', detailLat, detailLng)
 
   // const pubnub = new PubNub({
   //   subscribeKey: PubNubKeys.PUBNUB_SUBSCRIBE_KEY,
@@ -72,7 +75,7 @@ const SwipingPage = props => {
       props.route.params.pubnub,
     );
 
-    return () => {};
+    return () => { };
   }, []);
   const hasPermissionIOS = async () => {
     const openSetting = () => {
@@ -205,7 +208,7 @@ const SwipingPage = props => {
         <Image
           source={horseImg}
           resizeMode="contain"
-          style={{width: 40, height: 40, borderRadius: 20}}></Image>
+          style={{ width: 40, height: 40, borderRadius: 20 }}></Image>
       </Marker>
     ));
   };
@@ -283,9 +286,9 @@ const SwipingPage = props => {
 
   return (
     <SafeAreaView
-      style={[globalStyle.container, {backgroundColor: COLORS.white}]}>
+      style={[globalStyle.container, { backgroundColor: COLORS.white }]}>
       <View style={globalStyle.innerContainer}>
-        <View style={{flex: 1}}>
+        <View style={{ flex: 1 }}>
           <View style={styles.header}>
             <Image
               source={logoWriting}
@@ -293,7 +296,7 @@ const SwipingPage = props => {
               style={styles.logo}
             />
             <TouchableOpacity
-              style={{position: 'absolute', top: 10, left: 8}}
+              style={{ position: 'absolute', top: 10, left: 8 }}
               onPress={() => props.navigation.goBack()}>
               <Image
                 source={backIcon}
@@ -318,7 +321,7 @@ const SwipingPage = props => {
                 alignItems: 'center',
                 justifyContent: 'center',
               }}>
-              <Text style={{color: 'white'}}>Match</Text>
+              <Text style={{ color: 'white' }}>Match</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => setWichPage('map')}
@@ -330,19 +333,19 @@ const SwipingPage = props => {
                 alignItems: 'center',
                 justifyContent: 'center',
               }}>
-              <Text style={{color: 'white'}}>See on Map</Text>
+              <Text style={{ color: 'white' }}>See on Map</Text>
             </TouchableOpacity>
           </View>
           {whichPage == 'swipper' ? (
             <View
               style={styles.content}
-              onLayout={({nativeEvent}) =>
+              onLayout={({ nativeEvent }) =>
                 setCardHeight(nativeEvent.layout.height - 10)
               }>
               {loading ? (
                 <BarIndicator color={COLORS.color3} size={22}></BarIndicator>
               ) : horsesList.length == 0 ? (
-                <Text style={{alignSelf: 'center'}}>
+                <Text style={{ alignSelf: 'center' }}>
                   There is not any horse.
                 </Text>
               ) : (
@@ -352,7 +355,7 @@ const SwipingPage = props => {
                   renderCard={card =>
                     (card && (
                       <View
-                        style={{width: width - 32, height: cardHeight - 10}}>
+                        style={{ width: width - 32, height: cardHeight - 10 }}>
                         <MainItem
                           item={card}
                           onPressDetails={() => goToDetails(card)}
@@ -406,21 +409,18 @@ const SwipingPage = props => {
               spiralEnabled={false}
               clusteringEnabled={true}
               onRegionChangeComplete={e => console.log(e)}
-              onClusterPress={(cluster, markers) =>
-                // clickonMarkers(cluster, markers)
-
-                {
-                  // console.log('rrrr', cluster);
-                  let region = {
-                    latitude: markers[0]?.geometry?.coordinates[1],
-                    longitude: markers[0]?.geometry?.coordinates[0],
-                    latitudeDelta: 0.0002,
-                    longitudeDelta: 0.0001,
-                  };
-
-                  mapRef?.current?.animateToRegion(region, 2000);
-                }
-              }
+              // onClusterPress={(cluster, markers) =>
+              // // clickonMarkers(cluster, markers)
+              // {
+              //   // console.log('rrrr', cluster);
+              //   let region = {
+              //     latitude: markers[0]?.geometry?.coordinates[1],
+              //     longitude: markers[0]?.geometry?.coordinates[0],
+              //     latitudeDelta: 0.0002,
+              //     longitudeDelta: 0.0001,
+              //   };
+              //   mapRef?.current?.animateToRegion(region, 2000);
+              // }}
               style={{
                 marginTop: 20,
                 borderRadius: 20,
@@ -431,9 +431,13 @@ const SwipingPage = props => {
               initialRegion={{
                 latitude: detailLat ? detailLat : 71.6385898,
                 longitude: detailLng ? detailLng : 29.5456146,
-                latitudeDelta: 8.5,
-                longitudeDelta: 8.5,
+                latitudeDelta: 0.05,
+                longitudeDelta: 0.05,
               }}>
+              <Marker coordinate={{
+                latitude: detailLat ? detailLat : 71.6385898,
+                longitude: detailLng ? detailLng : 29.5456146,
+              }} />
               {renderMarkers()}
 
               {/* <Marker coordinate={{latitude: 52.4, longitude: 18.7}} />
@@ -456,10 +460,10 @@ const SwipingPage = props => {
                 <Image
                   source={dislike}
                   resizeMode="contain"
-                  style={[styles.icon, {marginTop: 6}]}
+                  style={[styles.icon, { marginTop: 6 }]}
                 />
               </TouchableOpacity>
-              <View style={{alignItems: 'center', paddingTop: 12}}>
+              <View style={{ alignItems: 'center', paddingTop: 12 }}>
                 <Image source={chev} resizeMode="contain" style={styles.chev} />
                 <Image source={chev} resizeMode="contain" style={styles.chev} />
                 <TouchableOpacity
@@ -474,13 +478,13 @@ const SwipingPage = props => {
                 <Image
                   source={like}
                   resizeMode="contain"
-                  style={[styles.icon, {marginBottom: 0}]}
+                  style={[styles.icon, { marginBottom: 0 }]}
                 />
               </TouchableOpacity>
             </View>
           ) : null}
         </View>
-        <View style={{height: 80, width: '100%'}} />
+        <View style={{ height: 80, width: '100%' }} />
       </View>
       <CustomTab navigation={props.navigation} />
     </SafeAreaView>

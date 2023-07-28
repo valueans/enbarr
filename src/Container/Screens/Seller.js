@@ -17,11 +17,11 @@ import {
   PermissionsAndroid,
   Button,
 } from 'react-native';
-import React, {useState, useEffect, useRef} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Background from '../../components/Layout/Background';
 import HomeHeader from '../../components/Common/HomeHeader';
-import {profile_img} from '../../assets/images/user.png';
-import {globalStyle} from '../../utils/GlobalStyle';
+import { profile_img } from '../../assets/images/user.png';
+import { globalStyle } from '../../utils/GlobalStyle';
 import fonts from '../../utils/fonts';
 import ScreenTitle from '../../components/Text/ScreenTitle';
 import COLORS from '../../utils/colors';
@@ -38,12 +38,12 @@ import MultipleInput from '../../components/Input/MultipleInput';
 import RoundBtn from '../../components/Button/RoundBtn';
 import Sheet from '../../components/Common/Sheet';
 import ImagePicker from 'react-native-image-crop-picker';
-import {createThumbnail} from 'react-native-create-thumbnail';
-import {BottomSheetView, BottomSheetFlatList} from '@gorhom/bottom-sheet';
+import { createThumbnail } from 'react-native-create-thumbnail';
+import { BottomSheetView, BottomSheetFlatList } from '@gorhom/bottom-sheet';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {locations} from '../../utils/locations';
+import { locations } from '../../utils/locations';
 import Tabbar from '../bottomTab/Tabbar';
-import {Country, State, City} from 'country-state-city';
+import { Country, State, City } from 'country-state-city';
 import {
   getAllBreeds,
   getAllColors,
@@ -58,9 +58,9 @@ import {
 } from '../../APIs/api';
 import Geolocation from 'react-native-geolocation-service';
 import CustomTab from '../../components/Layout/CustomTab';
-import {DragSortableView} from 'react-native-drag-sort';
-import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
-const {width, height} = Dimensions.get('screen');
+import { DragSortableView } from 'react-native-drag-sort';
+import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
+const { width, height } = Dimensions.get('screen');
 
 const Seller = props => {
   console.log('dasfsdf', props.route.params);
@@ -109,7 +109,7 @@ const Seller = props => {
   const [uploadFeild, setUploadFeild] = useState(false);
   const [myImage, setMyImage] = useState('');
   const [dataGetLoading, setDataGetLoading] = useState(false);
-  const {source, horseID} = props.route.params;
+  const { source, horseID } = props.route.params;
   const genderList = ['Gelding', 'Mare', 'Stallion'];
 
   const [stateitems, setStatesitems] = useState([]);
@@ -156,7 +156,7 @@ const Seller = props => {
       );
     }
 
-    return () => {};
+    return () => { };
   }, [render]);
 
   useEffect(() => {
@@ -336,7 +336,7 @@ const Seller = props => {
                 },
               ]);
             })
-            .catch(err => console.log({err}));
+            .catch(err => console.log({ err }));
 
           file.uri =
             Platform.OS === 'android'
@@ -418,8 +418,13 @@ const Seller = props => {
       setVideoCount(x => x - 1);
     }
     if (listIndex != -1) {
+
       var listId = mediaListID.filter(item => item != mediaList[listIndex].id);
       var list = mediaList.filter(item => item.id != index);
+
+      console.log('THIS IS FOR API ', listId)
+      console.log('THIS IS FOR LIST ', list)
+
       setMediaList(list);
       setMediaListID(listId);
     }
@@ -516,9 +521,9 @@ const Seller = props => {
     setFromEditLng(data[1].lng);
     setMarkerLat(data[1].lat);
     setMarkerLng(data[1].lng);
-    setStatee({name: data[1]?.state});
-    setCityy({name: data[1]?.city});
-    setLocation({name: data[1]?.country});
+    setStatee({ name: data[1]?.state });
+    setCityy({ name: data[1]?.city });
+    setLocation({ name: data[1]?.country });
 
     setTitle(data[1]?.title);
     // setLocation(data[1].location?.location);
@@ -570,6 +575,7 @@ const Seller = props => {
     };
 
     const data = await updateHorse(horseID, body);
+
     console.log('update', JSON.stringify(data[0], null, 2));
     console.log('update', JSON.stringify(data[1], null, 2));
 
@@ -582,7 +588,7 @@ const Seller = props => {
 
   if (dataGetLoading) {
     return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <ActivityIndicator animating={dataGetLoading} />
       </View>
     );
@@ -710,7 +716,7 @@ const Seller = props => {
     setKeyList([]);
     setTitle('');
 
-    scrollViewRef.current.scrollTo({x: 0, y: 0, animated: true});
+    scrollViewRef.current.scrollTo({ x: 0, y: 0, animated: true });
   };
 
   const handleChangeCountry = e => {
@@ -747,20 +753,20 @@ const Seller = props => {
     <Background>
       <SafeAreaView style={globalStyle.container}>
         <TouchableOpacity
-          style={{marginLeft: 15, marginBottom: 15}}
+          style={{ marginLeft: 15, marginBottom: 15 }}
           onPress={() => props.navigation.goBack()}>
-          <Image source={arrowLeft} style={{height: 20, width: 20}} />
+          <Image source={arrowLeft} style={{ height: 20, width: 20 }} />
         </TouchableOpacity>
 
         <KeyboardAvoidingView
-          style={{flex: 1, marginBottom: 50}}
+          style={{ flex: 1, marginBottom: 50 }}
           behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
           keyboardVerticalOffset={10}>
-          <View style={[globalStyle.innerContainer, {position: 'relative'}]}>
+          <View style={[globalStyle.innerContainer, { position: 'relative' }]}>
             <ScrollView
               ref={scrollViewRef}
               showsVerticalScrollIndicator={false}
-              contentContainerStyle={{paddingBottom: 100}}>
+              contentContainerStyle={{ paddingBottom: 100 }}>
               <HomeHeader
                 avatar={myImage}
                 showLine3={false}
@@ -787,7 +793,7 @@ const Seller = props => {
                     marginVertical={0}
                     size={10}
                     weight={'400'}
-                    style={{marginBottom: 10}}>
+                    style={{ marginBottom: 10 }}>
                     Upload up to 5 images/3 videos (max of 90 seconds)
                   </ScreenTitle>
                 </View>
@@ -827,7 +833,7 @@ const Seller = props => {
                         </Pressable>
                         <ActivityIndicator
                           animating={item?.isUploading || false}
-                          style={{position: 'absolute'}}
+                          style={{ position: 'absolute' }}
                           color={COLORS.white}
                         />
                       </View>
@@ -908,7 +914,7 @@ const Seller = props => {
                   locationSheetRef.current.snapToIndex(0);
                 }}
               /> */}
-              <View style={{paddingLeft: 10}}>
+              <View style={{ paddingLeft: 10 }}>
                 {/* <View style={[styles.row, {marginTop: 10}]}>
                   <View style={[styles.line, {height: 50}]}></View>
                   <Text style={styles.label}>City</Text> */}
@@ -1005,7 +1011,7 @@ const Seller = props => {
                 }}>
                 Select your location *
               </Text>
-              <View style={{justifyContent: 'center', alignItems: 'center'}}>
+              <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                 <MapView
                   // provider={PROVIDER_GOOGLE}
                   followsUserLocation={true}
@@ -1029,14 +1035,14 @@ const Seller = props => {
                       source == 'edit'
                         ? fromEditLat
                         : props.route.params.myLat
-                        ? props.route.params.myLat
-                        : 37.78825,
+                          ? props.route.params.myLat
+                          : 37.78825,
                     longitude:
                       source == 'edit'
                         ? fromEditLng
                         : props.route.params.myLong
-                        ? props.route.params.myLong
-                        : -122.4324,
+                          ? props.route.params.myLong
+                          : -122.4324,
                     latitudeDelta: 0.0922,
                     longitudeDelta: 0.0421,
                   }}>
@@ -1046,10 +1052,10 @@ const Seller = props => {
                       latitude: source == 'edit' ? fromEditLat : markerLat,
                       longitude: source == 'edit' ? fromEditLng : markerLng,
                     }}
-                    // onDragEnd={e => {
-                    //   setMarkerLat(e.nativeEvent.coordinate.latitude);
-                    //   setMarkerLng(e.nativeEvent.coordinate.longitude);
-                    // }}
+                  // onDragEnd={e => {
+                  //   setMarkerLat(e.nativeEvent.coordinate.latitude);
+                  //   setMarkerLng(e.nativeEvent.coordinate.longitude);
+                  // }}
                   />
                 </MapView>
               </View>
@@ -1074,7 +1080,7 @@ const Seller = props => {
                 </>
               )}
               <RoundBtn
-                style={{marginTop: 21}}
+                style={{ marginTop: 21 }}
                 onPress={sendDataToSerever}
                 loading={loading}>
                 {source == 'edit' ? 'Save' : 'Create'}
@@ -1085,7 +1091,7 @@ const Seller = props => {
         <CustomTab navigation={props.navigation} />
       </SafeAreaView>
       <Sheet ref={mediaSheetRef} index={-1} pressBehavior={'close'}>
-        <View style={{alignItems: 'center', paddingBottom: 32, paddingTop: 18}}>
+        <View style={{ alignItems: 'center', paddingBottom: 32, paddingTop: 18 }}>
           <ScreenTitle size={18}>Choose Media</ScreenTitle>
 
           <TextButton onPress={() => openPicker('photo')}>Image</TextButton>
@@ -1118,8 +1124,8 @@ const Seller = props => {
               data={filterLocations}
               extraData={filterLocations}
               keyExtractor={(item, index) => index}
-              contentContainerStyle={{paddingTop: 32}}
-              renderItem={({item, index}) => {
+              contentContainerStyle={{ paddingTop: 32 }}
+              renderItem={({ item, index }) => {
                 return (
                   <TouchableOpacity
                     key={index}
@@ -1129,7 +1135,7 @@ const Seller = props => {
                       // setLocationID(item.id);
                       locationSheetRef.current.close();
                     }}>
-                    <Text style={[styles.textItem, {textAlign: 'left'}]}>
+                    <Text style={[styles.textItem, { textAlign: 'left' }]}>
                       {item?.name}
                     </Text>
                   </TouchableOpacity>
@@ -1167,8 +1173,8 @@ const Seller = props => {
               data={filterStatesitems}
               extraData={filterStatesitems}
               keyExtractor={(item, index) => index}
-              contentContainerStyle={{paddingTop: 32}}
-              renderItem={({item, index}) => {
+              contentContainerStyle={{ paddingTop: 32 }}
+              renderItem={({ item, index }) => {
                 return (
                   <TouchableOpacity
                     key={index}
@@ -1179,7 +1185,7 @@ const Seller = props => {
                       // setLocationID(item.id);
                       stateSheetRef.current.close();
                     }}>
-                    <Text style={[styles.textItem, {textAlign: 'left'}]}>
+                    <Text style={[styles.textItem, { textAlign: 'left' }]}>
                       {item?.name}
                     </Text>
                   </TouchableOpacity>
@@ -1218,8 +1224,8 @@ const Seller = props => {
               data={filterCitiesitems}
               extraData={filterCitiesitems}
               keyExtractor={(item, index) => index}
-              contentContainerStyle={{paddingTop: 32}}
-              renderItem={({item, index}) => {
+              contentContainerStyle={{ paddingTop: 32 }}
+              renderItem={({ item, index }) => {
                 return (
                   <TouchableOpacity
                     key={index}
@@ -1230,7 +1236,7 @@ const Seller = props => {
                       // setLocationID(item.id);
                       citySheetRef.current.close();
                     }}>
-                    <Text style={[styles.textItem, {textAlign: 'left'}]}>
+                    <Text style={[styles.textItem, { textAlign: 'left' }]}>
                       {item?.name}
                     </Text>
                   </TouchableOpacity>
@@ -1250,13 +1256,13 @@ const Seller = props => {
             // height: '95%',
           }}>
           <ScreenTitle size={18}>Select breed</ScreenTitle>
-          <BottomSheetView style={[styles.listContainer, {height: 200}]}>
+          <BottomSheetView style={[styles.listContainer, { height: 200 }]}>
             <FlatList
               data={breedList}
               extraData={breedList}
               keyExtractor={(item, index) => index}
-              contentContainerStyle={{paddingTop: 32}}
-              renderItem={({item, index}) => {
+              contentContainerStyle={{ paddingTop: 32 }}
+              renderItem={({ item, index }) => {
                 return (
                   <TouchableOpacity
                     key={index}
@@ -1284,17 +1290,17 @@ const Seller = props => {
             height: Platform.OS == 'android' ? 600 : 600,
           }}>
           <ScreenTitle size={18}>Select discipline</ScreenTitle>
-          <BottomSheetView style={[styles.listContainer, {height: 200}]}>
+          <BottomSheetView style={[styles.listContainer, { height: 200 }]}>
             <FlatList
               data={disciploneList}
               extraData={disciploneList}
               keyExtractor={(item, index) => index}
-              contentContainerStyle={{paddingTop: 32}}
-              renderItem={({item, index}) => {
+              contentContainerStyle={{ paddingTop: 32 }}
+              renderItem={({ item, index }) => {
                 return (
                   <TouchableOpacity
                     key={index}
-                    style={[styles.listItem, {marginBottom: 5}]}
+                    style={[styles.listItem, { marginBottom: 5 }]}
                     onPress={() => {
                       setDiscipline(item);
                       disciplineSheetRef.current.close();
@@ -1318,13 +1324,13 @@ const Seller = props => {
             height: Platform.OS == 'android' ? 600 : 600,
           }}>
           <ScreenTitle size={18}>Select color</ScreenTitle>
-          <BottomSheetView style={[styles.listContainer, {height: 200}]}>
+          <BottomSheetView style={[styles.listContainer, { height: 200 }]}>
             <FlatList
               data={colorList}
               extraData={colorList}
               keyExtractor={(item, index) => index}
-              contentContainerStyle={{paddingTop: 32}}
-              renderItem={({item, index}) => {
+              contentContainerStyle={{ paddingTop: 32 }}
+              renderItem={({ item, index }) => {
                 return (
                   <TouchableOpacity
                     key={index}
@@ -1352,13 +1358,13 @@ const Seller = props => {
             height: Platform.OS == 'android' ? 600 : 600,
           }}>
           <ScreenTitle size={18}>Select temperament</ScreenTitle>
-          <BottomSheetView style={[styles.listContainer, {height: 200}]}>
+          <BottomSheetView style={[styles.listContainer, { height: 200 }]}>
             <FlatList
               data={temperamentList}
               extraData={temperamentList}
               keyExtractor={(item, index) => index}
-              contentContainerStyle={{paddingTop: 32}}
-              renderItem={({item, index}) => {
+              contentContainerStyle={{ paddingTop: 32 }}
+              renderItem={({ item, index }) => {
                 return (
                   <TouchableOpacity
                     key={index}
@@ -1498,5 +1504,5 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: COLORS.color10,
   },
-  listContainer: {flex: 1, height: 600, width},
+  listContainer: { flex: 1, height: 600, width },
 });

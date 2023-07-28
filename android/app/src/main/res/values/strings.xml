@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">tiny_bird_36835</string>
+    <string name="app_name">Enbarr</string>
+    <string name="facebook_app_id">450929960465142</string>
+    <string name="facebook_client_token">a7b361bfce3f003d85ae769d4faa5158</string>
 </resources>

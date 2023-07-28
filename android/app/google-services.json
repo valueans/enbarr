@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "968378738153",
+    "project_id": "enbarr-app-368019",
+    "storage_bucket": "enbarr-app-368019.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:968378738153:android:c16cdc12c7079ffd5c9778",
+        "android_client_info": {
+          "package_name": "com.tiny_bird_36835"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "968378738153-e0j24fkogtbumea08ppjul8hu8tjv5vm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC6fLmIEyM3ZgKt1owHp0KOLosH5uAj6_s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "968378738153-bgi29e57md0mgl2u4nrqau1ksvdre34s.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "968378738153-00p57ilsamv24td5710mbndfkm0p3u9j.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.tiny-bird-36835"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

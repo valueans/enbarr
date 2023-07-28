@@ -11,16 +11,16 @@ import {
   FlatList,
   Alert,
 } from 'react-native';
-import React, {useState, useCallback} from 'react';
+import React, { useState, useCallback } from 'react';
 import Background from '../../../components/Layout/Background';
 import COLORS from '../../../utils/colors';
 import fonts from '../../../utils/fonts';
-import {globalStyle} from '../../../utils/GlobalStyle';
-import {useSelector} from 'react-redux';
+import { globalStyle } from '../../../utils/GlobalStyle';
+import { useSelector } from 'react-redux';
 import MainItem from '../../../components/ListItem/MainItem';
 import OneSignal from 'react-native-onesignal';
-import {list, profile_img} from '../../../utils/data';
-import {useFocusEffect} from '@react-navigation/native';
+import { list, profile_img } from '../../../utils/data';
+import { useFocusEffect } from '@react-navigation/native';
 import HomeHeader from '../../../components/Common/HomeHeader';
 
 import {
@@ -41,15 +41,15 @@ import {
   sendPlayerIDToServer,
   getNmberOfNotifications,
 } from '../../../APIs/api';
-import {BarIndicator} from 'react-native-indicators';
+import { BarIndicator } from 'react-native-indicators';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {TimeFromNow} from '../../../utils/Time';
-import {useEffect} from 'react';
+import { TimeFromNow } from '../../../utils/Time';
+import { useEffect } from 'react';
 import PubNub from 'pubnub';
 import * as PubNubKeys from '../Chat/PubNubKeys';
 global.pag = 2;
 const HomeScreen = props => {
-  const {userDetail} = useSelector(state => state.userDetail);
+  const { userDetail } = useSelector(state => state.userDetail);
 
   const pubnub = new PubNub({
     subscribeKey: PubNubKeys.PUBNUB_SUBSCRIBE_KEY,
@@ -57,7 +57,7 @@ const HomeScreen = props => {
     userId: `${userDetail?.user?.email}`,
     // uuid: `${myDetail?.user?.email}`,
   });
-  const {navigation} = props;
+  const { navigation } = props;
   const [listOfHorses, setListOfHorses] = useState([]);
   const [listOfSerachHorses, setListOfSearchHorses] = useState([]);
   const [loading, setIsLoading] = useState(false);
@@ -68,7 +68,7 @@ const HomeScreen = props => {
   const [numberOfNotif, setNumberOfNotif] = useState(0);
 
   const goToDetails = item => {
-    navigation.navigate('Details', {item, pubnub});
+    navigation.navigate('Details', { item, pubnub });
   };
 
   useFocusEffect(
@@ -258,7 +258,7 @@ const HomeScreen = props => {
             navigation={navigation}
           />
 
-          <View style={{flex: 1}}>
+          <View style={{ flex: 1 }}>
             <Text
               style={{
                 // alignSelf: 'center',
@@ -277,18 +277,19 @@ const HomeScreen = props => {
               <FlatList
                 onEndReached={loadMoreHorses}
                 onEndReachedThreshold={0.7}
-                contentContainerStyle={{paddingBottom: 90}}
+                contentContainerStyle={{ paddingBottom: 90 }}
                 keyExtractor={index =>
                   (index + 1 + Math.random() * 100).toString()
                 }
                 data={listOfHorses}
                 extraData={listOfHorses}
                 showsVerticalScrollIndicator={false}
-                renderItem={({item, index}) => {
+                renderItem={({ item, index }) => {
                   return (
                     <>
                       {(index + 1) % 3 === 0 && (
                         <View
+                          key={index}
                           style={{
                             marginTop: 10,
                             marginBottom: 10,
@@ -324,14 +325,14 @@ const HomeScreen = props => {
               <FlatList
                 onEndReached={loadMoreHorses}
                 onEndReachedThreshold={0.7}
-                contentContainerStyle={{paddingBottom: 90}}
+                contentContainerStyle={{ paddingBottom: 90 }}
                 keyExtractor={index =>
                   (index + 1 + Math.random() * 100).toString()
                 }
                 data={listOfSerachHorses}
                 extraData={listOfSerachHorses}
                 showsVerticalScrollIndicator={false}
-                renderItem={({item, index}) => (
+                renderItem={({ item, index }) => (
                   <MainItem
                     item={item}
                     index={index}
