@@ -9,8 +9,8 @@ import {
   Platform,
   Alert,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
-import {useRef} from 'react';
+import React, { useState, useEffect } from 'react';
+import { useRef } from 'react';
 import SimpleLayout from '../../components/Layout/SimpleLayout';
 import upgradeIcon from '../../assets/images/upgrade.png';
 import unsubscribeIcon from '../../assets/images/unsubscribe.png';
@@ -26,12 +26,12 @@ import COLORS from '../../utils/colors';
 import fonts from '../../utils/fonts';
 import Sheet from '../../components/Common/Sheet';
 import RoundBtn from '../../components/Button/RoundBtn';
-import {globalStyle} from '../../utils/GlobalStyle';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useDispatch} from 'react-redux';
+import { globalStyle } from '../../utils/GlobalStyle';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useDispatch } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {logout} from '../../redux/login';
-import {deleteUserDetail} from '../../redux/userDetail';
+import { logout } from '../../redux/login';
+import { deleteUserDetail } from '../../redux/userDetail';
 import {
   deletAccount,
   unsunbscribe,
@@ -39,7 +39,7 @@ import {
   getMyDetail,
 } from '../../APIs/api';
 
-const Settings = ({navigation}) => {
+const Settings = ({ navigation }) => {
   const [isNotification, setIsNotification] = useState(false);
   const [sheetAction, setSheetAction] = useState('');
   const sheetRef = useRef(null);
@@ -81,7 +81,7 @@ const Settings = ({navigation}) => {
     {
       icon: notifIcon,
       title: 'Notification',
-      onPress: () => {},
+      onPress: () => { },
       customComponent: (
         <Switch
           value={isNotification}
@@ -147,24 +147,45 @@ const Settings = ({navigation}) => {
   const goToPage = (name, params = {}) => {
     navigation.navigate(name, params);
   };
-  const renderItem = ({item, index}) => {
+  const renderItem = ({ item, index }) => {
+
     const Custom = item.customComponent;
     return (
-      <TouchableHighlight onPress={item.onPress} underlayColor={COLORS.color11}>
-        <View style={styles.item}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Image source={item.icon} resizeMode="contain" style={styles.img} />
-            <Text
-              style={[
-                styles.itemText,
-                index == items.length - 1 ? styles.logout : {},
-              ]}>
-              {item.title}
-            </Text>
+      <>{Platform.OS === 'ios' ? item.title === 'Upgrade' || item.title === 'Unsubscribe' ?
+        null :
+        <TouchableHighlight onPress={item.onPress} underlayColor={COLORS.color11}>
+          <View style={styles.item}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Image source={item.icon} resizeMode="contain" style={styles.img} />
+              <Text
+                style={[
+                  styles.itemText,
+                  index == items.length - 1 ? styles.logout : {},
+                ]}>
+                {item.title}
+              </Text>
+            </View>
+            {item.customComponent}
           </View>
-          {item.customComponent}
-        </View>
-      </TouchableHighlight>
+        </TouchableHighlight>
+        :
+        <TouchableHighlight onPress={item.onPress} underlayColor={COLORS.color11}>
+          <View style={styles.item}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Image source={item.icon} resizeMode="contain" style={styles.img} />
+              <Text
+                style={[
+                  styles.itemText,
+                  index == items.length - 1 ? styles.logout : {},
+                ]}>
+                {item.title}
+              </Text>
+            </View>
+            {item.customComponent}
+          </View>
+        </TouchableHighlight>}
+      </>
+
     );
   };
   const sheetActionFunction = async type => {
@@ -249,16 +270,16 @@ const Settings = ({navigation}) => {
             style={
               styles.sheetText
             }>{`Are you sure, you want \nto ${sheetAction}?`}</Text>
-          <View style={{flexDirection: 'row', marginTop: 25}}>
+          <View style={{ flexDirection: 'row', marginTop: 25 }}>
             <RoundBtn
-              style={{flex: 1, marginRight: 4}}
+              style={{ flex: 1, marginRight: 4 }}
               onPress={() => {
                 sheetActionFunction(sheetAction);
               }}>
               Yes
             </RoundBtn>
             <RoundBtn
-              style={{...globalStyle.btnType2, flex: 1, marginLeft: 4}}
+              style={{ ...globalStyle.btnType2, flex: 1, marginLeft: 4 }}
               color={COLORS.color10}
               onPress={() => {
                 sheetRef.current.close();

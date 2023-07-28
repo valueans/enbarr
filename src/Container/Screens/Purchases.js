@@ -13,18 +13,17 @@ import {
   FlatList,
 } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
-import React, {useState, useEffect} from 'react';
-import {globalStyle} from '../../utils/GlobalStyle';
+import React, { useState, useEffect } from 'react';
+import { globalStyle } from '../../utils/GlobalStyle';
 import Header from '../../components/Layout/Header';
 import Input from '../../components/Input/Input';
 import TextField from '../../components/Input/TextField';
 import RoundBtn from '../../components/Button/RoundBtn';
 import COLORS from '../../utils/colors';
-import {packages} from '../../utils/data';
+import { packages } from '../../utils/data';
 import fonts from '../../utils/fonts';
 import cart from '../../assets/images/cart.png';
 import TextButton from '../../components/Button/TextButton';
-
 import {
   CardField,
   useStripe,
@@ -39,22 +38,30 @@ import {
   getMyCardDetail,
   changeSubcriptionPlan,
 } from '../../APIs/api';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
-const {width, height} = Dimensions.get('screen');
+const { width, height } = Dimensions.get('screen');
 const ITEM_WIDTH = (width - 42 - 16) / 3;
-const Purchases = ({navigation, route}) => {
-  const {id, items} = route.params;
+const Purchases = ({ navigation, route }) => {
+  const { id, items } = route.params;
 
-  const {confirmSetupIntent, loading} = useConfirmSetupIntent();
-  const {initPaymentSheet, presentPaymentSheet} = usePaymentSheet();
+  const { confirmSetupIntent, loading } = useConfirmSetupIntent();
+  const { initPaymentSheet, presentPaymentSheet } = usePaymentSheet();
 
-  useEffect(async () => {
-    const data = await getMyCardDetail();
-    console.log(data);
-    setLast4Digits(data[1].last_4);
-    setCardNumber(`**** **** **** ${data[1].last_4}`);
-  }, []);
+  // useEffect(async () => {
+  //   const data = await getMyCardDetail();
+  //   console.log(data);
+  //   setLast4Digits(data[1].last_4);
+  //   setCardNumber(`**** **** **** ${data[1].last_4}`);
+  // }, []);
+  useEffect(() => {
+    (async () => {
+      const data = await getMyCardDetail();
+      console.log(data);
+      setLast4Digits(data[1].last_4);
+      setCardNumber(`**** **** **** ${data[1].last_4}`);
+    })();
+  }, [])
 
   const [selectedIndex, setSelectedIndex] = useState(id);
   const [subs, setSubs] = useState(items);
@@ -91,7 +98,7 @@ const Purchases = ({navigation, route}) => {
         return COLORS.color2;
     }
   };
-  renderItem = ({item, index}) => {
+  renderItem = ({ item, index }) => {
     return (
       <TouchableOpacity
         onPress={() => changePlanPressed(item, index)}
@@ -105,18 +112,18 @@ const Purchases = ({navigation, route}) => {
         <View
           style={[
             styles.item,
-            {backgroundColor: getBackgroundColorByIndex(index)},
+            { backgroundColor: getBackgroundColorByIndex(index) },
           ]}>
           {/* <View style={styles.circle}>
             {selectedIndex == item.id ? <View style={styles.selected} /> : null}
           </View> */}
-          <Text style={[styles.itemName, {color: getTextColorByIndex(index)}]}>
+          <Text style={[styles.itemName, { color: getTextColorByIndex(index) }]}>
             {item.title}
           </Text>
-          <Text style={[styles.itemPrice, {color: getTextColorByIndex(index)}]}>
+          <Text style={[styles.itemPrice, { color: getTextColorByIndex(index) }]}>
             ${item.price}
           </Text>
-          <Text style={[styles.itemName, {color: getTextColorByIndex(index)}]}>
+          <Text style={[styles.itemName, { color: getTextColorByIndex(index) }]}>
             {item.description}
           </Text>
         </View>
@@ -138,7 +145,7 @@ const Purchases = ({navigation, route}) => {
   const handlePayPress = async () => {
     //get payment intent
     const data = await getANewSetupIntent();
-    const {error, setupIntent} = await confirmSetupIntent(
+    const { error, setupIntent } = await confirmSetupIntent(
       data[1].setupIntent.toString(),
       {
         paymentMethodType: 'Card',
@@ -167,7 +174,7 @@ const Purchases = ({navigation, route}) => {
 
   const payTest = async () => {
     await handlePayPress();
-    const {error} = await presentPaymentSheet();
+    const { error } = await presentPaymentSheet();
 
     if (error) {
       Alert.alert(`Error code: ${error.code}`, error.message);
@@ -177,9 +184,9 @@ const Purchases = ({navigation, route}) => {
   };
   return (
     <SafeAreaView
-      style={[globalStyle.container, {backgroundColor: COLORS.white}]}>
+      style={[globalStyle.container, { backgroundColor: COLORS.white }]}>
       <KeyboardAvoidingView
-        style={{flex: 1}}
+        style={{ flex: 1 }}
         behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={0}>
         <View style={globalStyle.innerContainer}>
@@ -192,7 +199,7 @@ const Purchases = ({navigation, route}) => {
                 extraData={items}
                 renderItem={renderItem}
                 horizontal
-                contentContainerStyle={{paddingVertical: 4}}
+                contentContainerStyle={{ paddingVertical: 4 }}
                 showsHorizontalScrollIndicator={false}
                 pagingEnabled
                 snapToInterval={width / 3}
@@ -241,16 +248,16 @@ const Purchases = ({navigation, route}) => {
                 height: 300,
                 marginTop: 50,
               }}
-              // cardStyle={{
-              //   borderRadius: 500,
-              //   borderWidth: 50,
-              //   borderColor: 'red',
-              //   backgroundColor: 'red',
+            // cardStyle={{
+            //   borderRadius: 500,
+            //   borderWidth: 50,
+            //   borderColor: 'red',
+            //   backgroundColor: 'red',
 
-              //   backgroundColor: COLORS.color11,
-              //   textAlign: 'center',
-              //   textColor: 'pink',
-              // }}
+            //   backgroundColor: COLORS.color11,
+            //   textAlign: 'center',
+            //   textColor: 'pink',
+            // }}
             />
 
             {/* <RoundBtn

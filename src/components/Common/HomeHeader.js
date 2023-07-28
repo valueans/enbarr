@@ -142,10 +142,12 @@ const HomeHeader = ({
   const getUserLocation = async () => {
     const hasPermission = await hasLocationPermission();
     if (hasPermission) {
+      
       Geolocation.getCurrentPosition(async position => {
         setMyLat(position.coords.latitude);
         setMyLong(position.coords.longitude);
       });
+
     } else {
       setDistance(0);
     }

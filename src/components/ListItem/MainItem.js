@@ -7,18 +7,18 @@ import {
   TouchableOpacity,
   Platform,
 } from 'react-native';
-import React, {useState} from 'react';
-import COLORS, {ColorShade} from '../../utils/colors';
-import {BlurView} from '@react-native-community/blur';
+import React, { useState } from 'react';
+import COLORS, { ColorShade } from '../../utils/colors';
+import { BlurView } from '@react-native-community/blur';
 import fonts from '../../utils/fonts';
 import SpecialButton from '../Button/SpecialButton';
-import {globalStyle} from '../../utils/GlobalStyle';
+import { globalStyle } from '../../utils/GlobalStyle';
 import message from '../../assets/images/envelope.png';
 import heart from '../../assets/images/heart.png';
 import heartFill from '../../assets/images/heart_fill.png';
 
-import {addHorseToFav, deleteHorseToFav} from '../../APIs/api';
-const {width, height} = Dimensions.get('screen');
+import { addHorseToFav, deleteHorseToFav } from '../../APIs/api';
+const { width, height } = Dimensions.get('screen');
 
 const DEFAULT_IMAGE = require('../../assets/images/user.png');
 
@@ -37,12 +37,13 @@ import Video from 'react-native-video';
 import playIcon from '../../assets/images/play.png';
 const MainItem = ({
   item,
-  onPressDetails = () => {},
-  onPressMessage = () => {},
-  onPressImage = () => {},
+  index,
+  onPressDetails = () => { },
+  onPressMessage = () => { },
+  onPressImage = () => { },
   pubnub,
 }) => {
-  const {images, userprofile, title, isfav, description, id} = item;
+  const { images, userprofile, title, isfav, description, id } = item;
   const [isLiked, setIsLiked] = useState(isfav);
   const [isLoadingPic, setIsLoadingPic] = useState(false);
   const [play, setPlay] = useState(false);
@@ -61,7 +62,7 @@ const MainItem = ({
   const goToChat = () => {
     onPressMessage();
   };
-  const FooterWrapper = ({children}) => {
+  const FooterWrapper = ({ children }) => {
     return Platform.OS == 'android' ? (
       <View style={styles.ViewContainer}>{children}</View>
     ) : (
@@ -72,7 +73,7 @@ const MainItem = ({
   };
 
   return (
-    <TouchableOpacity activeOpacity={0.9} onPress={onPressDetails}>
+    <TouchableOpacity key={index} activeOpacity={0.9} onPress={onPressDetails}>
       <View style={styles.container}>
         {images.length > 0 ? (
           images[0].file_type == 'VIDEO' ? (
@@ -86,11 +87,11 @@ const MainItem = ({
                 alignItems: 'center',
               }}>
               <Video
-                style={{width: '100%', height: '100%'}}
+                style={{ width: '100%', height: '100%' }}
                 posterResizeMode={'cover'}
                 resizeMode={'cover'}
                 poster={images[0].file}
-                source={{uri: images[0].file}}
+                source={{ uri: images[0].file }}
                 repeat={true}
                 paused={!play}
                 fullscreen={play}
@@ -104,7 +105,7 @@ const MainItem = ({
                 <Image
                   source={playIcon}
                   resizeMode="contain"
-                  style={{width: '100%', height: '100%'}}
+                  style={{ width: '100%', height: '100%' }}
                 />
               </TouchableOpacity>
             </View>
@@ -113,15 +114,15 @@ const MainItem = ({
               onLoad={() => setIsLoadingPic(false)}
               onLoadStart={() => setIsLoadingPic(true)}
               onLoadEnd={() => setIsLoadingPic(false)}
-              source={{uri: images.length > 0 ? images[0].file : ''}}
+              source={{ uri: images.length > 0 ? images[0].file : '' }}
               style={styles.img}
-              // resizeMode="cover"
+            // resizeMode="cover"
             />
           )
         ) : null}
 
         {isLoadingPic ? (
-          <View style={{position: 'absolute', top: 100}}>
+          <View style={{ position: 'absolute', top: 100 }}>
             <BarIndicator size={20} color={COLORS.color14}></BarIndicator>
           </View>
         ) : null}
@@ -139,7 +140,7 @@ const MainItem = ({
                   backgroundColor: 'white',
                 }}>
                 {false ? (
-                  <Image style={styles.avatar} source={{uri: ''}} />
+                  <Image style={styles.avatar} source={{ uri: '' }} />
                 ) : (
                   <Image
                     source={DEFAULT_IMAGE}
@@ -154,16 +155,16 @@ const MainItem = ({
                   {userprofile.first_name
                     ? userprofile.first_name + ' '
                     : userprofile?.user?.email.substring(
-                        0,
-                        userprofile?.user?.email.lastIndexOf('@'),
-                      )}
+                      0,
+                      userprofile?.user?.email.lastIndexOf('@'),
+                    )}
                 </Text>
               </View>
             </View>
             <View style={[styles.row, styles.circleBtnContainer]}>
               <TouchableOpacity
                 activeOpacity={0.9}
-                style={[styles.circleBtn, {marginRight: 12}]}
+                style={[styles.circleBtn, { marginRight: 12 }]}
                 onPress={goToChat}>
                 <Image
                   source={message}

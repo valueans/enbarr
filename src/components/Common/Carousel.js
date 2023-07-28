@@ -173,48 +173,48 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState, useRef} from 'react';
+import React, { useState, useRef } from 'react';
 import COLORS from '../../utils/colors';
 import Video from 'react-native-video';
 import playIcon from '../../assets/images/play.png';
 import VideoModal from './VideoModal';
-const {width, height} = Dimensions.get('screen');
+const { width, height } = Dimensions.get('screen');
 
-const Carousel = ({items, children}) => {
+const Carousel = ({ items, children }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [play, setPlay] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedVideoItem, setSelectedVideoItem] = useState({});
   const videoRef = useRef(null);
 
-  const renderItem = ({item, index}) => {
+  const renderItem = ({ item, index }) => {
     const isVideo = item.file_type === 'VIDEO';
 
     return (
-      <View key={'img ' + index.toString()} style={styles.container}>
+      <View key={index} style={styles.container}>
         {isVideo ? (
-          <View style={{width: '100%', height: '100%'}}>
+          <View style={{ width: '100%', height: '100%' }}>
             <Video
               ref={videoRef}
-              source={{uri: item.file}}
+              source={{ uri: item.file }}
               paused={true}
               repeat={true}
-              style={{width: '100%', height: '100%'}}
+              style={{ width: '100%', height: '100%' }}
               poster={item.file}
               resizeMode={'cover'}
               posterResizeMode={'cover'}
-              // fullscreen={play}
-              // onFullscreenPlayerDidPresent={() => {
-              //   setPlay(true);
-              // }}
-              // onFullscreenPlayerDidDismiss={() => {
-              //   console.log('exit');
-              //   setPlay(false);
-              //   videoRef.current.seek(0);
-              // }}
-              // onFullscreenPlayerWillDismiss={() => {
-              //   setPlay(false);
-              // }}
+            // fullscreen={play}
+            // onFullscreenPlayerDidPresent={() => {
+            //   setPlay(true);
+            // }}
+            // onFullscreenPlayerDidDismiss={() => {
+            //   console.log('exit');
+            //   setPlay(false);
+            //   videoRef.current.seek(0);
+            // }}
+            // onFullscreenPlayerWillDismiss={() => {
+            //   setPlay(false);
+            // }}
             />
             <View
               style={{
@@ -229,14 +229,14 @@ const Carousel = ({items, children}) => {
                 <Image
                   source={playIcon}
                   resizeMode="contain"
-                  style={{width: '100%', height: '100%'}}
+                  style={{ width: '100%', height: '100%' }}
                 />
               </TouchableOpacity>
             </View>
           </View>
         ) : (
           <Image
-            source={{uri: item.file}}
+            source={{ uri: item.file }}
             resizeMode="cover"
             style={styles.img}
           />
@@ -250,7 +250,7 @@ const Carousel = ({items, children}) => {
     setSelectedVideoItem(item);
   };
   return (
-    <View style={{flex: 1, position: 'relative'}}>
+    <View style={{ flex: 1, position: 'relative' }}>
       <FlatList
         key={item => item}
         data={items}
@@ -262,7 +262,7 @@ const Carousel = ({items, children}) => {
         onMomentumScrollEnd={event => {
           const index = Math.floor(
             event.nativeEvent.contentOffset.x /
-              event.nativeEvent.layoutMeasurement.width,
+            event.nativeEvent.layoutMeasurement.width,
           );
           // work with: index
 
@@ -285,7 +285,7 @@ const Carousel = ({items, children}) => {
               <View
                 style={[
                   styles.circle,
-                  {opacity: selectedIndex == index ? 1 : 0.3},
+                  { opacity: selectedIndex == index ? 1 : 0.3 },
                 ]}
               />
             );

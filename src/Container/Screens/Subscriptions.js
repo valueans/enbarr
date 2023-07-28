@@ -11,26 +11,26 @@ import {
   ScrollView,
   Alert,
 } from 'react-native';
-import React, {useRef, useEffect, useState} from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import SimpleLayout from '../../components/Layout/SimpleLayout';
 import RoundBtn from '../../components/Button/RoundBtn';
 import COLORS from '../../utils/colors';
-import {packages} from '../../utils/data';
+import { packages } from '../../utils/data';
 import fonts from '../../utils/fonts';
 import ScreenTitle from '../../components/Text/ScreenTitle';
 import Seprator from '../../components/Layout/Seprator';
-const {width, height} = Dimensions.get('screen');
+const { width, height } = Dimensions.get('screen');
 import tick from '../../assets/images/tick.png';
 import wrong from '../../assets/images/wrong.png';
-import {getPlans, changeSubcriptionPlan} from '../../APIs/api';
-import {BarIndicator} from 'react-native-indicators';
+import { getPlans, changeSubcriptionPlan } from '../../APIs/api';
+import { BarIndicator } from 'react-native-indicators';
 
 const ITEM_WIDTH = width - width * 0.15;
 const ITEM_SPACE = 0;
 const ITEM_HEIGHT = height * 0.58;
 const SPACE = (width * 0.15) / 2;
 
-const Subscriptions = ({navigation}) => {
+const Subscriptions = ({ navigation }) => {
   const listRef = useRef(null);
 
   const scrollX = useRef(new Animated.Value(0)).current;
@@ -76,18 +76,18 @@ const Subscriptions = ({navigation}) => {
     setSubs(data);
     setLoading(false);
   };
-  const renderItem = ({item, index}) => {
+  const renderItem = ({ item, index }) => {
     const inputRange = [
       (index - 1) * ITEM_WIDTH,
       index * ITEM_WIDTH,
       (index + 1) * ITEM_WIDTH,
     ];
     const outputRange = [0.9, 1, 0.9];
-    const scale = scrollX.interpolate({inputRange, outputRange});
+    const scale = scrollX.interpolate({ inputRange, outputRange });
 
     return (
       <Animated.View>
-        <ScreenTitle style={{marginBottom: 32, alignSelf: 'center'}}>
+        <ScreenTitle style={{ marginBottom: 32, alignSelf: 'center' }}>
           {item.title}
         </ScreenTitle>
 
@@ -96,17 +96,17 @@ const Subscriptions = ({navigation}) => {
             styles.item,
             {
               backgroundColor: getBackgroundColorByIndex(index),
-              transform: [{scale}],
+              transform: [{ scale }],
             },
           ]}>
-          <ScreenTitle style={{color: getTextColorByIndex(index)}}>
+          <ScreenTitle style={{ color: getTextColorByIndex(index) }}>
             ${item.price}
           </ScreenTitle>
-          <Text style={[styles.textItem, {color: getTextColorByIndex(index)}]}>
+          <Text style={[styles.textItem, { color: getTextColorByIndex(index) }]}>
             {item.description}
           </Text>
           <Seprator
-            style={{marginVertical: 12}}
+            style={{ marginVertical: 12 }}
             color={getTextColorByIndex(index)}
           />
           <View>
@@ -157,7 +157,7 @@ const Subscriptions = ({navigation}) => {
       showBackButton={false}
       paddingHorizontalContent={0}
       paddingHorizontal={21}>
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         {loading ? (
           <BarIndicator color={COLORS.color3} size={22}></BarIndicator>
         ) : (
@@ -188,7 +188,7 @@ const Subscriptions = ({navigation}) => {
             onScroll={Animated.event(
               [
                 {
-                  nativeEvent: {contentOffset: {x: scrollX}},
+                  nativeEvent: { contentOffset: { x: scrollX } },
                 },
               ],
               {
