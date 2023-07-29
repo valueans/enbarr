@@ -168,6 +168,7 @@ import {
   Dimensions,
   FlatList,
   Image,
+  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -237,7 +238,7 @@ const Carousel = ({ items, children }) => {
         ) : (
           <Image
             source={{ uri: item.file }}
-            resizeMode="cover"
+            resizeMode='cover'
             style={styles.img}
           />
         )}
@@ -250,7 +251,7 @@ const Carousel = ({ items, children }) => {
     setSelectedVideoItem(item);
   };
   return (
-    <View style={{ flex: 1, position: 'relative' }}>
+    <SafeAreaView style={{ flex: 1, position: 'relative', backgroundColor: COLORS.white }}>
       <FlatList
         key={item => item}
         data={items}
@@ -297,7 +298,7 @@ const Carousel = ({ items, children }) => {
         setIsVisible={setIsModalVisible}
         item={selectedVideoItem}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 
