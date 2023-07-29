@@ -27,6 +27,7 @@ import { getMyDetail, updateMyDetail } from '../../APIs/api';
 import ImagePicker from 'react-native-image-crop-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BarIndicator } from 'react-native-indicators';
+import { userProfileUrl } from '../../../backend/frontend/src/Constants/urls';
 
 const { width, height } = Dimensions.get('screen');
 
@@ -56,7 +57,7 @@ const MyProfile = ({ navigation }) => {
   const getDetail = async () => {
     const data = await getMyDetail();
     setIsLoadingDetail(true);
-    // console.log('my Detail', data);
+    console.log('my Detail', data);
     //so let set Our states
     setFirstName(data.first_name);
     setLastName(data.last_name);
@@ -100,14 +101,15 @@ const MyProfile = ({ navigation }) => {
       includeBase64: true,
     })
       .then(async file => {
-        console.log(file.data);
-
+        // console.log(file.data);
         if (type == 'video') {
+
         } else {
+
           console.log(file);
           setIsUploading(true);
           //so lets upload profile image
-          var url = `https://enbarrapp.com/users/userprofile/`;
+          var url = userProfileUrl;
           console.log('qwqwqw', file.sourceURL);
           var photo = {
             uri:
@@ -137,21 +139,21 @@ const MyProfile = ({ navigation }) => {
             setIsUploading(false);
           });
 
+          xhr.open('PUT', url);
+          xhr.setRequestHeader('Authorization', `Token ${acc}`);
+          xhr.send(formData);
+
           xhr.addEventListener('readystatechange', async e => {
-            console.log('fffffff', xhr);
+            console.log('fffffff', xhr, xhr.readyState, xhr.DONE);
+
             if (xhr.readyState === xhr.DONE) {
+              console.log('fiiiiii', xhr.response);
               res = JSON.parse(xhr.response);
-              console.log('fiiiiii', res);
               AsyncStorage.setItem('myProfilePicture', file.data);
               setMyImage(res.profile_photo);
               setIsUploading(false);
             }
           });
-
-          xhr.open('PUT', url);
-
-          xhr.setRequestHeader('Authorization', `Token ${acc}`);
-          xhr.send(formData);
         }
       })
       .catch(e => console.log(e));

@@ -1,6 +1,7 @@
 // production
 export const baseUrl = "https://enbarrapp.com/";
 // export const baseUrl = "https://tiny-bird-36835.botics.co/";
+
 // development
 // export const baseUrl = "http://127.0.0.1:8000/";
 export const api = `${baseUrl}api/v1/`;
