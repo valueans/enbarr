@@ -57,6 +57,7 @@ const HomeScreen = props => {
     userId: `${userDetail?.user?.email}`,
     // uuid: `${myDetail?.user?.email}`,
   });
+
   const { navigation } = props;
   const [listOfHorses, setListOfHorses] = useState([]);
   const [listOfSerachHorses, setListOfSearchHorses] = useState([]);

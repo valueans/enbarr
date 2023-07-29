@@ -7,16 +7,16 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import COLORS from '../../../utils/colors';
 import fonts from '../../../utils/fonts';
-import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import Favorite from './Tabs/Favorite';
 import MyHorses from './Tabs/MyHorses';
 import ScreenTitle from '../../../components/Text/ScreenTitle';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import arrowLeft from '../../../assets/images/arrowLeft.png';
-const {width, height} = Dimensions.get('screen');
+const { width, height } = Dimensions.get('screen');
 
 const Tab = createMaterialTopTabNavigator();
 const HorsesScreen = props => {
@@ -34,7 +34,7 @@ const HorsesScreen = props => {
         paddingTop: safeArea.top,
       }}>
       <TouchableOpacity
-        style={{marginLeft: 10, marginBottom: 10}}
+        style={{ marginLeft: 10, marginBottom: 10 }}
         onPress={() => {
           console.log();
           if (from == undefined) {
@@ -43,10 +43,10 @@ const HorsesScreen = props => {
             props.navigation.navigate('Notification');
           }
         }}>
-        <Image source={arrowLeft} style={{height: 20, width: 20}} />
+        <Image source={arrowLeft} style={{ height: 20, width: 20 }} />
       </TouchableOpacity>
-      <ScreenTitle style={{marginLeft: 21}}>My horses</ScreenTitle>
-      <View style={{flex: 1}}>
+      <ScreenTitle style={{ marginLeft: 21 }}>My horses</ScreenTitle>
+      <View style={{ flex: 1 }}>
         <Tab.Navigator
           initialRouteName={'MyHorses'}
           screenOptions={{
@@ -57,13 +57,14 @@ const HorsesScreen = props => {
           }}>
           <Tab.Screen
             name="Favorite"
+            initialParams={{}}
             component={Favorite}
-            options={{title: 'Favorite'}}
+            options={{ title: 'Favorite' }}
           />
           <Tab.Screen
             name="MyHorses"
             component={MyHorses}
-            options={{title: 'My horses'}}
+            options={{ title: 'My horses' }}
           />
         </Tab.Navigator>
       </View>

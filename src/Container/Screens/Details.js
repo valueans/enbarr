@@ -76,6 +76,7 @@ const Details = props => {
   //   publishKey: PubNubKeys.PUBNUB_PUBLISH_KEY,
   //   userId: `${data?.user?.email}`,
   // });
+
   const gotoChat = async () => {
     const data = await getOrCreateNewChannel(item?.userprofile?.user?.id);
     if (data.data) {

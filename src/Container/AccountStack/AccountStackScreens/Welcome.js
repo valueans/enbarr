@@ -511,7 +511,7 @@ const Welcome = props => {
 
   const onFaceBookButtonPress = async () => {
     console.log('a');
-    LoginManager.logInWithPermissions(['public_profile']).then(
+    LoginManager.logInWithPermissions(['public_profile', 'email']).then(
       async function (result) {
         console.log('fffffff', result);
         if (result.isCancelled) {
@@ -520,19 +520,20 @@ const Welcome = props => {
 
           console.log(
             'Login success with permissions: ' +
-            result.grantedPermissions.toString(),
+            result,
           );
-          // const data = await SignupWithFacebook(result.grantedPermissions.toString());
-          // dispatch(
-          //   setUserDetail({
-          //     token: data[1].key,
-          //     user: { email: '' },
-          //     'user-profile': { 'profile-photo': '' },
-          //   }),
-          // );
+          const token = await AccessToken.getCurrentAccessToken();
+          const data = await SignupWithFacebook(token);
+          dispatch(
+            setUserDetail({
+              token: data[1].key,
+              user: { email: '' },
+              'user-profile': { 'profile-photo': '' },
+            }),
+          );
 
-          // await AsyncStorage.setItem('acc', data[1].key);
-          // dispatch(login());
+          await AsyncStorage.setItem('acc', data[1].key);
+          dispatch(login());
 
         }
       },
