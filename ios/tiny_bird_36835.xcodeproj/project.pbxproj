@@ -21,10 +21,6 @@
 		CF14652FBE35468397EA1699 /* PoppinsMedium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 090D9DD7167A47E4B4EC6616 /* PoppinsMedium.ttf */; };
 		E4EC39891DC44A4E98805940 /* PoppinsRegular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 86601BB7A9E94225BB02EB65 /* PoppinsRegular.ttf */; };
 		F0A83A190D2D4D7385EE8B4E /* bookman old style.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 51D68F2C899C431CBC2A65A3 /* bookman old style.ttf */; };
-		F565747D2901503600B43BFF /* hermes.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = F565747C2901503600B43BFF /* hermes.xcframework */; };
-		F565747F290155CF00B43BFF /* double-conversion.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = F565747E290155CF00B43BFF /* double-conversion.xcframework */; };
-		F5657481290155E000B43BFF /* glog.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5657480290155E000B43BFF /* glog.xcframework */; };
-		F5657483290155E000B43BFF /* OpenSSL.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5657482290155E000B43BFF /* OpenSSL.xcframework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +54,7 @@
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = tiny_bird_36835/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		86601BB7A9E94225BB02EB65 /* PoppinsRegular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = PoppinsRegular.ttf; path = ../src/assets/fonts/PoppinsRegular.ttf; sourceTree = "<group>"; };
 		8A7293A0C0DA44048807F390 /* PoppinsSemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = PoppinsSemiBold.ttf; path = ../src/assets/fonts/PoppinsSemiBold.ttf; sourceTree = "<group>"; };
+		B54BA6572A74345000A19A49 /* AdServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdServices.framework; path = System/Library/Frameworks/AdServices.framework; sourceTree = SDKROOT; };
 		B7A05456F4E4449AB3F52E28 /* PoppinsLight.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = PoppinsLight.ttf; path = ../src/assets/fonts/PoppinsLight.ttf; sourceTree = "<group>"; };
 		CC92F6C82A727CF50034F21B /* tiny_bird_36835.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = tiny_bird_36835.entitlements; path = tiny_bird_36835/tiny_bird_36835.entitlements; sourceTree = "<group>"; };
 		CC92F6C92A727D310034F21B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -82,10 +79,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F5657481290155E000B43BFF /* glog.xcframework in Frameworks */,
-				F5657483290155E000B43BFF /* OpenSSL.xcframework in Frameworks */,
-				F565747F290155CF00B43BFF /* double-conversion.xcframework in Frameworks */,
-				F565747D2901503600B43BFF /* hermes.xcframework in Frameworks */,
 				7A8324825ADB2B0372E76834 /* libPods-tiny_bird_36835.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -127,6 +120,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B54BA6572A74345000A19A49 /* AdServices.framework */,
 				F5657480290155E000B43BFF /* glog.xcframework */,
 				F5657482290155E000B43BFF /* OpenSSL.xcframework */,
 				F565747E290155CF00B43BFF /* double-conversion.xcframework */,
@@ -570,7 +564,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = tiny_bird_36835/tiny_bird_36835.entitlements;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 1.9;
 				DEVELOPMENT_TEAM = THZ8C8Y54G;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = tiny_bird_36835/Info.plist;
@@ -579,7 +573,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.9;
+				MARKETING_VERSION = 27;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -587,8 +581,12 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.tiny-bird-36835";
 				PRODUCT_NAME = tiny_bird_36835;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -600,7 +598,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = tiny_bird_36835/tiny_bird_36835.entitlements;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 1.9;
 				DEVELOPMENT_TEAM = THZ8C8Y54G;
 				INFOPLIST_FILE = tiny_bird_36835/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Enbarr;
@@ -608,7 +606,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.9;
+				MARKETING_VERSION = 27;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -616,7 +614,11 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.tiny-bird-36835";
 				PRODUCT_NAME = tiny_bird_36835;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

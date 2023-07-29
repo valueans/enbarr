@@ -263,7 +263,7 @@ USE_S3 = env.bool("USE_S3",True)
 if USE_S3:
     AWS_S3_OBJECT_PARAMETERS = {"CacheControl": "max-age=86400","ACL": "public-read"}
     AWS_DEFAULT_ACL = env.str("AWS_DEFAULT_ACL", "public-read")
-    AWS_MEDIA_LOCATION = env.str("AWS_MEDIA_LOCATION", "enbarr/media")
+    AWS_MEDIA_LOCATION = env.str("AWS_MEDIA_LOCATION", "media")
     AWS_AUTO_CREATE_BUCKET = env.bool("AWS_AUTO_CREATE_BUCKET", True)
     DEFAULT_FILE_STORAGE = env.str(
         "DEFAULT_FILE_STORAGE", "home.storage_backends.MediaStorage"

@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>968378738153-00p57ilsamv24td5710mbndfkm0p3u9j.apps.googleusercontent.com</string>
+	<string>968378738153-mvtaacnb9rtci0nl2a7dav3klcr7bgfr.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.968378738153-00p57ilsamv24td5710mbndfkm0p3u9j</string>
+	<string>com.googleusercontent.apps.968378738153-mvtaacnb9rtci0nl2a7dav3klcr7bgfr</string>
 	<key>API_KEY</key>
 	<string>AIzaSyC7MRCri4QeeIvmG_2biJLmUYNDJCjLFHA</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,7 +13,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.tiny-bird-36835</string>
+	<string>org.reactjs.native.example.tiny-bird-36835</string>
 	<key>PROJECT_ID</key>
 	<string>enbarr-app-368019</string>
 	<key>STORAGE_BUCKET</key>
@@ -29,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:968378738153:ios:c072f8581f727f7e5c9778</string>
+	<string>1:968378738153:ios:fb5363360fbeafe85c9778</string>
 </dict>
 </plist>
