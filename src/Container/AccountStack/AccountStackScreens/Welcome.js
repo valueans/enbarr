@@ -43,24 +43,24 @@ import appleAuth from '@invertase/react-native-apple-authentication';
 
 import jwt_decode from 'jwt-decode';
 import auth from '@react-native-firebase/auth';
-import { SignUpWithGoogle, SignUpWithApple } from '../../../APIs/api';
+import { SignUpWithGoogle, SignUpWithApple, SignupWithFacebook } from '../../../APIs/api';
 import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
 
 GoogleSignin.configure({
   webClientId:
-    '968378738153-00p57ilsamv24td5710mbndfkm0p3u9j.apps.googleusercontent.com',
+    '968378738153-mvtaacnb9rtci0nl2a7dav3klcr7bgfr.apps.googleusercontent.com',
 });
 
 GoogleSignin.configure({
   scopes: ['https://www.googleapis.com/auth/drive.readonly'], // what API you want to access on behalf of the user, default is email and profile
   webClientId:
-    '968378738153-00p57ilsamv24td5710mbndfkm0p3u9j.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
+    '968378738153-mvtaacnb9rtci0nl2a7dav3klcr7bgfr.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
   offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
   hostedDomain: '', // specifies a hosted domain restriction
   forceCodeForRefreshToken: true, // [Android] related to `serverAuthCode`, read the docs link below *.
   accountName: '', // [Android] specifies an account name on the device that should be used
   iosClientId:
-    '968378738153-00p57ilsamv24td5710mbndfkm0p3u9j.apps.googleusercontent.com', // [iOS] if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
+    '968378738153-mvtaacnb9rtci0nl2a7dav3klcr7bgfr.apps.googleusercontent.com', // [iOS] if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
   googleServicePlistPath: '', // [iOS] if you renamed your GoogleService-Info file, new name here, e.g. GoogleService-Info-Staging
   openIdRealm: '', // [iOS] The OpenID2 realm of the home web server. This allows Google to include the user's OpenID Identifier in the OpenID Connect ID token.
   profileImageSize: 120, // [iOS] The desired height (and width) of the profile image. Defaults to 120px
@@ -143,15 +143,19 @@ const Welcome = props => {
     // console.log('000', email, email_verified, is_private_email, sub);
 
     console.log('main result', appleAuthRequestResponse);
+
     console.log('main result nonce', appleAuthRequestResponse.nonce);
+
     const { email, email_verified, is_private_email, sub } = jwt_decode(
       appleAuthRequestResponse.identityToken,
     );
+
     const data = await SignUpWithApple(
       appleAuthRequestResponse.identityToken,
       appleAuthRequestResponse.authorizationCode,
     );
-    console.log('fffff', data, email);
+
+    console.log('fffff', data, email, appleAuthRequestResponse.identityToken, appleAuthRequestResponse.authorizationCode);
 
     dispatch(
       setUserDetail({
@@ -167,8 +171,10 @@ const Welcome = props => {
     // use credentialState response to ensure the user is authenticated
     if (credentialState === appleAuth.State.AUTHORIZED) {
       // user is authenticated
+
     }
   }
+
 
   const safeHeight = height - safeArea.bottom - safeArea.top;
   const goToForgotPassword = () => {
@@ -506,15 +512,28 @@ const Welcome = props => {
   const onFaceBookButtonPress = async () => {
     console.log('a');
     LoginManager.logInWithPermissions(['public_profile']).then(
-      function (result) {
+      async function (result) {
+        console.log('fffffff', result);
         if (result.isCancelled) {
           console.log('Login cancelled');
         } else {
-          console.log('fffffff', result);
+
           console.log(
             'Login success with permissions: ' +
             result.grantedPermissions.toString(),
           );
+          // const data = await SignupWithFacebook(result.grantedPermissions.toString());
+          // dispatch(
+          //   setUserDetail({
+          //     token: data[1].key,
+          //     user: { email: '' },
+          //     'user-profile': { 'profile-photo': '' },
+          //   }),
+          // );
+
+          // await AsyncStorage.setItem('acc', data[1].key);
+          // dispatch(login());
+
         }
       },
       function (error) {
@@ -522,6 +541,7 @@ const Welcome = props => {
       },
     );
   };
+
 
   const googleAction = async () => {
     await GoogleSignin.hasPlayServices();

@@ -47,6 +47,7 @@ import PubNub from 'pubnub';
 import * as PubNubKeys from '../Tabs/Chat/PubNubKeys';
 global.item2 = {};
 import ReportModal from '../../components/Common/ReportModal';
+import { baseUrl } from '../../../backend/frontend/src/Constants/urls';
 const Details = props => {
   const [isLiked, setIsLiked] = useState(props?.route?.params?.item?.isfav);
   const [horseImages, setHorseImages] = useState([]);
@@ -193,7 +194,7 @@ const Details = props => {
   const onSharePressed = async () => {
     try {
       const result = await Share.share({
-        message: `https://enbarrapp.com/home/horse?id=${props?.route?.params?.item?.id}`,
+        message: `${baseUrl}home/horse?id=${props?.route?.params?.item?.id}`,
       });
       if (result.action === Share.sharedAction) {
         if (result.activityType) {

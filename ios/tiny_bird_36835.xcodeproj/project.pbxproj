@@ -21,10 +21,6 @@
 		CF14652FBE35468397EA1699 /* PoppinsMedium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 090D9DD7167A47E4B4EC6616 /* PoppinsMedium.ttf */; };
 		E4EC39891DC44A4E98805940 /* PoppinsRegular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 86601BB7A9E94225BB02EB65 /* PoppinsRegular.ttf */; };
 		F0A83A190D2D4D7385EE8B4E /* bookman old style.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 51D68F2C899C431CBC2A65A3 /* bookman old style.ttf */; };
-		F565747D2901503600B43BFF /* hermes.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = F565747C2901503600B43BFF /* hermes.xcframework */; };
-		F565747F290155CF00B43BFF /* double-conversion.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = F565747E290155CF00B43BFF /* double-conversion.xcframework */; };
-		F5657481290155E000B43BFF /* glog.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5657480290155E000B43BFF /* glog.xcframework */; };
-		F5657483290155E000B43BFF /* OpenSSL.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5657482290155E000B43BFF /* OpenSSL.xcframework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -82,10 +78,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F5657481290155E000B43BFF /* glog.xcframework in Frameworks */,
-				F5657483290155E000B43BFF /* OpenSSL.xcframework in Frameworks */,
-				F565747F290155CF00B43BFF /* double-conversion.xcframework in Frameworks */,
-				F565747D2901503600B43BFF /* hermes.xcframework in Frameworks */,
 				7A8324825ADB2B0372E76834 /* libPods-tiny_bird_36835.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -570,8 +562,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = tiny_bird_36835/tiny_bird_36835.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = F6C4PFMKAB;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = THZ8C8Y54G;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = tiny_bird_36835/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Enbarr;
@@ -584,8 +580,10 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.tiny-bird-3683";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.tiny-bird-36835";
 				PRODUCT_NAME = tiny_bird_36835;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = Enabar7;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -599,8 +597,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = tiny_bird_36835/tiny_bird_36835.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = F6C4PFMKAB;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = THZ8C8Y54G;
 				INFOPLIST_FILE = tiny_bird_36835/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Enbarr;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -612,8 +614,10 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.tiny-bird-3683";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.tiny-bird-36835";
 				PRODUCT_NAME = tiny_bird_36835;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = Enabar7;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

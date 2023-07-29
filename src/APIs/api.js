@@ -1090,6 +1090,19 @@ export const SignUpWithApple = async (id_token, code) => {
   return data;
 };
 
+export const SignupWithFacebook = async (token) => {
+  var formdata = new FormData();
+  formdata.append('access_token', `${token}`);
+
+  var requestOptions = {
+    method: 'POST',
+    body: formdata,
+    redirect: 'follow',
+  };
+  const data = await fetchWithTimeout(`/api/v1/users/facebook/`, requestOptions);
+  return data;
+};
+
 export const reportHorse = async (id, reason) => {
   acc = await AsyncStorage.getItem('acc');
 
