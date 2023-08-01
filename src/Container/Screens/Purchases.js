@@ -24,15 +24,15 @@ import { packages } from '../../utils/data';
 import fonts from '../../utils/fonts';
 import cart from '../../assets/images/cart.png';
 import TextButton from '../../components/Button/TextButton';
-import {
-  CardField,
-  useStripe,
-  CardForm,
-  useConfirmPayment,
-  StripeProvider,
-  usePaymentSheet,
-  useConfirmSetupIntent,
-} from '@stripe/stripe-react-native';
+// import {
+//   CardField,
+//   useStripe,
+//   CardForm,
+//   useConfirmPayment,
+//   StripeProvider,
+//   usePaymentSheet,
+//   useConfirmSetupIntent,
+// } from '@stripe/stripe-react-native';
 import {
   getANewSetupIntent,
   getMyCardDetail,

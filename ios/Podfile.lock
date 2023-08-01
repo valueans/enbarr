@@ -640,42 +640,6 @@ PODS:
   - RNSVG (13.10.0):
     - React-Core
   - SocketRocket (0.6.1)
-  - Stripe (23.3.4):
-    - StripeApplePay (= 23.3.4)
-    - StripeCore (= 23.3.4)
-    - StripePayments (= 23.3.4)
-    - StripePaymentsUI (= 23.3.4)
-    - StripeUICore (= 23.3.4)
-  - stripe-react-native (0.23.3):
-    - React-Core
-    - Stripe (~> 23.3.0)
-    - StripeApplePay (~> 23.3.0)
-    - StripeFinancialConnections (~> 23.3.0)
-    - StripePayments (~> 23.3.0)
-    - StripePaymentSheet (~> 23.3.0)
-    - StripePaymentsUI (~> 23.3.0)
-  - StripeApplePay (23.3.4):
-    - StripeCore (= 23.3.4)
-  - StripeCore (23.3.4)
-  - StripeFinancialConnections (23.3.4):
-    - StripeCore (= 23.3.4)
-    - StripeUICore (= 23.3.4)
-  - StripePayments (23.3.4):
-    - StripeCore (= 23.3.4)
-    - StripePayments/Stripe3DS2 (= 23.3.4)
-  - StripePayments/Stripe3DS2 (23.3.4):
-    - StripeCore (= 23.3.4)
-  - StripePaymentSheet (23.3.4):
-    - StripeApplePay (= 23.3.4)
-    - StripeCore (= 23.3.4)
-    - StripePayments (= 23.3.4)
-    - StripePaymentsUI (= 23.3.4)
-  - StripePaymentsUI (23.3.4):
-    - StripeCore (= 23.3.4)
-    - StripePayments (= 23.3.4)
-    - StripeUICore (= 23.3.4)
-  - StripeUICore (23.3.4):
-    - StripeCore (= 23.3.4)
   - TOCropViewController (2.6.1)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
@@ -774,7 +738,6 @@ DEPENDENCIES:
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
-  - "stripe-react-native (from `../node_modules/@stripe/stripe-react-native`)"
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -817,14 +780,6 @@ SPEC REPOS:
     - OpenSSL-Universal
     - PromisesObjC
     - SocketRocket
-    - Stripe
-    - StripeApplePay
-    - StripeCore
-    - StripeFinancialConnections
-    - StripePayments
-    - StripePaymentSheet
-    - StripePaymentsUI
-    - StripeUICore
     - TOCropViewController
     - YogaKit
 
@@ -957,8 +912,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-screens"
   RNSVG:
     :path: "../node_modules/react-native-svg"
-  stripe-react-native:
-    :path: "../node_modules/@stripe/stripe-react-native"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -1065,19 +1018,10 @@ SPEC CHECKSUMS:
   RNScreens: 34cc502acf1b916c582c60003dc3089fa01dc66d
   RNSVG: 80584470ff1ffc7994923ea135a3e5ad825546b9
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
-  Stripe: 7393b16fe555d4a68e6555044e7b57eff11ae547
-  stripe-react-native: 333a6c66a256412fcb353b7e8585564fe2407095
-  StripeApplePay: 174b09c0211134417e340c68af199a3dd34f3cd6
-  StripeCore: babb08ec2b961f7cde8663dad3b4cbb77e0ae63b
-  StripeFinancialConnections: 484096f2dc5d3c20cc24a5ad4d261953ba806ef0
-  StripePayments: 71bf62ccdacefc4b68b46a02a7f2492aeba252b3
-  StripePaymentSheet: 722ea7bea092c243d771122fe3572a9c84512704
-  StripePaymentsUI: fd08081c4be73c16322dc76a1878140520a9df2e
-  StripeUICore: ed68cbd5ad0626e0760e772f8c82d96cae9b829b
   TOCropViewController: edfd4f25713d56905ad1e0b9f5be3fbe0f59c863
   Yoga: 99caf8d5ab45e9d637ee6e0174ec16fbbb01bcfc
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
 PODFILE CHECKSUM: 15547393d4575f5c1d46839d840daeda672c7c71
 
-COCOAPODS: 1.12.1
+COCOAPODS: 1.11.3

@@ -8,9 +8,10 @@ import {
   TextInput,
   Keyboard,
   Platform,
+  Alert,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import React, { useState, useEffect } from 'react';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import COLORS from '../../utils/colors';
 import sendIcon from '../../assets/images/send.png';
 import emoji from '../../assets/images/emoji.png';
@@ -24,7 +25,7 @@ import Animated, {
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
-import {sendMessage} from '../../APIs/api';
+import { sendMessage } from '../../APIs/api';
 const defaultHeight = 45;
 const inputColor = '#e9e9e9';
 const MIN_COMPOSER_HEIGHT = Platform.select({
@@ -41,6 +42,7 @@ const ChatInput = ({
   messages,
   chatChannel,
   pubnub,
+  userBlock
 }) => {
   const safeArea = useSafeAreaInsets();
   const defaultWrapperheight = safeArea.bottom + 5 + MIN_COMPOSER_HEIGHT;
@@ -78,23 +80,24 @@ const ChatInput = ({
   const animatedHeight = useAnimatedStyle(() => {
     const height = isOpend.value
       ? Math.max(
-          MIN_COMPOSER_HEIGHT,
-          Math.min(MAX_COMPOSER_HEIGHT, composerHeight),
-        ) +
-        keyboardHeight +
-        (Platform.OS == 'ios' ? PADDING_COMPOSER * 2 : PADDING_COMPOSER * 5)
+        MIN_COMPOSER_HEIGHT,
+        Math.min(MAX_COMPOSER_HEIGHT, composerHeight),
+      ) +
+      keyboardHeight +
+      (Platform.OS == 'ios' ? PADDING_COMPOSER * 2 : PADDING_COMPOSER * 5)
       : Math.max(
-          MIN_COMPOSER_HEIGHT,
-          Math.min(MAX_COMPOSER_HEIGHT, composerHeight),
-        ) +
-        safeArea.bottom +
-        PADDING_COMPOSER * 2;
+        MIN_COMPOSER_HEIGHT,
+        Math.min(MAX_COMPOSER_HEIGHT, composerHeight),
+      ) +
+      safeArea.bottom +
+      PADDING_COMPOSER * 2;
     return {
-      height: withTiming(height, {duration: 200}),
+      height: withTiming(height, { duration: 200 }),
     };
   }, [composerHeight]);
 
   const onSendPress = async () => {
+
     //here we should handle send text message
     //function sendMessage(messageType, context, reciver_id)
     // const data = await sendMessage('', textForSending, user_two_detail.id);
@@ -244,7 +247,7 @@ const ChatInput = ({
         },
         animatedHeight,
       ]}>
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <View
           style={[
             styles.inputContainer,
@@ -283,14 +286,20 @@ const ChatInput = ({
             <Image
               source={emoji}
               resizeMode="contain"
-              style={[styles.icon, {marginRight: 12}]}
+              style={[styles.icon, { marginRight: 12 }]}
             />
           </TouchableOpacity>
           <TouchableOpacity style={styles.inputButton}>
             <Image source={camera} resizeMode="contain" style={styles.icon} />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.sendBtn} onPress={() => onSendPress()}>
+        <TouchableOpacity style={styles.sendBtn} onPress={() => {
+          if (userBlock) {
+            Alert.alert('User Is Blocked !')
+          } else {
+            onSendPress()
+          }
+        }}>
           <Image
             source={sendIcon}
             resizeMode="contain"

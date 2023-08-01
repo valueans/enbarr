@@ -81,7 +81,7 @@ const Favorite = props => {
               item={item.horses}
               index={index}
               onPressDetails={() =>
-                props.navigation.navigate('Details', { item: item.horses })
+                props.navigation.navigate('Details', { item: item.horses, pubnub: pubnub })
               }
               onPressMessage={() => goToChat(item)}
             />
