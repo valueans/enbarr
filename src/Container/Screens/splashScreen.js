@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Image, Text, TouchableOpacity, Appearance} from 'react-native';
+import { View, Image, Text, TouchableOpacity, Appearance } from 'react-native';
 import splashImagee from '../../assets/images/splash.png';
 import arrowLeft from '../../assets/images/arrowLeft.png';
 import logoWriting from '../../assets/images/logo_writing.png';

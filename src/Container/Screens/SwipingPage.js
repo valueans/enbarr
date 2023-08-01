@@ -33,15 +33,18 @@ import {
   getSavedSearchDetal,
   resultUserSearchBuyer,
   getAllHorseLatandLong,
+  getOrCreateNewChannel,
 } from '../../APIs/api';
 import PubNub from 'pubnub';
-// import * as PubNubKeys from './pubNubKeys';
 import * as PubNubKeys from '../Tabs/Chat/PubNubKeys';
 const [allHorseLatandLon, setAllHorseLatandLon] = useState([]);
 import { BarIndicator } from 'react-native-indicators';
+import { useSelector } from 'react-redux';
 const { width, height } = Dimensions.get('screen');
 global.pag = 2;
+
 const SwipingPage = props => {
+
   const swiperRef = useRef(null);
   const mapRef = useRef(null);
   const [horsesList, setHorsesList] = useState([]);
@@ -57,11 +60,14 @@ const SwipingPage = props => {
 
   console.log('%%%#### THIS IS LAT ', detailLat, detailLng)
 
-  // const pubnub = new PubNub({
-  //   subscribeKey: PubNubKeys.PUBNUB_SUBSCRIBE_KEY,
-  //   publishKey: PubNubKeys.PUBNUB_PUBLISH_KEY,
-  //   userId: `${userDetail?.user?.email}`,
-  // });
+  const { userDetail } = useSelector(state => state.userDetail);
+
+
+  const pubnub = new PubNub({
+    subscribeKey: PubNubKeys.PUBNUB_SUBSCRIBE_KEY,
+    publishKey: PubNubKeys.PUBNUB_PUBLISH_KEY,
+    userId: `${userDetail?.user?.email}`,
+  });
 
   useEffect(() => {
     pag = 2;
@@ -198,7 +204,7 @@ const SwipingPage = props => {
                 coordinates: [item.lng, item.lat],
               },
             },
-            pubnub: props?.pubnub,
+            pubnub: pubnub,
           })
         }
         coordinate={{
@@ -250,7 +256,23 @@ const SwipingPage = props => {
     if (item) {
       props.navigation.navigate('Details', {
         item,
+        pubnub: pubnub
       });
+    }
+  };
+
+  const goToChat = async item => {
+    console.log(item);
+    const data = await getOrCreateNewChannel(item.userprofile.user.id);
+    if (data.data) {
+      console.log('THIS IS DATA FROM ', data);
+      props.navigation.navigate('Chat', {
+        item: data.data,
+        myDetail: data.data.user_one_profile,
+        pubnub: pubnub,
+      });
+    } else {
+      Alert.alert('Error', 'Please try again later.');
     }
   };
 
@@ -359,6 +381,10 @@ const SwipingPage = props => {
                         <MainItem
                           item={card}
                           onPressDetails={() => goToDetails(card)}
+                          onPressMessage={() => {
+                            // console.log('GO TO CHAT ', card)
+                            goToChat(card)
+                          }}
                         />
                       </View>
                     )) ||
@@ -383,6 +409,7 @@ const SwipingPage = props => {
                   onSwipedTop={cardIndex => {
                     props.navigation.navigate('Details', {
                       item: horsesList[cardIndex],
+                      pubnub: pubnub
                     });
                     swiperRef.current.swipeBack();
                   }}
