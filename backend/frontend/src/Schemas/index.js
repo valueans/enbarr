@@ -9,7 +9,7 @@ export const signUpSchema = Yup.object({
 });
 
 export const loginSchema = Yup.object({
-    username: Yup.string().required("Please enter your username/email"),
+    email: Yup.string().email().required("Please enter your email"),
     password: Yup.string().min(8).required("Please enter your password"),
 });
 

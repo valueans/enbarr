@@ -141,6 +141,17 @@ const Chat = ({pubnub,userprofile}) => {
             }
             setUsers([...filteredUser,...filteredNotUser])
         },
+        // message: (message) => {
+        //     if (unreadTimeTokens.includes(message.timetoken)===false){
+        //         setUnreadTimeTokens(message.timetoken)
+        //         filterConversations.forEach((item)=>{
+        //             if(item.channel === message.channel && item.publisher !== userprofile.user.email){
+        //                 item.unread += 1;
+        //             }
+        //         })
+        //         setFilterConversations(filterConversations)
+        //     }
+        //   }
     })
       
       const handleFilterConversations = (e)=>{
@@ -278,7 +289,7 @@ const Chat = ({pubnub,userprofile}) => {
                     </Grid>
                     <Grid container item xs={12} sx={{ overflow: "auto" }} wrap="nowrap">
                         {users.map((user,index)=>{
-                            return <CustomAvatarOnline name={user?.user?.username} image={user?.profile_photo} key={index} online={user.online} channel={user.channel}/>
+                            return <CustomAvatarOnline name={user?.user?.email.split('@')[0]} image={user?.profile_photo} key={index} online={user.online} channel={user.channel}/>
                         })
                         }
                     </Grid>
@@ -317,7 +328,7 @@ const Chat = ({pubnub,userprofile}) => {
                         <CustomAvatar image={state.SelectedChat?.user_two_profile?.profile_photo}/>
                     </Grid>
                     <Grid item xs={10} >
-                        <Typography variant="horseDetailsUserName" sx={{color:"#000000"}}>{state.SelectedChat?.user_two_profile?.user?.username}</Typography>
+                        <Typography variant="horseDetailsUserName" sx={{color:"#000000"}}>{state.SelectedChat?.user_two_profile?.user?.email.split('@')[0]}</Typography>
                     </Grid>
                     <Grid item xs={1} >
                     <IconButton
