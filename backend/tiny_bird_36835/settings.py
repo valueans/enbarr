@@ -34,7 +34,7 @@ env = environ.Env()
 env.read_env(env_file)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env.bool("DEBUG",False)
 
 try:
     # Pull secrets from Secret Manager
