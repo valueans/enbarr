@@ -19,11 +19,11 @@ const RecentChat = ({props,setLastRead}) => {
         setLastRead();
     }}>
         <Grid item xs={3}>
-            <CustomAvatar name={props.user_two_profile.user.username} image={props.user_two_profile.profile_photo}/>
+            <CustomAvatar name={props.user_two_profile.user.email} image={props.user_two_profile.profile_photo}/>
         </Grid>
         <Grid container item xs={7}>
             <Grid item xs={12}>
-                <Typography variant="characteristicsHeading">{props.user_two_profile.user.username}</Typography>
+                <Typography variant="characteristicsHeading">{props.user_two_profile.user.email.split('@')[0]}</Typography>
             </Grid>
             <Grid item xs={12}>
                 <Typography variant="imageDescriptions">{props.last_message?clip(props.last_message.Messages, 50):""}</Typography>
