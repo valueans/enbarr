@@ -319,8 +319,8 @@ const Chat = props => {
                   ),
                 )}
             </Text>
-            <TouchableOpacity onPress={onReportPress} style={{ marginLeft: '45%' }}>
-              <Image source={require('../../assets/images/more.png')} />
+            <TouchableOpacity onPress={onReportPress}>
+              <Image style={{ height: 20, width: 40 }} resizeMode='contain' source={require('../../assets/images/more.png')} />
             </TouchableOpacity>
           </View>
           {/* <TouchableOpacity
@@ -415,7 +415,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  userWrapper: { flex: 1, flexDirection: 'row', alignItems: 'center' },
+  userWrapper: { flex: 1, flexDirection: 'row', alignItems: 'center', },
   avatar: {
     width: 40,
     height: 40,
@@ -427,5 +427,6 @@ const styles = StyleSheet.create({
     fontFamily: fonts.medium,
     fontWeight: '600',
     color: COLORS.color3,
+    width: '70%'
   },
 });
