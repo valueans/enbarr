@@ -1,0 +1,4 @@
+frontend/node_module
+frontend/src
+.circleci
+.cloudbuild

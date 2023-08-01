@@ -14,7 +14,7 @@ User = get_user_model()
 @receiver(post_save, sender=Report)
 def create_notification_report(sender, instance, created, **kwargs):
     user = User.objects.filter(is_superuser=True).first()
-    description = f"{instance.user.userprofile.first_name} {instance.user.userprofile.last_name} has reported horse {instance.horse.title} with id {instance.horse.id} as {instance.reason}"
+    description = f"{instance.user.username} has reported horse {instance.horse.title} with id {instance.horse.id} as {instance.reason}"
     Notifications.objects.create(
         user=user, description=description, type="HORSE REPORT"
     )

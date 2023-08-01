@@ -34,7 +34,7 @@ env = environ.Env()
 env.read_env(env_file)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.bool("DEBUG", default=False)
+DEBUG = True
 
 try:
     # Pull secrets from Secret Manager
@@ -93,8 +93,7 @@ THIRD_PARTY_APPS = [
     "rest_framework_gis",
     "corsheaders",
     "rest_framework.authtoken",
-    "rest_auth",
-    "rest_auth.registration",
+    "dj_rest_auth.registration",
     "dj_rest_auth",
     "bootstrap4",
     "allauth",
@@ -230,12 +229,9 @@ SOCIALACCOUNT_ADAPTER = "users.adapters.SocialAccountAdapter"
 ACCOUNT_ALLOW_REGISTRATION = env.bool("ACCOUNT_ALLOW_REGISTRATION", True)
 SOCIALACCOUNT_ALLOW_REGISTRATION = env.bool("SOCIALACCOUNT_ALLOW_REGISTRATION", True)
 
-REST_AUTH_SERIALIZERS = {
+REST_AUTH = {
     # Replace password reset serializer to fix 500 error
     "PASSWORD_RESET_SERIALIZER": "users.api.serializers.PasswordSerializer",
-}
-REST_AUTH_REGISTER_SERIALIZERS = {
-    # Use custom serializer that has no username and matches web signup
     "REGISTER_SERIALIZER": "users.api.serializers.SignupSerializer",
 }
 

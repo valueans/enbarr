@@ -21,6 +21,8 @@ from rest_framework.decorators import (
 from home.api.v1.swaggerParams import (
     createParam,
     customDeleteResponse,
+    customSuccessfullResponse,
+    createBoolParam,
     deleted_message,
 )
 
@@ -47,7 +49,7 @@ User = get_user_model()
         )
     ],
     responses=customDeleteResponse(),
-)
+)       
 @api_view(["GET", "DELETE"])
 @permission_classes([IsAuthenticated])
 @authentication_classes([TokenAuthentication])
@@ -82,7 +84,6 @@ def conversationView(request):
                         Q(user_one=request.user) & Q(user_two=receiver)
                         | Q(user_one=receiver) & Q(user_two=request.user)
                     )
-                    print("deleted_conversation", deleted_conversation)
                     if deleted_conversation.count() == 0:
                         channel = f"channel-chat-{request.user.id}-{receiver.id}"
                     else:
@@ -98,7 +99,6 @@ def conversationView(request):
         serializer = ConversationSerializer(instance, context={"request": request})
         data = {"status": "ok", "message": "successfull", "data": serializer.data}
         return Response(data=data, status=status.HTTP_200_OK)
-
     if request.method == "DELETE":
         conversation_id = request.GET.get("conversation-id", None)
         if conversation_id is None:
@@ -130,6 +130,63 @@ def conversationView(request):
 
         data = {"status": "OK", "message": deleted_message}
         return Response(data=data, status=status.HTTP_200_OK)
+
+
+@swagger_auto_schema(
+    method="post",
+    manual_parameters=[
+        createParam(
+            paramName="conversation-id",
+            description="to get the conversation that needs to be block or unblock",
+            required=True,
+        ),
+        createBoolParam(
+            paramName="block",
+            description="true or false",
+            required=True,
+        )
+    ],
+    responses=customSuccessfullResponse(),
+)
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+@authentication_classes([TokenAuthentication])
+def blockConversationView(request):
+    if request.method == "POST":
+        conversation_id = request.POST.get("conversation-id", None)
+        block = request.POST.get("block", None)
+        user = request.user
+        
+        if conversation_id is None:
+            data = {"status": "ERROR", "message": "conversation-id is required"}
+            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+        
+        if block is None:
+            data = {"status": "ERROR", "message": "block is required"}
+            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+        else:
+            block = int(block)
+            if block == 1:
+                block = True
+            else:
+                block = False
+        try:
+            instance = Conversation.objects.get(id=conversation_id)
+        except:
+            data = {"status": "ERROR", "message": "invalid conversation-id"}
+            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+        
+        if instance.user_one == user:
+            instance.blocked_user_one = block
+        else:
+            instance.blocked_user_two = block
+        instance.save()
+        
+        if block:
+            data = {"status": "OK", "message": "successfully blocked"}
+        else:
+            data = {"status": "OK", "message": "successfully unblocked"}
+        return Response(data=data)
 
 
 @api_view(["POST"])

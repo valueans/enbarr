@@ -61,10 +61,10 @@ urlpatterns = [
     path("api/v1/terms_and_conditions/", include("terms_and_conditions.urls")),
     path("api/v1/FAQ/", include("FAQ.urls")),
     path("api/v1/PrivacyPolicy/", include("PrivacyPolicy.urls")),
-    path("rest-auth/", include("rest_auth.urls")),
-    # Override email confirm to use allauth's HTML view instead of rest_auth's API view
+    path("rest-auth/", include("dj_rest_auth.urls")),
+    # Override email confirm to use allauth's HTML view instead of rest_auth's API vi
     path("rest-auth/registration/account-confirm-email/<str:key>/", confirm_email),
-    path("rest-auth/registration/", include("rest_auth.registration.urls")),
+    path("rest-auth/registration/", include("dj_rest_auth.registration.urls")),
 ]
 
 # swagger

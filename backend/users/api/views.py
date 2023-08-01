@@ -15,8 +15,7 @@ from allauth.socialaccount.providers.apple.views import AppleOAuth2Adapter
 from allauth.socialaccount.providers.apple.client import AppleOAuth2Client
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.authtoken.models import Token
-from rest_auth.registration.views import SocialLoginView
-from rest_auth.registration.serializers import SocialLoginSerializer
+from dj_rest_auth.registration.serializers import SocialLoginSerializer
 from datetime import date
 from dj_rest_auth.registration.views import SocialLoginView as AppleLoginView
 
