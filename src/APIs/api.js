@@ -1124,6 +1124,28 @@ export const reportHorse = async (id, reason) => {
   return data;
 };
 
+
+export const reportUser = async (id) => {
+  acc = await AsyncStorage.getItem('acc');
+
+  var myHeaders = new Headers();
+  myHeaders.append('Content-Type', 'application/json');
+  myHeaders.append('Authorization', `Token ${acc}`);
+
+  var formdata = new FormData();
+  formdata.append('conversation-id', id);
+  formdata.append('block', 1);
+
+  var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: formdata,
+    redirect: 'Chat',
+  };
+  const data = await fetchWithTimeout(`/api/v1/chat/block_conversation/`, requestOptions);
+  return data;
+};
+
 export const getSpecialHorseDistance = async (horseId, lat, lon) => {
   if (lat == 0 || lon == 0) {
     return 0;

@@ -10,29 +10,30 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {clockRunning} from 'react-native-reanimated';
-import {globalStyle} from '../../utils/GlobalStyle';
+import React, { useEffect, useState } from 'react';
+import { clockRunning } from 'react-native-reanimated';
+import { globalStyle } from '../../utils/GlobalStyle';
 import COLORS from '../../utils/colors';
 
 import arrowLeft from '../../assets/images/arrowLeft.png';
 import option from '../../assets/images/option.png';
 import fonts from '../../utils/fonts';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {profile_img} from '../../utils/data';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { profile_img } from '../../utils/data';
 import Message from '../../components/chat/Message';
 import ChatInput from '../../components/chat/ChatInput';
 import Sheet from '../../components/Common/Sheet';
 
-import {useRef} from 'react';
+import { useRef } from 'react';
 
-import {getMyDetail} from '../../APIs/api';
+import { getMyDetail } from '../../APIs/api';
 
 import * as PubNubKeys from '../Tabs/Chat/PubNubKeys';
 import DeviceInfo from 'react-native-device-info';
-import {BarIndicator} from 'react-native-indicators';
+import { BarIndicator } from 'react-native-indicators';
 // import PubNub from 'pubnub';
-import {PubNubProvider} from 'pubnub-react';
+import { PubNubProvider } from 'pubnub-react';
+import ReportUserModal from '../../components/Common/ReportUserModal';
 
 // const groupChatChannel = 'group_chat';
 // var deviceId = 'ChangeMe';
@@ -49,7 +50,7 @@ const Chat = props => {
   //   userId: `${props.route.params.myDetail.user.email}`,
   // });
 
-  const {pubnub} = props.route.params;
+  const { pubnub } = props.route.params;
 
   const safeArea = useSafeAreaInsets();
   const reportSheetRef = useRef();
@@ -59,6 +60,12 @@ const Chat = props => {
   const [myUUId, setMyUUId] = useState('');
   const [lastMessageTimeToken, setLastMessageTimeToken] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+
+  const [reportModal, setReportModal] = useState(false);
+
+  const onReportPress = async () => {
+    setReportModal(true);
+  };
 
   useEffect(() => {
     // async function getDeviceId() {
@@ -230,8 +237,10 @@ const Chat = props => {
     reportSheetRef.current.snapToIndex(0);
   };
 
+
+
   return (
-    <View style={{flex: 1}} onPress={() => Keyboard.dismiss()}>
+    <View style={{ flex: 1 }} onPress={() => Keyboard.dismiss()}>
       <View
         style={[
           globalStyle.innerContainer,
@@ -244,7 +253,7 @@ const Chat = props => {
         <View
           style={[
             styles.header,
-            {paddingTop: safeArea.top, height: 60 + safeArea.top},
+            { paddingTop: safeArea.top, height: 60 + safeArea.top },
           ]}>
           <TouchableOpacity
             style={styles.btn}
@@ -258,7 +267,7 @@ const Chat = props => {
           </TouchableOpacity>
           <View style={styles.userWrapper}>
             {props.route.params.item.user_two_profile.profile_photo ? (
-              <View>
+              <View >
                 <Image
                   // onLoad={() => setIsLoadingPic(false)}
                   // onLoadStart={() => setIsLoadingPic(true)}
@@ -283,6 +292,7 @@ const Chat = props => {
                   <BarIndicator size={20} color={COLORS.color14}></BarIndicator>
                 </View>
               ) : null} */}
+
               </View>
             ) : (
               <Image
@@ -303,12 +313,15 @@ const Chat = props => {
               {props.route.params.item.user_two_profile.user.name
                 ? props.route.params.item.user_two_profile.user.name
                 : props.route.params.item.user_two_profile.user.email.substring(
-                    0,
-                    props.route.params.item.user_two_profile.user.email.lastIndexOf(
-                      '@',
-                    ),
-                  )}
+                  0,
+                  props.route.params.item.user_two_profile.user.email.lastIndexOf(
+                    '@',
+                  ),
+                )}
             </Text>
+            <TouchableOpacity onPress={onReportPress} style={{ marginLeft: '45%' }}>
+              <Image source={require('../../assets/images/more.png')} />
+            </TouchableOpacity>
           </View>
           {/* <TouchableOpacity
             style={styles.btn}
@@ -324,7 +337,7 @@ const Chat = props => {
         {isLoading ? (
           <BarIndicator color={COLORS.color3} size={22}></BarIndicator>
         ) : null}
-        <View style={{flex: 1}}>
+        <View style={{ flex: 1 }}>
           <FlatList
             inverted={true}
             data={messages}
@@ -352,6 +365,7 @@ const Chat = props => {
         </View>
 
         <ChatInput
+          userBlock={props.route.params.item.user_one_block || props.route.params.item.user_two_block}
           setMessages={setMessages}
           messages={messages}
           user_two_detail={props.route.params.item.user_two_profile.user}
@@ -360,9 +374,15 @@ const Chat = props => {
           pubnub={pubnub}
         />
         <Sheet ref={reportSheetRef} index={-1} pressBehavior="close">
-          <Text style={{margin: 100}}>HI</Text>
+          <Text style={{ margin: 100 }}>HI</Text>
         </Sheet>
       </View>
+      <ReportUserModal
+        visible={reportModal}
+        setVisible={setReportModal}
+        userID={props.route.params.item.id}
+        navigation={props.navigation}
+      />
     </View>
   );
 };
@@ -395,7 +415,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  userWrapper: {flex: 1, flexDirection: 'row', alignItems: 'center'},
+  userWrapper: { flex: 1, flexDirection: 'row', alignItems: 'center' },
   avatar: {
     width: 40,
     height: 40,

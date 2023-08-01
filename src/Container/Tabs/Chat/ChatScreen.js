@@ -13,19 +13,19 @@ import {
   Button,
   NativeModules,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
-import {useFocusEffect} from '@react-navigation/native';
-import COLORS, {ColorShade} from '../../../utils/colors';
+import React, { useState, useEffect } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
+import COLORS, { ColorShade } from '../../../utils/colors';
 import fonts from '../../../utils/fonts';
-import {globalStyle} from '../../../utils/GlobalStyle';
+import { globalStyle } from '../../../utils/GlobalStyle';
 import logo from '../../../assets/images/logo_black_sm.png';
 import search from '../../../assets/images/search.png';
 import ScreenTitle from '../../../components/Text/ScreenTitle';
-import {getAllConversations, getMyDetail} from '../../../APIs/api';
-import {BarIndicator} from 'react-native-indicators';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useSelector} from 'react-redux';
-const {width, height} = Dimensions.get('screen');
+import { getAllConversations, getMyDetail } from '../../../APIs/api';
+import { BarIndicator } from 'react-native-indicators';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useSelector } from 'react-redux';
+const { width, height } = Dimensions.get('screen');
 
 import PubNub from 'pubnub';
 import * as PubNubKeys from './PubNubKeys';
@@ -37,7 +37,7 @@ const DEFAULT_IMAGE = require('../../../assets/images/user.png');
 global.pag = 2;
 
 const ChatScreen = props => {
-  const {userDetail} = useSelector(state => state.userDetail);
+  const { userDetail } = useSelector(state => state.userDetail);
   console.log('wwwwwwewqqqqq', userDetail);
   const pubnub = new PubNub({
     subscribeKey: PubNubKeys.PUBNUB_SUBSCRIBE_KEY,
@@ -64,7 +64,7 @@ const ChatScreen = props => {
       async function fetchConv() {
         setLoading(true);
         const convs = await getAllConversations(1);
-        // console.log('chatsssaaaaaaaass', convs[0].user_two_profile);
+        console.log('chatsssaaaaaaaass', convs);
 
         setMyConversations(convs);
 
@@ -155,10 +155,10 @@ const ChatScreen = props => {
     // console.log('fuuuckingggggResponse', response);
   };
 
-  const renderItem = ({item, index}) => {
+  const renderItem = ({ item, index }) => {
     return (
       <TouchableOpacity style={styles.circleItemContainer}>
-        <View style={{position: 'relative'}}>
+        <View style={{ position: 'relative' }}>
           <Image style={styles.circleItemAvatar} resizeMode={'cover'} />
           <View style={styles.circle} />
         </View>
@@ -166,7 +166,7 @@ const ChatScreen = props => {
       </TouchableOpacity>
     );
   };
-  const chatItem = ({item, index}) => {
+  const chatItem = ({ item, index }) => {
     isOnLineFunction(item);
     getUnreadCount(item);
     // console.log(item.user_two_profile.user);
@@ -239,7 +239,9 @@ const ChatScreen = props => {
             <Text style={styles.username}>
               {item?.user_two_profile?.first_name
                 ? item?.user_two_profile.first_name
-                : item?.user_two_profile?.user.email.substring(
+                : item?.user_two_profile.first_name == null ?
+                  item?.user_two_profile.user.username
+                  : item?.user_two_profile?.user.email.substring(
                     0,
                     item?.user_two_profile?.user.email.lastIndexOf('@'),
                   )}
@@ -331,7 +333,7 @@ const ChatScreen = props => {
           />
         </View> */}
 
-        <View style={{flex: 1}}>
+        <View style={{ flex: 1 }}>
           <Text style={styles.subtitle}>Recent</Text>
           {loading ? (
             <BarIndicator color="black"></BarIndicator>
