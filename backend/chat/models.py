@@ -29,6 +29,8 @@ class Conversation(models.Model):
     channel = models.CharField(max_length=100, null=False, blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    blocked_user_one = models.BooleanField(default=False)
+    blocked_user_two = models.BooleanField(default=False)
     user_one_deleted = models.BooleanField(default=False)
     user_two_deleted = models.BooleanField(default=False)
 

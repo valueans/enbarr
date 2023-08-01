@@ -12,7 +12,7 @@ const SignInForm = ({setSnackBarData}) => {
     const navigator = useNavigate();
 
     const initialValues = {
-        email: "",
+        username: "",
         password: "",
       };
 
@@ -25,7 +25,7 @@ const SignInForm = ({setSnackBarData}) => {
         validateOnBlur: false,
         onSubmit: async (values, action) => {
         try {
-            const response = await AuthService.loginMethod(values.email,values.password);
+            const response = await AuthService.loginMethod(values.username,values.password);
             setAccessToken(response.token);
             setVerifyStatus(response.user.is_verified)
             if(response.user.is_verified){
@@ -54,10 +54,10 @@ const SignInForm = ({setSnackBarData}) => {
                 <Typography variant="authTitle" component="div">Login</Typography>
             </Grid>
             <Grid item xs={12}>
-                <Typography variant="authInputTitle" component="div">Email</Typography>
-                <CustomInput type="text" placeholder="Email" name="email" value={values.email} onChange={handleChange} onBlur={handleBlur} />
-                {touched.email && errors.email ? (
-                      <span className="form-error">{errors.email}</span>
+                <Typography variant="authInputTitle" component="div">Usename/ Email</Typography>
+                <CustomInput type="text" placeholder="Usename/ Email" name="username" value={values.username} onChange={handleChange} onBlur={handleBlur} />
+                {touched.username && errors.username ? (
+                      <span className="form-error">{errors.username}</span>
                 ) : null}
             </Grid>
             <Grid item xs={12}>

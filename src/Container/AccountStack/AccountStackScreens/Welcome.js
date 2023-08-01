@@ -518,16 +518,20 @@ const Welcome = props => {
           console.log('Login cancelled');
         } else {
 
+        
+          const token = await AccessToken.getCurrentAccessToken();
+
           console.log(
             'Login success with permissions: ' +
-            result,
+            JSON.stringify(result),
+            token
           );
-          const token = await AccessToken.getCurrentAccessToken();
-          const data = await SignupWithFacebook(token);
+
+          const data = await SignupWithFacebook(token.accessToken);
           dispatch(
             setUserDetail({
               token: data[1].key,
-              user: { email: '' },
+              //user: { email: '' },
               'user-profile': { 'profile-photo': '' },
             }),
           );

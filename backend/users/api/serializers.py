@@ -6,7 +6,7 @@ from allauth.account import app_settings as allauth_settings
 from allauth.account.adapter import get_adapter
 from allauth.account.utils import setup_user_email
 from allauth.account.forms import ResetPasswordForm
-from rest_auth.serializers import PasswordResetSerializer
+from dj_rest_auth.serializers import PasswordResetSerializer
 from payments.api.v1.serializers import SubscriptionPlansSerializer
 from payments.models import SubscriptionPlans
 from django.utils.translation import ugettext_lazy as _
@@ -76,7 +76,7 @@ class SignupSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["id", "email", "name", "is_verified", "userprofile"]
+        fields = ["id", "email", "name", "is_verified", "userprofile","username"]
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
