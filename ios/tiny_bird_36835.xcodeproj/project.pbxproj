@@ -243,7 +243,8 @@
 		83CBB9F71A601CBA00E9B192 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1210;
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
@@ -508,6 +509,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 282C661E89FACA95B9CDFEF4 /* Pods-tiny_bird_36835-tiny_bird_36835Tests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = K6S9ZMWV55;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -536,6 +538,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 08D008DA48070189A732EE3A /* Pods-tiny_bird_36835-tiny_bird_36835Tests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				DEVELOPMENT_TEAM = K6S9ZMWV55;
@@ -575,7 +578,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 29;
+				MARKETING_VERSION = 31;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -611,7 +614,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 29;
+				MARKETING_VERSION = 31;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
