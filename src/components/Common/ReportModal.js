@@ -3,21 +3,22 @@ import {
   Image,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
 import React from 'react';
-import {useState} from 'react';
+import { useState } from 'react';
 import Modal from 'react-native-modal';
 import COLORS from '../../utils/colors';
 import ScreenTitle from '../Text/ScreenTitle';
 import Seprator from '../Layout/Seprator';
 import close from '../../assets/images/close_solid.png';
 import fonts from '../../utils/fonts';
-import {reportHorse} from '../../APIs/api';
-const {width, height} = Dimensions.get('screen');
+import { reportHorse } from '../../APIs/api';
+const { width, height } = Dimensions.get('screen');
 
-const ReportModal = ({visible, setVisible, horseID}) => {
+const ReportModal = ({ visible, setVisible, horseID, navigation }) => {
   const [isOpen, setIsOpen] = useState(visible);
   const closeModal = () => {
     setVisible(false);
@@ -32,12 +33,12 @@ const ReportModal = ({visible, setVisible, horseID}) => {
     'Report ',
   ];
   const pressItem = async (item, index) => {
-    console.log(item, index);
 
+    console.log(item, index);
     const data = await reportHorse(horseID, item);
     console.log(data);
-
     closeModal();
+    navigation.navigate('Home')
   };
   return (
     <Modal
@@ -60,12 +61,17 @@ const ReportModal = ({visible, setVisible, horseID}) => {
         <ScreenTitle size={12} marginVertical={5} weight="500">
           Why are you reporting this?
         </ScreenTitle>
-        <Seprator style={{marginVertical: 10}} />
+        <Seprator style={{ marginVertical: 10 }} />
         <TouchableOpacity style={styles.btn} onPress={closeModal}>
           <Image source={close} resizeMode="contain" />
         </TouchableOpacity>
-        <View style={{marginVertical: 10}} />
-        <View style={{alignItems: 'flex-start', width: '100%'}}>
+        <View style={{ marginVertical: 10 }} />
+        {/* <TextInput
+          style={styles.textinput}
+          placeholder='why are you reporting this?'
+          placeholderTextColor={COLORS.color14}
+        /> */}
+        <View style={{ alignItems: 'flex-start', width: '100%' }}>
           {message.map((item, index) => (
             <TouchableOpacity
               key={index}
@@ -73,7 +79,7 @@ const ReportModal = ({visible, setVisible, horseID}) => {
               onPress={() => {
                 pressItem(item, index);
               }}>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <View style={styles.circle} />
                 <Text style={styles.text}>{item}</Text>
               </View>
@@ -113,6 +119,15 @@ const styles = StyleSheet.create({
   },
   rowBtn: {
     marginBottom: 16,
+  },
+  textinput: {
+    width: '100%',
+    height: 50,
+    borderRadius: 15,
+    backgroundColor: COLORS.color11,
+    marginBottom: 20,
+    color: COLORS.black,
+    paddingLeft: 15
   },
   text: {
     fontFamily: fonts.medium,
