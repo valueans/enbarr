@@ -392,7 +392,8 @@ def HorseView(request):
 @permission_classes([IsAuthenticated])
 @authentication_classes([TokenAuthentication])
 def HorsesView(request):
-    querset = Horses.objects.all().order_by("id").reverse()
+    reports = Report.objects.filter(user=request.user).values_list("horse__id",flat=True)
+    querset = Horses.objects.all().order_by("id").reverse().exclude(id__in=reports)
     return getPagination(querset, request, HorsesSerializer)
 
 
