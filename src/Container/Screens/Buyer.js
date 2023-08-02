@@ -13,6 +13,10 @@ import {
   Alert,
   TextInput,
 } from 'react-native';
+// import {
+//   // ScrollView,
+//   FlatList
+// } from 'react-native-gesture-handler';
 import React, { useState, useRef, useEffect } from 'react';
 import Background from '../../components/Layout/Background';
 import HomeHeader from '../../components/Common/HomeHeader';
@@ -45,7 +49,7 @@ import fonts from '../../utils/fonts';
 import { BarIndicator } from 'react-native-indicators';
 import Sheet from '../../components/Common/Sheet';
 import TextButton from '../../components/Button/TextButton';
-import { BottomSheetView } from '@gorhom/bottom-sheet';
+import { BottomSheetFlatList, BottomSheetView } from '@gorhom/bottom-sheet';
 const { width, height } = Dimensions.get('screen');
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Country, State, City } from 'country-state-city';
@@ -173,7 +177,7 @@ const Buyer = props => {
       setMaxPrice(data[1][0].max_price);
 
       setLocation({ name: data[1][0].country });
-      
+
       setRadius(data[1][0].radius);
       // setSelectedIndex(
       //   data[1][0].gender === 'Gelding'
@@ -794,6 +798,7 @@ const Buyer = props => {
       {/* breeds */}
       <Sheet ref={breedSheetRef} index={-1} pressBehavior={'close'}>
         <BottomSheetView
+          enableOverDrag={false}
           style={{
             alignItems: 'center',
             paddingBottom: 32,
@@ -802,11 +807,13 @@ const Buyer = props => {
           }}>
           <ScreenTitle size={18}>Select breed</ScreenTitle>
           <BottomSheetView style={[styles.listContainer, { height: 200 }]}>
+
             <FlatList
               data={breedList}
+              scrollEnabled
               extraData={breedList}
               keyExtractor={(item, index) => item.breed}
-              contentContainerStyle={{ paddingTop: 32 }}
+              contentContainerStyle={{ paddingTop: 32, zIndex: 200 }}
               renderItem={({ item, index }) => {
                 return (
                   <TouchableOpacity

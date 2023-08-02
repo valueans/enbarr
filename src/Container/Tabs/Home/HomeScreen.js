@@ -10,6 +10,7 @@ import {
   TextInput,
   FlatList,
   Alert,
+  Platform,
 } from 'react-native';
 import React, { useState, useCallback } from 'react';
 import Background from '../../../components/Layout/Background';
@@ -299,7 +300,8 @@ const HomeScreen = props => {
                           }}>
                           <BannerAd
                             size={BannerAdSize.BANNER}
-                            unitId={TestIds.BANNER}
+                            // unitId={TestIds.BANNER}
+                            unitId={Platform.OS === 'ios' ? 'ca-app-pub-3055000822514370/8330285382' : 'ca-app-pub-3055000822514370/7591918782'}
                           />
                         </View>
                       )}

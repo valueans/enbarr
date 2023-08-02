@@ -1,12 +1,12 @@
-import {Dimensions, StyleSheet, Text, View, Image} from 'react-native';
-import React, {useEffect, useState, useRef} from 'react';
+import { Dimensions, StyleSheet, Text, View, Image } from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
 import COLORS from '../../utils/colors';
 import fonts from '../../utils/fonts';
-import {profile_img} from '../../utils/data';
+import { profile_img } from '../../utils/data';
 import triangle from '../../assets/images/triangle.png';
-import {createThumbnail} from 'react-native-create-thumbnail';
+import { createThumbnail } from 'react-native-create-thumbnail';
 import ImageModal from '../Modal/ShowImageVideo';
-const {width, height} = Dimensions.get('screen');
+const { width, height } = Dimensions.get('screen');
 
 const message_width = width * 0.75;
 const mine_bubble_color = COLORS.color3; //'#0A0A44';
@@ -18,9 +18,9 @@ const mine_text_color = '#f4f4f4';
 const BORDER_RADIUS = 10;
 
 import moment from 'moment';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
-const Message = ({mine, avatar, item, pubnub, chatChannel}) => {
+const Message = ({ mine, avatar, item, pubnub, chatChannel }) => {
   // console.log(convertTimestamp(item.item.timetoken / 10000000));
   // console.log(item.item.timetoken);
   useEffect(() => {
@@ -89,7 +89,7 @@ const Message = ({mine, avatar, item, pubnub, chatChannel}) => {
         timeStamp: 1,
       })
         .then(response => setThumbVideo(response.path))
-        .catch(err => console.log({err}));
+        .catch(err => console.log({ err }));
     }
   };
 
@@ -104,7 +104,7 @@ const Message = ({mine, avatar, item, pubnub, chatChannel}) => {
       timeStamp: 1,
     })
       .then(response => setVidThumb(response.path))
-      .catch(err => console.log({err}));
+      .catch(err => console.log({ err }));
     setVideoOpenUrl(result);
     dialogeRefVideo.current.open();
   };
@@ -143,19 +143,19 @@ const Message = ({mine, avatar, item, pubnub, chatChannel}) => {
   };
 
   return (
-    <View style={[styles.wrapper, {marginBottom: mine ? 10 : 25}]}>
+    <View style={[styles.wrapper, { marginBottom: mine ? 10 : 25 }]}>
       <ImageModal
         ref={dialogeRefImage}
         video={null}
         image={imageOpenUrl}
-        // imageSize={{ width: imageWidth, height: imageHeight }}
+      // imageSize={{ width: imageWidth, height: imageHeight }}
       />
       <ImageModal
         vid_thumbnail={vid_thumbnail}
         ref={dialogeRefVideo}
         video={videoOpenUrl}
         image={null}
-        // imageSize={{ width: imageWidth, height: imageHeight }}
+      // imageSize={{ width: imageWidth, height: imageHeight }}
       />
       <View
         style={[
@@ -179,7 +179,7 @@ const Message = ({mine, avatar, item, pubnub, chatChannel}) => {
               </Text>
             )}
 
-            <View style={[styles.arrow, {display: mine ? 'flex' : 'none'}]}>
+            <View style={[styles.arrow, { display: mine ? 'flex' : 'none' }]}>
               <Image
                 style={styles.arrowImg}
                 resizeMode="contain"
@@ -191,7 +191,7 @@ const Message = ({mine, avatar, item, pubnub, chatChannel}) => {
           <View
             style={[
               styles.messageFooter,
-              {flexDirection: mine ? 'row-reverse' : 'row'},
+              { flexDirection: mine ? 'row-reverse' : 'row' },
             ]}>
             <Text style={styles.time}>
               {convertTimestamp(item.item.timetoken / 10000000)}

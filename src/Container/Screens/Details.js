@@ -248,6 +248,7 @@ const Details = props => {
         visible={reportModal}
         setVisible={setReportModal}
         horseID={item?.id}
+        navigation={props.navigation}
       />
       <View
         style={[styles.headerContainer, { top: safeArea.top + 12, zIndex: 10 }]}>

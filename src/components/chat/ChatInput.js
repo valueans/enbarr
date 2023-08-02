@@ -347,6 +347,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 8,
     height: 40,
     padding: PADDING_COMPOSER,
+    color: COLORS.black
   },
   icon: {
     width: 20,
