@@ -1,7 +1,6 @@
 from celery import shared_task
 from celery.utils.log import get_task_logger
 import stripe
-from .api.v1.helpers import createStripeCustomer
 from django.contrib.auth import get_user_model
 from .api.v1.helpers import createMonthlySubscriptionCharge
 

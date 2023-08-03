@@ -21,12 +21,13 @@ def createStripeCustomer(user):
         stipe_customer = StripeCustomer.objects.create(
             user=user, stipe_customerId=response["id"]
         )
-    return stipe_customer.stipe_customerId
+    return stipe_customer
 
 
 def createSetupIntentCustomer(user):
     # create a new setup intent to add a new card for customer.
-    stripe_customer = StripeCustomer.objects.get(user=user)
+    stripe_customer = createStripeCustomer(user)
+        
     response = stripe.SetupIntent.create(
         payment_method_types=["card"], customer=stripe_customer.stipe_customerId
     )
@@ -54,9 +55,9 @@ def createStripeSubcription(user, subscription_plan):
     if user.userprofile.user_stripe_subscription_id != None:
         deleteSubscription(user)
     card = Cards.objects.filter(user=user, active=True).order_by("id").last()
-    customer_id = createStripeCustomer(user)
+    stripe_customer = createStripeCustomer(user)
     response = stripe.Subscription.create(
-        customer=customer_id,
+        customer=stripe_customer.stipe_customerId,
         default_payment_method=card.payment_id,
         items=[
             {"price": subscription_plan.stripe_price_id},

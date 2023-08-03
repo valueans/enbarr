@@ -96,13 +96,14 @@ def setupIntentStripeView(request):
     """
     if request.method == "GET":
         user = request.user
-        stipe_customer = StripeCustomer.objects.get(user=user)
         setup_intent = createSetupIntentCustomer(user)
+        stripe_customer = createStripeCustomer(user)
+        
         data = {
             "status": "OK",
             "setupIntent": setup_intent.intent_secret,
             "ephemeralKey": setup_intent.ephemeral_key,
-            "customer": stipe_customer.stipe_customerId,
+            "customer": stripe_customer.stipe_customerId,
             "publish_key": settings.STRIPE_PUBLISHABLE_KEY,
         }
         return Response(data=data, status=status.HTTP_200_OK)
