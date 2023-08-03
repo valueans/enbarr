@@ -25,12 +25,12 @@ const ReportModal = ({ visible, setVisible, horseID, navigation }) => {
   };
   const message = [
     'Spam',
-    // 'Pornography',
-    // 'Self-harm',
-    // 'Not for children',
-    // 'Illegal activities (e.g. drug selling)',
-    // 'Deceptive content',
-    'Report ',
+    'Pornography',
+    'Self-harm',
+    'Not for children',
+    'Illegal activities (e.g. drug selling)',
+    'Deceptive content',
+    // 'Report ',
   ];
   const pressItem = async (item, index) => {
 
