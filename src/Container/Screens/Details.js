@@ -242,7 +242,7 @@ const Details = props => {
   };
   return (
     <View style={[globalStyle.container, { backgroundColor: COLORS.white }]}>
-      <StatusBar barStyle={'light-content'} />
+      <StatusBar barStyle={'dark-content'} />
 
       <ReportModal
         visible={reportModal}
@@ -281,10 +281,7 @@ const Details = props => {
                   <Text style={styles.username}>
                     {item?.userprofile?.first_name
                       ? item?.userprofile?.first_name
-                      : item?.userprofile?.user?.email.substring(
-                        0,
-                        item?.userprofile?.user?.email.lastIndexOf('@'),
-                      )}
+                      : item?.userprofile?.user?.username}
                   </Text>
                 </View>
               </View>

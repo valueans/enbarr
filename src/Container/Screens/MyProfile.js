@@ -95,10 +95,11 @@ const MyProfile = ({ navigation }) => {
   const openPicker = async type => {
     await ImagePicker.openPicker({
       mediaType: type,
-      width,
-      height: height * 0.65,
+      width: 1200,
+      height: 1200,
       forceJpg: true,
       includeBase64: true,
+      cropping: true
     })
       .then(async file => {
         // console.log(file.data);

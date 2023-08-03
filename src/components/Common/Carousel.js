@@ -238,7 +238,7 @@ const Carousel = ({ items, children }) => {
         ) : (
           <Image
             source={{ uri: item.file }}
-            resizeMode='cover'
+            resizeMode='contain'
             style={styles.img}
           />
         )}
@@ -306,8 +306,8 @@ export default Carousel;
 
 const styles = StyleSheet.create({
   img: {
-    width,
-    height: '100%',
+    width: '100%',
+    height: 800,
   },
   container: {
     flex: 1,

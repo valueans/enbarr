@@ -310,14 +310,10 @@ const Chat = props => {
               }}
             /> */}
             <Text style={styles.username}>
-              {props.route.params.item.user_two_profile.user.name
-                ? props.route.params.item.user_two_profile.user.name
-                : props.route.params.item.user_two_profile.user.email.substring(
-                  0,
-                  props.route.params.item.user_two_profile.user.email.lastIndexOf(
-                    '@',
-                  ),
-                )}
+              {props.route.params.item?.user_two_profile?.first_name
+                ? props.route.params.item?.user_two_profile.first_name
+                :
+                props.route.params.item?.user_two_profile.user.username}
             </Text>
             <TouchableOpacity onPress={onReportPress}>
               <Image style={{ height: 20, width: 40 }} resizeMode='contain' source={require('../../assets/images/more.png')} />

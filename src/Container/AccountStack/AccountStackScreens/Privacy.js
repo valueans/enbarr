@@ -1,16 +1,17 @@
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import SimpleLayout from '../../../components/Layout/SimpleLayout';
 import fonts from '../../../utils/fonts';
+import COLORS from '../../../utils/colors';
 
-const Privacy = ({navigation}) => {
+const Privacy = ({ navigation }) => {
   return (
     <SimpleLayout
       title={'Privacy policy'}
       navigation={navigation}
       paddingHorizontal={0}>
       <ScrollView
-        contentContainerStyle={{paddingTop: 12}}
+        contentContainerStyle={{ paddingTop: 12 }}
         showsVerticalScrollIndicator={false}>
         <Text style={styles.text}>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Elit mi
@@ -67,5 +68,6 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     fontSize: 12,
     lineHeight: 18,
+    color: COLORS.black
   },
 });

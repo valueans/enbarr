@@ -154,10 +154,7 @@ const MainItem = ({
                 <Text style={styles.username}>
                   {userprofile.first_name
                     ? userprofile.first_name + ' '
-                    : userprofile?.user?.email.substring(
-                      0,
-                      userprofile?.user?.email.lastIndexOf('@'),
-                    )}
+                    : userprofile?.user?.username}
                 </Text>
               </View>
             </View>

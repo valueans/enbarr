@@ -2,21 +2,21 @@ import {
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
-  ScrollView,
+  // ScrollView,
   StyleSheet,
   Text,
   View,
   Image,
   Dimensions,
-  FlatList,
+  // FlatList,
   TouchableOpacity,
   Alert,
   TextInput,
 } from 'react-native';
-// import {
-//   // ScrollView,
-//   FlatList
-// } from 'react-native-gesture-handler';
+import {
+  ScrollView,
+  FlatList
+} from 'react-native-gesture-handler';
 import React, { useState, useRef, useEffect } from 'react';
 import Background from '../../components/Layout/Background';
 import HomeHeader from '../../components/Common/HomeHeader';
@@ -55,6 +55,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Country, State, City } from 'country-state-city';
 
 global.firstTime = true;
+
 const Buyer = props => {
   // console.log('qwertyu', props.route.params);
   const mediaSheetRef = useRef(null);
@@ -114,7 +115,7 @@ const Buyer = props => {
 
   const [initialize, setInitialize] = useState(false);
 
-  const [radius, setRadius] = useState(20);
+  const [radius, setRadius] = useState(null);
   const [radiusOptions, setRadiusOptions] = useState([
     { value: 20 },
     { value: 50 },
@@ -271,14 +272,14 @@ const Buyer = props => {
     setStatee('');
     setBreed('');
     setMinAge('');
-    setRadius(20);
+    setRadius(null);
     setMaxAge('');
     setMinHeight('');
     setMaxHeight('');
     setMinPrice('');
     setMaxPrice('');
     setDiscipline('');
-    setGender('');
+    setGender([]);
     setColor('');
     setTemperament('');
     setKeywords([]);
@@ -489,6 +490,7 @@ const Buyer = props => {
                   title={'Gender (select all that apply)'}
                   list={['Gelding', 'Mare', 'Stallion']}
                   direction={'row'}
+                  data={gender}
                   onChange={data => {
                     console.log(data);
                     setGender(data);
@@ -840,7 +842,7 @@ const Buyer = props => {
             paddingTop: 18,
             height: height * 0.8,
           }}>
-          <ScreenTitle size={18}>Select breed</ScreenTitle>
+          <ScreenTitle size={18}>Select discipline</ScreenTitle>
           <BottomSheetView style={[styles.listContainer, { height: 200 }]}>
             <FlatList
               data={disciplineList}
@@ -872,7 +874,7 @@ const Buyer = props => {
             paddingTop: 18,
             height: height * 0.8,
           }}>
-          <ScreenTitle size={18}>Select breed</ScreenTitle>
+          <ScreenTitle size={18}>Select Color</ScreenTitle>
           <BottomSheetView style={[styles.listContainer, { height: 200 }]}>
             <FlatList
               data={colorList}
@@ -904,7 +906,7 @@ const Buyer = props => {
             paddingTop: 18,
             height: height * 0.8,
           }}>
-          <ScreenTitle size={18}>Select breed</ScreenTitle>
+          <ScreenTitle size={18}>Select temperament</ScreenTitle>
           <BottomSheetView style={[styles.listContainer, { height: 200 }]}>
             <FlatList
               data={temperamentList}

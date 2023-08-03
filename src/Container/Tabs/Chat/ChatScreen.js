@@ -239,12 +239,8 @@ const ChatScreen = props => {
             <Text style={styles.username}>
               {item?.user_two_profile?.first_name
                 ? item?.user_two_profile.first_name
-                : item?.user_two_profile.first_name == null ?
-                  item?.user_two_profile.user.username
-                  : item?.user_two_profile?.user.email.substring(
-                    0,
-                    item?.user_two_profile?.user.email.lastIndexOf('@'),
-                  )}
+                : item?.user_two_profile.user.username
+              }
             </Text>
             <Text style={styles.text} numberOfLines={1}>
               {item?.last_message?.Messages}

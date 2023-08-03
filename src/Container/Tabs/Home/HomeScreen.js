@@ -48,8 +48,11 @@ import { TimeFromNow } from '../../../utils/Time';
 import { useEffect } from 'react';
 import PubNub from 'pubnub';
 import * as PubNubKeys from '../Chat/PubNubKeys';
-global.pag = 2;
+
+// global.pag = 2;
+
 const HomeScreen = props => {
+
   const { userDetail } = useSelector(state => state.userDetail);
 
   const pubnub = new PubNub({
@@ -68,6 +71,8 @@ const HomeScreen = props => {
   const [filterItem, setFilterItem] = useState('All');
   const [myDetail, setMydetail] = useState([]);
   const [numberOfNotif, setNumberOfNotif] = useState(0);
+
+  const [page, setPage] = useState(1)
 
   const goToDetails = item => {
     navigation.navigate('Details', { item, pubnub });
@@ -104,7 +109,6 @@ const HomeScreen = props => {
           );
           setListOfHorses(x);
         }
-
         const myData = await getMyDetail();
         // console.log('qqqwwww', myData.user.email);
         console.log('qqqqww', myData?.user?.email);
@@ -120,7 +124,6 @@ const HomeScreen = props => {
         setNumberOfNotif(notifCount[1].count);
         console.log('iouioiu', notifCount[1].count);
       }
-      pag = 2;
       fetchHorses();
     }, []),
   );
@@ -167,30 +170,35 @@ const HomeScreen = props => {
   }, [filterItem]);
 
   const loadMoreHorses = async () => {
-    const data = await getAlhorses(pag);
-    pag = pag + 1;
-    setListOfHorses(p => [...p, ...data]);
 
-    if (filterItem == 'All') {
-      setListOfHorses(p => [...p, ...data]);
-    } else if (filterItem == 'Last Day') {
-      x = horses.filter((item, index) => TimeFromNow(item.created_at) == 'D');
-      setListOfHorses(p => [...p, ...x]);
-    } else if (filterItem == 'Week') {
-      x = horses.filter(
-        (item, index) =>
-          TimeFromNow(item.created_at) == 'W' ||
-          TimeFromNow(item.created_at) == 'D',
-      );
-      setListOfHorses(p => [...p, ...x]);
-    } else if (filterItem == 'Month') {
-      x = horses.filter(
-        (item, index) =>
-          TimeFromNow(item.created_at) == 'M' ||
-          TimeFromNow(item.created_at) == 'W' ||
-          TimeFromNow(item.created_at) == 'D',
-      );
-      setListOfHorses(p => [...p, ...x]);
+    const data = await getAlhorses(page + 1);
+    console.log('NEW PAGE NO DATA ', page + 1)
+    if (data != '') {
+      setPage(page + 1)
+      console.log('NEW PAGE WITH DATA ', page + 1, data)
+      // setListOfHorses(p => [...p, ...data]);
+
+      if (filterItem == 'All') {
+        setListOfHorses(p => [...p, ...data]);
+      } else if (filterItem == 'Last Day') {
+        x = horses.filter((item, index) => TimeFromNow(item.created_at) == 'D');
+        setListOfHorses(p => [...p, ...x]);
+      } else if (filterItem == 'Week') {
+        x = horses.filter(
+          (item, index) =>
+            TimeFromNow(item.created_at) == 'W' ||
+            TimeFromNow(item.created_at) == 'D',
+        );
+        setListOfHorses(p => [...p, ...x]);
+      } else if (filterItem == 'Month') {
+        x = horses.filter(
+          (item, index) =>
+            TimeFromNow(item.created_at) == 'M' ||
+            TimeFromNow(item.created_at) == 'W' ||
+            TimeFromNow(item.created_at) == 'D',
+        );
+        setListOfHorses(p => [...p, ...x]);
+      }
     }
   };
 
@@ -235,6 +243,7 @@ const HomeScreen = props => {
       //let call search api
       setIsLoading(true);
       const seachHorse = await searchHorses(e, e);
+      console.log('SEARCH RESULTS ', seachHorse);
       setListOfSearchHorses(seachHorse);
       setIsLoading(false);
     }
