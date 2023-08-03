@@ -1,11 +1,12 @@
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
 import SimpleLayout from '../../components/Layout/SimpleLayout';
 import fonts from '../../utils/fonts';
-import {getTerms} from '../../APIs/api';
+import { getTerms } from '../../APIs/api';
 // import {WebView} from 'react-native-webview';
 import RenderHtml from 'react-native-render-html';
-const Terms = ({navigation}) => {
+import COLORS from '../../utils/colors';
+const Terms = ({ navigation }) => {
   const [privacyContent, setPrivacyContent] = useState('');
   const data = async () => {
     const x = await getTerms();
@@ -30,10 +31,15 @@ const Terms = ({navigation}) => {
       navigation={navigation}
       paddingHorizontal={0}>
       <ScrollView
-        contentContainerStyle={{paddingTop: 12}}
+        contentContainerStyle={{ paddingTop: 12 }}
         showsVerticalScrollIndicator={false}>
         <RenderHtml
           contentWidth={400}
+          tagsStyles={{
+            a: { color: COLORS.black, textDecorationLine: 'none', fontFamily: fonts.medium, fontSize: 16, lineHeight: 23 },
+            p: { lineHeight: 23, color: COLORS.black, fontFamily: fonts.medium, fontSize: 16, marginBottom: 16 },
+            img: { display: 'none' }
+          }}
           source={{
             html: `
     ${privacyContent}`,

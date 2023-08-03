@@ -57,7 +57,7 @@ const MyProfile = ({ navigation }) => {
   const getDetail = async () => {
     const data = await getMyDetail();
     setIsLoadingDetail(true);
-    console.log('my Detail', data);
+    // console.log('my Detail', data);
     //so let set Our states
     setFirstName(data.first_name);
     setLastName(data.last_name);
@@ -111,11 +111,10 @@ const MyProfile = ({ navigation }) => {
           setIsUploading(true);
           //so lets upload profile image
           var url = userProfileUrl;
-          console.log('qwqwqw', file.sourceURL);
+          // console.log('qwqwqw', file.sourceURL);
           var photo = {
             uri:
-              Platform.OS === 'android'
-                ? file.sourceURL
+              Platform.OS === 'android' ? file.path
                 : file.sourceURL.replace('file://', ''), // CameralRoll Url
             // uri: file.path,
             type: file.mime,
@@ -151,7 +150,7 @@ const MyProfile = ({ navigation }) => {
               console.log('fiiiiii', xhr.response);
               res = JSON.parse(xhr.response);
               AsyncStorage.setItem('myProfilePicture', file.data);
-              setMyImage(res.profile_photo);
+              setMyImage(res?.profile_photo);
               setIsUploading(false);
             }
           });
