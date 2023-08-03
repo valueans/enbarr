@@ -35,13 +35,12 @@ const App = () => {
   const hideSplash = async () => {
     setShowSplash(true);
     RNBootSplash.hide({ fade: true, duration: 3000 });
-
     setTimeout(() => setShowSplash(false), 4000);
   };
 
   return (
     <>
-      <StatusBar hidden backgroundColor="blue" barStyle="dark-content" />
+      <StatusBar barStyle="light-content" />
       {showSpalsh ? (
         <MysplashScreen />
       ) : (

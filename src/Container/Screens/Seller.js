@@ -299,9 +299,10 @@ const Seller = props => {
     }
     await ImagePicker.openPicker({
       mediaType: type,
-      width,
-      height: height * 0.65,
+      width: 1700,
+      height: 1900,
       forceJpg: true,
+      cropping: true
     })
       .then(async file => {
         mediaSheetRef.current.close();

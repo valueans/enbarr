@@ -1,17 +1,18 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useState} from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useState } from 'react';
 import ScreenTitle from '../Text/ScreenTitle';
 import COLORS from '../../utils/colors';
 import fonts from '../../utils/fonts';
-import {forwardRef, useImperativeHandle} from 'react';
+import { forwardRef, useImperativeHandle } from 'react';
 arr = [];
+
 const RadioListBuyer = forwardRef(
   (
     {
       title = 'default',
-      list = [],
+      list = data,
       direction = ['row' | 'column'],
-      onChange = data => {},
+      onChange = data => { },
     },
     ref,
   ) => {
@@ -50,7 +51,7 @@ const RadioListBuyer = forwardRef(
     };
 
     return (
-      <View style={{marginVertical: 8}}>
+      <View style={{ marginVertical: 8 }}>
         <ScreenTitle size={12} marginVertical={4}>
           {title}
         </ScreenTitle>

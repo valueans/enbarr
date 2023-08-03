@@ -9,20 +9,20 @@ import {
   Platform,
   PermissionsAndroid,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import Geolocation from 'react-native-geolocation-service';
-import {Menu, MenuItem, MenuDivider} from 'react-native-material-menu';
-import {getNmberOfNotifications} from '../../APIs/api';
+import { Menu, MenuItem, MenuDivider } from 'react-native-material-menu';
+import { getNmberOfNotifications } from '../../APIs/api';
 import COLORS from '../../utils/colors';
 import fonts from '../../utils/fonts';
-import {globalStyle} from '../../utils/GlobalStyle';
+import { globalStyle } from '../../utils/GlobalStyle';
 import notif from '../../assets/images/bell.png';
 import settings from '../../assets/images/settings.png';
 import filter from '../../assets/images/filter.png';
 import search from '../../assets/images/search.png';
 import ScreenTitle from '../Text/ScreenTitle';
-import {getMyDetail} from '../../APIs/api';
-import {BarIndicator} from 'react-native-indicators';
+import { getMyDetail } from '../../APIs/api';
+import { BarIndicator } from 'react-native-indicators';
 
 const DEFAULT_IMAGE = require('../../assets/images/user.png');
 
@@ -66,7 +66,7 @@ const HomeHeader = ({
     const data = await getMyDetail();
     if (data.promotion_adds > 0) {
       //should go to post page
-      goToPage('Seller', {myLat: myLat, myLong: myLong});
+      goToPage('Seller', { myLat: myLat, myLong: myLong });
       //for testing purposes:
       // goToPage('RequestSubscribe');
     } else if (data.promotion_adds <= 0) {
@@ -99,6 +99,7 @@ const HomeHeader = ({
     return false;
   };
   const hasLocationPermission = async () => {
+
     if (Platform.OS === 'ios') {
       const hasPermission = await hasPermissionIOS();
       return hasPermission;
@@ -142,13 +143,14 @@ const HomeHeader = ({
   const getUserLocation = async () => {
     const hasPermission = await hasLocationPermission();
     if (hasPermission) {
-      
       Geolocation.getCurrentPosition(async position => {
+        console.log('LAT AND LONG ', position)
         setMyLat(position.coords.latitude);
         setMyLong(position.coords.longitude);
       });
 
     } else {
+      console.log('LAT AND LONG ', hasPermission)
       setDistance(0);
     }
   };
@@ -164,7 +166,7 @@ const HomeHeader = ({
                   <Image
                     style={styles.avatar}
                     resizeMode="cover"
-                    source={{uri: `data:image/png;base64,${avatar}`}}
+                    source={{ uri: `data:image/png;base64,${avatar}` }}
                     onLoad={() => setIsImageLoading(true)}
                     onLoadStart={() => setIsImageLoading(true)}
                     onLoadEnd={() => setIsImageLoading(false)}
@@ -214,7 +216,7 @@ const HomeHeader = ({
             </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={0.8}
-              style={[styles.headerBtn, {marginLeft: 16}]}
+              style={[styles.headerBtn, { marginLeft: 16 }]}
               onPress={() => goToPage('Settings')}>
               <Image
                 style={styles.btnIcon}
@@ -254,7 +256,7 @@ const HomeHeader = ({
               style={[
                 styles.hBtn,
                 isSeller ? styles.hSelectedBtn : {},
-                {marginLeft: 8},
+                { marginLeft: 8 },
               ]}
               onPress={() => aSellerPress()}>
               <Text
@@ -269,12 +271,12 @@ const HomeHeader = ({
         </View>
       ) : null}
       {showLine3 ? (
-        <View style={[styles.row, {paddingVertical: 8}]}>
+        <View style={[styles.row, { paddingVertical: 8 }]}>
           <View style={styles.inputContainer}>
             <Image
               source={search}
               resizeMode="contain"
-              style={[styles.filterIcon, {width: 20, height: 20}]}
+              style={[styles.filterIcon, { width: 20, height: 20 }]}
             />
             <TextInput
               style={styles.input}
@@ -353,7 +355,7 @@ const styles = StyleSheet.create({
     elevation: 2,
     shadowColor: COLORS.black,
     shadowOpacity: 0.15,
-    shadowOffset: {width: 0, height: 3},
+    shadowOffset: { width: 0, height: 3 },
     shadowRadius: 5,
     backgroundColor: 'white',
     borderRadius: 15,
@@ -464,6 +466,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.regular,
     fontSize: 14,
     fontWeight: '600',
+    color: COLORS.black
   },
   menuItemSelect: {
     width: 13,
