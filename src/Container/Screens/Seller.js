@@ -8,15 +8,19 @@ import {
   Pressable,
   KeyboardAvoidingView,
   Platform,
-  ScrollView,
+  // ScrollView,
   TextInput,
   Alert,
-  FlatList,
+  // FlatList,
   TouchableOpacity,
   ActivityIndicator,
   PermissionsAndroid,
   Button,
 } from 'react-native';
+import {
+  ScrollView,
+  FlatList
+} from 'react-native-gesture-handler';
 import React, { useState, useEffect, useRef } from 'react';
 import Background from '../../components/Layout/Background';
 import HomeHeader from '../../components/Common/HomeHeader';
