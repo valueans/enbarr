@@ -415,7 +415,7 @@ const Welcome = props => {
         console.log('fffffggg', data[1]);
         dispatch(setUserDetail(data[1]));
         // console.log()
-        if (data[1]['user-profile'].profile_photo) {
+        if (data[1]['user-profile']?.profile_photo) {
           // const fileReader = new FileReader();
 
           RNFS.downloadFile({
@@ -434,12 +434,17 @@ const Welcome = props => {
             });
           });
         }
+
         await AsyncStorage.setItem('acc', data[1].token);
+
+        console.log('******** ', data[1].user.is_verified)
+
         if (data[1].user.is_verified) {
           dispatch(login());
         } else {
           props.navigation.navigate('Passcode', { source: 'LOGIN', data });
         }
+
         if (isCheckedRemember) {
           dispatch(trueRemember());
         } else {
@@ -450,7 +455,6 @@ const Welcome = props => {
       }
 
       setBtnLoginLoading(false);
-
       console.log(data);
     } else if (step == 1) {
       if (signUppass != signUpPassConfirm) {
