@@ -318,7 +318,7 @@ const SwipingPage = props => {
               style={styles.logo}
             />
             <TouchableOpacity
-              style={{ position: 'absolute', top: 10, left: 8 }}
+              style={{ position: 'absolute', top: 30, left: 8 }}
               onPress={() => props.navigation.goBack()}>
               <Image
                 source={backIcon}

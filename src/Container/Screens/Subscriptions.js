@@ -109,6 +109,9 @@ const Subscriptions = ({ navigation }) => {
             style={{ marginVertical: 12 }}
             color={getTextColorByIndex(index)}
           />
+          <Text style={[styles.textItem, { color: getTextColorByIndex(index) }]}>
+            {item.description_features}
+          </Text>
           <View>
             {/* {item.features.map((itm, i) => (
             <View key={'feature_' + i.toString()} style={styles.fItem}>
@@ -176,6 +179,7 @@ const Subscriptions = ({ navigation }) => {
               paddingLeft: SPACE,
               paddingRight: SPACE,
               alignItems: 'center',
+              // borderColor: COLORS.color13
             }}
             contentInset={{
               position: 'absolute',

@@ -9,26 +9,26 @@ import {
   Platform,
   PermissionsAndroid,
 } from 'react-native';
-import React, {useState} from 'react';
-import COLORS, {ColorShade} from '../../utils/colors';
-import {BlurView} from '@react-native-community/blur';
+import React, { useState } from 'react';
+import COLORS, { ColorShade } from '../../utils/colors';
+import { BlurView } from '@react-native-community/blur';
 import fonts from '../../utils/fonts';
 import SpecialButton from '../Button/SpecialButton';
-import {globalStyle} from '../../utils/GlobalStyle';
+import { globalStyle } from '../../utils/GlobalStyle';
 import message from '../../assets/images/envelope.png';
 import heart from '../../assets/images/heart.png';
 import heartFill from '../../assets/images/heart_fill.png';
-import {BarIndicator} from 'react-native-indicators';
-import {deleteAHorse} from '../../APIs/api';
+import { BarIndicator } from 'react-native-indicators';
+import { deleteAHorse } from '../../APIs/api';
 import Video from 'react-native-video';
 import playIcon from '../../assets/images/play.png';
 
-const {width, height} = Dimensions.get('screen');
+const { width, height } = Dimensions.get('screen');
 
-import {horsesUri} from '../../utils/data';
+import { horsesUri } from '../../utils/data';
 
 const MyAds = props => {
-  const {images, title, description, likes, user} = props.item;
+  const { images, title, description, likes, user } = props.item;
   const [isLiked, setIsLiked] = useState(false);
   const [isLoadingPicture, setIsLoadingPicture] = useState(false);
   const [play, setPlpay] = useState(false);
@@ -40,7 +40,7 @@ const MyAds = props => {
         onPress: () => console.log('Cancel Pressed'),
         style: 'cancel',
       },
-      {text: 'YES', onPress: () => deleteHorse()},
+      { text: 'YES', onPress: () => deleteHorse() },
     ]);
     // console.log(props.fetchHorseInAdsPage);
   };
@@ -54,7 +54,7 @@ const MyAds = props => {
       Alert.alert('Please try again');
     }
   };
-  const FooterWrapper = ({children}) => {
+  const FooterWrapper = ({ children }) => {
     return Platform.OS == 'android' ? (
       <View style={styles.ViewContainer}>{children}</View>
     ) : (
@@ -66,7 +66,7 @@ const MyAds = props => {
 
   const detailPress = async () => {
     console.log('sa', props.item);
-    props.navigation.navigate('Details', {item: props.item});
+    props.navigation.navigate('Details', { item: props.item, myhorse: true });
   };
   return (
     <TouchableOpacity onPress={detailPress} activeOpacity={0.9}>
@@ -82,11 +82,11 @@ const MyAds = props => {
                 alignItems: 'center',
               }}>
               <Video
-                style={{width: '100%', height: '100%'}}
+                style={{ width: '100%', height: '100%' }}
                 posterResizeMode={'cover'}
                 resizeMode={'cover'}
                 poster={images[0].file}
-                source={{uri: images[0].file}}
+                source={{ uri: images[0].file }}
                 repeat={true}
                 paused={!play}
                 fullscreen={play}
@@ -100,7 +100,7 @@ const MyAds = props => {
                 <Image
                   source={playIcon}
                   resizeMode="contain"
-                  style={{width: '100%', height: '100%'}}
+                  style={{ width: '100%', height: '100%' }}
                 />
               </TouchableOpacity>
             </View>
@@ -109,15 +109,15 @@ const MyAds = props => {
               onLoad={() => setIsLoadingPicture(false)}
               onLoadStart={() => setIsLoadingPicture(true)}
               onLoadEnd={() => setIsLoadingPicture(false)}
-              source={{uri: images.length > 0 ? images[0].file : ''}}
+              source={{ uri: images.length > 0 ? images[0].file : '' }}
               style={styles.img}
-              // resizeMode="cover"
+            // resizeMode="cover"
             />
           )
         ) : null}
 
         {isLoadingPicture ? (
-          <View style={{position: 'absolute', top: 100}}>
+          <View style={{ position: 'absolute', top: 100 }}>
             <BarIndicator size={20} color={COLORS.color14}></BarIndicator>
           </View>
         ) : null}
@@ -180,7 +180,7 @@ const MyAds = props => {
                   }}
                   width={120 + 90}
                   textAlign={'start'}
-                  textStyle={{paddingLeft: 20, color: COLORS.color3}}
+                  textStyle={{ paddingLeft: 20, color: COLORS.color3 }}
                   backgroundColor={COLORS.white}
                   secondaryColor={COLORS.color3}
                   onPress={() => {
@@ -189,7 +189,7 @@ const MyAds = props => {
                       horseID: props.item.id,
                     });
                   }}
-                  // reverse={true}
+                // reverse={true}
                 >
                   Edit
                 </SpecialButton>
@@ -206,7 +206,7 @@ const MyAds = props => {
                   textAlign={'start'}
                   backgroundColor={COLORS.red2}
                   secondaryColor={COLORS.white}
-                  // textStyle={{ paddingLeft: 10 }}
+                // textStyle={{ paddingLeft: 10 }}
                 >
                   Remove Ads
                 </SpecialButton>

@@ -435,7 +435,11 @@ const Welcome = props => {
           });
         }
         await AsyncStorage.setItem('acc', data[1].token);
-        dispatch(login());
+        if (data[1].user.is_verified) {
+          dispatch(login());
+        } else {
+          props.navigation.navigate('Passcode', { source: 'LOGIN', data });
+        }
         if (isCheckedRemember) {
           dispatch(trueRemember());
         } else {

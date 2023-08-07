@@ -11,6 +11,7 @@ import {
   Pressable,
   Image,
   FlatList,
+  Appearance,
 } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import React, { useState, useEffect } from 'react';
@@ -24,15 +25,15 @@ import { packages } from '../../utils/data';
 import fonts from '../../utils/fonts';
 import cart from '../../assets/images/cart.png';
 import TextButton from '../../components/Button/TextButton';
-// import {
-//   CardField,
-//   useStripe,
-//   CardForm,
-//   useConfirmPayment,
-//   StripeProvider,
-//   usePaymentSheet,
-//   useConfirmSetupIntent,
-// } from '@stripe/stripe-react-native';
+import {
+  CardField,
+  useStripe,
+  CardForm,
+  useConfirmPayment,
+  StripeProvider,
+  usePaymentSheet,
+  useConfirmSetupIntent,
+} from '@stripe/stripe-react-native';
 import {
   getANewSetupIntent,
   getMyCardDetail,
@@ -239,6 +240,7 @@ const Purchases = ({ navigation, route }) => {
             </View> */}
 
             <CardForm
+              cardStyle={{ backgroundColor: Appearance.getColorScheme() == 'dark' ? '#000000' : '#ffffff' }}
               postalCodeEnable={false}
               onFormComplete={cardDetails => {
                 console.log('card details', cardDetails);
