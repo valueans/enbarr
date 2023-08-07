@@ -6,6 +6,6 @@ const fonts = {
   medium: Platform.OS == 'ios' ? 'Poppins-Medium' : 'PoppinsMedium',
   semiBold: Platform.OS == 'ios' ? 'Poppins-SemiBold' : 'PoppinsSemiBold',
   bold: Platform.OS == 'ios' ? 'Poppins-Bold' : 'PoppinsBold',
-  sp: Platform.OS == 'ios' ? 'BookmanOldStyle' : 'Bookman Old Style',
+  sp: Platform.OS == 'ios' ? 'BookmanOldStyle' : 'bookman old style',
 };
 export default fonts;

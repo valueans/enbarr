@@ -80,11 +80,15 @@ const Details = props => {
   const gotoChat = async () => {
     const data = await getOrCreateNewChannel(item?.userprofile?.user?.id);
     if (data.data) {
-      props.navigation.navigate('Chat', {
-        item: data.data,
-        myDetail: data.data.user_one_profile,
-        pubnub: props?.route?.params?.pubnub,
-      });
+      if (props?.route?.params?.myhorse) {
+
+      } else {
+        props.navigation.navigate('Chat', {
+          item: data.data,
+          myDetail: data.data.user_one_profile,
+          pubnub: props?.route?.params?.pubnub,
+        })
+      }
     } else {
       Alert.alert('Error', 'Please try again later.');
     }

@@ -1,12 +1,12 @@
-import {FlatList, StyleSheet, Text, View} from 'react-native';
-import React, {useState} from 'react';
+import { FlatList, StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
 import COLORS from '../../../../utils/colors';
-import {list} from '../../../../utils/data';
+import { list } from '../../../../utils/data';
 
 import MyAds from '../../../../components/ListItem/MyAds';
-import {useFocusEffect} from '@react-navigation/native';
-import {getMyHorses} from '../../../../APIs/api';
-import {BarIndicator} from 'react-native-indicators';
+import { useFocusEffect } from '@react-navigation/native';
+import { getMyHorses } from '../../../../APIs/api';
+import { BarIndicator } from 'react-native-indicators';
 import fonts from '../../../../utils/fonts';
 global.pag = 2;
 const MyHorses = props => {
@@ -56,7 +56,7 @@ const MyHorses = props => {
             paddingTop: 16,
             paddingBottom: 130,
           }}
-          renderItem={({item, index}) => (
+          renderItem={({ item, index }) => (
             <MyAds
               item={item}
               index={index}

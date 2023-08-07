@@ -627,6 +627,7 @@ const Buyer = props => {
               borderRadius: 5,
               padding: 10,
               width: '80%',
+              color: COLORS.black,
               fontSize: 18,
             }}></TextInput>
           <BottomSheetView style={styles.listContainer}>

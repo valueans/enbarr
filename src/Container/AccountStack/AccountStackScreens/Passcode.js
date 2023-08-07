@@ -12,24 +12,24 @@ import {
   ScrollView,
   StatusBar,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import LinearGradient from 'react-native-linear-gradient';
-import COLORS, {ColorShade} from '../../../utils/colors';
+import COLORS, { ColorShade } from '../../../utils/colors';
 import fonts from '../../../utils/fonts';
 import bg from '../../../assets/images/passcode_bg.png';
 import logo from '../../../assets/images/logo_white_sm.png';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
-import {fetchWithTimeout} from '../../../Shared/fetchData';
-import {useDispatch} from 'react-redux';
-import {login} from '../../../redux/login';
+import { fetchWithTimeout } from '../../../Shared/fetchData';
+import { useDispatch } from 'react-redux';
+import { login } from '../../../redux/login';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {BarIndicator} from 'react-native-indicators';
+import { BarIndicator } from 'react-native-indicators';
 
 const Passcode = props => {
   console.log('hiiii', props.route.params);
   const safeArea = useSafeAreaInsets();
-  const {source} = props.route.params;
+  const { source } = props.route.params;
   const [otp, setOtp] = useState('');
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
@@ -91,8 +91,42 @@ const Passcode = props => {
         Alert.alert('Please enter a valid otp.');
         setOtp('');
       }
+    } else if (source == 'LOGIN') {
+      if (data[0].code == 200) {
+        dispatch(login());
+      } else {
+        Alert.alert('Please enter a valid otp.');
+        setOtp('');
+      }
     }
   };
+
+  const ResendOTP = async () => {
+    setLoading(true);
+    var myHeaders = new Headers();
+    myHeaders.append(
+      'Authorization',
+      `Token ${props.route.params.data[1].token}`,
+    );
+    var requestOptions = {
+      method: 'GET',
+      redirect: 'follow',
+      headers: myHeaders,
+    };
+    const data = await fetchWithTimeout(
+      `/api/v1/users/sendotp/`,
+      requestOptions,
+    );
+    console.log(data);
+    setLoading(false);
+    if (data[0].code == 200) {
+      Alert.alert(data[1].message);
+      setOtp('');
+    } else {
+      // Alert.alert('Please enter a valid otp.');
+      setOtp('');
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -102,22 +136,22 @@ const Passcode = props => {
         backgroundColor={'transparent'}
       />
       <KeyboardAvoidingView
-        style={{flex: 1, backgroundColor: 'white'}}
+        style={{ flex: 1, backgroundColor: 'white' }}
         behavior={Platform.OS == 'ios' ? 'padding' : 'height'}>
         <TouchableWithoutFeedback
-          style={{flex: 1}}
+          style={{ flex: 1 }}
           onPress={() => Keyboard.dismiss()}>
-          <View style={{flex: 1, backgroundColor: 'white'}}>
+          <View style={{ flex: 1, backgroundColor: 'white' }}>
             <View style={styles.bgContainer}>
               <Image source={bg} style={styles.img} resizeMode="cover" />
               <LinearGradient
                 style={styles.overlay}
-                start={{x: 0, y: 0}}
-                end={{x: 0, y: 1}}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 0, y: 1 }}
                 colors={['transparent', ColorShade(COLORS.color3, 80)]}>
                 <Image
                   source={logo}
-                  style={[styles.logo, {top: safeArea.top}]}
+                  style={[styles.logo, { top: safeArea.top }]}
                   resizeMode="contain"
                 />
                 <Text style={styles.title}>Email Verification</Text>
@@ -144,6 +178,9 @@ const Passcode = props => {
                 ) : (
                   <Text style={styles.btnText}>Verify</Text>
                 )}
+              </TouchableOpacity>
+              <TouchableOpacity onPress={ResendOTP} style={{ height: 50, width: '100%', alignItems: 'center', justifyContent: 'center' }}>
+                <Text style={[styles.btnText, { color: COLORS.color3 }]}>Resend</Text>
               </TouchableOpacity>
             </View>
           </View>
