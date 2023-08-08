@@ -191,7 +191,6 @@ const MainItem = ({
 
                 <Text style={styles.description}>
                   {description}
-
                   {/* <Text style={styles.btnText}>Read More</Text> */}
                 </Text>
               </View>
@@ -281,6 +280,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     paddingRight: 10,
     alignItems: 'baseline',
+    height: 60,
   },
   row: {
     flexDirection: 'row',
