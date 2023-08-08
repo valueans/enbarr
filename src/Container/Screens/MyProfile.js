@@ -118,7 +118,7 @@ const MyProfile = ({ navigation }) => {
                 : file.sourceURL.replace('file://', ''), // CameralRoll Url
             // uri: file.path,
             type: file.mime,
-            name: file.filename,
+            name: Platform.OS === 'android' ? 'name.jpeg' : file.filename,
           };
           acc = await AsyncStorage.getItem('acc');
 

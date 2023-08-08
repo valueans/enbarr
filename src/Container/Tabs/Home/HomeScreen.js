@@ -55,6 +55,8 @@ const HomeScreen = props => {
 
   const { userDetail } = useSelector(state => state.userDetail);
 
+  console.log('USER DETAILS ', userDetail)
+
   const pubnub = new PubNub({
     subscribeKey: PubNubKeys.PUBNUB_SUBSCRIBE_KEY,
     publishKey: PubNubKeys.PUBNUB_PUBLISH_KEY,
@@ -75,7 +77,7 @@ const HomeScreen = props => {
   const [page, setPage] = useState(1)
 
   const goToDetails = item => {
-    navigation.navigate('Details', { item, pubnub });
+    navigation.navigate('Details', { item, pubnub, myhorse: userDetail.user.id === item.userprofile.id ? true : false });
   };
 
   useFocusEffect(
@@ -321,6 +323,7 @@ const HomeScreen = props => {
                         onPressDetails={() => goToDetails(item)}
                         onPressMessage={() => goToChat(item)}
                         onPressImage={() => goToDetails(item)}
+                        myhorse={userDetail.user.id === item.userprofile.id ? true : false}
                       />
                     </>
                   );

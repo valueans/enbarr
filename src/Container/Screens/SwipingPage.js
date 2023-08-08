@@ -254,10 +254,12 @@ const SwipingPage = props => {
   };
   const goToDetails = item => {
     if (item) {
-      props.navigation.navigate('Details', {
-        item,
-        pubnub: pubnub
-      });
+      // props.navigation.navigate('Details', {
+      //   item,
+      //   pubnub: pubnub
+      // });
+      props.navigation.navigate('Details', { item, pubnub: pubnub, myhorse: userDetail.user.id === item.userprofile.id ? true : false });
+
     }
   };
 
@@ -385,6 +387,7 @@ const SwipingPage = props => {
                             // console.log('GO TO CHAT ', card)
                             goToChat(card)
                           }}
+                          myhorse={userDetail.user.id === item.userprofile.id ? true : false}
                         />
                       </View>
                     )) ||
