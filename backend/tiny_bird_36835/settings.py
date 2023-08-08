@@ -130,7 +130,7 @@ ROOT_URLCONF = "tiny_bird_36835.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [os.path.join(REACT_APP_DIR, "build")],
+        "DIRS": [os.path.join(REACT_APP_DIR, "build"),os.path.join(BASE_DIR, "templates")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [

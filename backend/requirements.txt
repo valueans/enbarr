@@ -122,3 +122,4 @@ whitenoise==6.0.0
 wrapt==1.15.0
 yarl==1.9.2
 django-dbbackup==4.0.2
+sendgrid==6.8.3
