@@ -80,15 +80,11 @@ const Details = props => {
   const gotoChat = async () => {
     const data = await getOrCreateNewChannel(item?.userprofile?.user?.id);
     if (data.data) {
-      if (props?.route?.params?.myhorse) {
-
-      } else {
-        props.navigation.navigate('Chat', {
-          item: data.data,
-          myDetail: data.data.user_one_profile,
-          pubnub: props?.route?.params?.pubnub,
-        })
-      }
+      props.navigation.navigate('Chat', {
+        item: data.data,
+        myDetail: data.data.user_one_profile,
+        pubnub: props?.route?.params?.pubnub,
+      })
     } else {
       Alert.alert('Error', 'Please try again later.');
     }
@@ -297,7 +293,8 @@ const Details = props => {
           <View style={[styles.row, styles.circleBtnContainer]}>
             <TouchableOpacity
               activeOpacity={0.9}
-              style={[styles.circleBtn, { marginRight: 12 }]}
+              disabled={props?.route?.params?.myhorse ? true : false}
+              style={[styles.circleBtn, { opacity: props?.route?.params?.myhorse ? 0.5 : 1, marginRight: 12 }]}
               onPress={() => onReportPress()}>
               <Image
                 source={blockIcon}
@@ -317,8 +314,9 @@ const Details = props => {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => gotoChat()}
+              disabled={props?.route?.params?.myhorse ? true : false}
               activeOpacity={0.9}
-              style={[styles.circleBtn, { marginRight: 12 }]}>
+              style={[styles.circleBtn, { opacity: props?.route?.params?.myhorse ? 0.5 : 1, marginRight: 12 }]}>
               <Image
                 source={message}
                 resizeMode="contain"
@@ -327,7 +325,8 @@ const Details = props => {
             </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={0.9}
-              style={styles.circleBtn}
+              disabled={props?.route?.params?.myhorse ? true : false}
+              style={[styles.circleBtn, { opacity: props?.route?.params?.myhorse ? 0.5 : 1 }]}
               onPress={() => favPressed()}>
               <Image
                 source={isLiked ? heartFill : heart}

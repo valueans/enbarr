@@ -42,8 +42,9 @@ const MainItem = ({
   onPressMessage = () => { },
   onPressImage = () => { },
   pubnub,
+  myhorse
 }) => {
-  const { images, userprofile, title, isfav, description, id } = item;
+  const { images, userprofile, title, isfav, description, id, } = item;
   const [isLiked, setIsLiked] = useState(isfav);
   const [isLoadingPic, setIsLoadingPic] = useState(false);
   const [play, setPlay] = useState(false);
@@ -161,7 +162,8 @@ const MainItem = ({
             <View style={[styles.row, styles.circleBtnContainer]}>
               <TouchableOpacity
                 activeOpacity={0.9}
-                style={[styles.circleBtn, { marginRight: 12 }]}
+                disabled={myhorse ? true : false}
+                style={[styles.circleBtn, { marginRight: 12, opacity: myhorse ? 0.5 : 1 }]}
                 onPress={goToChat}>
                 <Image
                   source={message}
@@ -171,7 +173,8 @@ const MainItem = ({
               </TouchableOpacity>
               <TouchableOpacity
                 activeOpacity={0.9}
-                style={styles.circleBtn}
+                style={[styles.circleBtn, { opacity: myhorse ? 0.5 : 1 }]}
+                disabled={myhorse ? true : false}
                 onPress={() => favouriteIconPress()}>
                 <Image
                   source={isLiked ? heartFill : heart}

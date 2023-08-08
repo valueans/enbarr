@@ -81,9 +81,10 @@ const Favorite = props => {
               item={item.horses}
               index={index}
               onPressDetails={() =>
-                props.navigation.navigate('Details', { item: item.horses, pubnub: pubnub })
+                props.navigation.navigate('Details', { item: item.horses, pubnub: pubnub, myhorse: userDetail.user.id === item.userprofile.id ? true : false })
               }
               onPressMessage={() => goToChat(item)}
+              myhorse={userDetail.user.id === item.userprofile.id ? true : false}
             />
           )}
           ListEmptyComponent={() => (
