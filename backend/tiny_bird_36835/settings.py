@@ -238,10 +238,9 @@ REST_AUTH = {
 # Custom user model
 AUTH_USER_MODEL = "users.User"
 
-EMAIL_HOST = env.str("EMAIL_HOST", "smtp.sendgrid.net")
-EMAIL_HOST_USER = env.str("SENDGRID_USERNAME", "apikey")
-EMAIL_HOST_PASSWORD = env.str("SENDGRID_PASSWORD", "")
-SENDGRID_EMAIL = env.str("SENDGRID_EMAIL", "")
+EMAIL_HOST = env.str("EMAIL_HOST", "smtp.gmail.com")
+EMAIL_HOST_USER = env.str("EMAIL_HOST_USER", "admin@enbarrapp.com")
+EMAIL_HOST_PASSWORD = env.str("EMAIL_HOST_PASSWORD", "")
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
@@ -272,14 +271,7 @@ SWAGGER_SETTINGS = {
     "DEFAULT_INFO": f"{ROOT_URLCONF}.api_info",
 }
 
-if DEBUG or not (EMAIL_HOST_USER and EMAIL_HOST_PASSWORD and SENDGRID_EMAIL):
-    # output email to console instead of sending
-    if not DEBUG:
-        logging.warning(
-            "You should setup `SENDGRID_USERNAME` and `SENDGRID_PASSWORD` env vars to send emails."
-        )
-    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
 # GCP config
 def google_service_account_config():

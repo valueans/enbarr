@@ -3,11 +3,9 @@ import base64
 import pyotp
 from django.conf import settings
 from django.core.mail import send_mail
-from sendgrid.helpers.mail import (
-    Mail,
-)
-from sendgrid import SendGridAPIClient
+from django.utils.html import strip_tags
 from django.template.loader import render_to_string
+from django.core.mail import EmailMultiAlternatives
 from django.db.models import F
 from .models import User
 from datetime import date
@@ -34,15 +32,16 @@ def sendOtpEmail(user):
     key = base64.b32encode(keygen.encode())
     OTP = pyotp.HOTP(key, digits=4)
     otp = OTP.at(user.otp_counter)
-    html = render_to_string("otp.html", context={"otp":otp})
-    message = Mail(
-        from_email=settings.SENDGRID_EMAIL,
-        to_emails=[user.email],
-        subject="OTP verification",
-        html_content=html
-    )
-    sg = SendGridAPIClient(settings.EMAIL_HOST_PASSWORD)
-    sg.send(message)
+    
+    subject="OTP verification"
+    from_email=settings.EMAIL_HOST_USER
+    html_content = render_to_string("otp.html", context={"otp":otp})
+    text_content = strip_tags(html_content)
+    to = user.email
+    msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+    msg.attach_alternative(html_content, "text/html")
+    msg.send()
+    
     user = User.objects.filter(email=user.email).update(
         otp_counter=F("otp_counter") + 1
     )

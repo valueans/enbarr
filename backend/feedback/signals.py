@@ -13,7 +13,7 @@ def send_feedback_response(sender, instance, created, **kwargs):
         send_mail(
             f"Feedback Response",
             f"{instance.response}",
-            settings.SENDGRID_EMAIL,
+            settings.EMAIL_HOST_USER,
             [instance.email],
             fail_silently=False,
         )
@@ -23,7 +23,7 @@ def send_feedback_response(sender, instance, created, **kwargs):
         send_mail(
             f"Feedback Response",
             f"{instance.message}",
-            settings.SENDGRID_EMAIL,
+            settings.EMAIL_HOST_USER,
             emails,
             fail_silently=False,
         )
