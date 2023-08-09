@@ -4,10 +4,11 @@ import GoogleStoreSocialIcon from '../Svgs/GoogleStoreSocialIcon';
 import AppleStoreSocialIcon from '../Svgs/AppleStoreSocialIcon';
 import { useSelector } from 'react-redux';
 
-const StoreLinks = ({color="#313033",className}) => {
+const StoreLinks = ({color="#313033",className, sx}) => {
   const socialLinks = useSelector(state=>state.SocialLinks);
+
   return (
-    <Grid container spacing={1} className={className}>
+    <Grid sx={sx} container spacing={1} className={className}>
       <Grid item>
         <a href={socialLinks?.appleStoreLink} target="_blank" rel="noopener noreferrer">
           <AppleStoreSocialIcon color={color} />

@@ -46,7 +46,7 @@ const SignUpForm = ({setSnackBarData}) => {
 
   return (
     <form onSubmit={handleSubmit}>
-    <Grid container spacing={1}> 
+    <Grid container spacing={1}>
             <Grid item xs={12} sx={{width:"100%"}}>
                 <Typography variant="authTitle" component="div">Sign up</Typography>
             </Grid>
@@ -57,14 +57,14 @@ const SignUpForm = ({setSnackBarData}) => {
                       <span className="form-error">{errors.email}</span>
                 ) : null}
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} md={6}>
                 <Typography variant="authInputTitle" component="div">Create password</Typography>
                 <CustomInput type="password" placeholder="password" name="password" value={values.password} onChange={handleChange} onBlur={handleBlur} />
                 {touched.password && errors.password ? (
                       <span className="form-error">{errors.password}</span>
                 ) : null}
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} md={6}>
                 <Typography variant="authInputTitle" component="div">Confirm password</Typography>
                 <CustomInput type="password" placeholder="password" name="confirm_password" value={values.confirm_password} onChange={handleChange} onBlur={handleBlur} />
                 {touched.confirm_password && errors.confirm_password ? (

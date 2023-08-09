@@ -8,6 +8,8 @@
     "@mui/icons-material": "^5.11.0",
     "@mui/material": "^5.11.0",
     "@pubnub/react-chat-components": "^0.20.0",
+    "@react-buddy/ide-toolbox": "^2.4.0",
+    "@react-buddy/palette-mui": "^5.0.1",
     "@stripe/react-stripe-js": "^1.16.3",
     "@stripe/stripe-js": "^1.46.0",
     "@testing-library/jest-dom": "^5.16.5",

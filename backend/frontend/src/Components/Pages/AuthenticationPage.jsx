@@ -19,10 +19,24 @@ const AuthenticationPage = () => {
   const navigator = useNavigate();
 
   const location = useLocation();
-
   const [signupActive,setSignupActive] = useState(location.pathname === "/auth/register");
   const [loginActive,setLoginActive] = useState(location.pathname === "/auth/login");
   const [showTabs,setShowTabs] = useState(true);
+  const [mobileView, setMobileView] = useState({mobileView: false,});
+
+  useEffect(()=>{
+    const setResponsiveness = () => {
+      return window.innerWidth < 900
+          ? setMobileView(true)
+          : setMobileView(false);
+    }
+    setResponsiveness();
+    window.addEventListener("resize", () => setResponsiveness());
+
+    return () => {
+      window.removeEventListener("resize", () => setResponsiveness());
+    }
+  },[])
 
   const isAuthenticated = AuthService.checkUserAuthenticated();
   const [snackBarData,setSnackBarData] = useState({open:false,message:"",severity:"error"});
@@ -48,13 +62,32 @@ const AuthenticationPage = () => {
 
   
 
+  const styles = {
+      authForm: {
+        mt:2,
+        background:"#FFFFFF",
+        boxShadow:"0px 5px 40px rgba(0, 0, 0, 0.15)",
+        borderRadius:"15px",
+        p:6,
+        '@media (max-width: 600px)': {
+          p:2,
+        }
+      },
+      wrapper: {
+        height:"100vh",
+        p:8,
+        '@media (max-width: 600px)': {
+          p:2,
+        }
+      }
+  }
 
   return (
     <>
       <CustomSnackBar snackBarData={snackBarData} setSnackBarData={setSnackBarData} />
       <Grid container className="white-bg">
         {/* form image right taking 4 column */}
-        <Grid item lg={6} xs={12} sx={{height:"100vh",p:8}}>
+        <Grid item lg={6} xs={12} sx={styles.wrapper}>
           {/* logo grid starts */}
           <Grid item container>
             <Grid item xs={1} sx={{textAlign:"center"}}>
@@ -85,7 +118,7 @@ const AuthenticationPage = () => {
           }
           {/* authentication forms starts */}
 
-          <Grid container sx={{mt:2,background:"#FFFFFF",boxShadow:"0px 5px 40px rgba(0, 0, 0, 0.15)",borderRadius:"15px",p:6}}>
+          <Grid container sx={styles.authForm}>
             <Grid item xs={12}>
             <Routes>
             <Route path="register" element={<SignUpForm setSnackBarData={setSnackBarData}/>} />
@@ -104,7 +137,7 @@ const AuthenticationPage = () => {
 
         </Grid>
         {/* header image right taking 4 column */}
-        <HeaderImageGrid top="0px" height="100vh" xs={6}/>
+        {!mobileView && <HeaderImageGrid top="0px" height="100vh" xs={6}/>}
       </Grid>
     </>
   )

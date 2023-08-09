@@ -29,7 +29,7 @@ const FavoriteHorse = () => {
   return (
     <Grid container>
       <Grid item xs={12}>
-          <Typography variant='authTitle'>Favorites</Typography>
+          <Typography xs={12} width={'100%'} display={'inline-block'} variant='authTitle'>Favorites</Typography>
       </Grid>
       <Grid item xs={12} sx={{minHeight:"200px"}}> 
         {totalHorseCount > 0?

@@ -159,13 +159,25 @@ const keywordClick = async ()=>{
             setSnackBarData({...snackBarData,open:true,message:error.response.data.message,severity:"error"})
         }
     }
- } 
+ }
+
+ const styles = {
+        sellerWrapper: {
+            background:"#FFFFFF",
+            borderRadius:"15px",
+            marginTop:"39px",
+            padding:"65px",
+            '@media (max-width: 600px)': {
+                padding:"16px"
+            },
+        }
+ }
 
   return (
     // seler page starts
     <Grid container sx={{minHeight:"calc(100vh - 101px)"}} className="justifyContentCenter" id="root">
         <CustomSnackBar snackBarData={snackBarData} setSnackBarData={setSnackBarData} />
-        <Grid item xs={12} lg={6} sx={{background:"#FFFFFF",borderRadius:"15px",marginTop:"39px",padding:"65px"}}>
+        <Grid item xs={12} lg={6} sx={styles.sellerWrapper}>
             {/* main container starts */}
             <Grid container>
                 {/* title starts */}

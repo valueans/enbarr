@@ -34,18 +34,14 @@ const UpgradeSubscribtion = ({setSnackBarData}) => {
     },[])
 
 
-
-
   return (
     <Grid container sx={{p:10}}>
         <Grid item xs={12} sx={{textAlign:"center"}}>
             <Typography variant="landingPageDesc">Subscriptions</Typography>
         </Grid>
-        <Grid container item xs={12}  className="justifyContentCenter" sx={{zIndex:10}}>
-            {
-            
-            plans.map((plan,index)=>{
-                return <Grid item xs={12} lg={4} sx={{textAlign:"center"}}>
+        <Grid container item xs={12} className="justifyContentCenter" sx={{zIndex:10}}>
+            {plans.map((plan,index) => {
+                return <Grid item lg={4} xs={12} sx={{textAlign:"center"}}>
                 <Grid container>
                     <Grid item xs={12}>
                         <Typography variant="myHorseCardTitle" sx={{color:"black"}}>{plan.title} offer</Typography>

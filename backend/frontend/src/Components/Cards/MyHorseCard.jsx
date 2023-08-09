@@ -45,16 +45,40 @@ const editHorse = ()=>{
 const detailsClicked = ()=>{
     return navigator(`/home/horse?id=${horseAddKey}`)
 }
+
+const styles = {
+    myHorseCard: {
+        height:"500px",
+        width:"340px",
+        boxShadow:"0px 10px 10px rgba(0, 0, 0, 0.1)",
+        borderRadius:"30px",
+        '@media (max-width: 600px)': {
+            width: '100%'
+        }
+    },
+    myHorseBox: {
+        width:"340px",
+        background: "rgba(27, 24, 25, 0.3)",
+        backdropFilter: "blur(15px)",
+        borderRadius: "0px 0px 30px 30px",
+        height: "146px",
+        position:"relative",
+        top:'-146px',
+        '@media (max-width: 600px)': {
+            width: '100%'
+        }
+    }
+}
     
 
   return (
     <>
     <CustomSnackBar snackBarData={snackBarData} setSnackBarData={setSnackBarData}/>
-    <Card sx={{height:"500px",width:"340px",boxShadow:"0px 10px 10px rgba(0, 0, 0, 0.1)",borderRadius:"30px"}}>
+    <Card sx={styles.myHorseCard}>
         <CardMedia component={image?.file_type==='IMAGE'?'img':'video'} height="100%" image={image?.file} alt="add-image" controls autoPlay loop sx={{objectFit:"contain",borderRadius:"30px"}} muted={true}/>
     </Card>
     <Grid container>
-        <Grid item xs={10} sx={{position:"relative",top:"-126px",zIndex:8}} className="justifyContentEnd">
+        <Grid item xs={12} sx={{position:"relative",top:"-126px",zIndex:8}} className="justifyContentEnd">
             <Box sx={{width: "88px",height: "50px",background: "#FFFFFF",borderRadius:"15px"}} className='justifyContenCenterAlignCenter'>
                 <Typography variant='authInputTitle'>
                     <FavoriteIcon />
@@ -65,7 +89,7 @@ const detailsClicked = ()=>{
     </Grid>
 
     <Box
-        sx={{width:"340px",background: "rgba(27, 24, 25, 0.3)",backdropFilter: "blur(15px)",borderRadius: "0px 0px 30px 30px",height: "146px",position:"relative",top:'-146px'}}>
+        sx={styles.myHorseBox}>
         <Grid container>
             <Grid item xs={12} sx={{padding:"2px 5px 0px 5px"}}>
                 <Typography variant='myHorseCardTitle'>{currentAdd?.title}</Typography>

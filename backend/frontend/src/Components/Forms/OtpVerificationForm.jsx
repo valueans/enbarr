@@ -82,17 +82,17 @@ const OtpVerificationForm = ({setShowTabs,setSnackBarData,verificationType="norm
                 </Typography>
             </Grid>
             <Grid item xs={12} sx={{mt:4}}>
-                <Grid container className="justifyContentCenter">
-                    <Grid item xs={1} sx={{ml:2,mr:2}}>
+                <Grid xs={12} container sx={{gap:2}} className="justifyContentCenter">
+                    <Grid item xs={2} md={1}>
                         <CustomInput type="text" maxLength={1} value={values.otp1} name="otp1" onKeyUp={onKeyUp} onChange={handleChange} onBlur={handleBlur} id={1}/>
                     </Grid>
-                    <Grid item xs={1} sx={{ml:2,mr:2}}>
+                    <Grid item xs={2} md={1}>
                         <CustomInput type="text" maxLength={1} value={values.otp2} name="otp2" onKeyUp={onKeyUp} onChange={handleChange} onBlur={handleBlur} id={2}/>
                     </Grid>
-                    <Grid item xs={1} sx={{ml:2,mr:2}}>
+                    <Grid item xs={2} md={1}>
                         <CustomInput type="text" maxLength={1} value={values.otp3} name="otp3" onKeyUp={onKeyUp} onChange={handleChange} onBlur={handleBlur} id={3}/>
                     </Grid>
-                    <Grid item xs={1} sx={{ml:2,mr:2}}>
+                    <Grid item xs={2} md={1}>
                         <CustomInput type="text" maxLength={1} value={values.otp4} name="otp4" onKeyUp={onKeyUp} onChange={handleChange} onBlur={handleBlur} id={4}/>
                     </Grid>
                 </Grid>

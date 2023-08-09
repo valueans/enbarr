@@ -118,10 +118,21 @@ const BuyerContent = ({setSnackBarData}) => {
     }
   }
 
+  const styles = {
+    buyer: {
+      background:"#FFFFFF",
+      borderRadius:"15px",
+      marginTop:"39px",
+      padding:"65px",
+      '@media (max-width: 600px)': {
+        padding: '16px',
+      }
+    }
+  }
 
   return (
     <Grid container sx={{minHeight:"calc(100vh - 101px)"}} className="justifyContentCenter" id="root">
-      <Grid item xs={12} lg={6} sx={{background:"#FFFFFF",borderRadius:"15px",marginTop:"39px",padding:"65px"}}>
+      <Grid item xs={12} lg={6} sx={styles.buyer}>
         <Grid container>
           <Grid item xs={12}>
             <Typography variant='authTitle'>Buyer</Typography>

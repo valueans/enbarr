@@ -51,7 +51,25 @@ const ProfilePage = ({setSnackBarData}) => {
         }
     }
 
-
+    const styles = {
+        avatar: {
+            height:"167px",
+            width:"167px",
+            border:"5px solid white",
+            '@media (max-width: 600px)': {
+                marginRight: '-40px',
+            }
+        },
+        fab: {
+            border:"5px solid white",
+            position:"relative",
+            right:"40px",
+            top:"90px",
+            '@media (max-width: 600px)': {
+                right: '0px',
+            }
+        }
+    }
 
   return (
     <Grid container>
@@ -64,12 +82,12 @@ const ProfilePage = ({setSnackBarData}) => {
             </Grid>
             <Grid item xs={12} sx={{pt:5}} className="justifyContentCenter">
                 <Avatar alt={`${userProfile.first_name===null?"":userProfile.first_name} ${userProfile.last_name===null?"":userProfile.last_name}`} src={profilePhoto}
-                    sx={{height:"167px",width:"167px",border:"5px solid white"}} />
-                <input type="file" style={{display:'none'}} ref={inputFile} onChange={handleFileInputChange} accept="image/png,image/jpeg,image/jpg"/>
+                    sx={styles.avatar} />
                 <Fab color="primary" aria-label="add"
-                    sx={{border:"5px solid white",position:"relative",right:"40px",top:"90px"}} onClick={()=>{inputFile.current.click()}} disabled={disableEdit}>
+                    sx={styles.fab} onClick={()=>{inputFile.current.click()}} disabled={disableEdit}>
                     <CameraAltIcon />
                 </Fab>
+                <input type="file" style={{display:'none'}} ref={inputFile} onChange={handleFileInputChange} accept="image/png,image/jpeg,image/jpg"/>
             </Grid>
         </Grid>
         <Grid container sx={{p:5,mt:5}} spacing={5}>

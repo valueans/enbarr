@@ -67,6 +67,36 @@ const messageOwner = async ()=>{
     return navigate('/messages')
 }
 
+const styles = {
+  line: {
+    display:"flex",
+    alignItems:"center",
+    height:"103px",
+    ml: '24px',
+    '@media (max-width: 600px)': {
+      ml:"0px"
+    },
+  },
+  like: {
+    display:"flex",
+    alignItems:"end",
+    height:"103px",
+    position:"relative",
+    top:"35px",
+    right:"10px",
+    justifyContent:"flex-end",
+    '@media (max-width: 600px)': {
+      top:"-65px"
+    },
+  },
+  userInfo: {
+    p: '80px',
+    '@media (max-width: 600px)': {
+      p:"12px"
+    },
+  }
+}
+
 return (
 <Grid container sx={{minHeight:"calc(100vh - 101px)"}} className="justifyContentCenter" id="root">
   <Grid item xs={12} lg={6} sx={{background:"#FFFFFF",borderRadius:"15px",marginTop:"39px"}}>
@@ -84,7 +114,7 @@ return (
         <Grid container>
           {/* profile picture and uploader name starts */}
           <Grid item xs={12} lg={6} sx={{height:"103px"}}>
-            <Grid container sx={{display:"flex",alignItems:"center",height:"103px",ml:3}}>
+            <Grid container sx={styles.line}>
               <Grid item xs={2} lg={2} sx={{display:"flex",alignItems:"center",zIndex:7,justifyContent:"end"}}>
                 <ProfileCard image={horseDetails.userprofile.profile_photo}/>
               </Grid>
@@ -101,8 +131,7 @@ return (
           {/* message and like button starts */}
           {isAuthenticated?
           <Grid item xs={12} lg={6} sx={{height:"103px"}}>
-            <Grid container
-              sx={{display:"flex",alignItems:"end",height:"103px",position:"relative",top:"35px",right:"10px",justifyContent:"flex-end"}}>
+            <Grid container sx={styles.like}>
               <Grid item xs={3}>
                 <IconButton sx={{background:"#FFFFFF",width:"80px",height:"80px",boxShadow:"1px 1px 15px 1px grey"}} disabled={currentLoginUserProfile.id === horseDetails.userprofile.id} onClick={messageOwner}>
                   <MailOutlineIcon sx={{height:"80%",width:"80%"}} />
@@ -121,7 +150,7 @@ return (
         </Grid>
       </Grid>
       {/* user information and buttons ends */}
-      <Grid container sx={{p:10}}>
+      <Grid container sx={styles.userInfo}>
         {/* horse title starts */}
         <Grid item xs={12}>
           <Typography variant="authTitle">{horseDetails.title}</Typography>

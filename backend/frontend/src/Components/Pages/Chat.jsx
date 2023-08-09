@@ -18,6 +18,7 @@ import SendButton from '../Buttons/SendButton';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import Picker from '@emoji-mart/react'
 import emojiData from "@emoji-mart/data";
+import CloseIcon from "@mui/icons-material/Close";
 
 
 
@@ -54,8 +55,25 @@ const Chat = ({pubnub,userprofile}) => {
 
     const [lastMessageTimetoken,setLastMessageTimetoken] = useState("");
 
+    const [isChatOpen, setChatOpen] = useState(false);
+
+    const isFirstLoad = useRef(true);
+
+    useEffect(() => {
+        if (isFirstLoad.current) {
+            isFirstLoad.current = false;
+        } else {
+            setChatOpen(true);
+        }
+    }, [state.SelectedChatId]);
+
+    const toggleChat = () => {
+        setChatOpen(!isChatOpen);
+    }
 
     const isAuthenticated = AuthService.checkUserAuthenticated();
+
+    const [mobileView, setMobileView] = useState({mobileView: false,});
     
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
@@ -272,6 +290,66 @@ const Chat = ({pubnub,userprofile}) => {
         setFilterConversations(filterConversations)
     }
 
+    const styles = {
+        selectedChat: {
+            height:"calc(100vh - 101px)",
+            overflow:"scroll",
+            '@media (max-width: 600px)': {
+                position: 'fixed',
+                zIndex: 50,
+                top: '0',
+                background:"#FFFFFF",
+                height: '100vh',
+            }
+        },
+        messageHeader: {
+            minHeight:"120px",
+            background:"#FFFFFF",
+            boxShadow:"0px 4px 10px rgba(0, 0, 0, 0.1)",
+            position:"relative",
+            top:"0px",
+            paddingLeft:"20px",
+            '@media (max-width: 600px)': {
+                paddingLeft: '5px',
+                paddingRight: '5px',
+            }
+        },
+        messageWindow: {
+
+            overflow:"scroll",
+            boxShadow: "0px -4px 10px rgba(0, 0, 0, 0.1)",
+            p:4,
+            '@media (max-width: 600px)': {
+                minHeight:"calc(100vh - 341px)",
+                maxHeight: "calc(100vh - 341px)",
+            }
+        },
+        selectedChatID: {
+            height:"calc(100vh - 101px)",
+            p:2,
+            background:"#FFFFFF",
+            '@media (max-width: 600px)': {
+                height: '100vh',
+                paddingLeft: '0px',
+                paddingRight: '0px',
+            }
+        }
+    }
+
+    useEffect(()=>{
+        const setResponsiveness = () => {
+            return window.innerWidth < 900
+                ? setMobileView(true)
+                : setMobileView(false);
+        }
+        setResponsiveness();
+        window.addEventListener("resize", () => setResponsiveness());
+
+        return () => {
+            window.removeEventListener("resize", () => setResponsiveness());
+        }
+    },[])
+
   return (
     <>
         {/* header when the user will logged in starts */}
@@ -279,7 +357,7 @@ const Chat = ({pubnub,userprofile}) => {
         {/* header when the user will logged in ends */}
         <PubChat currentChannel={state?.SelectedChatId}>
         <Grid container >
-            <Grid item xs={3} sx={{height:"calc(100vh - 101px)",p:2,background:"#FFFFFF"}}>
+            <Grid item xs={12} md={3} sx={styles.selectedChatID}>
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
                     <Typography variant="subscriptionCardTitle">Message</Typography>
@@ -318,16 +396,16 @@ const Chat = ({pubnub,userprofile}) => {
                 </Grid>
             </Grid>
             {
-                state.SelectedChatId?
-                <Grid item xs={9} style={{height:"calc(100vh - 101px)",overflow:"scroll"}}>
+                (state.SelectedChatId && isChatOpen) ?
+                <Grid item md={9} sx={styles.selectedChat}>
                 
                 {/* message header starts */}
                 {/* */}
-                <Grid item container xs={12} sx={{minHeight:"120px",background:"#FFFFFF",boxShadow:"0px 4px 10px rgba(0, 0, 0, 0.1)",position:"relative",top:"0px",paddingLeft:"20px"}} className="alignContentCenter">
-                    <Grid item xs={1} >
+                <Grid item container xs={12} sx={styles.messageHeader} className="alignContentCenter">
+                    <Grid item xs={3} md={1} >
                         <CustomAvatar image={state.SelectedChat?.user_two_profile?.profile_photo}/>
                     </Grid>
-                    <Grid item xs={10} >
+                    <Grid item xs={6} md={10} >
                         <Typography variant="horseDetailsUserName" sx={{color:"#000000"}}>{state.SelectedChat?.user_two_profile?.user?.email.split('@')[0]}</Typography>
                     </Grid>
                     <Grid item xs={1} >
@@ -354,12 +432,17 @@ const Chat = ({pubnub,userprofile}) => {
                         <MenuItem onClick={deleteConversation} sx={{minWidth:"200px"}}>Delete</MenuItem>
                     </Menu>
                     </Grid>
+                    {mobileView && (
+                        <Grid item sx={{marginLeft: '10px'}} xs={1}>
+                            <CloseIcon onClick={() => toggleChat()} />
+                        </Grid>
+                    )}
                 </Grid>
                 {/* message header ends */}
                 
                 {/* message list starts */}
                 
-                <Grid item xs={12} sx={{minHeight:"calc(100vh - 341px)",maxHeight:"calc(100vh - 341px)",overflow:"scroll",boxShadow: "0px -4px 10px rgba(0, 0, 0, 0.1)",p:4}}> 
+                <Grid item xs={12} sx={styles.messageWindow}>
                 <MessageList fetchMessages={100} onScroll={(e)=>{
                 }} messageRenderer={(props)=>{
                     setLastMessageTimetoken(props.message.timetoken);
@@ -384,8 +467,8 @@ const Chat = ({pubnub,userprofile}) => {
                             setFileInput(null);
                         }} onEnter={sendMessage}/>
                     </Grid>
-                    <Grid item xs={2} sx={{pl:3}}>
-                        <SendButton width="50%" disabled={messageInputVal.length===0} onClick={sendMessage} />
+                    <Grid item xs={2} sx={{pl: mobileView ? 1 : 3}}>
+                        <SendButton width={mobileView ? '30%' : '50%'} disabled={messageInputVal.length===0} onClick={sendMessage} />
                     </Grid>
                 </Grid>
                 {/* message input ends  */}
