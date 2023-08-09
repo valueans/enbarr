@@ -1,7 +1,7 @@
 import React,{useState,useEffect} from 'react';
 import {Grid, Typography} from '@mui/material';
 import HeaderImageGrid from '../Header/HeaderImageGrid';
-import logo from '../../assets/logo.svg'
+
 import {Link, useLocation} from 'react-router-dom';
 import AuthenticationTabs from '../Buttons/AuthenticationTabs';
 import Footer from '../Footer/Footer';
@@ -14,9 +14,15 @@ import AuthService from '../../Services/AuthService';
 import CustomSnackBar from '../SnackBar/CustomSnackBar';
 import ResetEmailForm from '../Forms/ResetEmailForm';
 import ChangePasswordForm from '../Forms/ChangePasswordForm';
+import logo from "../../../public/logo.svg"
+
 
 const AuthenticationPage = () => {
+  const debug = import.meta.env.VITE_DEBUG
+  const base_url = import.meta.env.VITE_BASE_URL
+
   const navigator = useNavigate();
+  
 
   const location = useLocation();
   const [signupActive,setSignupActive] = useState(location.pathname === "/auth/register");
@@ -92,7 +98,7 @@ const AuthenticationPage = () => {
           <Grid item container>
             <Grid item xs={1} sx={{textAlign:"center"}}>
               <Link to="/" variant="logo">
-              <img src={logo} alt="logo" style={{height:"85px",width:"35.36px",marginTop:"7px"}} />
+              <img src={debug=="true"?logo:base_url+"static/logo.svg"} alt="logo" style={{height:"85px",width:"35.36px",marginTop:"7px"}} />
               </Link>
             </Grid>
             <Grid item xs={1} sx={{display:"flex",alignItems:"center"}}>

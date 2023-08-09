@@ -13,7 +13,6 @@ import {
     Switch
 } from '@mui/material';
 import Button from '../Buttons/Button.jsx';
-import logo from '../../assets/logo.svg';
 import { Link,useNavigate } from 'react-router-dom';
 import NotificationMenu from '../Menu/NotificationMenu.jsx';
 import {
@@ -39,9 +38,11 @@ import AuthService from "../../Services/AuthService";
 import CustomModel from "../Models/CustomModel";
 import PaymentServices from "../../Services/PaymentServices";
 import CloseIcon from "@mui/icons-material/Close";
-
+import logo from "../../../public/logo.svg"
 
 export default function ButtonAppBar({headerType="landing",currentPage="home"}) {
+    const debug = import.meta.env.VITE_DEBUG
+    const base_url = import.meta.env.VITE_BASE_URL
     const navigator = useNavigate();
 
     const currentLoginUserProfile = getUserProfile();
@@ -223,7 +224,7 @@ export default function ButtonAppBar({headerType="landing",currentPage="home"}) 
                                 width: '100%' }}>
                                 <Grid item lg={1} sx={{textAlign:"center", marginLeft: mobileView ? '32px' : '0'}}>
                                     <Link to="/" variant="logo">
-                                    <img src={logo} alt="logo"
+                                    <img src={debug=="true"?logo:base_url+"static/logo.svg"} alt="logo"
                                         style={{height:"85px",width:"35.36px",marginTop:"7px"}} />
                                     </Link>
                                 </Grid>
@@ -335,7 +336,7 @@ export default function ButtonAppBar({headerType="landing",currentPage="home"}) 
                                                     <Grid container>
                                                         <Grid item lg={1} sx={{textAlign:"center", marginLeft: mobileView ? '32px' : '0'}}>
                                                             <Link to="/" variant="logo">
-                                                                <img src={logo} alt="logo"
+                                                                <img src={debug=="true"?logo:base_url+"static/logo.svg"} alt="logo"
                                                                      style={{height:"85px",width:"35.36px",marginTop:"7px"}} />
                                                             </Link>
                                                         </Grid>

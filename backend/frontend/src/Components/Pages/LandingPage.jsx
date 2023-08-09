@@ -30,7 +30,7 @@ const LandingPage = () => {
         <ButtonAppBar headerType="landing"/>
         {/* LandingPage header ends */}
 
-        <div id="root">
+        <div id="landing-footer">
         <Routes>
           <Route path="" element={<LandingContent />} />
           <Route path="privacypolicy" element={<PrivacyPolicy/>} />

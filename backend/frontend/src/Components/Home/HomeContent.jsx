@@ -1,6 +1,5 @@
 import React,{useState,useEffect} from 'react';
 import { Grid,Typography } from '@mui/material';
-import homeImage from '../../assets/homeImage.png';
 import SocialLinks from '../SocialLinks/SocialLinksVertical';
 import Button from '../Buttons/Button';
 import HorseCardList from '../Cards/HorseCardList';
@@ -9,8 +8,13 @@ import HorseService from '../../Services/HorseService';
 import AuthService from '../../Services/AuthService';
 import { setUserProfile,getUserProfile } from '../../Constants/storage';
 import BlackFooter from '../Footer/BlackFooter'
+import horseImage from "../../../public/homeImage.png"
 
 const HomeContent = () => {
+    const debug = import.meta.env.VITE_DEBUG;
+    const base_url = import.meta.env.VITE_BASE_URL
+    const homeImagePath = debug=="true"?horseImage:base_url+"static/homeImage.png";
+
     const navigator = useNavigate();
     const isAuthenticated = AuthService.checkUserAuthenticated();
 
@@ -101,7 +105,7 @@ const HomeContent = () => {
         <Grid item xs={1} sx={styles.extraSocial}>
             <SocialLinks />
         </Grid>
-        <Grid container item xs={10} sx={{height:"calc(100vh - 101px)",backgroundImage:`url(${homeImage})`,backgroundSize:"contain",backgroundRepeat:"no-repeat",backgroundPosition:"right",display:"flex",alignContent:"start"}}>
+        <Grid container item xs={10} sx={{height:"calc(100vh - 101px)",backgroundImage:`url(${homeImagePath})`,backgroundSize:"contain",backgroundRepeat:"no-repeat",backgroundPosition:"right",display:"flex",alignContent:"start"}}>
             <Grid item xs={12} sx={{mt:4,height:"60px", mb: 1.5}}>
                 <Typography variant='landingPageTitle' sx={styles.title}>
                     Buy, Sell, Ride.

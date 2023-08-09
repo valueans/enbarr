@@ -1,8 +1,11 @@
 import React from 'react';
-import landingImage from '../../assets/landingImage.png';
 import {Grid} from '@mui/material';
+import landingImage from "../../../public/landingImage.png"
 
 const HeaderImageGrid = ({height="86.5vh",top="-102px",xs=4}) => {
+  const base_url = import.meta.env.VITE_BASE_URL
+  const debug = import.meta.env.VITE_DEBUG
+
   return (
     <>
       <Grid item xs={xs} sx={{display:"flex",justifyContent:"center",height:height}}>
@@ -12,7 +15,7 @@ const HeaderImageGrid = ({height="86.5vh",top="-102px",xs=4}) => {
         <div
           style={{height:"95%",width: "100%",backdropFilter:"blur(7.5px)",background:"linear-gradient(180deg, rgba(49, 48, 51, 0.5) 0%, rgba(0, 0, 0, 0.5) 100%)",alignSelf:"center",zIndex:7,position:"relative",left:"16px"}}>
         </div>
-        <img src={landingImage} alt="landing-img" style={{height:"100vh",zIndex:8,position:"relative",top:top}} />
+        <img src={debug=="true"?landingImage:base_url+"static/landingImage.png"} alt="landing-img" style={{height:"100vh",zIndex:8,position:"relative",top:top}} />
       </Grid>
     </>
   )

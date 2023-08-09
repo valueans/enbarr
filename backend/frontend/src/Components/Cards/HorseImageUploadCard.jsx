@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { Card, CardMedia,IconButton } from '@mui/material';
-import horseImage from '../../assets/horse.png';
 import CloseIcon from '@mui/icons-material/Close';
 import HorseService from '../../Services/HorseService';
+import horseImage from "../../../public/horse.png"
 
 const HorseImageUploadCard = ({image,setFiles,files,horseData,setHorseData}) => {
+  const debug = import.meta.env.VITE_DEBUG;
+  const base_url = import.meta.env.VITE_BASE_URL
+  const imagePath = debug=="true"?horseImage:base_url+"static/horse.png";
   
   const removeImage = async (event,id)=>{
     await HorseService.deleteHorseImage(id)
@@ -32,7 +35,7 @@ const HorseImageUploadCard = ({image,setFiles,files,horseData,setHorseData}) => 
     <IconButton sx={{width:"25px",height:"25px",position:"relative",left:"55px",zIndex:5,top:"17px",background:"grey"}} onClick={e=>removeImage(e,image.id)}>
         <CloseIcon sx={{height:"25px",width:"25px",color:"#FFFFFF"}} />
       </IconButton>
-    <Card sx={{border: "2px dashed #666666",width: "70px",height: "70px",background: "#FFFFFF",backgroundImage:horseImage,zIndex:2}}>
+    <Card sx={{border: "2px dashed #666666",width: "70px",height: "70px",background: "#FFFFFF",backgroundImage:imagePath,zIndex:2}}>
     <CardMedia
       component={image?.file_type === 'IMAGE'?'img':'video'}
       height="100%"
