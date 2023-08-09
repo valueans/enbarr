@@ -31,9 +31,19 @@ const ChangePasswordForm = ({setSnackBarData}) => {
       }
       },
     });
+
+    const styles = {
+        confirmPassword: {
+            padding: '80px',
+            '@media (max-width: 600px)': {
+                padding: '16px',
+            }
+        }
+    }
+
   return (
     <form onSubmit={handleSubmit}>
-    <Grid container spacing={5} sx={{p:10}}>
+    <Grid container spacing={5} sx={styles.confirmPassword}>
         <Grid item>
             <Typography variant="authTitle" component="div">Change password</Typography>
         </Grid>

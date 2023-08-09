@@ -54,26 +54,67 @@ const HomeContent = () => {
         }
     }
 
+    const styles = {
+        title: {
+            fontSize:"40px",
+            fontWeight:800,
+
+            '@media (max-width: 600px)': {
+                textAlign: 'center',
+                width: '100%',
+                display: 'inline-block',
+                marginBottom: '12px',
+            },
+        },
+        typeButton: {
+            marginBottom: 0,
+            '@media (max-width: 600px)': {
+                textAlign: 'center',
+                width: '100%',
+                display: 'inline-block'
+            },
+        },
+        extraSettingsBuyer: {
+            height:"60px",
+            marginBottom: '12px',
+            '@media (max-width: 600px)': {
+                marginLeft: '48px',
+            },
+        },
+        extraSettingsSeller: {
+            height:"60px",
+            '@media (max-width: 600px)': {
+                marginLeft: '48px',
+            },
+        },
+        extraSocial: {
+            pt: '32px',
+            '@media (max-width: 600px)': {
+                marginLeft: '12px',
+            },
+        }
+    }
+
   return (
     <>
     <Grid container direction="row">
-        <Grid item xs={1} sx={{pt:4}}>
+        <Grid item xs={1} sx={styles.extraSocial}>
             <SocialLinks />
         </Grid>
-        <Grid container item xs={11} sx={{height:"calc(100vh - 101px)",backgroundImage:`url(${homeImage})`,backgroundSize:"contain",backgroundRepeat:"no-repeat",backgroundPosition:"right",display:"flex",alignContent:"start"}}>
-            <Grid item xs={12} sx={{mt:4,height:"80px"}}>
-                <Typography variant='landingPageTitle' sx={{fontSize:"40px",fontWeight:800}}>
+        <Grid container item xs={10} sx={{height:"calc(100vh - 101px)",backgroundImage:`url(${homeImage})`,backgroundSize:"contain",backgroundRepeat:"no-repeat",backgroundPosition:"right",display:"flex",alignContent:"start"}}>
+            <Grid item xs={12} sx={{mt:4,height:"60px", mb: 1.5}}>
+                <Typography variant='landingPageTitle' sx={styles.title}>
                     Buy, Sell, Ride.
                 </Typography>
             </Grid>
-            <Grid item xs={2} sx={{height:"60px"}} >
-                <Button title="A Buyer" onClick={buyerClicks}/>
+            <Grid item xs={7} md={2} sx={styles.extraSettingsBuyer} >
+                <Button width='100%' title="A Buyer" onClick={buyerClicks}/>
             </Grid>
-            <Grid item xs={2} sx={{height:"60px"}} >
-                <Button title="A Seller" onClick={sellerClicks}/>
+            <Grid item xs={7} lg={2} sx={styles.extraSettingsSeller} >
+                <Button width='100%' title="A Seller" onClick={sellerClicks}/>
             </Grid>
         </Grid>
-        <Grid container sx={{position:"absolute",top:"300px"}}>
+        <Grid container sx={{position:"absolute",top:"320px"}}>
             <Grid item xs={12}>
                 <HorseCardList title="Recently added" adds={recentlyAddedHorses}/>
             </Grid>

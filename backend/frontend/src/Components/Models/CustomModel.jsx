@@ -19,7 +19,12 @@ const CustomModel = ({open,setOpen,title,onClick}) => {
         bgcolor: 'background.paper',
         boxShadow: 24,
         borderRadius:"15px",
-        p:10
+        p:10,
+        '@media (max-width: 600px)': {
+            minWidth: "310px",
+            p: 2.5
+
+        }
       };
 
   return (

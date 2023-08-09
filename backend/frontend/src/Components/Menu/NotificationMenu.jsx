@@ -7,7 +7,7 @@ import CustomSnackBar from '../SnackBar/CustomSnackBar';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import { useNavigate } from 'react-router-dom';
 
-export default function NotificationMenu() {
+export default function NotificationMenu({ mobile }) {
 
 // variable define for menu to open and close
   const navigator = useNavigate();
@@ -123,6 +123,20 @@ export default function NotificationMenu() {
     getUnreadCount()
   },[notifications])
 
+    const styles = {
+      notificationsContainer: {
+          minWidth:"600px",
+          maxWidth:"600px",
+          p: '32px',
+          maxHeight:"600px",
+          overflow:"scroll",
+          '@media (max-width: 600px)': {
+              minWidth: '310px',
+              p: '16px',
+          },
+      }
+    }
+
   return (
     <div>
         <CustomSnackBar snackBarData={snackBarData} setSnackBarData={setSnackBarData} />
@@ -134,16 +148,16 @@ export default function NotificationMenu() {
         <Menu id="basic-menu" anchorEl={anchorEl} open={open} onClose={handleClose} MenuListProps={{
           'aria-labelledby': 'basic-button',
         }}>
-            <Grid container sx={{minWidth:"600px",maxWidth:"600px",p:4,maxHeight:"600px",overflow:"scroll"}} spacing={4}>
+            <Grid container sx={styles.notificationsContainer} spacing={mobile ? 2 : 4}>
                 <Grid item xs={12}>
                     <Typography variant="authTitle">Notification</Typography>
                 </Grid>
                 <Grid item xs={12}>
-                    <Grid container className='justifyContentBetween'>
-                        <Grid item xs={5} sx={{textAlign:"start"}}>
+                    <Grid container className={mobile ? '' : 'justifyContentBetween'}>
+                        <Grid item xs={6} sx={{textAlign:"start"}}>
                             <Typography variant="notification">All notifications</Typography>
                         </Grid>
-                        <Grid item xs={5} sx={{textAlign:"end"}}>
+                        <Grid item xs={6} sx={{textAlign: "end"}}>
                         <IconButton onClick={updateAllNotificationStatus} disabled={unReadCount===0}><Typography variant="notification" sx={{color:"#8F8F8F"}}>Mark all as read</Typography></IconButton>
                         </Grid>
                     </Grid>
@@ -156,10 +170,10 @@ export default function NotificationMenu() {
                                 element.read_status === false?<FiberManualRecordIcon fontSize="10px" color='warning'/>:""
                             }
                         </Grid>
-                        <Grid item xs={2} className="alignContentCenter">
+                        <Grid item xs={3} className="alignContentCenter">
                             <Avatar alt="Remy Sharp" sx={{width:"70px",height:"70px"}} src={element?.message_profile_url}/>
                         </Grid>
-                        <Grid item xs={7} sx={{cursor:"pointer"}} className="alignContentCenter" onClick={()=>{
+                        <Grid item xs={6} lg={7} sx={{cursor:"pointer", whiteSpace: 'breack-word'}} className="alignContentCenter" onClick={()=>{
                           if(element.type === "MESSAGE"){
                             navigator("/messages")
                           }

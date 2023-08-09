@@ -83,8 +83,23 @@ const StripePaymentForm = ({setSnackBarData,subscriptionPlanId,setSubscriptionPl
         setSetupIntent(response)
     }
 
+    const styles = {
+        stripePaymentWrapper: {
+            padding: 10,
+            '@media (max-width: 600px)': {
+                padding: 2.5
+            }
+        },
+        stripePaymentButton: {
+            width: "40%",
+            '@media (max-width: 600px)': {
+                width: "100%"
+            }
+        }
+    }
+
   return (
-    <Grid container spacing={1} sx={{p:10}}> 
+    <Grid container spacing={1} sx={styles.stripePaymentWrapper}>
             <Grid item xs={12} sx={{width:"100%"}}>
                 <Typography variant="authTitle" component="div">Subscription</Typography>
             </Grid>
@@ -94,7 +109,7 @@ const StripePaymentForm = ({setSnackBarData,subscriptionPlanId,setSubscriptionPl
             <Grid item container xs={12} spacing={2}>
                 {
                     plans.map((plan,index)=>{
-                        return <Grid item xs={4} key={plan.id}> 
+                        return <Grid item xs={12} lg={4} key={plan.id}>
                         <ShortSubscriptionCard plan={plan} subscriptionPlanId={subscriptionPlanId} setSubscriptionPlanId={setSubscriptionPlanId} index={index}/>
                     </Grid>       
                     })
@@ -109,7 +124,7 @@ const StripePaymentForm = ({setSnackBarData,subscriptionPlanId,setSubscriptionPl
                         await getSetupIntent()
                         setShowPaymentForm(true)
                     }
-                }} width="40%" icon={<CreditCardIcon/>}/>
+                }} icon={<CreditCardIcon/>}/>
             </Grid>
             {
                 showPaymentForm?<Grid item container xs={12}>

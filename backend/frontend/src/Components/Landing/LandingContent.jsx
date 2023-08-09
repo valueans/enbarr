@@ -35,7 +35,7 @@ const LandingContent = () => {
                 {/* left side of landing page with title description and social LInks starts */}
                 <Grid container sx={{height:"100%",marginTop:mobileView?"0px":"0px"}}>
                     <SocialLinkLanding mobileView={mobileView} xs={mobileView?2:1}/>
-                    <Grid item xs={10} sx={{display:"flex",alignItems:"center"}}>
+                    <Grid item xs={mobileView?10:11} sx={{display:"flex",alignItems:"center"}}>
                         <Grid container direction="column" sx={{paddingLeft:"40px",paddingRight:"40px"}}
                             spacing={0.5}>
                             <Grid item>

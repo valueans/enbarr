@@ -10,32 +10,51 @@ import { useSelector } from 'react-redux';
 
 const SocialLinksVertical = () => {
     const socialLinks = useSelector(state=>state.SocialLinks);
+
+    const styles = {
+        socialIcons: {
+            justifyContent: 'start',
+            display: 'flex',
+            alignItems: 'start',
+            flexDirection: 'row',
+            gap: 3,
+
+            '@media (max-width: 600px)': {
+                flexDirection: 'row',
+                justifyContent: 'start',
+                marginTop: 2
+            },
+        },
+    };
   return (
     <>
         <Grid container>
-            <Grid item lg={2} xs={12}>
+            <Grid item xs={12} lg={2}>
                 <HorizontalLineIcon color='#FFFFFF' />
             </Grid>
-            <Grid item lg={1} xs={12}>
-                <a href={socialLinks?.instagram} target="_blank" rel="noreferrer">
-                    <InstagramSocialIcon color='#FFFFFF' />
-                </a>
+            <Grid lg={10} container sx={styles.socialIcons}>
+                <Grid item>
+                    <a href={socialLinks?.instagram} target="_blank" rel="noreferrer">
+                        <InstagramSocialIcon color='#FFFFFF' />
+                    </a>
+                </Grid>
+                <Grid item>
+                    <a href={socialLinks?.twitter} target="_blank" rel="noreferrer">
+                        <TwitterSocialIcon color='#FFFFFF' />
+                    </a>
+                </Grid>
+                <Grid item>
+                    <a href={socialLinks?.facebook} target="_blank" rel="noreferrer">
+                        <FacebookSocialIcon color='#FFFFFF' />
+                    </a>
+                </Grid>
+                <Grid item>
+                    <a href={socialLinks?.linkedIn} target="_blank" rel="noreferrer">
+                        <LinkedInSocialIcon color='#FFFFFF' />
+                    </a>
+                </Grid>
             </Grid>
-            <Grid item lg={1} xs={12}>
-                <a href={socialLinks?.twitter} target="_blank" rel="noreferrer">
-                    <TwitterSocialIcon color='#FFFFFF' />
-                </a>
-            </Grid>
-            <Grid item lg={1} xs={12}>
-                <a href={socialLinks?.facebook} target="_blank" rel="noreferrer">
-                    <FacebookSocialIcon color='#FFFFFF' />
-                </a>
-            </Grid>
-            <Grid item lg={1} xs={12}>
-                <a href={socialLinks?.linkedIn} target="_blank" rel="noreferrer">
-                    <LinkedInSocialIcon color='#FFFFFF' />
-                </a>
-            </Grid>
+
         </Grid>
     </>
   )

@@ -14,6 +14,18 @@ const HorseCard = ({image,horse}) => {
     }
   },[])
 
+    const styles = {
+      stack: {
+          height:"500px",
+          width:"340px",
+          boxShadow:"0px 10px 10px rgba(0, 0, 0, 0.1)",
+          borderRadius:"30px",
+          '@media (max-width: 600px)': {
+              width: '100%'
+          }
+      }
+    }
+
   return (
     // <Card sx={{width:"340px",boxShadow:"0px 10px 10px rgba(0, 0, 0, 0.1)",borderRadius:"30px",cursor:"pointer",maxHeight:"400px"}}>
     //   <CardActionArea>
@@ -49,9 +61,9 @@ const HorseCard = ({image,horse}) => {
     //   </CardActionArea>
     // </Card>
     <>
-     <Stack sx={{height:"500px",width:"340px",boxShadow:"0px 10px 10px rgba(0, 0, 0, 0.1)",borderRadius:"30px",borderRadius:"30px"}}>
+     <Stack sx={styles.stack}>
      <Card sx={{height:"354px",borderRadius:"30px 30px 0px 0px"}}>
-        <CardMedia component={firstImage?.file_type === 'IMAGE'?'img':'video'} height="100%" image={firstImage?.file} alt="add-image" controls autoPlay loop sx={{objectFit:"contain",borderRadius:"30px 30px 0px 0px",width:"100%",height:"100%",borderRadius:"30px 30px 0px 0px"}} muted={true}/>
+        <CardMedia component={firstImage?.file_type === 'IMAGE'?'img':'video'} height="100%" image={firstImage?.file} alt="add-image" controls autoPlay loop sx={{objectFit:"contain",borderRadius:"30px 30px 0px 0px",width:"100%",height:"100%"}} muted={true}/>
     </Card>
     <Box
         sx={{background: "rgba(27, 24, 25, 0.3)",backdropFilter: "blur(15px)",borderRadius: "0px 0px 30px 30px",height: "150px",padding:"10px"}}>

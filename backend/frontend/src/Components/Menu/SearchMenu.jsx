@@ -6,7 +6,7 @@ import Button from '../Buttons/Button.jsx'
 import HorseService from '../../Services/HorseService';
 import SearchHorseCard from '../Cards/SearchHorseCard';
 
-const SearchMenu = () => {
+const SearchMenu = ({ mobile }) => {
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
 
@@ -47,11 +47,11 @@ const SearchMenu = () => {
     <Menu id="basic-menu" anchorEl={anchorEl} open={open} onClose={handleClose} MenuListProps={{
         'aria-labelledby': 'basic-button',
       }}>
-         <Grid container sx={{minWidth:"600px",maxWidth:"600px",p:4,maxHeight:"600px",overflow:"scroll"}} spacing={2}>
+         <Grid container sx={{minWidth:mobile ? '310px' : "600px",maxWidth:"600px",p:4,maxHeight:"600px",overflow:"scroll"}} spacing={2}>
             <Grid item xs={5} sx={{textAlign:"start"}}>
                 <Typography variant="notification">Search Horses</Typography>
             </Grid>
-            <Grid item xs={10}>
+            <Grid item xs={8} lg={10}>
                 <CustomInput value={inpuptVal} onChange={(e)=>{
                     setInputVal(e.target.value);
                     if (e.target.value.length !== 0){

@@ -32,9 +32,21 @@ const LandingFeedback = ({setSnackBarData}) => {
         },
       });
 
+    const styles = {
+        feedback: {
+            padding: '80px',
+            borderRadius:"15px",
+            ...style,
+            height:"calc(100vh - 101px)",
+            '@media (max-width: 600px)': {
+                padding: '12px',
+            },
+        }
+    }
+
   return (
     <form onSubmit={handleSubmit} style={{display:"flex",justifyContent:"center",alignItems:"center"}} id="root">
-    <Grid container sx={{p:10,borderRadius:"15px",...style,height:"calc(100vh - 101px)"}} item lg={6} xs={12} style={{background:"#FFFFFF"}} className="justifyContentCenter">
+    <Grid container sx={styles.feedback} item lg={6} xs={12} style={{background:"#FFFFFF"}} className="justifyContentCenter">
         <Grid item xs={12}>
             <Typography variant="authTitle" component="div"> Support/ Send Feedback</Typography>
         </Grid>

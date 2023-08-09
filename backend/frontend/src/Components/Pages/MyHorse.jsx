@@ -58,7 +58,7 @@ return (
 
     <Grid container className="justifyContentCenter">
         <Grid item xs={12} className="justifyContentCenter">
-            <Grid item xs={10}>
+            <Grid item md={10} xs={12}>
                 <Routes>
                     <Route path="favorites">
                         <Route index element={<FavoriteHorse/>} />

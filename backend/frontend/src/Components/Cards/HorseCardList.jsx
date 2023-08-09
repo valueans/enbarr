@@ -13,13 +13,28 @@ const HorseCardList = ({title,adds,setAdds,typeCard="horse"}) => {
 
     }
 
+    const styles = {
+        container: {
+            justifyContent: 'center',
+            display: 'flex',
+            alignItems: 'center',
+            pl: 10,
+            pr: 10,
+
+            '@media (max-width: 600px)': {
+                pl: 2.5,
+                pr: 2.5,
+            },
+        },
+    };
+
   return (
     <>
-    <Grid container sx={{justifyContent:"center",display:"flex",alignItems:"center",pl:10,pr:10}}>
+    <Grid container sx={styles.container}>
         {
             title?<Grid container item sx={{textAlign:"center",mb:4,mt:2}}>
             <Grid item xs={12}>
-                <Typography variant='authTitle' sx={{fontSize:"25px"}}>
+                <Typography variant='authTitle'>
                     {title}
                 </Typography>
             </Grid>
@@ -38,7 +53,7 @@ const HorseCardList = ({title,adds,setAdds,typeCard="horse"}) => {
                         <Grid item lg={4} sm={6} xs={12} sx={{mt:4}} className="justifyContentCenter" key={object.id} onClick={event => horseListClicked(event,object.id)}>
                             <HorseCard image={object.images} horse={object}/>
                         </Grid>:
-                        <Grid item lg={4} sm={6} xs={12}  sx={{mt:4}} className="justifyContentCenter" key={object.id} onClick={event => horseListClicked(event,object.id)}>
+                        <Grid item lg={4} sm={6} xs={12} sx={{mt:4}} className="justifyContentCenter" key={object.id} onClick={event => horseListClicked(event,object.id)}>
                             <HorseCard image={object.images} horse={object}/>
                         </Grid>
                     )
@@ -54,7 +69,7 @@ const HorseCardList = ({title,adds,setAdds,typeCard="horse"}) => {
                         <Grid item lg={4} sm={6} xs={12} sx={{mt:4}} className="justifyContentCenter" key={horses.id} onClick={event => horseListClicked(event,horses.id)}>
                             <HorseCard image={horses.images} horse={horses}/>
                         </Grid>:
-                        <Grid item lg={4} sm={6} xs={12}  sx={{mt:4}} className="justifyContentCenter" key={horses.id} onClick={event => horseListClicked(event,horses.id)}>
+                        <Grid item lg={4} sm={6} xs={12} sx={{mt:4}} className="justifyContentCenter" key={horses.id} onClick={event => horseListClicked(event,horses.id)}>
                             <HorseCard image={horses.images} horse={horses}/>
                         </Grid>
                     )

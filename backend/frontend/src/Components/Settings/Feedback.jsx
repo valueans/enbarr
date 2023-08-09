@@ -30,10 +30,19 @@ const Feedback = ({setSnackBarData}) => {
         },
       });
 
+    const styles = {
+        feedback: {
+            padding: '80px',
+            '@media (max-width: 600px)': {
+                padding: '12px',
+            },
+        }
+    }
+
   return (
     <form onSubmit={handleSubmit}>
-    <Grid container spacing={5} sx={{p:10}}>
-        <Grid item xs={6}>
+    <Grid container spacing={5} sx={styles.feedback}>
+        <Grid item xs={12} md={6}>
             <Typography variant="authTitle" component="div"> Support/ Send Feedback</Typography>
         </Grid>
         <Grid item xs={12}>
