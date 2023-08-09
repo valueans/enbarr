@@ -130,7 +130,7 @@ ROOT_URLCONF = "tiny_bird_36835.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [os.path.join(REACT_APP_DIR, "build"),os.path.join(BASE_DIR, "templates")],
+        "DIRS": [os.path.join(BASE_DIR, "templates")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -207,8 +207,9 @@ AUTHENTICATION_BACKENDS = (
 
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATICFILES_DIRS = [
-    os.path.join(REACT_APP_DIR, "build/static"),
+    os.path.join(REACT_APP_DIR, "dist"),
     os.path.join(BASE_DIR, "static"),
+    os.path.join(REACT_APP_DIR, "public"),
 ]
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
