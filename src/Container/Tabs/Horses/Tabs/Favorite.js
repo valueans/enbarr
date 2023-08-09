@@ -77,15 +77,18 @@ const Favorite = props => {
             paddingBottom: 130,
           }}
           renderItem={({ item, index }) => (
-            <MainItem
-              item={item.horses}
-              index={index}
-              onPressDetails={() =>
-                props.navigation.navigate('Details', { item: item.horses, pubnub: pubnub, myhorse: userDetail.user.id === item.userprofile.id ? true : false })
-              }
-              onPressMessage={() => goToChat(item)}
-              myhorse={userDetail.user.id === item.userprofile.id ? true : false}
-            />
+            <>{
+              console.log(userDetail.user.id, item)
+            }
+              <MainItem
+                item={item.horses}
+                index={index}
+                onPressDetails={() =>
+                  props.navigation.navigate('Details', { item: item.horses, pubnub: pubnub, myhorse: userDetail.user.id === item.userprofile.id ? true : false })
+                }
+                onPressMessage={() => goToChat(item)}
+                myhorse={userDetail.user.id === item.horses.userprofile.id ? true : false}
+              /></>
           )}
           ListEmptyComponent={() => (
             <View style={styles.nothingWrapper}>
