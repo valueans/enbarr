@@ -1,22 +1,52 @@
-
-{% load staticfiles %}
-<!doctype html>
+{% load render_vite_bundle %}
+<!DOCTYPE html>
 <html lang="en">
   <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+      })(window,document,'script','dataLayer','GTM-MZ4297S');</script>
+      <!-- End Google Tag Manager -->
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <title>Enbarr</title>
+    <style>
+      body{
+        zoom:"90%";
+      }
+    </style>
+    <script async src="https://rum.cronitor.io/script.js"></script>
+    <script>
+        window.cronitor = window.cronitor || function() { (window.cronitor.q = window.cronitor.q || []).push(arguments); };
+        cronitor('config', { clientKey: '434092bc25f006c38e907c031ccb1b47' });
+    </script>
 
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:700|Poppins:500|Poppins:400">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Bookman+Old+Style:400">
-    <link rel="stylesheet" href={% static 'css/main.css' %} >
+    {% if DEBUG %}
+        <script type="module">
+            import RefreshRuntime from 'http://localhost:5173/@react-refresh'
+            RefreshRuntime.injectIntoGlobalHook(window)
+            window.$RefreshReg$ = () => {}
+            window.$RefreshSig$ = () => (type) => type
+            window.__vite_plugin_react_preamble_installed__ = true
+        </script>
+        <script type="module" src="http://localhost:5173/@vite/client"></script>
+    {% endif %}
 
-    <title>{{ customtext.title|striptags }}</title>
   </head>
   <body>
-        {% block content %}
-        {% endblock %}
-    </div>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MZ4297S"
+      height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      <!-- End Google Tag Manager (noscript) -->
+    <div id="root"></div>
+    {% if DEBUG %}
+    <script type="module" src="http://localhost:5173/src/main.jsx"></script>
+    {% else %}
+    {% render_vite_bundle %}
+    {% endif %}
   </body>
 </html>
-
