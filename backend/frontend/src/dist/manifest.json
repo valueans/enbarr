@@ -1,0 +1,52 @@
+{
+  "assets/homeImage.png": {
+    "file": "assets/homeImage-9ea92de7.png",
+    "src": "assets/homeImage.png"
+  },
+  "assets/horse.png": {
+    "file": "assets/horse-2ae98b42.png",
+    "src": "assets/horse.png"
+  },
+  "assets/landingImage.png": {
+    "file": "assets/landingImage-5699865b.png",
+    "src": "assets/landingImage.png"
+  },
+  "assets/logo.svg": {
+    "file": "assets/logo-e4cd52b1.svg",
+    "src": "assets/logo.svg"
+  },
+  "assets/profileimage.png": {
+    "file": "assets/profileimage-ff4b0986.png",
+    "src": "assets/profileimage.png"
+  },
+  "dev/previews.jsx": {
+    "file": "assets/previews-2b5d74b3.js",
+    "imports": [
+      "index.html"
+    ],
+    "isDynamicEntry": true,
+    "src": "dev/previews.jsx"
+  },
+  "index.css": {
+    "file": "assets/index-a8ac8a7b.css",
+    "src": "index.css"
+  },
+  "index.html": {
+    "assets": [
+      "assets/logo-e4cd52b1.svg",
+      "assets/profileimage-ff4b0986.png",
+      "assets/landingImage-5699865b.png",
+      "assets/homeImage-9ea92de7.png",
+      "assets/horse-2ae98b42.png"
+    ],
+    "css": [
+      "assets/index-a8ac8a7b.css"
+    ],
+    "dynamicImports": [
+      "dev/previews.jsx"
+    ],
+    "file": "assets/index-73a3c694.js",
+    "isEntry": true,
+    "src": "index.html"
+  }
+}
