@@ -29,6 +29,7 @@ from django_celery_beat.models import ClockedSchedule, SolarSchedule, IntervalSc
 from django.contrib.sites.models import Site
 from django.contrib.auth.models import Group
 from users.superadmin import super_admin_site
+from django.conf.urls.static import static
 
 admin.site.site_header = "ENBARR"
 admin.site.site_title = "ENBARR Admin Portal"
@@ -84,9 +85,9 @@ urlpatterns += [
     path("api-docs/", schema_view.with_ui("swagger", cache_timeout=0), name="api_docs")
 ]
 
-
-urlpatterns += [path("", TemplateView.as_view(template_name="index.html"))]
-urlpatterns += [
-    re_path(r"^(?:.*)/?$", TemplateView.as_view(template_name="index.html"))
-]
 urlpatterns += [path("", include("home.urls"))]
+
+
+urlpatterns += [
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
