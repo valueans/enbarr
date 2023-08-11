@@ -47,7 +47,8 @@ import PubNub from 'pubnub';
 import * as PubNubKeys from '../Tabs/Chat/PubNubKeys';
 global.item2 = {};
 import ReportModal from '../../components/Common/ReportModal';
-import { baseUrl } from '../../../backend/frontend/src/Constants/urls';
+import { baseUrl } from '../../Constants/urls';
+
 const Details = props => {
   const [isLiked, setIsLiked] = useState(props?.route?.params?.item?.isfav);
   const [horseImages, setHorseImages] = useState([]);
