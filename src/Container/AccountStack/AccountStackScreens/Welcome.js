@@ -186,6 +186,7 @@ const Welcome = props => {
         <>
           <Text style={[styles.inputLabel, { marginTop: -8 }]}>Email</Text>
           <TextInput
+            value={loginEmail}
             style={[styles.input, { marginBottom: !isEmailCorrect ? 5 : 10 }]}
             onChangeText={e => {
               if (!e) {
@@ -193,7 +194,9 @@ const Welcome = props => {
               }
               setLoginEmail(e);
             }}
-            autoCapitalize={'none'}></TextInput>
+            autoCapitalize={'none'}>
+
+          </TextInput>
           {!isEmailCorrect ? (
             <Text
               style={{
@@ -217,6 +220,7 @@ const Welcome = props => {
             ]}>
             <TextInput
               style={{ flex: 1, color: COLORS.white }}
+              value={loginPass1}
               onChangeText={e => setLoginPass1(e)}
               autoCapitalize={'none'}
               secureTextEntry={!isShowPassword}></TextInput>
@@ -260,6 +264,7 @@ const Welcome = props => {
               styles.input,
               { height: 40, marginBottom: !isEmailCorrect ? 5 : 10 },
             ]}
+            value={singUpEmail}
             onChangeText={e => {
               if (!e) {
                 setIsEmailCorrect(true);
@@ -289,6 +294,7 @@ const Welcome = props => {
             ]}>
             <TextInput
               style={{ flex: 1, color: COLORS.white }}
+              value={signUppass}
               onChangeText={e => setsignUpPass(e)}
               autoCapitalize={'none'}
               secureTextEntry={!isShowPassword}></TextInput>
@@ -313,6 +319,7 @@ const Welcome = props => {
             ]}>
             <TextInput
               style={{ flex: 1, color: COLORS.white }}
+              value={signUpPassConfirm}
               onChangeText={e => setSignUpPassConfirm(e)}
               autoCapitalize={'none'}
               secureTextEntry={!isShowPassword}></TextInput>
@@ -386,6 +393,7 @@ const Welcome = props => {
 
   const buttonPressed = async step => {
     if (step == 0) {
+      console.log(emailRegex.test(loginEmail), loginEmail)
       if (!emailRegex.test(loginEmail)) {
         // Alert.alert('invalid email');
         setIsEmailCorrect(false);
