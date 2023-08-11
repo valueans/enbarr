@@ -27,7 +27,7 @@ import { getMyDetail, updateMyDetail } from '../../APIs/api';
 import ImagePicker from 'react-native-image-crop-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BarIndicator } from 'react-native-indicators';
-import { userProfileUrl } from '../../../backend/frontend/src/Constants/urls';
+import { userProfileUrl } from '../../Constants/urls';
 
 const { width, height } = Dimensions.get('screen');
 

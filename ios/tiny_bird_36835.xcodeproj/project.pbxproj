@@ -566,8 +566,8 @@
 				CODE_SIGN_ENTITLEMENTS = tiny_bird_36835/tiny_bird_36835.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				CURRENT_PROJECT_VERSION = 2.1;
+				DEVELOPMENT_TEAM = THZ8C8Y54G;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = tiny_bird_36835/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Enbarr;
@@ -575,7 +575,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 27;
+				MARKETING_VERSION = 1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -600,15 +600,15 @@
 				CODE_SIGN_ENTITLEMENTS = tiny_bird_36835/tiny_bird_36835.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				CURRENT_PROJECT_VERSION = 2.1;
+				DEVELOPMENT_TEAM = THZ8C8Y54G;
 				INFOPLIST_FILE = tiny_bird_36835/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Enbarr;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 27;
+				MARKETING_VERSION = 1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
