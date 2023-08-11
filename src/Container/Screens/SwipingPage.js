@@ -387,7 +387,7 @@ const SwipingPage = props => {
                             // console.log('GO TO CHAT ', card)
                             goToChat(card)
                           }}
-                          myhorse={userDetail.user.id === item.userprofile.id ? true : false}
+                          myhorse={userDetail.user.id === card?.userprofile?.id ? true : false}
                         />
                       </View>
                     )) ||
