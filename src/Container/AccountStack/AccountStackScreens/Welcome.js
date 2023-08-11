@@ -232,8 +232,8 @@ const Welcome = props => {
             </TouchableOpacity>
           </View>
 
-          <View style={styles.sFooterContainer}>
-            <View style={styles.row}>
+          <View style={[styles.sFooterContainer, { flex: 1, }]}>
+            <View style={[styles.row, { flex: 0.5 }]}>
               <CheckBox
                 onChange={x => {
                   setIsCheckedRemember(x);
@@ -244,9 +244,9 @@ const Welcome = props => {
             </View>
 
             <TouchableOpacity
-              style={{ alignSelf: 'center' }}
+              style={{ alignSelf: 'center', flex: 0.5, }}
               onPress={goToForgotPassword}>
-              <Text style={styles.sText}>Forgot password</Text>
+              <Text style={[styles.sText, { textAlign: 'right' }]}>Forgot password</Text>
             </TouchableOpacity>
           </View>
         </>
