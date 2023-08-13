@@ -78,13 +78,13 @@ const Favorite = props => {
           }}
           renderItem={({ item, index }) => (
             <>{
-              console.log(userDetail.user.id, item)
+              console.log(userDetail.user.id, item.horses.userprofile.id)
             }
               <MainItem
                 item={item.horses}
                 index={index}
                 onPressDetails={() =>
-                  props.navigation.navigate('Details', { item: item.horses, pubnub: pubnub, myhorse: userDetail.user.id === item.userprofile.id ? true : false })
+                  props.navigation.navigate('Details', { item: item.horses, pubnub: pubnub, myhorse: userDetail.user.id === item.horses.userprofile.id ? true : false })
                 }
                 onPressMessage={() => goToChat(item)}
                 myhorse={userDetail.user.id === item.horses.userprofile.id ? true : false}
