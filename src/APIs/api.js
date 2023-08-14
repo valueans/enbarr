@@ -661,9 +661,8 @@ export async function disLikeAHorse(horse_id) {
 
 export async function forgetPasswordEmailCheck(email) {
   var myHeaders = new Headers();
-  acc = await AsyncStorage.getItem('acc');
-  myHeaders.append('Authorization', `Token ${acc}`);
-
+  // acc = await AsyncStorage.getItem('acc');
+  // myHeaders.append('Authorization', `Token ${acc}`);
   var requestOptions = {
     headers: myHeaders,
     method: 'GET',
@@ -674,7 +673,7 @@ export async function forgetPasswordEmailCheck(email) {
     `/api/v1/users/reset-email/?email=${email}`,
     requestOptions,
   );
-
+  console.log(data)
   if (data[0].code == 200) {
     return data;
   } else {
