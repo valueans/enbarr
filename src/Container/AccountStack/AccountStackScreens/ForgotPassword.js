@@ -13,19 +13,19 @@ import {
   StatusBar,
   TextInput,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import LinearGradient from 'react-native-linear-gradient';
-import COLORS, {ColorShade} from '../../../utils/colors';
+import COLORS, { ColorShade } from '../../../utils/colors';
 import fonts from '../../../utils/fonts';
 import bg from '../../../assets/images/passcode_bg.png';
 import logo from '../../../assets/images/logo_white_sm.png';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
-import {fetchWithTimeout} from '../../../Shared/fetchData';
+import { fetchWithTimeout } from '../../../Shared/fetchData';
 import Input from '../../../components/Input/Input';
-import {forgetPasswordEmailCheck} from '../../../APIs/api';
-import {BarIndicator} from 'react-native-indicators';
-const {width, height} = Dimensions.get('screen');
+import { forgetPasswordEmailCheck } from '../../../APIs/api';
+import { BarIndicator } from 'react-native-indicators';
+const { width, height } = Dimensions.get('screen');
 
 var emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
 
@@ -39,8 +39,9 @@ const ForgotPassword = props => {
     setLoading(true);
     const data = await forgetPasswordEmailCheck(email);
     setLoading(false);
+    console.log(data)
     if (data[0].code == 200) {
-      props.navigation.replace('Passcode', {source: 'FORGOT_PASSWORD', data});
+      props.navigation.replace('Passcode', { source: 'FORGOT_PASSWORD', data });
     } else {
       Alert.alert('Try Again', 'User with this email is not found.');
     }
@@ -55,26 +56,26 @@ const ForgotPassword = props => {
       />
 
       <KeyboardAvoidingView
-        style={{flex: 1, backgroundColor: 'white'}}
+        style={{ flex: 1, backgroundColor: 'white' }}
         behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={Platform.select({
           ios: 40,
           android: 0,
         })}>
         <TouchableWithoutFeedback
-          style={{flex: 1}}
+          style={{ flex: 1 }}
           onPress={() => Keyboard.dismiss()}>
-          <View style={{flex: 1, backgroundColor: 'white'}}>
+          <View style={{ flex: 1, backgroundColor: 'white' }}>
             <View style={styles.bgContainer}>
               <Image source={bg} style={styles.img} resizeMode="cover" />
               <LinearGradient
                 style={styles.overlay}
-                start={{x: 0, y: 0}}
-                end={{x: 0, y: 1}}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 0, y: 1 }}
                 colors={['transparent', ColorShade(COLORS.color3, 80)]}>
                 <Image
                   source={logo}
-                  style={[styles.logo, {top: safeArea.top}]}
+                  style={[styles.logo, { top: safeArea.top }]}
                   resizeMode="contain"
                 />
                 <Text style={styles.title}>Forgot Password</Text>
@@ -90,7 +91,7 @@ const ForgotPassword = props => {
                 style={{marginTop: 32}}></Input> */}
 
               {Platform.OS == 'ios' ? (
-                <Text style={{marginTop: 20}}>Email Address</Text>
+                <Text style={{ marginTop: 20 }}>Email Address</Text>
               ) : null}
 
               <TextInput
@@ -118,7 +119,7 @@ const ForgotPassword = props => {
                   Invalid Email
                 </Text>
               ) : (
-                <View style={{marginBottom: 10}} />
+                <View style={{ marginBottom: 10 }} />
               )}
               <TouchableOpacity
                 style={styles.btn}
