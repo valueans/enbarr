@@ -534,7 +534,7 @@ const Welcome = props => {
           console.log('Login cancelled');
         } else {
 
-        
+
           const token = await AccessToken.getCurrentAccessToken();
 
           console.log(
@@ -713,7 +713,7 @@ const Welcome = props => {
                   style={styles.tImg}
                   resizeMode="contain"
                 />
-                <Text style={styles.tText}>Google</Text>
+                {/* <Text style={styles.tText}>Google</Text> */}
               </TouchableOpacity>
               {Platform.OS == 'ios' ? (
                 <TouchableOpacity
@@ -724,7 +724,7 @@ const Welcome = props => {
                     style={styles.tImg}
                     resizeMode="contain"
                   />
-                  <Text style={styles.tText}>Apple</Text>
+                  {/* <Text style={styles.tText}>Apple</Text> */}
                 </TouchableOpacity>
               ) : null}
               <TouchableOpacity
@@ -735,7 +735,7 @@ const Welcome = props => {
                   style={styles.tImg}
                   resizeMode="contain"
                 />
-                <Text style={styles.tText}>Facebook</Text>
+                {/* <Text style={styles.tText}>Facebook</Text> */}
               </TouchableOpacity>
             </View>
           </View>
@@ -907,6 +907,10 @@ const styles = StyleSheet.create({
   tBtn: {
     alignItems: 'center',
     marginHorizontal: 32,
+    borderWidth: 1,
+    padding: 15,
+    borderColor: COLORS.white,
+    borderRadius: 5
   },
   tImg: {
     width: 25,
