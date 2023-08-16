@@ -70,7 +70,7 @@ const Subscriptions = ({ navigation }) => {
     setLoading(true);
     const data = await getPlans();
     console.log('www', data);
-    if (data.length > 0) {
+    if (data.length > 1) {
       setInitIndex(1);
     }
     setSubs(data);
