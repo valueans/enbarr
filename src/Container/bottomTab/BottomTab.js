@@ -1,17 +1,17 @@
-import React, {useEffect} from 'react';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import React, { useEffect } from 'react';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import ChatScreen from '../Tabs/Chat/ChatScreen';
 import HorsesScreen from '../Tabs/Horses/HorsesScreen';
 import HomeScreen from '../Tabs/Home/HomeScreen';
 import TabBar from './Tabbar';
-import {Platform, StyleSheet, View} from 'react-native';
+import { Dimensions, Platform, StyleSheet, View } from 'react-native';
 import COLORS from '../../utils/colors';
 import CustomTabButton from './CustomTabButton';
 import HomeIcon from './Icons/HomeIcon';
 import MessageIcon from './Icons/MessageIcon';
 import HorsesIcon from './Icons/HorsesIcon';
-import {getMyDetail} from '../../APIs/api';
+import { getMyDetail } from '../../APIs/api';
 import PubNub from 'pubnub';
 const Tab = createBottomTabNavigator();
 
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     backgroundColor: 'transparent',
     borderTopWidth: 0,
-    bottom: Platform.OS == 'ios' ? 13 : 0,
+    bottom: Platform.OS == 'ios' ? Dimensions.get('window').height < 668 ? 25 : 13 : 0,
     right: -15,
     left: -15,
     height: 92,

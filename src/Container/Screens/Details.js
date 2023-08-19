@@ -42,6 +42,7 @@ import {
   addHorseToFav,
   getOrCreateNewChannel,
   getSpecialHorseDistance,
+  getMyDetail,
 } from '../../APIs/api';
 import PubNub from 'pubnub';
 import * as PubNubKeys from '../Tabs/Chat/PubNubKeys';
@@ -228,8 +229,10 @@ const Details = props => {
   };
 
   const getMyImage = async () => {
-    const myBase64ProfileImage = await AsyncStorage.getItem('myProfilePicture');
-    setMyImage(myBase64ProfileImage);
+    const myData = await getMyDetail();
+    setMyImage(myData?.profile_photo);
+    // const myBase64ProfileImage = await AsyncStorage.getItem('myProfilePicture');
+    // setMyImage(myBase64ProfileImage);
   };
 
   const FooterWrapper = ({ children }) => {
@@ -252,12 +255,12 @@ const Details = props => {
         navigation={props.navigation}
       />
       <View
-        style={[styles.headerContainer, { top: safeArea.top + 12, zIndex: 10 }]}>
-        <TouchableOpacity
+        style={[styles.headerContainer, { top: safeArea.top - 5, zIndex: 10 }]}>
+        {/* <TouchableOpacity
           style={{ marginLeft: 10, marginBottom: 10 }}
           onPress={() => props.navigation.goBack()}>
           <Image source={arrowLeft} style={{ height: 20, width: 20 }} />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <HomeHeader
           avatar={myImage}
           showLine2={false}

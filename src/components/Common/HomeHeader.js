@@ -63,17 +63,17 @@ const HomeHeader = ({
 
   const aSellerPress = async () => {
     console.log('aSellerPress');
-    const data = await getMyDetail();
-    if (data.promotion_adds > 0) {
-      //should go to post page
-      goToPage('Seller', { myLat: myLat, myLong: myLong });
-      //for testing purposes:
-      // goToPage('RequestSubscribe');
-    } else if (data.promotion_adds <= 0) {
-      //should go to sub page
-      goToPage('RequestSubscribe');
-      // goToPage('Seller');
-    }
+    // const data = await getMyDetail();
+    // if (data.promotion_adds > 0) {
+    //should go to post page
+    goToPage('Seller', { myLat: myLat, myLong: myLong });
+    // // for testing purposes:
+    //  // goToPage('RequestSubscribe');
+    // } else if (data.promotion_adds <= 0) {
+    //  //should go to sub page
+    // goToPage('RequestSubscribe');
+    // // goToPage('Seller');
+    // }
   };
 
   const hasPermissionIOS = async () => {
@@ -166,7 +166,7 @@ const HomeHeader = ({
                   <Image
                     style={styles.avatar}
                     resizeMode="cover"
-                    source={{ uri: `data:image/png;base64,${avatar}` }}
+                    source={{ uri: avatar }}
                     onLoad={() => setIsImageLoading(true)}
                     onLoadStart={() => setIsImageLoading(true)}
                     onLoadEnd={() => setIsImageLoading(false)}

@@ -647,7 +647,7 @@ const Welcome = props => {
             <Image style={[styles.logo]} source={logo} resizeMode="contain" />
           </View>
           <View style={[styles.contentContainer]}>
-            <View style={{ overflow: 'hidden', borderRadius: 30 }}>
+            <View style={{ borderRadius: 30 }}>
               <ImageBackground style={styles.glassBox} blurRadius={30}>
                 <View style={styles.tabContainer}>
                   <View style={styles.btnContainer}>
@@ -786,8 +786,8 @@ const styles = StyleSheet.create({
     }),
   },
   contentContainer: {
-    marginTop: 30,
-    height: '60%',
+    marginTop: Dimensions.get('window').height < 668 ? -60 : 30,
+    height: Dimensions.get('window').height < 668 ? '72%' : '60%',
     width,
     justifyContent: 'center',
     alignItems: 'center',
@@ -801,7 +801,7 @@ const styles = StyleSheet.create({
   },
   glassBox: {
     width: width * 0.9,
-    height: '93%',
+    height: '94%',
     borderRadius: 30,
     backgroundColor: ColorShade(COLORS.white, 15),
 
@@ -835,7 +835,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     bottom: -1,
-
     borderBottomColor: COLORS.white,
   },
   btnText: {
