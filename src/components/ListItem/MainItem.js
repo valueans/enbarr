@@ -112,21 +112,22 @@ const MainItem = ({
             </View>
           ) : (
             <Image
-              onLoad={() => setIsLoadingPic(false)}
-              onLoadStart={() => setIsLoadingPic(true)}
-              onLoadEnd={() => setIsLoadingPic(false)}
-              source={{ uri: images.length > 0 ? images[0].file : '' }}
+              // onLoad={() => setIsLoadingPic(false)}
+              // onLoadStart={() => setIsLoadingPic(true)}
+              // onLoadEnd={() => setIsLoadingPic(false)}
+              source={{ uri: images[0]?.file }}
               style={styles.img}
-            // resizeMode="cover"
+              resizeMode='contain'
             />
           )
         ) : null}
 
-        {isLoadingPic ? (
+        {/* {isLoadingPic ? (
           <View style={{ position: 'absolute', top: 100 }}>
             <BarIndicator size={20} color={COLORS.color14}></BarIndicator>
           </View>
-        ) : null}
+        ) : null} */}
+
         <View style={styles.overlay}>
           <View style={styles.topContent}>
             {/* avatar & name */}
@@ -140,15 +141,15 @@ const MainItem = ({
                   borderRadius: 10,
                   backgroundColor: 'white',
                 }}>
-                {false ? (
+                {/* {false ? (
                   <Image style={styles.avatar} source={{ uri: '' }} />
-                ) : (
-                  <Image
-                    source={DEFAULT_IMAGE}
-                    style={[styles.noAvatar]}
-                    resizeMode="contain"
-                  />
-                )}
+                ) : ( */}
+                <Image
+                  source={DEFAULT_IMAGE}
+                  style={[styles.noAvatar]}
+                  resizeMode="contain"
+                />
+                {/* )} */}
               </View>
 
               <View style={styles.nameContainer}>
@@ -210,7 +211,7 @@ export default MainItem;
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    height: width * 1.15,
+    height: width * 1,
     borderRadius: 30,
     backgroundColor: COLORS.color11,
     marginBottom: 16,
@@ -221,7 +222,7 @@ const styles = StyleSheet.create({
   img: {
     flex: 1,
     height: '100%',
-    width: width,
+    width: '100%',
     borderRadius: 30,
   },
   overlay: {
@@ -280,7 +281,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     paddingRight: 10,
     alignItems: 'baseline',
-    height: 60,
+    height: 37,
   },
   row: {
     flexDirection: 'row',

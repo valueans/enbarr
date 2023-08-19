@@ -203,8 +203,10 @@ const Seller = props => {
   };
 
   const getMyPic = async () => {
-    const myBase64ProfileImage = await AsyncStorage.getItem('myProfilePicture');
-    setMyImage(myBase64ProfileImage);
+    const myData = await getMyDetail();
+    setMyImage(myData?.profile_photo);
+    // const myBase64ProfileImage = await AsyncStorage.getItem('myProfilePicture');
+    // setMyImage(myBase64ProfileImage);
   };
 
   const hasPermissionIOS = async () => {
@@ -306,7 +308,7 @@ const Seller = props => {
       width: 1700,
       height: 1900,
       forceJpg: true,
-      cropping: true
+      cropping: type === 'image' ? true : false
     })
       .then(async file => {
         mediaSheetRef.current.close();
@@ -1087,6 +1089,7 @@ const Seller = props => {
               <RoundBtn
                 style={{ marginTop: 21 }}
                 onPress={sendDataToSerever}
+                disabled={loading ? true : false}
                 loading={loading}>
                 {source == 'edit' ? 'Save' : 'Create'}
               </RoundBtn>

@@ -82,6 +82,7 @@ const HomeScreen = props => {
 
   useFocusEffect(
     React.useCallback(() => {
+      console.log('CALL BACK IN FOCUS EFFECT ')
       async function fetchHorses() {
         setIsSeraching(false);
         setIsLoading(true);
@@ -112,14 +113,14 @@ const HomeScreen = props => {
           setListOfHorses(x);
         }
         const myData = await getMyDetail();
-        // console.log('qqqwwww', myData.user.email);
+        console.log('PROFILE DATA ', myData);
         console.log('qqqqww', myData?.user?.email);
         setMydetail(myData);
-        const myBase64ProfileImage = await AsyncStorage.getItem(
-          'myProfilePicture',
-        );
+        // const myBase64ProfileImage = await AsyncStorage.getItem(
+        //   'myProfilePicture',
+        // );
         // console.log('fuck', myBase64ProfileImage);
-        setMyImage(myBase64ProfileImage);
+        setMyImage(myData?.profile_photo);
         await getId();
 
         const notifCount = await getNmberOfNotifications();
@@ -300,22 +301,6 @@ const HomeScreen = props => {
                 renderItem={({ item, index }) => {
                   return (
                     <>
-                      {(index + 1) % 3 === 0 && (
-                        <View
-                          key={index}
-                          style={{
-                            marginTop: 10,
-                            marginBottom: 10,
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                          }}>
-                          <BannerAd
-                            size={BannerAdSize.BANNER}
-                            // unitId={TestIds.BANNER}
-                            unitId={Platform.OS === 'ios' ? 'ca-app-pub-3055000822514370/8330285382' : 'ca-app-pub-3055000822514370/7591918782'}
-                          />
-                        </View>
-                      )}
                       <MainItem
                         item={item}
                         pubnub={pubnub}
@@ -338,6 +323,7 @@ const HomeScreen = props => {
               />
             ) : (
               <FlatList
+                vir
                 onEndReached={loadMoreHorses}
                 onEndReachedThreshold={0.7}
                 contentContainerStyle={{ paddingBottom: 90 }}
@@ -349,10 +335,13 @@ const HomeScreen = props => {
                 showsVerticalScrollIndicator={false}
                 renderItem={({ item, index }) => (
                   <MainItem
+                    pubnub={pubnub}
                     item={item}
                     index={index}
                     onPressDetails={() => goToDetails(item)}
                     onPressMessage={() => goToChat(item)}
+                    onPressImage={() => goToDetails(item)}
+                    myhorse={userDetail.user.id === item.userprofile.id ? true : false}
                   />
                 )}
                 ListEmptyComponent={() => (
@@ -398,5 +387,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: 120,
+    backgroundColor: 'red'
   },
 });
