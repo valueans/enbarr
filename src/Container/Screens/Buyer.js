@@ -125,16 +125,18 @@ const Buyer = props => {
     { value: 250 },
     { value: 300 },
   ]);
+
   useEffect(() => {
+
     // getAllCountries();
     // getColors();
     // getBreeds();
     // getDisciplines();
     // getTemperaments();
     // console.log('qwer', props.route.params.pubnub);
-
     getInitialSerachDetail();
     // getAllHorseLatituteandLongitute();
+
 
     return () => {
       setColorList([]);
@@ -154,6 +156,7 @@ const Buyer = props => {
   }, [location]);
 
   const getInitialSerachDetail = async () => {
+
     // const INITIAL_REGION = {
     //   latitude: 52.5,
     //   longitude: 19.2,
@@ -161,8 +164,13 @@ const Buyer = props => {
     //   longitudeDelta: 8.5,
     // };
     setLoading(true);
-    const myBase64ProfileImage = await AsyncStorage.getItem('myProfilePicture');
-    setMyImage(myBase64ProfileImage);
+
+    const myData = await getMyDetail();
+    setMyImage(myData?.profile_photo);
+
+    // const myBase64ProfileImage = await AsyncStorage.getItem('myProfilePicture');
+    // setMyImage(myBase64ProfileImage);
+
     const data = await getSavedSearchDetal();
     if (data[1]?.length !== 0 && data.length !== 0) {
       console.log('qqqqqq', data[1][0]);
@@ -624,6 +632,7 @@ const Buyer = props => {
             style={{
               borderWidth: 1,
               borderColor: '#ccc',
+              color: '#000',
               borderRadius: 5,
               padding: 10,
               width: '80%',
@@ -676,6 +685,7 @@ const Buyer = props => {
             style={{
               borderWidth: 1,
               borderColor: '#ccc',
+              color: '#000',
               borderRadius: 5,
               padding: 10,
               width: '80%',
@@ -764,6 +774,7 @@ const Buyer = props => {
             style={{
               borderWidth: 1,
               borderColor: '#ccc',
+              color: '#000',
               borderRadius: 5,
               padding: 10,
               width: '80%',
