@@ -16,7 +16,7 @@ import { globalStyle } from '../../utils/GlobalStyle';
 import message from '../../assets/images/envelope.png';
 import heart from '../../assets/images/heart.png';
 import heartFill from '../../assets/images/heart_fill.png';
-
+import FastImage from 'react-native-fast-image'
 import { addHorseToFav, deleteHorseToFav } from '../../APIs/api';
 const { width, height } = Dimensions.get('screen');
 
@@ -74,7 +74,7 @@ const MainItem = ({
   };
 
   return (
-    <TouchableOpacity key={index} activeOpacity={0.9} onPress={onPressDetails}>
+    <TouchableOpacity activeOpacity={0.9} onPress={onPressDetails}>
       <View style={styles.container}>
         {images.length > 0 ? (
           images[0].file_type == 'VIDEO' ? (
@@ -111,14 +111,23 @@ const MainItem = ({
               </TouchableOpacity>
             </View>
           ) : (
-            <Image
-              // onLoad={() => setIsLoadingPic(false)}
-              // onLoadStart={() => setIsLoadingPic(true)}
-              // onLoadEnd={() => setIsLoadingPic(false)}
-              source={{ uri: images[0]?.file }}
+            // <Image
+            //   // onLoad={() => setIsLoadingPic(false)}
+            //   // onLoadStart={() => setIsLoadingPic(true)}
+            //   // onLoadEnd={() => setIsLoadingPic(false)}
+            //   source={{ uri: images[0]?.file }}
+            //   style={styles.img}
+            //   resizeMode='contain'
+            // />
+            <FastImage
               style={styles.img}
-              resizeMode='contain'
+              source={{
+                uri: images[0]?.file,
+                priority: FastImage.priority.normal,
+              }}
+              resizeMode={FastImage.resizeMode.contain}
             />
+
           )
         ) : null}
 
