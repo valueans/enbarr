@@ -1521,10 +1521,10 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
-"@stripe/stripe-react-native@^0.29.0":
-  "integrity" "sha512-E5wx/oLVNNryeezlGg35vvPLsNgrEsFIkMCjhKfP85Aj+06iEe00wIyil8/H1AGp1euNlM20rMyzt7RRMOCc6g=="
-  "resolved" "https://registry.npmjs.org/@stripe/stripe-react-native/-/stripe-react-native-0.29.0.tgz"
-  "version" "0.29.0"
+"@stripe/stripe-react-native@^0.30.0":
+  "integrity" "sha512-uh8XKUA7jmvr/10vf9eCTaLJ3xQ/3IFPpW+oQz2OEi1hUF2gOAEyZU6IDjMu23FX7aYlubBzgtN+iZfP5zuHEQ=="
+  "resolved" "https://registry.npmjs.org/@stripe/stripe-react-native/-/stripe-react-native-0.30.0.tgz"
+  "version" "0.30.0"
 
 "@tootallnate/once@1":
   "integrity" "sha512-RbzJvlNzmRq5c3O09UipeuXno4tA1FE6ikOjxZK0tuxVv3412l64l5t1W5pj4+rJq9vpkm/kwiR07aZXnsKPxw=="
@@ -6924,6 +6924,11 @@
   "integrity" "sha512-MixkgMzybt8tn9m850YK5VOSlicytV41mOp/b1gAE7cK94bou27ApvVJH9oCM61vY5EN6g9VT5PwLOahbYc+BQ=="
   "resolved" "https://registry.npmjs.org/react-native-drag-sort/-/react-native-drag-sort-2.4.4.tgz"
   "version" "2.4.4"
+
+"react-native-fast-image@^8.6.3":
+  "integrity" "sha512-Sdw4ESidXCXOmQ9EcYguNY2swyoWmx53kym2zRsvi+VeFCHEdkO+WG1DK+6W81juot40bbfLNhkc63QnWtesNg=="
+  "resolved" "https://registry.npmjs.org/react-native-fast-image/-/react-native-fast-image-8.6.3.tgz"
+  "version" "8.6.3"
 
 "react-native-fbsdk-next@^11.2.1":
   "integrity" "sha512-CfJmexiDpdeAUAGM3uHxLEHyRtiAQTeELoZ+eKp1z9W2X5a7/uITHIxCaqy/B+4GfHCCj4m1WF1RKjOy+d6G/A=="
