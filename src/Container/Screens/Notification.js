@@ -99,7 +99,7 @@ const Notification = ({ navigation }) => {
         onPress={() => onPressNotification(item)}>
         {item.user_two_profile?.profile_photo ? (
           <Image
-            source={{ uri: item.user_profile.profile_photo }}
+            source={{ uri: item.user_two_profile.profile_photo }}
             resizeMode="cover"
             style={styles.avatar}
           />
