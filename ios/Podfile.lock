@@ -208,6 +208,18 @@ PODS:
   - GTMSessionFetcher/Core (2.3.0)
   - hermes-engine (0.70.6)
   - libevent (2.1.12)
+  - libwebp (1.3.1):
+    - libwebp/demux (= 1.3.1)
+    - libwebp/mux (= 1.3.1)
+    - libwebp/sharpyuv (= 1.3.1)
+    - libwebp/webp (= 1.3.1)
+  - libwebp/demux (1.3.1):
+    - libwebp/webp
+  - libwebp/mux (1.3.1):
+    - libwebp/demux
+  - libwebp/sharpyuv (1.3.1)
+  - libwebp/webp (1.3.1):
+    - libwebp/sharpyuv
   - nanopb (2.30909.0):
     - nanopb/decode (= 2.30909.0)
     - nanopb/encode (= 2.30909.0)
@@ -576,6 +588,10 @@ PODS:
     - React-Core
   - RNDeviceInfo (10.8.0):
     - React-Core
+  - RNFastImage (8.6.3):
+    - React-Core
+    - SDWebImage (~> 5.11.1)
+    - SDWebImageWebPCoder (~> 0.8.4)
   - RNFBAnalytics (18.3.0):
     - Firebase/Analytics (= 10.10.0)
     - React-Core
@@ -639,43 +655,13 @@ PODS:
     - React-RCTImage
   - RNSVG (13.10.0):
     - React-Core
+  - SDWebImage (5.11.1):
+    - SDWebImage/Core (= 5.11.1)
+  - SDWebImage/Core (5.11.1)
+  - SDWebImageWebPCoder (0.8.5):
+    - libwebp (~> 1.0)
+    - SDWebImage/Core (~> 5.10)
   - SocketRocket (0.6.1)
-  - Stripe (23.10.0):
-    - StripeApplePay (= 23.10.0)
-    - StripeCore (= 23.10.0)
-    - StripePayments (= 23.10.0)
-    - StripePaymentsUI (= 23.10.0)
-    - StripeUICore (= 23.10.0)
-  - stripe-react-native (0.29.0):
-    - React-Core
-    - Stripe (~> 23.10.0)
-    - StripeApplePay (~> 23.10.0)
-    - StripeFinancialConnections (~> 23.10.0)
-    - StripePayments (~> 23.10.0)
-    - StripePaymentSheet (~> 23.10.0)
-    - StripePaymentsUI (~> 23.10.0)
-  - StripeApplePay (23.10.0):
-    - StripeCore (= 23.10.0)
-  - StripeCore (23.10.0)
-  - StripeFinancialConnections (23.10.0):
-    - StripeCore (= 23.10.0)
-    - StripeUICore (= 23.10.0)
-  - StripePayments (23.10.0):
-    - StripeCore (= 23.10.0)
-    - StripePayments/Stripe3DS2 (= 23.10.0)
-  - StripePayments/Stripe3DS2 (23.10.0):
-    - StripeCore (= 23.10.0)
-  - StripePaymentSheet (23.10.0):
-    - StripeApplePay (= 23.10.0)
-    - StripeCore (= 23.10.0)
-    - StripePayments (= 23.10.0)
-    - StripePaymentsUI (= 23.10.0)
-  - StripePaymentsUI (23.10.0):
-    - StripeCore (= 23.10.0)
-    - StripePayments (= 23.10.0)
-    - StripeUICore (= 23.10.0)
-  - StripeUICore (23.10.0):
-    - StripeCore (= 23.10.0)
   - TOCropViewController (2.6.1)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
@@ -763,6 +749,7 @@ DEPENDENCIES:
   - "RNCClipboard (from `../node_modules/@react-native-community/clipboard`)"
   - "RNCMaskedView (from `../node_modules/@react-native-masked-view/masked-view`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
+  - RNFastImage (from `../node_modules/react-native-fast-image`)
   - "RNFBAnalytics (from `../node_modules/@react-native-firebase/analytics`)"
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBAuth (from `../node_modules/@react-native-firebase/auth`)"
@@ -774,7 +761,6 @@ DEPENDENCIES:
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
-  - "stripe-react-native (from `../node_modules/@stripe/stripe-react-native`)"
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -812,19 +798,14 @@ SPEC REPOS:
     - GTMAppAuth
     - GTMSessionFetcher
     - libevent
+    - libwebp
     - nanopb
     - OneSignalXCFramework
     - OpenSSL-Universal
     - PromisesObjC
+    - SDWebImage
+    - SDWebImageWebPCoder
     - SocketRocket
-    - Stripe
-    - StripeApplePay
-    - StripeCore
-    - StripeFinancialConnections
-    - StripePayments
-    - StripePaymentSheet
-    - StripePaymentsUI
-    - StripeUICore
     - TOCropViewController
     - YogaKit
 
@@ -935,6 +916,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-masked-view/masked-view"
   RNDeviceInfo:
     :path: "../node_modules/react-native-device-info"
+  RNFastImage:
+    :path: "../node_modules/react-native-fast-image"
   RNFBAnalytics:
     :path: "../node_modules/@react-native-firebase/analytics"
   RNFBApp:
@@ -957,8 +940,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-screens"
   RNSVG:
     :path: "../node_modules/react-native-svg"
-  stripe-react-native:
-    :path: "../node_modules/@stripe/stripe-react-native"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -1003,6 +984,7 @@ SPEC CHECKSUMS:
   GTMSessionFetcher: 3a63d75eecd6aa32c2fc79f578064e1214dfdec2
   hermes-engine: 2af7b7a59128f250adfd86f15aa1d5a2ecd39995
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
+  libwebp: 33dc822fbbf4503668d09f7885bbfedc76c45e96
   nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
   OneSignalXCFramework: 087934ab0d4d7445fcf1c015c7c782359e26c020
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
@@ -1053,6 +1035,7 @@ SPEC CHECKSUMS:
   RNCClipboard: 41d8d918092ae8e676f18adada19104fa3e68495
   RNCMaskedView: 949696f25ec596bfc697fc88e6f95cf0c79669b6
   RNDeviceInfo: 5795b418ed3451ebcaf39384e6cf51f60cb931c9
+  RNFastImage: 5c9c9fed9c076e521b3f509fe79e790418a544e8
   RNFBAnalytics: 7babe9fc072d8bcac0f21b97808ef028d988f7e9
   RNFBApp: 7da45c10070789f5e4337a5534139976e8d74e0a
   RNFBAuth: c869dede51535402b5ec0d1c2dd1306a7c1954cf
@@ -1064,20 +1047,13 @@ SPEC CHECKSUMS:
   RNReanimated: bec7736122a268883bdede07f1bf9cf4b40158db
   RNScreens: 34cc502acf1b916c582c60003dc3089fa01dc66d
   RNSVG: 80584470ff1ffc7994923ea135a3e5ad825546b9
+  SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
+  SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
-  Stripe: 6d859961e0b5b08fd3d7638fd777614117c487c4
-  stripe-react-native: d9df99841540d48f3e60bb40429f8eb61a6b044b
-  StripeApplePay: f5befbd478ef9b2bae9ddbc892da88a57b5bde1a
-  StripeCore: 38f680bd77e3797e3a884883b2a81db51b301766
-  StripeFinancialConnections: 47d27811a9c60d0acedd8b76b0b909d8f23ccbc6
-  StripePayments: 32d934fd9e46291cb70fe0b6c591a18b5439a6af
-  StripePaymentSheet: 377d3825a4d678968df0d10b9838ed651febaca7
-  StripePaymentsUI: 98bc9a21595a4e738d196896d8f62e27f44448e7
-  StripeUICore: 57812fcee73b5354f54428e4a2ad0a2a1870ecd3
   TOCropViewController: edfd4f25713d56905ad1e0b9f5be3fbe0f59c863
   Yoga: 99caf8d5ab45e9d637ee6e0174ec16fbbb01bcfc
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
 PODFILE CHECKSUM: 15547393d4575f5c1d46839d840daeda672c7c71
 
-COCOAPODS: 1.12.1
+COCOAPODS: 1.11.3

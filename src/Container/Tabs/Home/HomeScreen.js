@@ -23,7 +23,6 @@ import OneSignal from 'react-native-onesignal';
 import { list, profile_img } from '../../../utils/data';
 import { useFocusEffect } from '@react-navigation/native';
 import HomeHeader from '../../../components/Common/HomeHeader';
-
 import {
   AppOpenAd,
   InterstitialAd,
@@ -289,6 +288,7 @@ const HomeScreen = props => {
               <BarIndicator color={COLORS.color3} size={22}></BarIndicator>
             ) : !isSeraching ? (
               <FlatList
+                initialNumToRender={20}
                 onEndReached={loadMoreHorses}
                 onEndReachedThreshold={0.7}
                 contentContainerStyle={{ paddingBottom: 90 }}
@@ -323,7 +323,7 @@ const HomeScreen = props => {
               />
             ) : (
               <FlatList
-                vir
+                initialNumToRender={20}
                 onEndReached={loadMoreHorses}
                 onEndReachedThreshold={0.7}
                 contentContainerStyle={{ paddingBottom: 90 }}
@@ -387,6 +387,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: 120,
-    backgroundColor: 'red'
   },
 });
