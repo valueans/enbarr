@@ -18,6 +18,7 @@
 		A37540B1906466867F6AEC77 /* libPods-tiny_bird_36835-tiny_bird_36835Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D09328A6E2BB1F9430644C1A /* libPods-tiny_bird_36835-tiny_bird_36835Tests.a */; };
 		A49F1316D9E84D32BD4E7488 /* PoppinsLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B7A05456F4E4449AB3F52E28 /* PoppinsLight.ttf */; };
 		CC92F6CA2A727D310034F21B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CC92F6C92A727D310034F21B /* GoogleService-Info.plist */; };
+		CCB0B0142AA1B927008014EA /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCB0B0132AA1B927008014EA /* StoreKit.framework */; };
 		CF14652FBE35468397EA1699 /* PoppinsMedium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 090D9DD7167A47E4B4EC6616 /* PoppinsMedium.ttf */; };
 		E4EC39891DC44A4E98805940 /* PoppinsRegular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 86601BB7A9E94225BB02EB65 /* PoppinsRegular.ttf */; };
 		F0A83A190D2D4D7385EE8B4E /* bookman old style.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 51D68F2C899C431CBC2A65A3 /* bookman old style.ttf */; };
@@ -58,6 +59,7 @@
 		B7A05456F4E4449AB3F52E28 /* PoppinsLight.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = PoppinsLight.ttf; path = ../src/assets/fonts/PoppinsLight.ttf; sourceTree = "<group>"; };
 		CC92F6C82A727CF50034F21B /* tiny_bird_36835.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = tiny_bird_36835.entitlements; path = tiny_bird_36835/tiny_bird_36835.entitlements; sourceTree = "<group>"; };
 		CC92F6C92A727D310034F21B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		CCB0B0132AA1B927008014EA /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		D09328A6E2BB1F9430644C1A /* libPods-tiny_bird_36835-tiny_bird_36835Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-tiny_bird_36835-tiny_bird_36835Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F565747C2901503600B43BFF /* hermes.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = hermes.xcframework; path = "Pods/hermes-engine/destroot/Library/Frameworks/universal/hermes.xcframework"; sourceTree = "<group>"; };
@@ -80,6 +82,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7A8324825ADB2B0372E76834 /* libPods-tiny_bird_36835.a in Frameworks */,
+				CCB0B0142AA1B927008014EA /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -120,6 +123,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				CCB0B0132AA1B927008014EA /* StoreKit.framework */,
 				B54BA6572A74345000A19A49 /* AdServices.framework */,
 				F5657480290155E000B43BFF /* glog.xcframework */,
 				F5657482290155E000B43BFF /* OpenSSL.xcframework */,
