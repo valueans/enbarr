@@ -183,7 +183,7 @@ const ChatInput = ({
       // forceJpg: true,
     }).then(async image => {
       // console.log(image);
-      console.log(image);
+      console.log(image,'image console');
       if (
         Platform.OS === 'ios' &&
         (image.filename.endsWith('.heic') || image.filename.endsWith('.HEIC'))
@@ -191,9 +191,12 @@ const ChatInput = ({
         image.filename = `${image.filename.split('.')[0]}.JPG`;
       }
 
-      console.log(image.filename);
+      console.log(image?.filename);
       console.log(image);
 
+
+      // if(image.filename && !image.filename.includes('video') && !image?.mime.includes('video'))
+      // {
       setMessages(p => [
         {
           uuid: user_one_detail.email,
@@ -203,13 +206,14 @@ const ChatInput = ({
             file: {
               text: 'file',
               id: null,
-              url: image.path,
-              name: image.filename,
+              url: image?.path,
+              name: image?.filename ? image.filename : image?.mime.replace('/','.'),
             },
           },
         },
         ...p,
       ]);
+    // }
 
       const result = await pubnub.sendFile({
         channel: chatChannel,
@@ -218,7 +222,7 @@ const ChatInput = ({
         },
         file: {
           uri: image.path,
-          name: image.filename,
+          name: image?.filename ?? image?.mime.replace('/','.'),
           mimeType: image.mime,
         },
       });
@@ -282,7 +286,7 @@ const ChatInput = ({
             }}
             multiline
           />
-          <TouchableOpacity style={styles.inputButton}>
+          {/* <TouchableOpacity style={styles.inputButton}>
             <Image
               source={emoji}
               resizeMode="contain"
@@ -291,9 +295,13 @@ const ChatInput = ({
           </TouchableOpacity>
           <TouchableOpacity style={styles.inputButton}>
             <Image source={camera} resizeMode="contain" style={styles.icon} />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
-        <TouchableOpacity style={styles.sendBtn} onPress={() => {
+        <TouchableOpacity 
+        disabled={!textForSending}
+        style={styles.sendBtn} 
+        onPress={() => {
+          // alert('test')
           if (userBlock) {
             Alert.alert('User Is Blocked !')
           } else {

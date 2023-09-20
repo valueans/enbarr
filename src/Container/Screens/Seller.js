@@ -465,7 +465,7 @@ const Seller = props => {
           title, // ok
           markerLat, // ok
           markerLng, // ok
-          price, //ok
+          price.replace(',',''), //ok
           description, //ok
           breed.id, //ok
           gender, //ok
@@ -484,8 +484,12 @@ const Seller = props => {
         // console.log('eeeeeee', response[1].user_location);
 
         if (response) {
+    setLoading(false);
+
           Alert.alert('Successfully saved');
         } else {
+    setLoading(false);
+
           Alert.alert('Please try again.');
         }
       });
@@ -495,7 +499,7 @@ const Seller = props => {
         title, // ok
         markerLat, // ok
         markerLng, // ok
-        price, //ok
+        price.replace(',',''), //ok
         description, //ok
         breed.id, //ok
         gender, //ok
@@ -509,13 +513,16 @@ const Seller = props => {
         year,
       );
       if (response) {
+    setLoading(false);
+
         Alert.alert('Successfully saved');
       } else {
+    setLoading(false);
+
         Alert.alert('Please try again.');
       }
     }
 
-    setLoading(false);
   };
 
   const getHorseDetail = async () => {
@@ -534,7 +541,7 @@ const Seller = props => {
 
     setTitle(data[1]?.title);
     // setLocation(data[1].location?.location);
-    setPrice(data[1]?.price);
+    setPrice(data[1]?.price.replace(',',''));
     setState(data[1]?.state);
     setBreed(data[1]?.breed);
     setColor(data[1]?.color);
@@ -586,7 +593,10 @@ const Seller = props => {
     console.log('update', JSON.stringify(data[0], null, 2));
     console.log('update', JSON.stringify(data[1], null, 2));
 
+    setTimeout(() => {
     setLoading(false);
+      
+    }, 1500);
     if (data[0].code == 200) {
       props.navigation.goBack();
     } else {
@@ -786,8 +796,7 @@ const Seller = props => {
                 <View style={styles.selection}>
                   <ScreenTitle size={15}>Upload image/video *</ScreenTitle>
                   <ScreenTitle size={10} marginVertical={0} weight="400">
-                    First image/video-is the title picture, Drag to change the
-                    order
+                    First image/video-is the title picture
                   </ScreenTitle>
                   <View style={styles.iconContainer}>
                     <Image
@@ -871,7 +880,7 @@ const Seller = props => {
               />
               <Input
                 title="Price *"
-                onChangeText={x => setPrice(x)}
+                onChangeText={x => setPrice(x.replace(',',''))}
                 value={price.toString()}
               />
               <DropDown

@@ -1,4 +1,4 @@
-import { Dimensions, StyleSheet, Text, View, Image } from 'react-native';
+import { Dimensions, StyleSheet, Text, View, Image,Platform } from 'react-native';
 import React, { useEffect, useState, useRef } from 'react';
 import COLORS from '../../utils/colors';
 import fonts from '../../utils/fonts';
@@ -7,6 +7,7 @@ import triangle from '../../assets/images/triangle.png';
 import { createThumbnail } from 'react-native-create-thumbnail';
 import ImageModal from '../Modal/ShowImageVideo';
 const { width, height } = Dimensions.get('screen');
+import playIcon from '../../assets/images/play.png';
 
 const message_width = width * 0.75;
 const mine_bubble_color = COLORS.color3; //'#0A0A44';
@@ -19,8 +20,10 @@ const BORDER_RADIUS = 10;
 
 import moment from 'moment';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import Video from 'react-native-video';
+import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 
-const Message = ({ mine, avatar, item, pubnub, chatChannel }) => {
+const Message = ({ mine, avatar, item, pubnub, chatChannel,onPressVideo}) => {
   // console.log(convertTimestamp(item.item.timetoken / 10000000));
   // console.log(item.item.timetoken);
   useEffect(() => {
@@ -64,13 +67,14 @@ const Message = ({ mine, avatar, item, pubnub, chatChannel }) => {
   }
 
   const getFileURl = (fileID, fileName, fileType, url) => {
+    console.log(fileID,fileName,fileType,url,'fileID,fileName,fileType,url')
     if (fileType == 'img') {
       const result = pubnub.getFileUrl({
         channel: chatChannel,
         id: fileID,
         name: fileName,
       });
-
+      console.log('result of urls ',result)
       return result;
     } else if (fileType == 'vid') {
       var result = '';
@@ -83,22 +87,28 @@ const Message = ({ mine, avatar, item, pubnub, chatChannel }) => {
       } else {
         result = url;
       }
-
+      console.log(result,'result of video ')
+      // if(Platform.OS ==)
       createThumbnail({
         url: result,
         timeStamp: 1,
       })
-        .then(response => setThumbVideo(response.path))
-        .catch(err => console.log({ err }));
+        .then(response =>{console.log(response.path,'response.path'), Platform.OS =='ios' ? setThumbVideo(response.path) : setThumbVideo(result)})
+        .catch(err => console.log({ err },'error response.path'));
     }
   };
 
-  const openVideoPress = (fileID, fileName) => {
-    result = pubnub.getFileUrl({
+  const openVideoPress = (fileID, fileName,thumbVideo) => {
+    console.log(fileID,fileName,'on Video Press')
+    if(fileID && fileName)
+    {
+   let result = pubnub.getFileUrl({
       channel: chatChannel,
       id: fileID,
       name: fileName,
     });
+
+    console.log(result,'while video opening')
     createThumbnail({
       url: result,
       timeStamp: 1,
@@ -107,10 +117,18 @@ const Message = ({ mine, avatar, item, pubnub, chatChannel }) => {
       .catch(err => console.log({ err }));
     setVideoOpenUrl(result);
     dialogeRefVideo.current.open();
+  }
+  else if(thumbVideo){
+    setVideoOpenUrl(thumbVideo)
+    dialogeRefVideo.current.open();
+
+    // onPressVideo()
+  }
   };
 
   const renderImageAndVideo = item => {
-    if (item.name.endsWith('.jpg') || item.name.endsWith('.JPG')) {
+    console.log(item,'item name in msgs')
+    if (item.name.endsWith('.jpg') || item.name.endsWith('.JPG') || item.name.endsWith('.png') || item.name.endsWith('.PNG') ||item.name.endsWith('.jpeg') || item.name.endsWith('.JPEG')) {
       //imager
 
       return (
@@ -130,13 +148,37 @@ const Message = ({ mine, avatar, item, pubnub, chatChannel }) => {
       );
     } else {
       getFileURl(item.id, item.name, 'vid', item.url);
+      console.log(thumbVideo,'thumbVideo')
       return (
-        <TouchableOpacity onPress={() => openVideoPress(item.id, item.name)}>
-          <Image
+        <TouchableOpacity 
+        onPress={() => openVideoPress(item?.id, item?.name,thumbVideo)}>
+        
+         {Platform.OS =='ios' ? <Image
             style={styles.ttesst}
             source={{
               uri: thumbVideo,
-            }}></Image>
+            }}></Image>:<Video
+            style={styles.ttesst}
+            // paused={true}
+            muted={true}
+            onLoadStart={()=> setTimeout(() => {
+              
+            }, 1500)}
+            resizeMode={'cover'}
+            source={{
+              uri: thumbVideo,
+            }}>
+              </Video>}
+              <Pressable
+                style={styles.playBtn}
+                onPress={() => openVideoPress(item.id, item.name)}
+                >
+                <Image
+                  source={playIcon}
+                  resizeMode="cover"
+                  style={{ width: 50, height: 50 }}
+                />
+              </Pressable>
         </TouchableOpacity>
       );
     }
@@ -287,5 +329,24 @@ const styles = StyleSheet.create({
   },
   arrowImg: {
     width: 30,
+  },
+  playBtn: {
+    width: 170,
+    height: 170,
+    elevation: 5,
+    shadowColor: COLORS.black,
+    shadowRadius: 5,
+    shadowOpacity: 0.2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    // top: 20,
+    // left:20,
+    // alignItems:'center'
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    zIndex: 99999999,
   },
 });

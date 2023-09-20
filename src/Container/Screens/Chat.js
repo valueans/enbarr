@@ -349,6 +349,7 @@ const Chat = props => {
             renderItem={(itemm, index) => {
               return (
                 <Message
+                onPressVideo={()=> getMessages()}
                   chatChannel={props.route.params.item.channel}
                   pubnub={pubnub}
                   mine={

@@ -749,6 +749,35 @@ export async function getMyCardDetail() {
   }
 }
 
+export async function applyPromoCode(code) {
+  var myHeaders = new Headers();
+  acc = await AsyncStorage.getItem('acc');
+  myHeaders.append('Authorization', `Token ${acc}`);
+
+  // var formdata = new FormData();
+  // formdata.append('plan-id', plan_id);
+
+  var requestOptions = {
+    headers: myHeaders,
+    method: 'GET',
+    // body: formdata,
+    redirect: 'follow',
+  };
+
+  const data = await fetchWithTimeout(
+    `/api/v1/payment/promo_code/?code=`+code,
+    requestOptions,
+  );
+
+  console.log('promo code response', data);
+
+  if (data[0].code == 200) {
+    return data;
+  } else {
+    return [];
+  }
+}
+
 export async function changeSubcriptionPlan(plan_id) {
   var myHeaders = new Headers();
   acc = await AsyncStorage.getItem('acc');

@@ -79,56 +79,57 @@ const HomeScreen = props => {
     navigation.navigate('Details', { item, pubnub, myhorse: userDetail.user.id === item.userprofile.id ? true : false });
   };
 
-  useFocusEffect(
-    React.useCallback(() => {
-      console.log('CALL BACK IN FOCUS EFFECT ')
-      async function fetchHorses() {
-        setIsSeraching(false);
-        setIsLoading(true);
-        const horses = await getAlhorses(1);
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     console.log('CALL BACK IN FOCUS EFFECT ')
+  //     async function fetchHorses() {
+  //       setIsSeraching(false);
+  //       setIsLoading(true);
+  //       const horses = await getAlhorses(1);
 
-        setIsLoading(false);
-        if (filterItem == 'All') {
-          setListOfHorses(horses);
-        } else if (filterItem == 'Last Day') {
-          x = horses.filter(
-            (item, index) => TimeFromNow(item.created_at) == 'D',
-          );
-          setListOfHorses(x);
-        } else if (filterItem == 'Week') {
-          x = horses.filter(
-            (item, index) =>
-              TimeFromNow(item.created_at) == 'W' ||
-              TimeFromNow(item.created_at) == 'D',
-          );
-          setListOfHorses(x);
-        } else if (filterItem == 'Month') {
-          x = horses.filter(
-            (item, index) =>
-              TimeFromNow(item.created_at) == 'M' ||
-              TimeFromNow(item.created_at) == 'W' ||
-              TimeFromNow(item.created_at) == 'D',
-          );
-          setListOfHorses(x);
-        }
-        const myData = await getMyDetail();
-        console.log('PROFILE DATA ', myData);
-        console.log('qqqqww', myData?.user?.email);
-        setMydetail(myData);
-        // const myBase64ProfileImage = await AsyncStorage.getItem(
-        //   'myProfilePicture',
-        // );
-        // console.log('fuck', myBase64ProfileImage);
-        setMyImage(myData?.profile_photo);
-        await getId();
+  //       setIsLoading(false);
+  //       if (filterItem == 'All') {
+  //         setListOfHorses(horses);
+  //       } else if (filterItem == 'Last Day') {
+  //         x = horses.filter(
+  //           (item, index) => TimeFromNow(item.created_at) == 'D',
+  //         );
+  //         setListOfHorses(x);
+  //       } else if (filterItem == 'Week') {
+  //         x = horses.filter(
+  //           (item, index) =>
+  //             TimeFromNow(item.created_at) == 'W' ||
+  //             TimeFromNow(item.created_at) == 'D',
+  //         );
+  //         setListOfHorses(x);
+  //       } else if (filterItem == 'Month') {
+  //         x = horses.filter(
+  //           (item, index) =>
+  //             TimeFromNow(item.created_at) == 'M' ||
+  //             TimeFromNow(item.created_at) == 'W' ||
+  //             TimeFromNow(item.created_at) == 'D',
+  //         );
+  //         setListOfHorses(x);
+  //       }
+  //       const myData = await getMyDetail();
+  //       console.log('PROFILE DATA ', myData);
+  //       console.log('qqqqww', myData?.user?.email);
+  //       setMydetail(myData);
+  //       // const myBase64ProfileImage = await AsyncStorage.getItem(
+  //       //   'myProfilePicture',
+  //       // );
+  //       // console.log('fuck', myBase64ProfileImage);
+  //       setMyImage(myData?.profile_photo);
+  //       await getId();
 
-        const notifCount = await getNmberOfNotifications();
-        setNumberOfNotif(notifCount[1].count);
-        console.log('iouioiu', notifCount[1].count);
-      }
-      fetchHorses();
-    }, []),
-  );
+  //       const notifCount = await getNmberOfNotifications();
+  //       setNumberOfNotif(notifCount[1].count);
+  //       console.log('iouioiu', notifCount[1].count);
+  //     }
+  //     fetchHorses();
+  //   }, []),
+  // );
+  
 
   const getId = async () => {
     const data = await OneSignal.getDeviceState();
@@ -284,9 +285,10 @@ const HomeScreen = props => {
               Search for exact title of horse
             </Text>
             <Text style={styles.listTitle}>Recently added</Text>
-            {loading ? (
+            {loading && (
               <BarIndicator color={COLORS.color3} size={22}></BarIndicator>
-            ) : !isSeraching ? (
+            ) }
+            {!isSeraching ? (
               <FlatList
                 initialNumToRender={20}
                 onEndReached={loadMoreHorses}

@@ -20,7 +20,7 @@ const COLORS = {
   color19: '#f4f3f2',
   white: '#ffffff',
   black: '#000000',
-
+  grey:'#CCCCCC',
   green1: '#42FF00',
 
   red1: '#FF0009',
