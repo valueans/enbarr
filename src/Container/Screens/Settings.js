@@ -213,7 +213,6 @@ const Settings = ({ navigation }) => {
   const unsubscribe = async () => {
     //type here
     //here I should call unsun api
-
     const data = await unsunbscribe();
     if (data) {
       sheetRef.current.close();

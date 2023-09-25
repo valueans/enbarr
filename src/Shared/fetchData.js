@@ -1,6 +1,6 @@
 // const App_Domain = 'https://tiny-bird-36835.botics.co';
-const App_Domain = 'https://enbarrapp.com';
-
+const App_Domain = 'https://stagging.enbarrapp.com';
+//'https://enbarrapp.com';
 
 export async function fetchWithTimeout(url, options = {}) {
   const { timeout = 30000 } = options;

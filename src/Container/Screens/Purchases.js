@@ -38,6 +38,7 @@ import {
   getANewSetupIntent,
   getMyCardDetail,
   changeSubcriptionPlan,
+  applyPromoCode,
 } from '../../APIs/api';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
@@ -45,7 +46,7 @@ const { width, height } = Dimensions.get('screen');
 const ITEM_WIDTH = (width - 42 - 16) / 3;
 const Purchases = ({ navigation, route }) => {
   const { id, items } = route.params;
-
+  console.log(id, 'id', items)
   const { confirmSetupIntent, loading } = useConfirmSetupIntent();
   const { initPaymentSheet, presentPaymentSheet } = usePaymentSheet();
 
@@ -56,13 +57,25 @@ const Purchases = ({ navigation, route }) => {
   //   setCardNumber(`**** **** **** ${data[1].last_4}`);
   // }, []);
   useEffect(() => {
+    getCardDetails()
+  }, [])
+  const getCardDetails = () => {
     (async () => {
       const data = await getMyCardDetail();
-      console.log(data);
-      setLast4Digits(data[1].last_4);
-      setCardNumber(`**** **** **** ${data[1].last_4}`);
+      console.log(data, 'dsds');
+      if (data[1].exp_month) {
+        setLast4Digits(data[1]?.last_4);
+        setVisible(false)
+        setCardNumber(`**** **** **** ${data[1]?.last_4}`);
+        setCvc('***')
+        setExpiration(('0' + data[1]?.exp_month).slice(-2) + '/' + data[1]?.exp_year.slice(2))
+      }
+      else {
+        setVisible(true)
+      }
+
     })();
-  }, [])
+  }
 
   const [selectedIndex, setSelectedIndex] = useState(id);
   const [subs, setSubs] = useState(items);
@@ -73,7 +86,11 @@ const Purchases = ({ navigation, route }) => {
 
   const [cardNumber, setCardNumber] = useState('');
   const [cvc, setCvc] = useState('');
-  const [expiration, setExpiration] = useState();
+  const [promo, setPromo] = useState('');
+
+  const [addCardVisible, setVisible] = useState(false);
+
+  const [expiration, setExpiration] = useState('');
 
   const getBackgroundColorByIndex = index => {
     switch (index % 3) {
@@ -143,6 +160,49 @@ const Purchases = ({ navigation, route }) => {
     console.log(item, index);
   };
 
+  //PROMO CODE API CALLING IS HERE
+  const applyPromo = async () => {
+    console.log('test')
+    //API CALLBACK
+    const data = await applyPromoCode(promo);
+    if (data[0].code == 200) {
+      console.log('promo code api response from api', data)
+      // setSelectedIndex(item.id);
+      if (data[1]?.message) {
+        alert(data[1]?.message)
+      }
+      if (data[1]?.status != 'error') {
+        // alert('success')
+      }
+    } else {
+      Alert.alert('Server error', 'Please try again');
+    }
+
+    // console.log(item, index);
+  };
+
+
+  //UPGRADE THE PLAN API CALL
+  const buyPlanPressed = async () => {
+    const data = await changeSubcriptionPlan(id);
+    if (data[0].code == 200) {
+      setSelectedIndex(id);
+      alert(data[1]?.message)
+      //AFTER UPGRADING PLAN BACK NAVIGATE 
+      // navigation.goBack()
+        Geolocation.getCurrentPosition(async position => {
+        navigation.navigate('Seller', {
+          myLat: position.coords.latitude,
+          myLong: position.coords.longitude,
+        });
+      });
+    } else {
+      Alert.alert('Server error', 'Please try again');
+    }
+
+    console.log(id, '');
+  };
+
   const handlePayPress = async () => {
     //get payment intent
     const data = await getANewSetupIntent();
@@ -160,14 +220,15 @@ const Purchases = ({ navigation, route }) => {
     } else if (setupIntent) {
       Alert.alert(
         'Success',
-        `Setup intent created. Intent status: ${setupIntent.status}`,
+        `Card Successfully Added.`,
       );
-      Geolocation.getCurrentPosition(async position => {
-        navigation.navigate('Seller', {
-          myLat: position.coords.latitude,
-          myLong: position.coords.longitude,
-        });
-      });
+      getCardDetails()
+      // Geolocation.getCurrentPosition(async position => {
+      //   navigation.navigate('Seller', {
+      //     myLat: position.coords.latitude,
+      //     myLong: position.coords.longitude,
+      //   });
+      // });
 
       console.log(setupIntent);
     }
@@ -193,7 +254,6 @@ const Purchases = ({ navigation, route }) => {
         <View style={globalStyle.innerContainer}>
           <ScrollView showsVerticalScrollIndicator={false}>
             <Header title="Subscription" navigation={navigation} />
-
             <View style={styles.itemContainer}>
               <FlatList
                 data={items}
@@ -206,9 +266,35 @@ const Purchases = ({ navigation, route }) => {
                 snapToInterval={width / 3}
               />
             </View>
+            <View style={styles.promoDiv}>
 
-            {/* <RoundBtn
-              style={{marginTop: 12}}
+              <View style={{ width: width * 0.55 }}>
+                <Input title="Have Promocode ?"
+                  placeholder={'Add Promo'}
+                  onChangeText={(t) => setPromo(t)}
+                  // defaultValue={cardNumber}
+                  backgroundColor={COLORS.color11} />
+              </View>
+              <View style={styles.applyContainer}>
+                <RoundBtn
+                  style={{ marginTop: 12 }}
+                  backgroundColor={promo ? COLORS.color10 : COLORS.grey}
+                  onPress={() => applyPromo()}
+                  disabled={!promo}
+                  RenderIcon={
+                    <Image
+                      style={styles.iconImg}
+                      resizeMode="contain"
+                      source={cart}
+                    />
+                  }>
+                  Apply
+                </RoundBtn>
+              </View>
+            </View>
+            {cardNumber && <RoundBtn
+              style={{ marginTop: 12 }}
+              onPress={() => setVisible(!addCardVisible)}
               RenderIcon={
                 <Image
                   style={styles.iconImg}
@@ -216,36 +302,49 @@ const Purchases = ({ navigation, route }) => {
                   source={cart}
                 />
               }>
-              Add card
-            </RoundBtn> */}
-
-            {/* <View style={styles.inputContainer}>
-              <Input title="Card number" backgroundColor={COLORS.color11} />
+              {!addCardVisible ? 'Add card' : 'Show Saved Card'}
+            </RoundBtn>}
+            {/* SAVED CARD VIEW */}
+            {!addCardVisible && <View style={styles.inputContainer}>
+              <Input title="Card number"
+                defaultValue={cardNumber}
+                editable={false}
+                backgroundColor={COLORS.color11} />
               <View style={styles.row}>
                 <Input
                   title="Expiration date"
+                  defaultValue={expiration}
+                  editable={false}
                   backgroundColor={COLORS.color11}
-                  style={{flex: 1, marginRight: 6}}
+                  style={{ flex: 1, marginRight: 6 }}
                 />
                 <Input
                   title="CVV"
+                  defaultValue={'***'}
+                  editable={false}
                   backgroundColor={COLORS.color11}
-                  style={{flex: 1, marginLeft: 6}}
+                  style={{ flex: 1, marginLeft: 6 }}
                 />
               </View>
-              <Input
-                title="Card holder name "
-                backgroundColor={COLORS.color11}
-              />
-            </View> */}
 
-            <CardForm
+            </View>}
+
+            {addCardVisible && <CardForm
               cardStyle={{ backgroundColor: Appearance.getColorScheme() == 'dark' ? '#000000' : '#ffffff' }}
               postalCodeEnable={false}
               onFormComplete={cardDetails => {
                 console.log('card details', cardDetails);
                 setCardDetails(cardDetails);
               }}
+              // defaultValues={{
+              //   brand: "Visa",
+              //   complete: true,
+              //   country: "GB",
+              //   expiryMonth: 4,
+              //   expiryYear: 2025,
+              //   last4: "4242",
+              //   postalCode: "6362762",
+              // }}
               style={{
                 height: 300,
                 marginTop: 50,
@@ -260,7 +359,7 @@ const Purchases = ({ navigation, route }) => {
             //   textAlign: 'center',
             //   textColor: 'pink',
             // }}
-            />
+            />}
 
             {/* <RoundBtn
               style={[globalStyle.btnType2, {marginTop: 48}]}
@@ -272,9 +371,9 @@ const Purchases = ({ navigation, route }) => {
             <RoundBtn
               style={styles.btn}
               onPress={() => {
-                handlePayPress();
+                addCardVisible ? handlePayPress() : buyPlanPressed()
               }}>
-              Submit Card Details
+              {!addCardVisible ? 'Upgrade' : 'Submit Card Details'}
             </RoundBtn>
             <TextButton
               onPress={() => {
@@ -354,5 +453,14 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  promoDiv: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end'
+  },
+  applyContainer: {
+    width: width * 0.3,
+    marginBottom: 8
   },
 });
