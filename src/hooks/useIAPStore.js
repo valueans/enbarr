@@ -35,7 +35,9 @@ const useIAPStore = () => {
       await RNIap.initConnection()
       await clearPendingPurchases()
       setStoreConnected(true)
-      const appSubs = await RNIap.getSubscriptions({ skus: iosSubscriptionIDs })
+      const appSubs = await RNIap.getSubscriptions({
+        skus: ['enbarr_premium_subcription']
+      })
       setAppSubscriptions(appSubs)
       setFetchLoading(false)
     } catch (error) {

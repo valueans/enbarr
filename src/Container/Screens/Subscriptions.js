@@ -220,7 +220,7 @@ const Subscriptions = ({ navigation }) => {
                 color={COLORS.black}
                 style={styles.btnItem}
                 loading={purchaseLoading}
-                onPress={() => purchaseIAP(iosSubscriptionIDs[0])}
+                onPress={() => purchaseIAP('enbarr_premium_subcription')}
               >
                 Get Started
               </RoundBtn>
