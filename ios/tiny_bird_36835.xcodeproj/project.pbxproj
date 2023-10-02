@@ -56,6 +56,7 @@
 		8A7293A0C0DA44048807F390 /* PoppinsSemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = PoppinsSemiBold.ttf; path = ../src/assets/fonts/PoppinsSemiBold.ttf; sourceTree = "<group>"; };
 		B54BA6572A74345000A19A49 /* AdServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdServices.framework; path = System/Library/Frameworks/AdServices.framework; sourceTree = SDKROOT; };
 		B7A05456F4E4449AB3F52E28 /* PoppinsLight.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = PoppinsLight.ttf; path = ../src/assets/fonts/PoppinsLight.ttf; sourceTree = "<group>"; };
+		C17DC2102AC8B7EF00CAD3E1 /* Configuration.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = Configuration.storekit; sourceTree = "<group>"; };
 		CC92F6C82A727CF50034F21B /* tiny_bird_36835.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = tiny_bird_36835.entitlements; path = tiny_bird_36835/tiny_bird_36835.entitlements; sourceTree = "<group>"; };
 		CC92F6C92A727D310034F21B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		CCB0B0132AA1B927008014EA /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
@@ -146,6 +147,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				C17DC2102AC8B7EF00CAD3E1 /* Configuration.storekit */,
 				CC92F6C92A727D310034F21B /* GoogleService-Info.plist */,
 				13B07FAE1A68108700A75B9A /* tiny_bird_36835 */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -573,7 +575,7 @@
 				CODE_SIGN_ENTITLEMENTS = tiny_bird_36835/tiny_bird_36835.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2.9;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = THZ8C8Y54G;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = tiny_bird_36835/Info.plist;
@@ -582,7 +584,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1;
+				MARKETING_VERSION = 3.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -610,7 +612,7 @@
 				CODE_SIGN_ENTITLEMENTS = tiny_bird_36835/tiny_bird_36835.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2.9;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = THZ8C8Y54G;
 				INFOPLIST_FILE = tiny_bird_36835/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Enbarr;
@@ -618,7 +620,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1;
+				MARKETING_VERSION = 3.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

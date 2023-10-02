@@ -1,0 +1,83 @@
+{
+  "identifier" : "4197E8ED",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "9.99",
+      "familyShareable" : false,
+      "internalID" : "6467689238",
+      "localizations" : [
+        {
+          "description" : "unlimited ads",
+          "displayName" : "Platinum",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "enbarr_appPlatinumSubscription",
+      "referenceName" : "platinum_subscription",
+      "type" : "NonConsumable"
+    },
+    {
+      "displayPrice" : "4.99",
+      "familyShareable" : false,
+      "internalID" : "6466452437",
+      "localizations" : [
+        {
+          "description" : "upload 10 ads or post 10 active ads ",
+          "displayName" : "Premium Package",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "premium_enbarrPurchase",
+      "referenceName" : "premium_enbarr",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+    "_applicationInternalID" : "1666642346",
+    "_developerTeamID" : "THZ8C8Y54G",
+    "_lastSynchronizedDate" : 717797364.84591305
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "21394638",
+      "localizations" : [
+
+      ],
+      "name" : "enbarr_subscriptions",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "12.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "6468367669",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "List up to 3 horses at a time.",
+              "displayName" : "Premium",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "enbarr_premium_subcription",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Premium",
+          "subscriptionGroupID" : "21394638",
+          "type" : "RecurringSubscription"
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 2,
+    "minor" : 0
+  }
+}
