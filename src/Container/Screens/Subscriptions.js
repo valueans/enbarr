@@ -24,9 +24,9 @@ import tick from '../../assets/images/tick.png'
 import wrong from '../../assets/images/wrong.png'
 import { getPlans, changeSubcriptionPlan } from '../../APIs/api'
 import { BarIndicator } from 'react-native-indicators'
-import * as RNIap from 'react-native-iap'
 import useIAPStore from '../../hooks/useIAPStore'
-import { iosSubscriptionIDs } from '../../Constants/urls'
+import { iosSubscriptionIDs, skus } from '../../Constants/urls'
+import { useIAP } from 'react-native-iap'
 
 const ITEM_WIDTH = width - width * 0.15
 const ITEM_SPACE = 0
@@ -48,10 +48,7 @@ const Subscriptions = ({ navigation }) => {
   const [loading, setLoading] = useState(false)
   const [subs, setSubs] = useState([])
   const [initIndex, setInitIndex] = useState(0)
-
-  useEffect(() => {
-    getAppSubscriptions()
-  }, [])
+  const { getSubscriptions, getProducts, connected } = useIAP()
 
   // const getBackgroundColorByIndex = index => {
   //   switch (index % 3) {
@@ -216,6 +213,7 @@ const Subscriptions = ({ navigation }) => {
               <Text style={[styles.textItem, { color: COLORS.color2 }]}>
                 {`Great membership package for individual horse owners and small sales business to showcase their horses for sale. Add videos, photos, description, message with potential buyers and more. List up to 3 horses at a time.`}
               </Text>
+              <View style={{ flex: 1 }} />
               <RoundBtn
                 color={COLORS.black}
                 style={styles.btnItem}

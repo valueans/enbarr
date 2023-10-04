@@ -479,9 +479,7 @@ const Welcome = props => {
         '/api/v1/users/login/',
         requestOptionsLogin,
       );
-      console.log('ffffffff', data);
       if (data[0].code == 200) {
-        console.log('fffffggg', data[1]);
         dispatch(setUserDetail(data[1]));
         // console.log()
         if (data[1]['user-profile']?.profile_photo) {
@@ -505,8 +503,6 @@ const Welcome = props => {
         }
 
         await AsyncStorage.setItem('acc', data[1].token);
-
-        console.log('******** ', data[1].user.is_verified)
 
         if (data[1].user.is_verified) {
           dispatch(login());

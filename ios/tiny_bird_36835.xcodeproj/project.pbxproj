@@ -17,6 +17,7 @@
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		A17BBBB8F5A24FD1BF9ECD50 /* PoppinsSemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8A7293A0C0DA44048807F390 /* PoppinsSemiBold.ttf */; };
 		A49F1316D9E84D32BD4E7488 /* PoppinsLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B7A05456F4E4449AB3F52E28 /* PoppinsLight.ttf */; };
+		C17C5C7A2ACD3B55004517E1 /* Configuration.storekit in Resources */ = {isa = PBXBuildFile; fileRef = C17DC2102AC8B7EF00CAD3E1 /* Configuration.storekit */; };
 		CC92F6CA2A727D310034F21B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CC92F6C92A727D310034F21B /* GoogleService-Info.plist */; };
 		CCB0B0142AA1B927008014EA /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCB0B0132AA1B927008014EA /* StoreKit.framework */; };
 		CF14652FBE35468397EA1699 /* PoppinsMedium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 090D9DD7167A47E4B4EC6616 /* PoppinsMedium.ttf */; };
@@ -293,6 +294,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
+				C17C5C7A2ACD3B55004517E1 /* Configuration.storekit in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				CC92F6CA2A727D310034F21B /* GoogleService-Info.plist in Resources */,
 				785E9FE7E5124D76AE241D30 /* PoppinsBold.ttf in Resources */,
@@ -575,7 +577,7 @@
 				CODE_SIGN_ENTITLEMENTS = tiny_bird_36835/tiny_bird_36835.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = THZ8C8Y54G;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = tiny_bird_36835/Info.plist;
@@ -612,7 +614,7 @@
 				CODE_SIGN_ENTITLEMENTS = tiny_bird_36835/tiny_bird_36835.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = THZ8C8Y54G;
 				INFOPLIST_FILE = tiny_bird_36835/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Enbarr;

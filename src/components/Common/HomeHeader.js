@@ -7,24 +7,24 @@ import {
   TextInput,
   Pressable,
   Platform,
-  PermissionsAndroid,
-} from 'react-native';
-import React, { useEffect, useState } from 'react';
-import Geolocation from 'react-native-geolocation-service';
-import { Menu, MenuItem, MenuDivider } from 'react-native-material-menu';
-import { getNmberOfNotifications } from '../../APIs/api';
-import COLORS from '../../utils/colors';
-import fonts from '../../utils/fonts';
-import { globalStyle } from '../../utils/GlobalStyle';
-import notif from '../../assets/images/bell.png';
-import settings from '../../assets/images/settings.png';
-import filter from '../../assets/images/filter.png';
-import search from '../../assets/images/search.png';
-import ScreenTitle from '../Text/ScreenTitle';
-import { getMyDetail } from '../../APIs/api';
-import { BarIndicator } from 'react-native-indicators';
+  PermissionsAndroid
+} from 'react-native'
+import React, { useEffect, useState } from 'react'
+import Geolocation from 'react-native-geolocation-service'
+import { Menu, MenuItem, MenuDivider } from 'react-native-material-menu'
+import { getNmberOfNotifications } from '../../APIs/api'
+import COLORS from '../../utils/colors'
+import fonts from '../../utils/fonts'
+import { globalStyle } from '../../utils/GlobalStyle'
+import notif from '../../assets/images/bell.png'
+import settings from '../../assets/images/settings.png'
+import filter from '../../assets/images/filter.png'
+import search from '../../assets/images/search.png'
+import ScreenTitle from '../Text/ScreenTitle'
+import { getMyDetail } from '../../APIs/api'
+import { BarIndicator } from 'react-native-indicators'
 
-const DEFAULT_IMAGE = require('../../assets/images/user.png');
+const DEFAULT_IMAGE = require('../../assets/images/user.png')
 
 const HomeHeader = ({
   avatar,
@@ -37,36 +37,36 @@ const HomeHeader = ({
   isSeller = false,
   setFilterItem,
   pubnub,
-  numberOfNotif = 0,
+  numberOfNotif = 0
 }) => {
-  const [visible, setVisible] = useState(false);
-  const [selcetedIndex, setSelcetedIndex] = useState(0);
-  const [isImageLoading, setIsImageLoading] = useState(false);
-  const [myLat, setMyLat] = useState(0);
-  const [myLong, setMyLong] = useState(0);
+  const [visible, setVisible] = useState(false)
+  const [selcetedIndex, setSelcetedIndex] = useState(0)
+  const [isImageLoading, setIsImageLoading] = useState(false)
+  const [myLat, setMyLat] = useState(0)
+  const [myLong, setMyLong] = useState(0)
 
   const goToPage = (Page, params = {}) => {
-    navigation.navigate(Page, params);
-  };
+    navigation.navigate(Page, params)
+  }
 
   useEffect(() => {
-    getUserLocation();
-  }, []);
+    getUserLocation()
+  }, [])
   // const getNotif = async () => {
 
   // };
-  const menuItems = ['All', 'Last Day', 'Week', 'Month'];
+  const menuItems = ['All', 'Last Day', 'Week', 'Month']
 
-  const hideMenu = () => setVisible(false);
+  const hideMenu = () => setVisible(false)
 
-  const showMenu = () => setVisible(true);
+  const showMenu = () => setVisible(true)
 
   const aSellerPress = async () => {
-    console.log('aSellerPress');
+    console.log('aSellerPress')
     // const data = await getMyDetail();
     // if (data.promotion_adds > 0) {
     //should go to post page
-    goToPage('Seller', { myLat: myLat, myLong: myLong });
+    goToPage('Seller', { myLat: myLat, myLong: myLong })
     // // for testing purposes:
     //  // goToPage('RequestSubscribe');
     // } else if (data.promotion_adds <= 0) {
@@ -74,86 +74,82 @@ const HomeHeader = ({
     // goToPage('RequestSubscribe');
     // // goToPage('Seller');
     // }
-  };
+  }
 
   const hasPermissionIOS = async () => {
     const openSetting = () => {
       Linking.openSettings().catch(() => {
-        Alert.alert('Unable to open settings');
-      });
-    };
-    const status = await Geolocation.requestAuthorization('always');
+        Alert.alert('Unable to open settings')
+      })
+    }
+    const status = await Geolocation.requestAuthorization('always')
 
     if (status === 'granted') {
-      return true;
+      return true
     }
 
     if (status === 'denied') {
-      Alert.alert('We need your location');
+      Alert.alert('We need your location')
     }
 
     if (status === 'disabled') {
-      Alert.alert('We need your location');
+      Alert.alert('We need your location')
     }
 
-    return false;
-  };
+    return false
+  }
   const hasLocationPermission = async () => {
-
     if (Platform.OS === 'ios') {
-      const hasPermission = await hasPermissionIOS();
-      return hasPermission;
+      const hasPermission = await hasPermissionIOS()
+      return hasPermission
     }
 
     if (Platform.OS === 'android' && Platform.Version < 23) {
-      return true;
+      return true
     }
 
     const hasPermission = await PermissionsAndroid.check(
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-    );
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+    )
 
     if (hasPermission) {
-      return true;
+      return true
     }
 
     const status = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-    );
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+    )
 
     if (status === PermissionsAndroid.RESULTS.GRANTED) {
-      return true;
+      return true
     }
 
     if (status === PermissionsAndroid.RESULTS.DENIED) {
       ToastAndroid.show(
         'Location permission denied by user.',
-        ToastAndroid.LONG,
-      );
+        ToastAndroid.LONG
+      )
     } else if (status === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
       ToastAndroid.show(
         'Location permission revoked by user.',
-        ToastAndroid.LONG,
-      );
+        ToastAndroid.LONG
+      )
     }
 
-    return false;
-  };
+    return false
+  }
 
   const getUserLocation = async () => {
-    const hasPermission = await hasLocationPermission();
+    const hasPermission = await hasLocationPermission()
     if (hasPermission) {
       Geolocation.getCurrentPosition(async position => {
-        console.log('LAT AND LONG ', position)
-        setMyLat(position.coords.latitude);
-        setMyLong(position.coords.longitude);
-      });
-
+        setMyLat(position.coords.latitude)
+        setMyLong(position.coords.longitude)
+      })
     } else {
-      console.log('LAT AND LONG ', hasPermission)
-      setDistance(0);
+      setDistance(0)
     }
-  };
+  }
 
   return (
     <>
@@ -177,17 +173,19 @@ const HomeHeader = ({
                         alignSelf: 'center',
                         justifyContent: 'center',
                         alignItems: 'center',
-                        position: 'absolute',
+                        position: 'absolute'
                       }}
                       color={COLORS.color3}
-                      size={22}></BarIndicator>
+                      size={22}
+                    ></BarIndicator>
                   ) : null}
                 </>
               ) : (
                 <Image
                   style={styles.avatar1}
                   resizeMode="cover"
-                  source={DEFAULT_IMAGE}></Image>
+                  source={DEFAULT_IMAGE}
+                ></Image>
               )}
             </View>
           </Pressable>
@@ -195,7 +193,8 @@ const HomeHeader = ({
             <TouchableOpacity
               activeOpacity={0.8}
               style={styles.headerBtn}
-              onPress={() => goToPage('Notification')}>
+              onPress={() => goToPage('Notification')}
+            >
               <Image
                 style={styles.btnIcon}
                 source={notif}
@@ -210,14 +209,16 @@ const HomeHeader = ({
                     borderRadius: 10,
                     position: 'absolute',
                     top: -2,
-                    right: -2,
-                  }}></View>
+                    right: -2
+                  }}
+                ></View>
               ) : null}
             </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={0.8}
               style={[styles.headerBtn, { marginLeft: 16 }]}
-              onPress={() => goToPage('Settings')}>
+              onPress={() => goToPage('Settings')}
+            >
               <Image
                 style={styles.btnIcon}
                 source={settings}
@@ -239,14 +240,16 @@ const HomeHeader = ({
                 goToPage('Buyer', {
                   pubnub: pubnub,
                   myLat: myLat,
-                  myLong: myLong,
+                  myLong: myLong
                 })
-              }>
+              }
+            >
               <Text
                 style={[
                   styles.hBtnText,
-                  isBuyer ? styles.hSelectedBtnText : {},
-                ]}>
+                  isBuyer ? styles.hSelectedBtnText : {}
+                ]}
+              >
                 A Buyer
               </Text>
             </TouchableOpacity>
@@ -256,14 +259,16 @@ const HomeHeader = ({
               style={[
                 styles.hBtn,
                 isSeller ? styles.hSelectedBtn : {},
-                { marginLeft: 8 },
+                { marginLeft: 8 }
               ]}
-              onPress={() => aSellerPress()}>
+              onPress={() => aSellerPress()}
+            >
               <Text
                 style={[
                   styles.hBtnText,
-                  isSeller ? styles.hSelectedBtnText : {},
-                ]}>
+                  isSeller ? styles.hSelectedBtnText : {}
+                ]}
+              >
                 A Seller
               </Text>
             </TouchableOpacity>
@@ -296,23 +301,27 @@ const HomeHeader = ({
                 // height: '100%',
                 alignItems: 'center',
                 justifyContent: 'center',
-                borderRadius: 10,
-              }}>
+                borderRadius: 10
+              }}
+            >
               <Menu
                 visible={visible}
                 onRequestClose={hideMenu}
                 style={{
                   borderRadius: 10,
                   flexDirection: 'column',
-                  alignItems: 'flex-start',
-                }}>
+                  alignItems: 'flex-start'
+                }}
+              >
                 {menuItems.map((item, index) => (
                   <MenuItem
+                    key={index.toString()}
                     onPress={() => {
-                      setFilterItem(menuItems[index]);
-                      setSelcetedIndex(index);
-                      hideMenu();
-                    }}>
+                      setFilterItem(menuItems[index])
+                      setSelcetedIndex(index)
+                      hideMenu()
+                    }}
+                  >
                     <View style={styles.menuItem}>
                       <View style={styles.menueItemCircle}>
                         {selcetedIndex == index ? (
@@ -329,25 +338,25 @@ const HomeHeader = ({
         </View>
       ) : null}
     </>
-  );
-};
+  )
+}
 
-export default HomeHeader;
+export default HomeHeader
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 1
   },
   wrapper: {
     paddingHorizontal: 16,
-    flex: 1,
+    flex: 1
   },
   headerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
 
-    paddingVertical: 12,
+    paddingVertical: 12
   },
   avatarContainer: {
     width: 50,
@@ -360,7 +369,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 15,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
 
   avatar: {
@@ -370,7 +379,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
 
     borderWidth: 2,
-    borderColor: COLORS.color12,
+    borderColor: COLORS.color12
   },
   avatar1: {
     width: 35,
@@ -378,14 +387,14 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     backgroundColor: 'white',
     alignSelf: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
 
     // borderWidth: 2,
     // borderColor: COLORS.color12,
   },
   row: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   headerBtn: {
     ...globalStyle.shadowBtn,
@@ -393,11 +402,11 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 15,
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.white
   },
   btnIcon: {
     width: 25,
-    height: 25,
+    height: 25
   },
   hBtn: {
     ...globalStyle.center,
@@ -405,17 +414,17 @@ const styles = StyleSheet.create({
     width: 100,
     height: 37,
     borderRadius: 20,
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.white
   },
   hBtnText: {
     color: COLORS.color10,
-    fontSize: 12,
+    fontSize: 12
   },
   hSelectedBtn: {
-    backgroundColor: COLORS.color3,
+    backgroundColor: COLORS.color3
   },
   hSelectedBtnText: {
-    color: COLORS.white,
+    color: COLORS.white
   },
   inputContainer: {
     flexDirection: 'row',
@@ -424,7 +433,7 @@ const styles = StyleSheet.create({
     height: 60,
     backgroundColor: COLORS.white,
     borderRadius: 15,
-    flex: 1,
+    flex: 1
   },
   filterBtn: {
     ...globalStyle.center,
@@ -432,24 +441,24 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 15,
     backgroundColor: COLORS.color3,
-    marginLeft: 8,
+    marginLeft: 8
   },
   filterIcon: {
     width: 25,
-    height: 25,
+    height: 25
   },
   input: {
     flex: 1,
     color: COLORS.color3,
     fontSize: 13,
     fontFamily: fonts.regular,
-    paddingLeft: 16,
+    paddingLeft: 16
   },
   menuItem: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    paddingLeft: 10,
+    paddingLeft: 10
   },
   menueItemCircle: {
     justifyContent: 'center',
@@ -460,7 +469,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderColor: COLORS.color10,
     borderWidth: 1,
-    marginRight: 16,
+    marginRight: 16
   },
   menuItemText: {
     fontFamily: fonts.regular,
@@ -472,6 +481,6 @@ const styles = StyleSheet.create({
     width: 13,
     height: 13,
     backgroundColor: COLORS.color10,
-    borderRadius: 20,
-  },
-});
+    borderRadius: 20
+  }
+})

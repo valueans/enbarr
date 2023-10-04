@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { useEffect } from 'react'
 import { Alert, Platform } from 'react-native'
 import * as RNIap from 'react-native-iap'
-import { iosSubscriptionIDs } from '../Constants/urls'
+import { _GET_SKUS } from '../Constants/urls'
 import Geolocation from 'react-native-geolocation-service'
 
 const useIAPStore = () => {
@@ -36,7 +36,7 @@ const useIAPStore = () => {
       await clearPendingPurchases()
       setStoreConnected(true)
       const appSubs = await RNIap.getSubscriptions({
-        skus: ['enbarr_premium_subcription']
+        skus: _GET_SKUS()
       })
       setAppSubscriptions(appSubs)
       setFetchLoading(false)
@@ -61,20 +61,22 @@ const useIAPStore = () => {
 
       setPurchaseLoading(false)
 
-      Alert.alert('Sucess', 'You have successfully purchase the Item.', [
-        {
-          text: 'Okay',
-          style: 'default',
-          onPress: () => {
-            Geolocation.getCurrentPosition(async position => {
-              navigation.navigate('Seller', {
-                myLat: position.coords.latitude,
-                myLong: position.coords.longitude
+      setTimeout(() => {
+        Alert.alert('Sucess', 'You have successfully purchase the Item.', [
+          {
+            text: 'Okay',
+            style: 'default',
+            onPress: () => {
+              Geolocation.getCurrentPosition(async position => {
+                navigation.navigate('Seller', {
+                  myLat: position.coords.latitude,
+                  myLong: position.coords.longitude
+                })
               })
-            })
+            }
           }
-        }
-      ])
+        ])
+      }, 1500)
     } catch (error) {
       setPurchaseLoading(false)
       console.log(`ERROR WHILE HANDLING PURCHASE ${error}`)

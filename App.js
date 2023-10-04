@@ -12,7 +12,6 @@ import splash from './src/assets/images/splash.png'
 import MysplashScreen from './src/Container/Screens/splashScreen'
 import { logout } from './src/redux/login'
 import { Platform } from 'react-native'
-import { withIAPContext } from 'react-native-iap'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -26,7 +25,6 @@ const App = () => {
       setShowSplash(false)
     }
     hideSplash()
-    console.log('here is to check the remember process')
     if (!isremember) {
       dispatch(logout())
     }
@@ -57,4 +55,4 @@ const App = () => {
 
 const styles = StyleSheet.create({})
 
-export default withIAPContext(App)
+export default App

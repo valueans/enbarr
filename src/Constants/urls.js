@@ -6,4 +6,10 @@ export const api = `${baseUrl}api/v1/`
 export const usersUrl = `${api}users/`
 export const userProfileUrl = `${usersUrl}userprofile/`
 
-export const iosSubscriptionIDs = [`enbarr_premium_subcription`]
+export const _GET_SKUS = () => {
+  if (Platform.OS === 'android') {
+    return ['']
+  } else {
+    return ['enbarr_premium_subcription']
+  }
+}
