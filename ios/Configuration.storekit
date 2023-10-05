@@ -38,7 +38,7 @@
   "settings" : {
     "_applicationInternalID" : "1666642346",
     "_developerTeamID" : "THZ8C8Y54G",
-    "_lastSynchronizedDate" : 718092495.40404797
+    "_lastSynchronizedDate" : 718225655.03366697
   },
   "subscriptionGroups" : [
     {
@@ -54,6 +54,43 @@
           ],
           "codeOffers" : [
 
+          ],
+          "displayPrice" : "9.99",
+          "familyShareable" : false,
+          "groupNumber" : 2,
+          "internalID" : "6468798836",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "list unlimited ads",
+              "displayName" : "Platinum",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "enbarr_platinum_subcription",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Platinum",
+          "subscriptionGroupID" : "21394638",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+            {
+              "displayPrice" : "5.99",
+              "eligibility" : [
+                "existing",
+                "new"
+              ],
+              "internalID" : "DACB0D82",
+              "isStackable" : true,
+              "numberOfPeriods" : 12,
+              "paymentMode" : "payAsYouGo",
+              "referenceName" : "Offer code",
+              "subscriptionPeriod" : "P1M"
+            }
           ],
           "displayPrice" : "12.99",
           "familyShareable" : false,

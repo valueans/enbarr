@@ -15,7 +15,7 @@ import { PersistGate } from 'redux-persist/integration/react'
 import { Settings } from 'react-native-fbsdk-next'
 import { sendPlayerIDToServer } from './src/APIs/api'
 import { LogBox } from 'react-native'
-import { withIAPContext } from 'react-native-iap'
+import { withIAPContext, setup } from 'react-native-iap'
 
 LogBox.ignoreLogs(['Warning: ...', 'Error']) // Ignore log notification by message
 LogBox.ignoreAllLogs() //Ignore all log notifications

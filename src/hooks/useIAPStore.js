@@ -9,7 +9,8 @@ import Geolocation from 'react-native-geolocation-service'
 const useIAPStore = () => {
   const navigation = useNavigation()
   const [isStoreConnected, setStoreConnected] = useState(false)
-  const { currentPurchase, currentPurchaseError } = RNIap.useIAP()
+  const { currentPurchase, currentPurchaseError, finishTransaction } =
+    RNIap.useIAP()
   const [appSubscriptions, setAppSubscriptions] = useState([])
   const [fetchLoading, setFetchLoading] = useState(false)
   const [purchaseLoading, setPurchaseLoading] = useState(false)
@@ -54,9 +55,9 @@ const useIAPStore = () => {
 
   const handlePurchase = async purchase => {
     try {
-      await RNIap.finishTransaction({
+      await finishTransaction({
         purchase: purchase,
-        isConsumable: false
+        isConsumable: true
       })
 
       setPurchaseLoading(false)

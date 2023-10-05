@@ -10,6 +10,6 @@ export const _GET_SKUS = () => {
   if (Platform.OS === 'android') {
     return ['']
   } else {
-    return ['enbarr_premium_subcription']
+    return ['enbarr_premium_subcription', 'enbarr_platinum_subcription']
   }
 }

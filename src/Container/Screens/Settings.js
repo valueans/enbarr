@@ -63,15 +63,15 @@ const Settings = ({ navigation }) => {
       onPress: () => upgrade(),
       customComponent: null
     },
-    {
-      icon: unsubscribeIcon,
-      title: 'Unsubscribe',
-      onPress: () => {
-        setSheetAction('Unsubscribe')
-        sheetRef.current.snapToIndex(0)
-      },
-      customComponent: null
-    },
+    // {
+    //   icon: unsubscribeIcon,
+    //   title: 'Unsubscribe',
+    //   onPress: () => {
+    //     setSheetAction('Unsubscribe')
+    //     sheetRef.current.snapToIndex(0)
+    //   },
+    //   customComponent: null
+    // },
     {
       icon: userIcon,
       title: 'Profile',
