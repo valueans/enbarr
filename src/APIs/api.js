@@ -491,11 +491,7 @@ export async function sendHorseToServer(
     redirect: 'follow'
   }
   const data = await fetchWithTimeout('/api/v1/horse/', requestOptions)
-  if (data[0].code == 201) {
-    return true
-  } else {
-    return false
-  }
+  return data
 }
 
 export async function deleteAHorse(horse_id) {

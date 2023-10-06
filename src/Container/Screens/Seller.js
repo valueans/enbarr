@@ -482,15 +482,13 @@ const Seller = props => {
         );
         console.log('ooooo', markerLat, markerLng);
         // console.log('eeeeeee', response[1].user_location);
-
-        if (response) {
-    setLoading(false);
+        if (response[0].code == 201) {
+          setLoading(false);
 
           Alert.alert('Successfully saved');
         } else {
-    setLoading(false);
-
-          Alert.alert('Please try again.');
+          setLoading(false);
+          Alert.alert(response[1].message);
         }
       });
     } else {
