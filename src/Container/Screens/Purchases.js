@@ -56,11 +56,13 @@ const Purchases = ({ navigation, route }) => {
   //   setLast4Digits(data[1].last_4);
   //   setCardNumber(`**** **** **** ${data[1].last_4}`);
   // }, []);
+
   useEffect(() => {
     getCardDetails()
   }, [])
+
   const getCardDetails = () => {
-    ;(async () => {
+    ; (async () => {
       const data = await getMyCardDetail()
       console.log(data, 'dsds')
       if (data[1].exp_month) {
@@ -70,8 +72,8 @@ const Purchases = ({ navigation, route }) => {
         setCvc('***')
         setExpiration(
           ('0' + data[1]?.exp_month).slice(-2) +
-            '/' +
-            data[1]?.exp_year.slice(2)
+          '/' +
+          data[1]?.exp_year.slice(2)
         )
       } else {
         setVisible(true)
@@ -200,7 +202,7 @@ const Purchases = ({ navigation, route }) => {
       //AFTER UPGRADING PLAN BACK NAVIGATE
       // navigation.goBack()
       Geolocation.getCurrentPosition(async position => {
-        navigation.navigate('Seller', {
+        navigation.replace('Seller', {
           myLat: position.coords.latitude,
           myLong: position.coords.longitude
         })
@@ -371,16 +373,16 @@ const Purchases = ({ navigation, route }) => {
                   height: 300,
                   marginTop: 50
                 }}
-                // cardStyle={{
-                //   borderRadius: 500,
-                //   borderWidth: 50,
-                //   borderColor: 'red',
-                //   backgroundColor: 'red',
+              // cardStyle={{
+              //   borderRadius: 500,
+              //   borderWidth: 50,
+              //   borderColor: 'red',
+              //   backgroundColor: 'red',
 
-                //   backgroundColor: COLORS.color11,
-                //   textAlign: 'center',
-                //   textColor: 'pink',
-                // }}
+              //   backgroundColor: COLORS.color11,
+              //   textAlign: 'center',
+              //   textColor: 'pink',
+              // }}
               />
             )}
 

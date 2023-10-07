@@ -5,6 +5,7 @@ import { Alert, Platform } from 'react-native'
 import * as RNIap from 'react-native-iap'
 import { _GET_SKUS } from '../Constants/urls'
 import Geolocation from 'react-native-geolocation-service'
+import { appleTransaction } from '../APIs/api'
 
 const useIAPStore = () => {
   const navigation = useNavigation()
@@ -55,10 +56,14 @@ const useIAPStore = () => {
 
   const handlePurchase = async purchase => {
     try {
+
+      console.log('THIS IS PURCHASE ', purchase)
       await finishTransaction({
         purchase: purchase,
         isConsumable: true
       })
+      const data = await appleTransaction(purchase)
+      console.log(data)
 
       setPurchaseLoading(false)
 
@@ -69,7 +74,7 @@ const useIAPStore = () => {
             style: 'default',
             onPress: () => {
               Geolocation.getCurrentPosition(async position => {
-                navigation.navigate('Seller', {
+                navigation.replace('Seller', {
                   myLat: position.coords.latitude,
                   myLong: position.coords.longitude
                 })
@@ -88,6 +93,7 @@ const useIAPStore = () => {
   useEffect(() => {
     const checkCurrentPurchase = async () => {
       try {
+        console.log('CURRENT PURCHASE FOUND ', currentPurchase)
         if (currentPurchase && isStoreConnected)
           await handlePurchase(currentPurchase)
 
@@ -134,13 +140,27 @@ const useIAPStore = () => {
     }
   }
 
+  const reedemPromocodeIAP = async () => {
+    try {
+      setPurchaseLoading(true)
+
+      await RNIap.presentCodeRedemptionSheetIOS()
+
+      setPurchaseLoading(false)
+    } catch (error) {
+      console.log(`ERROR WHILE PROMOCODE ${error}`)
+      setPurchaseLoading(false)
+    }
+  }
+
   return {
     isStoreConnected,
     appSubscriptions,
     fetchLoading,
     purchaseLoading,
     getAppSubscriptions,
-    purchaseIAP
+    purchaseIAP,
+    reedemPromocodeIAP
   }
 }
 

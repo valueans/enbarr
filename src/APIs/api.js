@@ -739,6 +739,7 @@ export async function applyPromoCode(code) {
   }
 }
 
+
 export async function changeSubcriptionPlan(plan_id) {
   var myHeaders = new Headers()
   acc = await AsyncStorage.getItem('acc')
@@ -756,6 +757,34 @@ export async function changeSubcriptionPlan(plan_id) {
 
   const data = await fetchWithTimeout(
     `/api/v1/payment/updagradeSubscription/`,
+    requestOptions
+  )
+
+  if (data[0].code == 200) {
+    return data
+  } else {
+    return []
+  }
+}
+
+export async function appleTransaction(purchase) {
+  var myHeaders = new Headers()
+  acc = await AsyncStorage.getItem('acc')
+  myHeaders.append('Authorization', `Token ${acc}`)
+
+  var formdata = new FormData()
+  formdata.append('original_transaction_id', purchase?.originalTransactionIdentifierIOS)
+  formdata.append('transaction_id', purchase?.transactionId)
+
+  var requestOptions = {
+    headers: myHeaders,
+    method: 'POST',
+    body: formdata,
+    redirect: 'follow'
+  }
+
+  const data = await fetchWithTimeout(
+    `/api/v1/payment/apple-transaction/`,
     requestOptions
   )
 

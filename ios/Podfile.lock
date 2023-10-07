@@ -662,42 +662,6 @@ PODS:
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.10)
   - SocketRocket (0.6.1)
-  - Stripe (23.12.0):
-    - StripeApplePay (= 23.12.0)
-    - StripeCore (= 23.12.0)
-    - StripePayments (= 23.12.0)
-    - StripePaymentsUI (= 23.12.0)
-    - StripeUICore (= 23.12.0)
-  - stripe-react-native (0.30.0):
-    - React-Core
-    - Stripe (~> 23.12.0)
-    - StripeApplePay (~> 23.12.0)
-    - StripeFinancialConnections (~> 23.12.0)
-    - StripePayments (~> 23.12.0)
-    - StripePaymentSheet (~> 23.12.0)
-    - StripePaymentsUI (~> 23.12.0)
-  - StripeApplePay (23.12.0):
-    - StripeCore (= 23.12.0)
-  - StripeCore (23.12.0)
-  - StripeFinancialConnections (23.12.0):
-    - StripeCore (= 23.12.0)
-    - StripeUICore (= 23.12.0)
-  - StripePayments (23.12.0):
-    - StripeCore (= 23.12.0)
-    - StripePayments/Stripe3DS2 (= 23.12.0)
-  - StripePayments/Stripe3DS2 (23.12.0):
-    - StripeCore (= 23.12.0)
-  - StripePaymentSheet (23.12.0):
-    - StripeApplePay (= 23.12.0)
-    - StripeCore (= 23.12.0)
-    - StripePayments (= 23.12.0)
-    - StripePaymentsUI (= 23.12.0)
-  - StripePaymentsUI (23.12.0):
-    - StripeCore (= 23.12.0)
-    - StripePayments (= 23.12.0)
-    - StripeUICore (= 23.12.0)
-  - StripeUICore (23.12.0):
-    - StripeCore (= 23.12.0)
   - TOCropViewController (2.6.1)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
@@ -798,7 +762,6 @@ DEPENDENCIES:
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
-  - "stripe-react-native (from `../node_modules/@stripe/stripe-react-native`)"
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -845,14 +808,6 @@ SPEC REPOS:
     - SDWebImage
     - SDWebImageWebPCoder
     - SocketRocket
-    - Stripe
-    - StripeApplePay
-    - StripeCore
-    - StripeFinancialConnections
-    - StripePayments
-    - StripePaymentSheet
-    - StripePaymentsUI
-    - StripeUICore
     - TOCropViewController
     - YogaKit
 
@@ -989,8 +944,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-screens"
   RNSVG:
     :path: "../node_modules/react-native-svg"
-  stripe-react-native:
-    :path: "../node_modules/@stripe/stripe-react-native"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -1103,19 +1056,10 @@ SPEC CHECKSUMS:
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
-  Stripe: 15fad81ffb8d553d77ff504a6d50d47b9028bed0
-  stripe-react-native: a944368b2694b3046661883df7d40951292e662c
-  StripeApplePay: 871274acfa7a96650ea8a697c288c54b8288fb6e
-  StripeCore: 7b08fd286e8f8f5336eb725bc7ed1d2a4705cdc4
-  StripeFinancialConnections: 561831507db3d383be3933a3979f1b9d287a15e7
-  StripePayments: 081e01e73762852ccf3e662202d5dd4107634058
-  StripePaymentSheet: ec04397e9223c86a87be8b348cdbcf2075dd7a16
-  StripePaymentsUI: 3dae7fed9b148b2749dff622ece45f9b441b88ce
-  StripeUICore: 4a76fa59cab679e1b2fe1ad37d6b08c5bf2ada54
   TOCropViewController: edfd4f25713d56905ad1e0b9f5be3fbe0f59c863
   Yoga: 99caf8d5ab45e9d637ee6e0174ec16fbbb01bcfc
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 15547393d4575f5c1d46839d840daeda672c7c71
+PODFILE CHECKSUM: bc9e128095bcc16428f153077bc20b469c245464
 
 COCOAPODS: 1.12.1

@@ -63,15 +63,15 @@ const Settings = ({ navigation }) => {
       onPress: () => upgrade(),
       customComponent: null
     },
-    // {
-    //   icon: unsubscribeIcon,
-    //   title: 'Unsubscribe',
-    //   onPress: () => {
-    //     setSheetAction('Unsubscribe')
-    //     sheetRef.current.snapToIndex(0)
-    //   },
-    //   customComponent: null
-    // },
+    {
+      icon: unsubscribeIcon,
+      title: 'Unsubscribe',
+      onPress: () => {
+        setSheetAction('Unsubscribe')
+        sheetRef.current.snapToIndex(0)
+      },
+      customComponent: null
+    },
     {
       icon: userIcon,
       title: 'Profile',
@@ -81,7 +81,7 @@ const Settings = ({ navigation }) => {
     {
       icon: notifIcon,
       title: 'Notification',
-      onPress: () => {},
+      onPress: () => { },
       customComponent: (
         <Switch
           value={isNotification}
@@ -152,7 +152,7 @@ const Settings = ({ navigation }) => {
     const Custom = item.customComponent
     return (
       <>
-        <TouchableHighlight
+        {item.title === 'Unsubscribe' && Platform.OS === 'ios' ? null : <TouchableHighlight
           onPress={item.onPress}
           underlayColor={COLORS.color11}
         >
@@ -174,8 +174,8 @@ const Settings = ({ navigation }) => {
             </View>
             {item.customComponent}
           </View>
-        </TouchableHighlight>
-        {/* )} */}
+        </TouchableHighlight>}
+
       </>
     )
   }
