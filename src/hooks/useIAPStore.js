@@ -58,12 +58,20 @@ const useIAPStore = () => {
     try {
 
       console.log('THIS IS PURCHASE ', purchase)
+
       await finishTransaction({
         purchase: purchase,
         isConsumable: true
       })
+
+      const receiptBody = {
+        'receipt-data': purchase?.transactionReceipt,
+        'password': 'abd3b02519b640788b3af5b494022cea'
+      };
+      const result = await RNIap.validateReceiptIos(receiptBody, false);
+      console.log('VALIDATE RECIEPT ', result)
       const data = await appleTransaction(purchase)
-      console.log(data)
+      console.log('SUCCESS OF API CALL ', data)
 
       setPurchaseLoading(false)
 

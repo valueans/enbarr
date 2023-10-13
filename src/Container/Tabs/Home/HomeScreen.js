@@ -39,7 +39,8 @@ import {
   searchHorses,
   getOrCreateNewChannel,
   sendPlayerIDToServer,
-  getNmberOfNotifications
+  getNmberOfNotifications,
+  appleTransaction
 } from '../../../APIs/api'
 import { BarIndicator } from 'react-native-indicators'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -47,10 +48,13 @@ import { TimeFromNow } from '../../../utils/Time'
 import { useEffect } from 'react'
 import PubNub from 'pubnub'
 import * as PubNubKeys from '../Chat/PubNubKeys'
+import * as RNIap from 'react-native-iap'
 
 // global.pag = 2;
 
 const HomeScreen = props => {
+
+
   const { userDetail } = useSelector(state => state.userDetail)
 
   const pubnub = new PubNub({
@@ -138,6 +142,7 @@ const HomeScreen = props => {
   }
 
   useEffect(() => {
+
     async function fetchHorses() {
       setIsSeraching(false)
       setIsLoading(true)
@@ -168,7 +173,20 @@ const HomeScreen = props => {
     }
 
     fetchHorses()
+    getPurchaseHistory()
   }, [filterItem])
+
+  const getPurchaseHistory = async () => {
+    try {
+      const purchaseHistory = await RNIap.getPurchaseHistory();
+      console.log('PURCHASE HISRTORY ', purchaseHistory)
+      const data = await appleTransaction(purchaseHistory[0])
+      console.log('SUCCESS OF API CALL ', data)
+
+    } catch (error) {
+      console.log('error ', error)
+    }
+  }
 
   const loadMoreHorses = async () => {
     const data = await getAlhorses(page + 1)
