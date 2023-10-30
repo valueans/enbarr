@@ -170,6 +170,11 @@ const HomeScreen = props => {
         )
         setListOfHorses(x)
       }
+
+      const notifCount = await getNmberOfNotifications();
+      setNumberOfNotif(notifCount[1].count);
+      console.log('iouioiu', notifCount[1].count);
+
     }
 
     fetchHorses()
@@ -193,7 +198,6 @@ const HomeScreen = props => {
     if (data != '') {
       setPage(page + 1)
       // setListOfHorses(p => [...p, ...data]);
-
       if (filterItem == 'All') {
         setListOfHorses(p => [...p, ...data])
       } else if (filterItem == 'Last Day') {
@@ -220,7 +224,6 @@ const HomeScreen = props => {
 
   const goToChat = async item => {
     console.log('goToChat', item.userprofile.user.id)
-
     const data = await getOrCreateNewChannel(item.userprofile.user.id)
     if (data.data) {
       navigation.navigate('Chat', {

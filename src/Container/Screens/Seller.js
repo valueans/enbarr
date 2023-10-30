@@ -126,8 +126,8 @@ const Seller = props => {
 
   const [keywordIds, setKeywordIds] = useState([]);
 
-  const [markerLat, setMarkerLat] = useState(props.route.params.myLat);
-  const [markerLng, setMarkerLng] = useState(props.route.params.myLong);
+  const [markerLat, setMarkerLat] = useState(0);
+  const [markerLng, setMarkerLng] = useState(0);
 
   const [fromEditLat, setFromEditLat] = useState(0);
   const [fromEditLng, setFromEditLng] = useState(0);
@@ -465,7 +465,7 @@ const Seller = props => {
           title, // ok
           markerLat, // ok
           markerLng, // ok
-          price.replace(',',''), //ok
+          price.replace(',', ''), //ok
           description, //ok
           breed.id, //ok
           gender, //ok
@@ -497,7 +497,7 @@ const Seller = props => {
         title, // ok
         markerLat, // ok
         markerLng, // ok
-        price.replace(',',''), //ok
+        price.replace(',', ''), //ok
         description, //ok
         breed.id, //ok
         gender, //ok
@@ -511,11 +511,11 @@ const Seller = props => {
         year,
       );
       if (response) {
-    setLoading(false);
+        setLoading(false);
 
         Alert.alert('Successfully saved');
       } else {
-    setLoading(false);
+        setLoading(false);
 
         Alert.alert('Please try again.');
       }
@@ -525,21 +525,18 @@ const Seller = props => {
 
   const getHorseDetail = async () => {
     setDataGetLoading(true);
-
     const data = await getHorseDetails(horseID);
-
-    console.log('yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy', data[1].lat);
     setFromEditLat(data[1].lat);
     setFromEditLng(data[1].lng);
     setMarkerLat(data[1].lat);
     setMarkerLng(data[1].lng);
+
+    setLocation({ name: data[1]?.country });
     setStatee({ name: data[1]?.state });
     setCityy({ name: data[1]?.city });
-    setLocation({ name: data[1]?.country });
 
     setTitle(data[1]?.title);
-    // setLocation(data[1].location?.location);
-    setPrice(data[1]?.price.replace(',',''));
+    setPrice(data[1]?.price);
     setState(data[1]?.state);
     setBreed(data[1]?.breed);
     setColor(data[1]?.color);
@@ -558,8 +555,8 @@ const Seller = props => {
       listID.push(item.id);
     });
     setMediaListID(listID);
-    setDataGetLoading(false);
     setGender(genderList[genderIndex]);
+    setDataGetLoading(false);
   };
 
   const updateData = async horseID => {
@@ -592,8 +589,8 @@ const Seller = props => {
     console.log('update', JSON.stringify(data[1], null, 2));
 
     setTimeout(() => {
-    setLoading(false);
-      
+      setLoading(false);
+
     }, 1500);
     if (data[0].code == 200) {
       props.navigation.goBack();
@@ -878,7 +875,7 @@ const Seller = props => {
               />
               <Input
                 title="Price *"
-                onChangeText={x => setPrice(x.replace(',',''))}
+                onChangeText={x => setPrice(x.replace(',', ''))}
                 value={price.toString()}
               />
               <DropDown

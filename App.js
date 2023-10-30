@@ -43,11 +43,11 @@ const App = () => {
       {showSpalsh ? (
         <MysplashScreen />
       ) : (
-        // <StripeProvider publishableKey="pk_test_51LzBCTGzsITuEMlQLxfvUEYzYi3eaSiXbutnt6Spa4i6u8Ntp53OwyeSE9QAZqww7VcYedNIdoJLr5hhmv8o8oks006HurLFIl">
-        <NavigationContainer>
-          {!isLogin ? <AccountStack></AccountStack> : <Routing />}
-        </NavigationContainer>
-        // </StripeProvider>
+        <StripeProvider publishableKey="pk_test_51LzBCTGzsITuEMlQLxfvUEYzYi3eaSiXbutnt6Spa4i6u8Ntp53OwyeSE9QAZqww7VcYedNIdoJLr5hhmv8o8oks006HurLFIl">
+          <NavigationContainer>
+            {!isLogin ? <AccountStack></AccountStack> : <Routing />}
+          </NavigationContainer>
+        </StripeProvider>
       )}
     </>
   )

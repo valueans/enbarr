@@ -10,14 +10,16 @@ const RadioListBuyer = forwardRef(
   (
     {
       title = 'default',
-      list = data,
+      list = gender,
+      gender,
       direction = ['row' | 'column'],
       onChange = data => { },
     },
     ref,
   ) => {
+    console.log('THIS IS DAT AFOMR COMPI ', gender)
     // const [selectedIndex, setSelectedIndex] = useState(null);
-    const [selectedList, setSelectedList] = useState([]);
+    const [selectedList, setSelectedList] = useState(gender ? gender : []);
 
     const clear = () => {
       // setSelectedIndex(null);
