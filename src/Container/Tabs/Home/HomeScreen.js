@@ -10,27 +10,27 @@ import {
   TextInput,
   FlatList,
   Alert,
-  Platform,
-} from 'react-native';
-import React, { useState, useCallback } from 'react';
-import Background from '../../../components/Layout/Background';
-import COLORS from '../../../utils/colors';
-import fonts from '../../../utils/fonts';
-import { globalStyle } from '../../../utils/GlobalStyle';
-import { useSelector } from 'react-redux';
-import MainItem from '../../../components/ListItem/MainItem';
-import OneSignal from 'react-native-onesignal';
-import { list, profile_img } from '../../../utils/data';
-import { useFocusEffect } from '@react-navigation/native';
-import HomeHeader from '../../../components/Common/HomeHeader';
+  Platform
+} from 'react-native'
+import React, { useState, useCallback } from 'react'
+import Background from '../../../components/Layout/Background'
+import COLORS from '../../../utils/colors'
+import fonts from '../../../utils/fonts'
+import { globalStyle } from '../../../utils/GlobalStyle'
+import { useSelector } from 'react-redux'
+import MainItem from '../../../components/ListItem/MainItem'
+import OneSignal from 'react-native-onesignal'
+import { list, profile_img } from '../../../utils/data'
+import { useFocusEffect } from '@react-navigation/native'
+import HomeHeader from '../../../components/Common/HomeHeader'
 import {
   AppOpenAd,
   InterstitialAd,
   RewardedAd,
   BannerAd,
   TestIds,
-  BannerAdSize,
-} from 'react-native-google-mobile-ads';
+  BannerAdSize
+} from 'react-native-google-mobile-ads'
 
 import {
   getAlhorses,
@@ -40,223 +40,240 @@ import {
   getOrCreateNewChannel,
   sendPlayerIDToServer,
   getNmberOfNotifications,
-} from '../../../APIs/api';
-import { BarIndicator } from 'react-native-indicators';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { TimeFromNow } from '../../../utils/Time';
-import { useEffect } from 'react';
-import PubNub from 'pubnub';
-import * as PubNubKeys from '../Chat/PubNubKeys';
+  appleTransaction
+} from '../../../APIs/api'
+import { BarIndicator } from 'react-native-indicators'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { TimeFromNow } from '../../../utils/Time'
+import { useEffect } from 'react'
+import PubNub from 'pubnub'
+import * as PubNubKeys from '../Chat/PubNubKeys'
+import * as RNIap from 'react-native-iap'
 
 // global.pag = 2;
 
 const HomeScreen = props => {
 
-  const { userDetail } = useSelector(state => state.userDetail);
 
-  console.log('USER DETAILS ', userDetail)
+  const { userDetail } = useSelector(state => state.userDetail)
 
   const pubnub = new PubNub({
     subscribeKey: PubNubKeys.PUBNUB_SUBSCRIBE_KEY,
     publishKey: PubNubKeys.PUBNUB_PUBLISH_KEY,
-    userId: `${userDetail?.user?.email}`,
+    userId: `${userDetail?.user?.email}`
     // uuid: `${myDetail?.user?.email}`,
-  });
+  })
 
-  const { navigation } = props;
-  const [listOfHorses, setListOfHorses] = useState([]);
-  const [listOfSerachHorses, setListOfSearchHorses] = useState([]);
-  const [loading, setIsLoading] = useState(false);
-  const [myImage, setMyImage] = useState('');
-  const [isSeraching, setIsSeraching] = useState(false);
-  const [filterItem, setFilterItem] = useState('All');
-  const [myDetail, setMydetail] = useState([]);
-  const [numberOfNotif, setNumberOfNotif] = useState(0);
+  const { navigation } = props
+  const [listOfHorses, setListOfHorses] = useState([])
+  const [listOfSerachHorses, setListOfSearchHorses] = useState([])
+  const [loading, setIsLoading] = useState(false)
+  const [myImage, setMyImage] = useState('')
+  const [isSeraching, setIsSeraching] = useState(false)
+  const [filterItem, setFilterItem] = useState('All')
+  const [myDetail, setMydetail] = useState([])
+  const [numberOfNotif, setNumberOfNotif] = useState(0)
 
   const [page, setPage] = useState(1)
 
   const goToDetails = item => {
-    navigation.navigate('Details', { item, pubnub, myhorse: userDetail.user.id === item.userprofile.id ? true : false });
-  };
+    navigation.navigate('Details', {
+      item,
+      pubnub,
+      myhorse: userDetail.user.id === item.userprofile.id ? true : false
+    })
+  }
 
-  useFocusEffect(
-    React.useCallback(() => {
-      console.log('CALL BACK IN FOCUS EFFECT ')
-      async function fetchHorses() {
-        setIsSeraching(false);
-        setIsLoading(true);
-        const horses = await getAlhorses(1);
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     console.log('CALL BACK IN FOCUS EFFECT ')
+  //     async function fetchHorses() {
+  //       setIsSeraching(false);
+  //       setIsLoading(true);
+  //       const horses = await getAlhorses(1);
 
-        setIsLoading(false);
-        if (filterItem == 'All') {
-          setListOfHorses(horses);
-        } else if (filterItem == 'Last Day') {
-          x = horses.filter(
-            (item, index) => TimeFromNow(item.created_at) == 'D',
-          );
-          setListOfHorses(x);
-        } else if (filterItem == 'Week') {
-          x = horses.filter(
-            (item, index) =>
-              TimeFromNow(item.created_at) == 'W' ||
-              TimeFromNow(item.created_at) == 'D',
-          );
-          setListOfHorses(x);
-        } else if (filterItem == 'Month') {
-          x = horses.filter(
-            (item, index) =>
-              TimeFromNow(item.created_at) == 'M' ||
-              TimeFromNow(item.created_at) == 'W' ||
-              TimeFromNow(item.created_at) == 'D',
-          );
-          setListOfHorses(x);
-        }
-        const myData = await getMyDetail();
-        console.log('PROFILE DATA ', myData);
-        console.log('qqqqww', myData?.user?.email);
-        setMydetail(myData);
-        // const myBase64ProfileImage = await AsyncStorage.getItem(
-        //   'myProfilePicture',
-        // );
-        // console.log('fuck', myBase64ProfileImage);
-        setMyImage(myData?.profile_photo);
-        await getId();
+  //       setIsLoading(false);
+  //       if (filterItem == 'All') {
+  //         setListOfHorses(horses);
+  //       } else if (filterItem == 'Last Day') {
+  //         x = horses.filter(
+  //           (item, index) => TimeFromNow(item.created_at) == 'D',
+  //         );
+  //         setListOfHorses(x);
+  //       } else if (filterItem == 'Week') {
+  //         x = horses.filter(
+  //           (item, index) =>
+  //             TimeFromNow(item.created_at) == 'W' ||
+  //             TimeFromNow(item.created_at) == 'D',
+  //         );
+  //         setListOfHorses(x);
+  //       } else if (filterItem == 'Month') {
+  //         x = horses.filter(
+  //           (item, index) =>
+  //             TimeFromNow(item.created_at) == 'M' ||
+  //             TimeFromNow(item.created_at) == 'W' ||
+  //             TimeFromNow(item.created_at) == 'D',
+  //         );
+  //         setListOfHorses(x);
+  //       }
+  //       const myData = await getMyDetail();
+  //       console.log('PROFILE DATA ', myData);
+  //       console.log('qqqqww', myData?.user?.email);
+  //       setMydetail(myData);
+  //       // const myBase64ProfileImage = await AsyncStorage.getItem(
+  //       //   'myProfilePicture',
+  //       // );
+  //       // console.log('fuck', myBase64ProfileImage);
+  //       setMyImage(myData?.profile_photo);
+  //       await getId();
 
-        const notifCount = await getNmberOfNotifications();
-        setNumberOfNotif(notifCount[1].count);
-        console.log('iouioiu', notifCount[1].count);
-      }
-      fetchHorses();
-    }, []),
-  );
+  //       const notifCount = await getNmberOfNotifications();
+  //       setNumberOfNotif(notifCount[1].count);
+  //       console.log('iouioiu', notifCount[1].count);
+  //     }
+  //     fetchHorses();
+  //   }, []),
+  // );
 
   const getId = async () => {
-    const data = await OneSignal.getDeviceState();
-    console.log('aaa', data);
-    const serverResponse = await sendPlayerIDToServer(data?.userId);
-  };
+    const data = await OneSignal.getDeviceState()
+    console.log('aaa', data)
+    const serverResponse = await sendPlayerIDToServer(data?.userId)
+  }
 
   useEffect(() => {
-    console.log('changeees');
 
     async function fetchHorses() {
-      setIsSeraching(false);
-      setIsLoading(true);
-      const horses = await getAlhorses(1);
+      setIsSeraching(false)
+      setIsLoading(true)
+      const horses = await getAlhorses(1)
 
-      setIsLoading(false);
+      setIsLoading(false)
       if (filterItem == 'All') {
-        setListOfHorses(horses);
+        setListOfHorses(horses)
       } else if (filterItem == 'Last Day') {
-        x = horses.filter((item, index) => TimeFromNow(item.created_at) == 'D');
-        setListOfHorses(x);
+        x = horses.filter((item, index) => TimeFromNow(item.created_at) == 'D')
+        setListOfHorses(x)
       } else if (filterItem == 'Week') {
         x = horses.filter(
           (item, index) =>
             TimeFromNow(item.created_at) == 'W' ||
-            TimeFromNow(item.created_at) == 'D',
-        );
-        setListOfHorses(x);
+            TimeFromNow(item.created_at) == 'D'
+        )
+        setListOfHorses(x)
       } else if (filterItem == 'Month') {
         x = horses.filter(
           (item, index) =>
             TimeFromNow(item.created_at) == 'M' ||
             TimeFromNow(item.created_at) == 'W' ||
-            TimeFromNow(item.created_at) == 'D',
-        );
-        setListOfHorses(x);
+            TimeFromNow(item.created_at) == 'D'
+        )
+        setListOfHorses(x)
       }
+
+      const notifCount = await getNmberOfNotifications();
+      setNumberOfNotif(notifCount[1].count);
+      console.log('iouioiu', notifCount[1].count);
+
     }
 
-    fetchHorses();
-  }, [filterItem]);
+    fetchHorses()
+    getPurchaseHistory()
+  }, [filterItem])
+
+  const getPurchaseHistory = async () => {
+    try {
+      const purchaseHistory = await RNIap.getPurchaseHistory();
+      console.log('PURCHASE HISRTORY ', purchaseHistory)
+      const data = await appleTransaction(purchaseHistory[0])
+      console.log('SUCCESS OF API CALL ', data)
+
+    } catch (error) {
+      console.log('error ', error)
+    }
+  }
 
   const loadMoreHorses = async () => {
-
-    const data = await getAlhorses(page + 1);
-    console.log('NEW PAGE NO DATA ', page + 1)
+    const data = await getAlhorses(page + 1)
     if (data != '') {
       setPage(page + 1)
-      console.log('NEW PAGE WITH DATA ', page + 1, data)
       // setListOfHorses(p => [...p, ...data]);
-
       if (filterItem == 'All') {
-        setListOfHorses(p => [...p, ...data]);
+        setListOfHorses(p => [...p, ...data])
       } else if (filterItem == 'Last Day') {
-        x = horses.filter((item, index) => TimeFromNow(item.created_at) == 'D');
-        setListOfHorses(p => [...p, ...x]);
+        x = horses.filter((item, index) => TimeFromNow(item.created_at) == 'D')
+        setListOfHorses(p => [...p, ...x])
       } else if (filterItem == 'Week') {
         x = horses.filter(
           (item, index) =>
             TimeFromNow(item.created_at) == 'W' ||
-            TimeFromNow(item.created_at) == 'D',
-        );
-        setListOfHorses(p => [...p, ...x]);
+            TimeFromNow(item.created_at) == 'D'
+        )
+        setListOfHorses(p => [...p, ...x])
       } else if (filterItem == 'Month') {
         x = horses.filter(
           (item, index) =>
             TimeFromNow(item.created_at) == 'M' ||
             TimeFromNow(item.created_at) == 'W' ||
-            TimeFromNow(item.created_at) == 'D',
-        );
-        setListOfHorses(p => [...p, ...x]);
+            TimeFromNow(item.created_at) == 'D'
+        )
+        setListOfHorses(p => [...p, ...x])
       }
     }
-  };
+  }
 
   const goToChat = async item => {
-    console.log('goToChat', item.userprofile.user.id);
-
-    const data = await getOrCreateNewChannel(item.userprofile.user.id);
+    console.log('goToChat', item.userprofile.user.id)
+    const data = await getOrCreateNewChannel(item.userprofile.user.id)
     if (data.data) {
       navigation.navigate('Chat', {
         item: data.data,
         myDetail: data.data.user_one_profile,
-        pubnub: pubnub,
-      });
+        pubnub: pubnub
+      })
     } else {
-      Alert.alert('Error', 'Please try again later.');
+      Alert.alert('Error', 'Please try again later.')
     }
-  };
+  }
 
   const debounce = func => {
-    let timer;
+    let timer
     return function (...args) {
-      const context = this;
-      if (timer) clearTimeout(timer);
+      const context = this
+      if (timer) clearTimeout(timer)
       timer = setTimeout(() => {
-        timer = null;
-        func.apply(context, args);
-      }, 500);
-    };
-  };
+        timer = null
+        func.apply(context, args)
+      }, 500)
+    }
+  }
 
   const onChnageTextFunc = async e => {
-    console.log(e);
+    console.log(e)
     if (e == '') {
-      setIsSeraching(false);
-      setIsLoading(true);
-      const horses = await getAlhorses(1);
+      setIsSeraching(false)
+      setIsLoading(true)
+      const horses = await getAlhorses(1)
       // console.log(horses);
-      setIsLoading(false);
-      setListOfHorses(horses);
+      setIsLoading(false)
+      setListOfHorses(horses)
     } else {
-      setIsSeraching(true);
+      setIsSeraching(true)
       //let call search api
-      setIsLoading(true);
-      const seachHorse = await searchHorses(e, e);
-      console.log('SEARCH RESULTS ', seachHorse);
-      setListOfSearchHorses(seachHorse);
-      setIsLoading(false);
+      setIsLoading(true)
+      const seachHorse = await searchHorses(e, e)
+      console.log('SEARCH RESULTS ', seachHorse)
+      setListOfSearchHorses(seachHorse)
+      setIsLoading(false)
     }
-  };
+  }
 
   const testFunc = () => {
-    x = TimeFromNow('2022-12-18T12:50:47.582511Z', false);
-    console.log(x);
-  };
+    x = TimeFromNow('2022-12-18T12:50:47.582511Z', false)
+    console.log(x)
+  }
 
-  const optimizedSerachUsernamefunc = useCallback(debounce(onChnageTextFunc));
+  const optimizedSerachUsernamefunc = useCallback(debounce(onChnageTextFunc))
 
   return (
     <Background>
@@ -279,14 +296,16 @@ const HomeScreen = props => {
                 fontSize: 11,
                 fontFamily: fonts.light,
                 fontWeight: '100',
-                marginBottom: 12,
-              }}>
+                marginBottom: 12
+              }}
+            >
               Search for exact title of horse
             </Text>
             <Text style={styles.listTitle}>Recently added</Text>
-            {loading ? (
+            {loading && (
               <BarIndicator color={COLORS.color3} size={22}></BarIndicator>
-            ) : !isSeraching ? (
+            )}
+            {!isSeraching ? (
               <FlatList
                 initialNumToRender={20}
                 onEndReached={loadMoreHorses}
@@ -308,10 +327,14 @@ const HomeScreen = props => {
                         onPressDetails={() => goToDetails(item)}
                         onPressMessage={() => goToChat(item)}
                         onPressImage={() => goToDetails(item)}
-                        myhorse={userDetail.user.id === item.userprofile.id ? true : false}
+                        myhorse={
+                          userDetail.user.id === item.userprofile.id
+                            ? true
+                            : false
+                        }
                       />
                     </>
-                  );
+                  )
                 }}
                 ListEmptyComponent={() => (
                   <View style={styles.nothingWrapper}>
@@ -341,7 +364,9 @@ const HomeScreen = props => {
                     onPressDetails={() => goToDetails(item)}
                     onPressMessage={() => goToChat(item)}
                     onPressImage={() => goToDetails(item)}
-                    myhorse={userDetail.user.id === item.userprofile.id ? true : false}
+                    myhorse={
+                      userDetail.user.id === item.userprofile.id ? true : false
+                    }
                   />
                 )}
                 ListEmptyComponent={() => (
@@ -357,17 +382,17 @@ const HomeScreen = props => {
         </View>
       </SafeAreaView>
     </Background>
-  );
-};
+  )
+}
 
-export default HomeScreen;
+export default HomeScreen
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 1
   },
   wrapper: {
-    paddingHorizontal: 16,
+    paddingHorizontal: 16
   },
 
   listTitle: {
@@ -375,17 +400,17 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontFamily: fonts.medium,
     fontWeight: '600',
-    marginBottom: 12,
+    marginBottom: 12
   },
   nothingText: {
     fontFamily: fonts.regular,
     fontWeight: '400',
-    color: COLORS.color17,
+    color: COLORS.color17
   },
   nothingWrapper: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    height: 120,
-  },
-});
+    height: 120
+  }
+})

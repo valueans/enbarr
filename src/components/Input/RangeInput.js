@@ -1,4 +1,4 @@
-import {StyleSheet, Text, TextInput, View} from 'react-native';
+import { StyleSheet, Text, TextInput, View } from 'react-native';
 import React from 'react';
 import ScreenTitle from '../Text/ScreenTitle';
 import COLORS from '../../utils/colors';
@@ -6,15 +6,15 @@ import fonts from '../../utils/fonts';
 
 const RangeInput = ({
   title = 'input',
-  onMinimumChange = () => {},
-  onMaximumChange = () => {},
+  onMinimumChange = () => { },
+  onMaximumChange = () => { },
   minValue,
   maxValue,
   minPlaceholder,
   maxPlaceholder,
 }) => {
   return (
-    <View style={{marginVertical: 8}}>
+    <View style={{ marginVertical: 8 }}>
       <ScreenTitle marginVertical={8} size={12}>
         {title}
       </ScreenTitle>
@@ -29,7 +29,8 @@ const RangeInput = ({
               style={styles.input}
               onChangeText={text => onMinimumChange(text)}
               value={minValue}
-              placeholder={minPlaceholder}></TextInput>
+              placeholder={minPlaceholder}
+            />
           </View>
         </View>
         <View style={[styles.container, styles.left]}>
@@ -42,7 +43,8 @@ const RangeInput = ({
               style={styles.input}
               onChangeText={text => onMaximumChange(text)}
               value={maxValue}
-              placeholder={maxPlaceholder}></TextInput>
+              placeholder={maxPlaceholder}
+            />
           </View>
         </View>
       </View>

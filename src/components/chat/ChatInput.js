@@ -8,33 +8,33 @@ import {
   TextInput,
   Keyboard,
   Platform,
-  Alert,
-} from 'react-native';
-import React, { useState, useEffect } from 'react';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import COLORS from '../../utils/colors';
-import sendIcon from '../../assets/images/send.png';
-import emoji from '../../assets/images/emoji.png';
-import camera from '../../assets/images/camera.png';
-import attach from '../../assets/images/paper_clip.png';
-import ImagePicker from 'react-native-image-crop-picker';
+  Alert
+} from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import COLORS from '../../utils/colors'
+import sendIcon from '../../assets/images/send.png'
+import emoji from '../../assets/images/emoji.png'
+import camera from '../../assets/images/camera.png'
+import attach from '../../assets/images/paper_clip.png'
+import ImagePicker from 'react-native-image-crop-picker'
 import Animated, {
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
   withSpring,
-  withTiming,
-} from 'react-native-reanimated';
-import { sendMessage } from '../../APIs/api';
-const defaultHeight = 45;
-const inputColor = '#e9e9e9';
+  withTiming
+} from 'react-native-reanimated'
+import { sendMessage } from '../../APIs/api'
+const defaultHeight = 45
+const inputColor = '#e9e9e9'
 const MIN_COMPOSER_HEIGHT = Platform.select({
   android: 45,
-  ios: 45,
-});
-const PADDING_COMPOSER = 5;
+  ios: 45
+})
+const PADDING_COMPOSER = 5
 
-const MAX_COMPOSER_HEIGHT = 90;
+const MAX_COMPOSER_HEIGHT = 90
 const ChatInput = ({
   user_two_detail,
   user_one_detail,
@@ -44,60 +44,58 @@ const ChatInput = ({
   pubnub,
   userBlock
 }) => {
-  const safeArea = useSafeAreaInsets();
-  const defaultWrapperheight = safeArea.bottom + 5 + MIN_COMPOSER_HEIGHT;
+  const safeArea = useSafeAreaInsets()
+  const defaultWrapperheight = safeArea.bottom + 5 + MIN_COMPOSER_HEIGHT
   const [keyboardHeight, setKeyboardHeight] = useState(
-    Platform.OS == 'ios' ? 320 : 0,
-  );
-  const [wrapperHeight, setWrapperHeight] = useState(defaultWrapperheight);
-  const [isKeyboardShow, setIsKeyboardShow] = useState(false);
-  const [composerHeight, setComposerHeight] = useState(MIN_COMPOSER_HEIGHT);
-  const [textForSending, setTextForSending] = useState('');
-  const isOpend = useSharedValue(false);
+    Platform.OS == 'ios' ? 320 : 0
+  )
+  const [wrapperHeight, setWrapperHeight] = useState(defaultWrapperheight)
+  const [isKeyboardShow, setIsKeyboardShow] = useState(false)
+  const [composerHeight, setComposerHeight] = useState(MIN_COMPOSER_HEIGHT)
+  const [textForSending, setTextForSending] = useState('')
+  const isOpend = useSharedValue(false)
   useEffect(() => {
     const keyboardShow = Keyboard.addListener(
       Platform.OS == 'ios' ? 'keyboardWillShow' : 'keyboardDidShow',
       e => {
-        setKeyboardHeight(Platform.OS == 'ios' ? e.endCoordinates.height : 0);
-        console.log(Platform.OS, 'height', e.endCoordinates.height);
+        setKeyboardHeight(Platform.OS == 'ios' ? e.endCoordinates.height : 0)
         // setIsKeyboardShow(true);
-        isOpend.value = true;
-      },
-    );
+        isOpend.value = true
+      }
+    )
     const keyboardHide = Keyboard.addListener(
       Platform.OS == 'ios' ? 'keyboardWillHide' : 'keyboardDidHide',
       e => {
-        isOpend.value = false;
-      },
-    );
+        isOpend.value = false
+      }
+    )
 
     return () => {
-      keyboardShow.remove();
-      keyboardHide.remove();
-    };
-  }, []);
+      keyboardShow.remove()
+      keyboardHide.remove()
+    }
+  }, [])
 
   const animatedHeight = useAnimatedStyle(() => {
     const height = isOpend.value
       ? Math.max(
-        MIN_COMPOSER_HEIGHT,
-        Math.min(MAX_COMPOSER_HEIGHT, composerHeight),
-      ) +
-      keyboardHeight +
-      (Platform.OS == 'ios' ? PADDING_COMPOSER * 2 : PADDING_COMPOSER * 5)
+          MIN_COMPOSER_HEIGHT,
+          Math.min(MAX_COMPOSER_HEIGHT, composerHeight)
+        ) +
+        keyboardHeight +
+        (Platform.OS == 'ios' ? PADDING_COMPOSER * 2 : PADDING_COMPOSER * 5)
       : Math.max(
-        MIN_COMPOSER_HEIGHT,
-        Math.min(MAX_COMPOSER_HEIGHT, composerHeight),
-      ) +
-      safeArea.bottom +
-      PADDING_COMPOSER * 2;
+          MIN_COMPOSER_HEIGHT,
+          Math.min(MAX_COMPOSER_HEIGHT, composerHeight)
+        ) +
+        safeArea.bottom +
+        PADDING_COMPOSER * 2
     return {
-      height: withTiming(height, { duration: 200 }),
-    };
-  }, [composerHeight]);
+      height: withTiming(height, { duration: 200 })
+    }
+  }, [composerHeight])
 
   const onSendPress = async () => {
-
     //here we should handle send text message
     //function sendMessage(messageType, context, reciver_id)
     // const data = await sendMessage('', textForSending, user_two_detail.id);
@@ -135,22 +133,22 @@ const ChatInput = ({
     await pubnub.publish({
       channel: chatChannel,
       message: {
-        text: textForSending,
-      },
-    });
+        text: textForSending
+      }
+    })
 
     setMessages(p => [
       {
         uuid: user_one_detail.email,
         timetoken: Date.now() * 10000,
         message: {
-          text: textForSending,
-        },
+          text: textForSending
+        }
       },
-      ...p,
-    ]);
+      ...p
+    ])
 
-    setTextForSending('');
+    setTextForSending('')
 
     // const result = pubnub.getFileUrl({
     //   channel: chatChannel,
@@ -172,28 +170,25 @@ const ChatInput = ({
     //     mimeType: 'image/jpeg',
     //   },
     // })
-  };
+  }
 
   const attachBtnPress = async () => {
-    console.log('attachBtnPress');
     ImagePicker.openPicker({
       width: 300,
       height: 400,
-      mediaType: 'any',
+      mediaType: 'any'
       // forceJpg: true,
     }).then(async image => {
       // console.log(image);
-      console.log(image);
       if (
         Platform.OS === 'ios' &&
         (image.filename.endsWith('.heic') || image.filename.endsWith('.HEIC'))
       ) {
-        image.filename = `${image.filename.split('.')[0]}.JPG`;
+        image.filename = `${image.filename.split('.')[0]}.JPG`
       }
 
-      console.log(image.filename);
-      console.log(image);
-
+      // if(image.filename && !image.filename.includes('video') && !image?.mime.includes('video'))
+      // {
       setMessages(p => [
         {
           uuid: user_one_detail.email,
@@ -203,50 +198,52 @@ const ChatInput = ({
             file: {
               text: 'file',
               id: null,
-              url: image.path,
-              name: image.filename,
-            },
-          },
+              url: image?.path,
+              name: image?.filename
+                ? image.filename
+                : image?.mime.replace('/', '.')
+            }
+          }
         },
-        ...p,
-      ]);
+        ...p
+      ])
+      // }
 
       const result = await pubnub.sendFile({
         channel: chatChannel,
         message: {
-          text: 'file',
+          text: 'file'
         },
         file: {
           uri: image.path,
-          name: image.filename,
-          mimeType: image.mime,
-        },
-      });
-
-      console.log('asdfasdfasdf', result);
-    });
-  };
+          name: image?.filename ?? image?.mime.replace('/', '.'),
+          mimeType: image.mime
+        }
+      })
+    })
+  }
 
   const openCameraPress = async () => {
     ImagePicker.openCamera({
       width: 300,
       height: 400,
       mediaType: 'photo',
-      cropping: true,
+      cropping: true
     }).then(image => {
-      console.log(image);
-    });
-  };
+      console.log(image)
+    })
+  }
 
   return (
     <Animated.View
       style={[
         styles.container,
         {
-          paddingBottom: safeArea.bottom,
+          paddingBottom: safeArea.bottom
         },
-        animatedHeight,
-      ]}>
+        animatedHeight
+      ]}
+    >
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <View
           style={[
@@ -254,13 +251,15 @@ const ChatInput = ({
             {
               height: Math.max(
                 MIN_COMPOSER_HEIGHT,
-                Math.min(MAX_COMPOSER_HEIGHT, composerHeight),
-              ),
-            },
-          ]}>
+                Math.min(MAX_COMPOSER_HEIGHT, composerHeight)
+              )
+            }
+          ]}
+        >
           <TouchableOpacity
             onPress={() => attachBtnPress()}
-            style={styles.inputButton}>
+            style={styles.inputButton}
+          >
             <Image source={attach} resizeMode="contain" style={styles.icon} />
           </TouchableOpacity>
           <TextInput
@@ -271,18 +270,18 @@ const ChatInput = ({
               {
                 height: Math.max(
                   MIN_COMPOSER_HEIGHT,
-                  Math.min(MAX_COMPOSER_HEIGHT, composerHeight),
-                ),
-              },
+                  Math.min(MAX_COMPOSER_HEIGHT, composerHeight)
+                )
+              }
             ]}
             onContentSizeChange={e => {
               setComposerHeight(
-                e.nativeEvent.contentSize.height + PADDING_COMPOSER * 4,
-              );
+                e.nativeEvent.contentSize.height + PADDING_COMPOSER * 4
+              )
             }}
             multiline
           />
-          <TouchableOpacity style={styles.inputButton}>
+          {/* <TouchableOpacity style={styles.inputButton}>
             <Image
               source={emoji}
               resizeMode="contain"
@@ -291,15 +290,20 @@ const ChatInput = ({
           </TouchableOpacity>
           <TouchableOpacity style={styles.inputButton}>
             <Image source={camera} resizeMode="contain" style={styles.icon} />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
-        <TouchableOpacity style={styles.sendBtn} onPress={() => {
-          if (userBlock) {
-            Alert.alert('User Is Blocked !')
-          } else {
-            onSendPress()
-          }
-        }}>
+        <TouchableOpacity
+          disabled={!textForSending}
+          style={styles.sendBtn}
+          onPress={() => {
+            // alert('test')
+            if (userBlock) {
+              Alert.alert('User Is Blocked !')
+            } else {
+              onSendPress()
+            }
+          }}
+        >
           <Image
             source={sendIcon}
             resizeMode="contain"
@@ -308,10 +312,10 @@ const ChatInput = ({
         </TouchableOpacity>
       </View>
     </Animated.View>
-  );
-};
+  )
+}
 
-export default ChatInput;
+export default ChatInput
 
 const styles = StyleSheet.create({
   container: {
@@ -319,7 +323,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingTop: 5,
     justifyContent: 'flex-start',
-    alignItems: 'flex-start',
+    alignItems: 'flex-start'
   },
   inputContainer: {
     borderRadius: 30,
@@ -328,7 +332,7 @@ const styles = StyleSheet.create({
     backgroundColor: inputColor,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 8,
+    paddingHorizontal: 8
   },
   sendBtn: {
     marginLeft: 10,
@@ -337,10 +341,10 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.color3,
     borderRadius: 25,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   sendbtnIcon: {
-    width: 17,
+    width: 17
   },
   input: {
     flex: 1,
@@ -350,13 +354,13 @@ const styles = StyleSheet.create({
     color: COLORS.black
   },
   icon: {
-    width: 20,
+    width: 20
   },
   inputButton: {
     width: 30,
     height: 30,
     borderRadius: 25,
     justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
+    alignItems: 'center'
+  }
+})

@@ -2,64 +2,64 @@
  * @format
  */
 
-import { AppRegistry } from 'react-native';
-import App from './App';
-import { name as appName } from './app.json';
-import 'react-native-gesture-handler';
-import { useEffect } from 'react';
-import { Provider } from 'react-redux';
-import 'react-native-gesture-handler';
-import store, { persistor } from './src/redux/store';
-import OneSignal from 'react-native-onesignal';
-import { PersistGate } from 'redux-persist/integration/react';
-import { Settings } from 'react-native-fbsdk-next';
-import { sendPlayerIDToServer } from './src/APIs/api';
-import { LogBox } from 'react-native';
-LogBox.ignoreLogs(['Warning: ...', 'Error']); // Ignore log notification by message
-LogBox.ignoreAllLogs();//Ignore all log notifications
+import { AppRegistry } from 'react-native'
+import App from './App'
+import { name as appName } from './app.json'
+import 'react-native-gesture-handler'
+import { useEffect } from 'react'
+import { Provider } from 'react-redux'
+import 'react-native-gesture-handler'
+import store, { persistor } from './src/redux/store'
+import OneSignal from 'react-native-onesignal'
+import { PersistGate } from 'redux-persist/integration/react'
+import { Settings } from 'react-native-fbsdk-next'
+import { sendPlayerIDToServer } from './src/APIs/api'
+import { LogBox } from 'react-native'
+import { withIAPContext, setup } from 'react-native-iap'
+
+LogBox.ignoreLogs(['Warning: ...', 'Error']) // Ignore log notification by message
+LogBox.ignoreAllLogs() //Ignore all log notifications
 
 // persistor={persistor}
 
-Settings.setAppID('450929960465142');
-Settings.initializeSDK();
+Settings.setAppID('450929960465142')
+Settings.initializeSDK()
 
 const RNRedux = () => {
   useEffect(() => {
     // OneSignal.setLogLevel(6, 0);
-    OneSignal.setAppId('c8e6ea02-a03d-42dd-8463-b8d0098bdc1a');
+    OneSignal.setAppId('c8e6ea02-a03d-42dd-8463-b8d0098bdc1a')
 
-    OneSignal.promptForPushNotificationsWithUserResponse(res => {
-      console.log('wwwwwwwwwww11111', res);
-    });
+    OneSignal.promptForPushNotificationsWithUserResponse(res => {})
 
     //Method for handling notifications received while app in foreground
     OneSignal.setNotificationWillShowInForegroundHandler(
       notificationReceivedEvent => {
         console.log(
           'OneSignal: notification will show in foreground:',
-          notificationReceivedEvent,
-        );
-        let notification = notificationReceivedEvent.getNotification();
-        console.log('notification: ', notification);
-        const data = notification.additionalData;
-        console.log('additionalData: ', data);
+          notificationReceivedEvent
+        )
+        let notification = notificationReceivedEvent.getNotification()
+        console.log('notification: ', notification)
+        const data = notification.additionalData
+        console.log('additionalData: ', data)
         // Complete with null means don't show a notification.
-        notificationReceivedEvent.complete(notification);
-      },
-    );
+        notificationReceivedEvent.complete(notification)
+      }
+    )
 
     //Method for handling notifications opened
     OneSignal.setNotificationOpenedHandler(notification => {
-      console.log('OneSignal: notification opened:', notification);
-    });
-  });
+      console.log('OneSignal: notification opened:', notification)
+    })
+  })
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <App />
       </PersistGate>
     </Provider>
-  );
-};
+  )
+}
 
-AppRegistry.registerComponent(appName, () => RNRedux);
+AppRegistry.registerComponent(appName, () => withIAPContext(RNRedux))

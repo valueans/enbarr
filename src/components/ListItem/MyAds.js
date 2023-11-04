@@ -184,9 +184,12 @@ const MyAds = props => {
                   backgroundColor={COLORS.white}
                   secondaryColor={COLORS.color3}
                   onPress={() => {
+
                     props.navigation.navigate('Seller', {
                       source: 'edit',
                       horseID: props.item.id,
+                      // myLat: position.coords.latitude,
+                      // myLong: position.coords.longitude,
                     });
                   }}
                 // reverse={true}

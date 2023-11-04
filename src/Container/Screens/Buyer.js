@@ -168,15 +168,18 @@ const Buyer = props => {
     const myData = await getMyDetail();
     setMyImage(myData?.profile_photo);
 
-    // const myBase64ProfileImage = await AsyncStorage.getItem('myProfilePicture');
+    // const myBse64ProfileImage = await AsyncStorage.getItem('myProfilePicture');
     // setMyImage(myBase64ProfileImage);
-
     const data = await getSavedSearchDetal();
     if (data[1]?.length !== 0 && data.length !== 0) {
+
       console.log('qqqqqq', data[1][0]);
+
+      await setLocation({ name: data[1][0].country });
+      await setStatee({ name: data[1][0].state });
+
       setCityy({ name: data[1][0].city });
       // setLocation({name: data[1][0].country});
-      setStatee({ name: data[1][0].state });
 
       setMaxAge(data[1][0].max_age);
       setMinAge(data[1][0].min_age);
@@ -185,7 +188,6 @@ const Buyer = props => {
       setMinPrice(data[1][0].min_price);
       setMaxPrice(data[1][0].max_price);
 
-      setLocation({ name: data[1][0].country });
 
       setRadius(data[1][0].radius);
       // setSelectedIndex(
@@ -210,28 +212,39 @@ const Buyer = props => {
       /////////breed///////
       const getBreeds = await getAllBreeds();
       setBreedList(getBreeds);
+      const index = getBreeds.findIndex(item => item.id === data[1][0].breed_id)
       setBreed(
-        getBreeds[data[1][0].breed_id - 1]
-          ? getBreeds[data[1][0].breed_id - 1]
-          : '',
+        index === -1
+          ? ''
+          : getBreeds[index],
       );
 
-      /////colors////
+      const genderArray = data[1][0].gender.includes(',') ? data[1][0].gender.split(',') : [`${data[1][0].gender}`]
+      setGender(genderArray)
+
+      ///// colors ////
+      // const keywordArray = data[1][0].keyword.includes(',') ? data[1][0].keyword.split(',') : data[1][0].keyword.split('')
+      // console.log('GENDER ARRAY ', [`${data[1][0].keyword}`])
+      setKeywords(data[1][0].keywords)
 
       const colors = await getAllColors();
-      setColor(colors[[data[1][0].color_id] - 1]);
+      const colorsIndex = colors.findIndex(item => item.id === data[1][0].color_id)
       setColorList(colors);
+      setColor(colors[colorsIndex]);
 
       /////deciplions////
       const deciplions = await getAllDisciplines();
-      setDiscipline(deciplions[data[1][0].discipline_id - 1]);
       setDisciplineList(deciplions);
+      const deciplionIndex = deciplions.findIndex(item => item.id === data[1][0].discipline_id)
+      setDiscipline(deciplions[deciplionIndex]);
 
       ////Temperaments////
 
       const temperaments = await getAlltemperaments();
-      setTemperament(temperaments[data[1][0].temperament_id - 1]);
+      const temperamentsIndex = temperaments.findIndex(item => item.id === data[1][0].temperament_id)
       setTemperamentList(temperaments);
+      setTemperament(temperaments[temperamentsIndex]);
+
     } else {
       // getAllCountries();
       getColors();
@@ -457,8 +470,8 @@ const Buyer = props => {
                   onMinimumChange={e => {
                     setMinAge(e);
                   }}
-                  minValue={minAge}
-                  maxValue={maxAge}
+                  minValue={minAge?.toString()}
+                  maxValue={maxAge?.toString()}
                   minPlaceholder={minAge?.toString()}
                   maxPlaceholder={maxAge?.toString()}
                 />
@@ -470,8 +483,8 @@ const Buyer = props => {
                   onMinimumChange={e => {
                     setMinHeight(e);
                   }}
-                  minValue={minHeight}
-                  maxValue={maxHeight}
+                  minValue={minHeight?.toString()}
+                  maxValue={maxHeight?.toString()}
                   minPlaceholder={minHeight?.toString()}
                   maxPlaceholder={maxHeight?.toString()}
                 />
@@ -483,8 +496,8 @@ const Buyer = props => {
                   onMinimumChange={e => {
                     setMinPrice(e);
                   }}
-                  minValue={minPrice}
-                  maxValue={maxPrice}
+                  minValue={minPrice?.toString()}
+                  maxValue={maxPrice?.toString()}
                   minPlaceholder={minPrice?.toString()}
                   maxPlaceholder={maxPrice?.toString()}
                 />
@@ -498,7 +511,7 @@ const Buyer = props => {
                   title={'Gender (select all that apply)'}
                   list={['Gelding', 'Mare', 'Stallion']}
                   direction={'row'}
-                  data={gender}
+                  gender={gender}
                   onChange={data => {
                     console.log(data);
                     setGender(data);
@@ -703,6 +716,7 @@ const Buyer = props => {
                     key={index}
                     style={styles.listItem}
                     onPress={() => {
+                      console.log('STATE ', item)
                       setStatee(item);
                       // setLocation(item);
                       // setLocationID(item.id);
@@ -834,7 +848,6 @@ const Buyer = props => {
                     style={styles.listItem}
                     onPress={() => {
                       setBreed(item);
-
                       breedSheetRef.current.close();
                     }}>
                     <Text style={[styles.textItem]}>{item.breed}</Text>

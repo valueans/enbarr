@@ -8,13 +8,10 @@ import {
   TouchableOpacity,
   TextInput,
   Alert,
-  KeyboardAvoidingView,
-  ScrollView,
   TouchableWithoutFeedback,
   Keyboard,
   Platform,
   ImageBackground,
-  NativeModule,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import COLORS, { ColorShade } from '../../../utils/colors';
@@ -40,6 +37,7 @@ import { setUserDetail } from '../../../redux/userDetail';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import appleAuth from '@invertase/react-native-apple-authentication';
+// import RNIap, { purchaseErrorListener, purchaseUpdatedListener } from 'react-native-iap';
 
 import jwt_decode from 'jwt-decode';
 import auth from '@react-native-firebase/auth';
@@ -76,8 +74,8 @@ const Welcome = props => {
   const [signUppass, setsignUpPass] = useState('');
   const [signUpPassConfirm, setSignUpPassConfirm] = useState('');
 
-  const [loginEmail, setLoginEmail] = useState('');
-  const [loginPass1, setLoginPass1] = useState('');
+  const [loginEmail, setLoginEmail] = useState(__DEV__?'shehrozkapoor@kapoorsoftware.com':'');
+  const [loginPass1, setLoginPass1] = useState(__DEV__?'admin2345':'');
   const [loginPass2, setLoginPass2] = useState('');
   const [btnSignUpLoading, setBtnSignUpLoading] = useState(false);
   const [btnLoginLoading, setBtnLoginLoading] = useState(false);
@@ -85,8 +83,69 @@ const Welcome = props => {
   const [isCheckedTerms, setIsCheckedTerms] = useState(false);
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [isEmailCorrect, setIsEmailCorrect] = useState(true);
+
+
+
+
+
+//   const subscribe = async () => {
+//     try {
+//        const d = await RNIap.initConnection();
+//       console.log(d,'connection ')
+//     } catch (err) {
+     
+//         console.log(err, 'error in subscribe of iap initialization => ', { ...err });
+//     }
+//     const itemSkus=Platform.select({
+//       ios:[
+//       'premium_enbarr',
+//       'platinum_enbarr'
+//     ]})
+//     try {
+
+//         const products = await RNIap.getProducts(itemSkus);
+//         console.log(products,'products--')
+//     }
+//     catch (err) {
+      
+//         console.log('error in subscribe of iap initialization products => ', err);
+//     }
+
+//     // purchaseUpdateSubscription = purchaseUpdatedListener(
+//     //     async (purchase) => {
+//     //         // const {originalTransactionDateIOS,originalTransactionIdentifierIOS,productId,transactionDate,transactionId,transactionReceipt } = purchase
+//     //         const { productId, transactionId, transactionReceipt, purchaseToken } = purchase
+//     //         // if (transactionReceipt && route.name == 'Subscription') {
+//     //         if (transactionReceipt) {
+//     //             try {
+//     //                 // setPurchaseStart(true)
+//     //                 // finishTransaction(purchaseToken, purchase)
+//     //             } catch (ackErr) {
+//     //                 console.log(ackErr, 'purchase ackErr inside purchase update listener', { ...ackErr });
+                 
+//     //             }
+//     //         }
+//     //     }
+//     // );
+
+//     // purchaseErrorSubscription = purchaseErrorListener(
+//     //     async (error) => {
+//     //         console.log('purchase error::::::', error);
+//     //         // setPurchaseStart(false);
+          
+//     //         if (error.code === "E_ALREADY_OWNED") {
+//     //             const availablePurchases = await RNIap.getAvailablePurchases();
+            
+//     //             // setPurchaseStart(true)
+//     //             // finishTransaction(availablePurchases[0]?.purchaseToken, availablePurchases[0])
+//     //         }
+//     //     },
+//     // );
+
+// }
   useEffect(() => {
     // console.log(JSON.parse(bg));
+    // subscribe()
   }, []);
   useEffect(() => {
     // configureAppleSignIn();
@@ -223,7 +282,9 @@ const Welcome = props => {
               value={loginPass1}
               onChangeText={e => setLoginPass1(e)}
               autoCapitalize={'none'}
-              secureTextEntry={!isShowPassword}></TextInput>
+              secureTextEntry={!isShowPassword}>
+                
+              </TextInput>
             <TouchableOpacity onPress={() => setIsShowPassword(x => !x)}>
               <Text
                 style={{
@@ -418,9 +479,7 @@ const Welcome = props => {
         '/api/v1/users/login/',
         requestOptionsLogin,
       );
-      console.log('ffffffff', data);
       if (data[0].code == 200) {
-        console.log('fffffggg', data[1]);
         dispatch(setUserDetail(data[1]));
         // console.log()
         if (data[1]['user-profile']?.profile_photo) {
@@ -444,8 +503,6 @@ const Welcome = props => {
         }
 
         await AsyncStorage.setItem('acc', data[1].token);
-
-        console.log('******** ', data[1].user.is_verified)
 
         if (data[1].user.is_verified) {
           dispatch(login());
@@ -787,7 +844,8 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     marginTop: Dimensions.get('window').height < 668 ? -60 : 30,
-    height: Dimensions.get('window').height < 668 ? '72%' : '60%',
+    // height: Dimensions.get('window').height < 668 ? '72%' : '60%',
+    // height:'72%',
     width,
     justifyContent: 'center',
     alignItems: 'center',
@@ -797,11 +855,12 @@ const styles = StyleSheet.create({
     width,
     alignItems: 'center',
     // justifyContent: 'center',
-    paddingTop: 16,
+    paddingTop: 40,
   },
   glassBox: {
     width: width * 0.9,
-    height: '94%',
+    // height: '94%',
+    height:height *0.5,
     borderRadius: 30,
     backgroundColor: ColorShade(COLORS.white, 15),
 

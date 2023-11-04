@@ -46,8 +46,9 @@ const ANIMATION_CLOSE_TIME = 300;
 const ANIMATION_OPEN_TIME = 300;
 
 const ImageModal = forwardRef((props, ref) => {
-  const {image, video, vid_thumbnail} = props;
 
+  const {image, video, vid_thumbnail} = props;
+  console.log(image,video,'viddiidi')
   const [visible, setVisible] = useState(false);
   const translateY = useSharedValue(0);
   const imageScale = useSharedValue(1);
