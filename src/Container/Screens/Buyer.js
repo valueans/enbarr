@@ -197,7 +197,6 @@ const Buyer = props => {
       //     ? 1
       //     : 2,
       // );
-
       /////////locations///////
       // const locationss = await getAllLocations();
       // if (data[1].length > 0) {
@@ -210,18 +209,21 @@ const Buyer = props => {
       // }
 
       /////////breed///////
-      const getBreeds = await getAllBreeds();
-      setBreedList(getBreeds);
-      const index = getBreeds.findIndex(item => item.id === data[1][0].breed_id)
-      setBreed(
-        index === -1
-          ? ''
-          : getBreeds[index],
-      );
+      if (data[1][0].breed_id !== null) {
+        const getBreeds = await getAllBreeds();
+        setBreedList(getBreeds);
+        const index = getBreeds.findIndex(item => item.id === data[1][0].breed_id)
+        setBreed(
+          index === -1
+            ? ''
+            : getBreeds[index],
+        );
+      }
 
-      const genderArray = data[1][0].gender.includes(',') ? data[1][0].gender.split(',') : [`${data[1][0].gender}`]
-      setGender(genderArray)
-
+      if (data[1][0].gender !== null) {
+        const genderArray = data[1][0].gender.includes(',') ? data[1][0].gender.split(',') : [`${data[1][0].gender}`]
+        setGender(genderArray)
+      }
       ///// colors ////
       // const keywordArray = data[1][0].keyword.includes(',') ? data[1][0].keyword.split(',') : data[1][0].keyword.split('')
       // console.log('GENDER ARRAY ', [`${data[1][0].keyword}`])
