@@ -209,9 +209,10 @@ const Buyer = props => {
       // }
 
       /////////breed///////
+      const getBreeds = await getAllBreeds();
+      setBreedList(getBreeds);
+
       if (data[1][0].breed_id !== null) {
-        const getBreeds = await getAllBreeds();
-        setBreedList(getBreeds);
         const index = getBreeds.findIndex(item => item.id === data[1][0].breed_id)
         setBreed(
           index === -1
