@@ -1,7 +1,3 @@
-// const App_Domain = 'https://tiny-bird-36835.botics.co';
-// const App_Domain = 'https://stagging.enbarrapp.com';
-// const App_Domain = 'https://enbarrapp.com'
-
 import { baseUrl } from "../Constants/urls"
 
 export async function fetchWithTimeout(url, options = {}) {
