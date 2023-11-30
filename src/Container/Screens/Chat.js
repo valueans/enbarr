@@ -42,7 +42,7 @@ const Chat = props => {
   const currentChannel = props.route.params.item.channel;
   const theme = 'light';
 
-  console.log('asdfasdffff', props.route.params.item.channel);
+  // console.log('asdfasdffff', props.route.params.item.channel);
 
   // const pubnub = new PubNub({
   //   subscribeKey: PubNubKeys.PUBNUB_SUBSCRIBE_KEY,
@@ -60,7 +60,7 @@ const Chat = props => {
   const [myUUId, setMyUUId] = useState('');
   const [lastMessageTimeToken, setLastMessageTimeToken] = useState('');
   const [isLoading, setIsLoading] = useState(true);
-
+  const [isSendingFile, setIsSendingFile] = useState(false)
   const [reportModal, setReportModal] = useState(false);
 
   const onReportPress = async () => {
@@ -109,8 +109,7 @@ const Chat = props => {
     const listener = {
       message: messageEvent => {
         // showMessage(messageEvent.message.description);
-        console.log(
-          'qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq',
+        console.log('messageEvent',
           messageEvent.publisher,
           props.route.params.myDetail.user.email,
         );
@@ -118,7 +117,7 @@ const Chat = props => {
           messageEvent.publisher != props.route.params.myDetail.user.email &&
           messageEvent.publisher != 'undefined'
         ) {
-          console.log('qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq', messageEvent);
+          // console.log('qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq', messageEvent);
           setMessages(p => [
             {
               uuid: props.route.params.item.user_two_profile.user.id,
@@ -185,10 +184,10 @@ const Chat = props => {
             setLastMessageTimeToken('');
           }
 
-          console.log(
-            'fucking Time',
-            response.channels[props.route.params.item.channel],
-          );
+          // console.log(
+          //   'fucking Time',
+          //   response.channels[props.route.params.item.channel],
+          // );
           setMessages(
             response.channels[props.route.params.item.channel].reverse(),
           );
@@ -346,16 +345,20 @@ const Chat = props => {
             onEndReached={loadMoreChats}
             onEndReachedThreshold={0}
             showsVerticalScrollIndicator={false}
-            renderItem={(itemm, index) => {
+            renderItem={({ item, index }) => {
+              // console.log({ index });
               return (
                 <Message
-                onPressVideo={()=> getMessages()}
+                  length={messages.length}
+                  index={index}
+                  isFileSent={isSendingFile}
+                  onPressVideo={() => getMessages()}
                   chatChannel={props.route.params.item.channel}
                   pubnub={pubnub}
                   mine={
-                    itemm.item.uuid == props.route.params.myDetail.user.email
+                    item.uuid == props.route.params.myDetail.user.email
                   }
-                  item={itemm}></Message>
+                  item={item}></Message>
               );
             }}
           />
@@ -369,6 +372,9 @@ const Chat = props => {
           user_one_detail={props.route.params.item.user_one_profile.user}
           chatChannel={props.route.params.item.channel}
           pubnub={pubnub}
+          isFileSent={(val) => {
+            setIsSendingFile(val)
+          }}
         />
         <Sheet ref={reportSheetRef} index={-1} pressBehavior="close">
           <Text style={{ margin: 100 }}>HI</Text>

@@ -264,6 +264,26 @@ export async function getAllNotifications(pageNumber) {
   }
 }
 
+export async function getAllCurrencies() {
+  acc = await AsyncStorage.getItem('acc')
+  var myHeaders = new Headers()
+  myHeaders.append('Authorization', `Token ${acc}`)
+
+  var requestOptions = {
+    method: 'GET',
+    redirect: 'follow',
+    headers: myHeaders
+  }
+
+  const data = await fetchWithTimeout('/api/v1/getAllCurrency/', requestOptions)
+
+  if (data[0].code == 200) {
+    return data[1]
+  } else {
+    return []
+  }
+}
+
 export async function getAllBreeds() {
   acc = await AsyncStorage.getItem('acc')
   var myHeaders = new Headers()
@@ -454,7 +474,8 @@ export async function sendHorseToServer(
   locationName,
   stateName,
   cityName,
-  year_of_birth
+  year_of_birth,
+  currency
 ) {
   var myHeaders = new Headers()
   acc = await AsyncStorage.getItem('acc')
@@ -469,11 +490,9 @@ export async function sendHorseToServer(
     price: parseFloat(price),
     description: description,
     breed_id: breed_id,
-
     country: locationName,
     state: stateName,
     city: cityName,
-
     gender: gender,
     age: age,
     color_id: color_id,
@@ -481,7 +500,8 @@ export async function sendHorseToServer(
     temperament_id: temperament_id,
     discipline_id: discipline_id,
     keywords_id: keywords_ids,
-    year_of_birth: year_of_birth
+    year_of_birth: year_of_birth,
+    currency: currency
   })
 
   var requestOptions = {

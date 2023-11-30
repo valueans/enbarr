@@ -1,31 +1,24 @@
+import React, { useEffect, useState } from 'react'
 import {
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
+  Alert,
   Image,
-  TouchableOpacity,
-  TextInput,
   Keyboard,
   Platform,
-  Alert
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View
 } from 'react-native'
-import React, { useState, useEffect } from 'react'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import COLORS from '../../utils/colors'
-import sendIcon from '../../assets/images/send.png'
-import emoji from '../../assets/images/emoji.png'
-import camera from '../../assets/images/camera.png'
-import attach from '../../assets/images/paper_clip.png'
 import ImagePicker from 'react-native-image-crop-picker'
 import Animated, {
   useAnimatedStyle,
-  useDerivedValue,
   useSharedValue,
-  withSpring,
   withTiming
 } from 'react-native-reanimated'
-import { sendMessage } from '../../APIs/api'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import attach from '../../assets/images/paper_clip.png'
+import sendIcon from '../../assets/images/send.png'
+import COLORS from '../../utils/colors'
 const defaultHeight = 45
 const inputColor = '#e9e9e9'
 const MIN_COMPOSER_HEIGHT = Platform.select({
@@ -36,6 +29,7 @@ const PADDING_COMPOSER = 5
 
 const MAX_COMPOSER_HEIGHT = 90
 const ChatInput = ({
+  isFileSent = (val = false) => { },
   user_two_detail,
   user_one_detail,
   setMessages,
@@ -51,6 +45,7 @@ const ChatInput = ({
   )
   const [wrapperHeight, setWrapperHeight] = useState(defaultWrapperheight)
   const [isKeyboardShow, setIsKeyboardShow] = useState(false)
+  const [isSendingFile, setIsSendingFile] = useState(false)
   const [composerHeight, setComposerHeight] = useState(MIN_COMPOSER_HEIGHT)
   const [textForSending, setTextForSending] = useState('')
   const isOpend = useSharedValue(false)
@@ -79,17 +74,17 @@ const ChatInput = ({
   const animatedHeight = useAnimatedStyle(() => {
     const height = isOpend.value
       ? Math.max(
-          MIN_COMPOSER_HEIGHT,
-          Math.min(MAX_COMPOSER_HEIGHT, composerHeight)
-        ) +
-        keyboardHeight +
-        (Platform.OS == 'ios' ? PADDING_COMPOSER * 2 : PADDING_COMPOSER * 5)
+        MIN_COMPOSER_HEIGHT,
+        Math.min(MAX_COMPOSER_HEIGHT, composerHeight)
+      ) +
+      keyboardHeight +
+      (Platform.OS == 'ios' ? PADDING_COMPOSER * 2 : PADDING_COMPOSER * 5)
       : Math.max(
-          MIN_COMPOSER_HEIGHT,
-          Math.min(MAX_COMPOSER_HEIGHT, composerHeight)
-        ) +
-        safeArea.bottom +
-        PADDING_COMPOSER * 2
+        MIN_COMPOSER_HEIGHT,
+        Math.min(MAX_COMPOSER_HEIGHT, composerHeight)
+      ) +
+      safeArea.bottom +
+      PADDING_COMPOSER * 2
     return {
       height: withTiming(height, { duration: 200 })
     }
@@ -189,6 +184,8 @@ const ChatInput = ({
 
       // if(image.filename && !image.filename.includes('video') && !image?.mime.includes('video'))
       // {
+      isFileSent(true)
+      setIsSendingFile(true)
       setMessages(p => [
         {
           uuid: user_one_detail.email,
@@ -220,6 +217,10 @@ const ChatInput = ({
           mimeType: image.mime
         }
       })
+      setIsSendingFile(false)
+      setTimeout(() => {
+        isFileSent(false)
+      }, 1000);
     })
   }
 

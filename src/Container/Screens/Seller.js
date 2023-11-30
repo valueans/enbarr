@@ -59,6 +59,7 @@ import {
   getMyDetail,
   getHorseDetails,
   updateHorse,
+  getAllCurrencies,
 } from '../../APIs/api';
 import Geolocation from 'react-native-geolocation-service';
 import CustomTab from '../../components/Layout/CustomTab';
@@ -67,17 +68,18 @@ import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 const { width, height } = Dimensions.get('screen');
 
 const Seller = props => {
-  console.log('dasfsdf', props.route.params);
+  // console.log('props...', props.route.params);
+
   const mediaSheetRef = useRef(null);
   const locationSheetRef = useRef(null);
   const stateSheetRef = useRef(null);
   const citySheetRef = useRef(null);
   const breedSheetRef = useRef(null);
+  const currencySheetRef = useRef(null);
   const disciplineSheetRef = useRef(null);
   const colorSheetRef = useRef(null);
   const temperamentSheetRef = useRef(null);
   const scrollViewRef = useRef(null);
-
   const [mediaList, setMediaList] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [locations, setLocations] = useState([]);
@@ -91,6 +93,7 @@ const Seller = props => {
   const [zipCode, setZipCode] = useState('');
   const [state, setState] = useState('');
   const [breed, setBreed] = useState('');
+  const [currency, setCurrency] = useState('');
   const [year, setYear] = useState('');
   const [height, setHeight] = useState('');
   const [price, setPrice] = useState('');
@@ -102,8 +105,8 @@ const Seller = props => {
   const [keywords, setKeywords] = useState([]);
   const [keyList, setKeyList] = useState([]);
   const [title, setTitle] = useState('');
-
   const [breedList, setBreedList] = useState([]);
+  const [currencyList, setCurrencyList] = useState([]);
   const [heightList, setHeightList] = useState([]);
   const [disciploneList, setDisciploneList] = useState([]);
   const [temperamentList, setTemperamentList] = useState([]);
@@ -137,6 +140,7 @@ const Seller = props => {
   useEffect(() => {
     getMyPic();
     getBreeds();
+    getCurrencies()
     getColors();
     // getAllCountries();
     getDisciplines();
@@ -265,6 +269,12 @@ const Seller = props => {
     return false;
   };
 
+  const getCurrencies = async () => {
+    const data = await getAllCurrencies();
+    // console.log({ data });
+    setCurrencyList(data);
+  };
+
   const getBreeds = async () => {
     const data = await getAllBreeds();
     setBreedList(data);
@@ -277,8 +287,7 @@ const Seller = props => {
   const getDisciplines = async () => {
     const data = await getAllDisciplines();
 
-    console.log('oooooooo', data);
-
+    // console.log('getDisciplines', data);
     setDisciploneList(data);
   };
   const getTemperaments = async () => {
@@ -438,7 +447,7 @@ const Seller = props => {
   };
 
   const sendDataToSerever = async () => {
-    console.log(markerLat, markerLng);
+    // console.log(markerLat, markerLng);
     // return;
     // if (markerLat == 37.78825 && markerLng == -122.4324) {
     //   Alert.alert('Error', 'Please select your location on the map');
@@ -454,37 +463,106 @@ const Seller = props => {
       updateData(horseID);
       return;
     }
+    console.log({ mediaListID });
+    if (mediaListID.length == 0) {
+      Alert.alert('Please add some pictures/videos of your horse')
+      return
+    }
+    if (!!!title) {
+      Alert.alert('Please add name of your horse')
+      return
+    }
+    if (!!!breed) {
+      Alert.alert('Please add breed of your horse')
+      return
+    }
+    if (!!!year) {
+      Alert.alert('Please add year of birth')
+      return
+    }
+    if (!!!height) {
+      Alert.alert('Please add height of your horse')
+      return
+    }
+    if (!!!currency) {
+      Alert.alert('Please choose a currency to sell')
+      return
+    }
+    if (!!!price) {
+      Alert.alert('Please add a price of your horse')
+      return
+    }
+    if (!!!discipline) {
+      Alert.alert('Please choose a discipline')
+      return
+    }
+    if (!!!gender) {
+      Alert.alert('Please choose gender of your horse')
+      return
+    }
+    if (!!!color) {
+      Alert.alert('Please choose color of your horse')
+      return
+    }
+    if (!!!temperament) {
+      Alert.alert('Please choose temperament of your horse')
+      return
+    }
+    if (!!!description) {
+      Alert.alert('Please add some details about your horse')
+      return
+    }
+    if (keywordIds.length==0) {
+      Alert.alert('Please add some keywords to better describe your horse')
+      return
+    }
 
     setLoading(true);
     const hasPermission = await hasLocationPermission();
-
     if (hasPermission) {
       Geolocation.getCurrentPosition(async position => {
+        // console.log(mediaListID,
+        //   title,
+        //   markerLat,
+        //   markerLng,
+        //   price.replace(',', ''),
+        //   description,
+        //   breed.id,
+        //   gender,
+        //   year,
+        //   color.id,
+        //   height,
+        //   temperament.id,
+        //   discipline.id,
+        //   keywordIds,
+        //   locationID,
+        //   year,
+        //   currency);
         const response = await sendHorseToServer(
           mediaListID,
-          title, // ok
-          markerLat, // ok
-          markerLng, // ok
-          price.replace(',', ''), //ok
-          description, //ok
-          breed.id, //ok
-          gender, //ok
-          year, //ok
-          color.id, //ok
-          height, // ok
-          temperament.id, //ok
-          discipline.id, //ok
-          keywordIds, //ok
+          title,
+          markerLat,
+          markerLng, 
+          price.replace(',', ''), 
+          description, 
+          breed.id, 
+          gender, 
+          year,
+          color.id,
+          height, 
+          temperament.id, 
+          discipline.id, 
+          keywordIds,
           location?.isoCode,
           statee?.isoCode,
           cityy?.name,
           year,
+          currency
         );
-        console.log('ooooo', markerLat, markerLng);
-        // console.log('eeeeeee', response[1].user_location);
+        // console.log('ooooo', markerLat, markerLng);
+        console.log('save horse...', response);
         if (response[0].code == 201) {
           setLoading(false);
-
           Alert.alert('Successfully saved');
         } else {
           setLoading(false);
@@ -492,6 +570,24 @@ const Seller = props => {
         }
       });
     } else {
+      console.log(mediaListID,
+        title,
+        markerLat,
+        markerLng,
+        price.replace(',', ''),
+        description,
+        breed.id,
+        gender,
+        year,
+        color.id,
+        height,
+        temperament.id,
+        discipline.id,
+        keywordIds,
+        locationID,
+        year,
+        currency);
+      return
       const response = await sendHorseToServer(
         mediaListID,
         title, // ok
@@ -509,10 +605,10 @@ const Seller = props => {
         keywordIds, //ok
         locationID,
         year,
+        currency
       );
       if (response) {
         setLoading(false);
-
         Alert.alert('Successfully saved');
       } else {
         setLoading(false);
@@ -581,12 +677,13 @@ const Seller = props => {
       // location_id: locationID,
       gender,
       user_location: `POINT(${fromEditLng} ${fromEditLat})`,
+      currency: currency
     };
 
     const data = await updateHorse(horseID, body);
 
-    console.log('update', JSON.stringify(data[0], null, 2));
-    console.log('update', JSON.stringify(data[1], null, 2));
+    // console.log('update', JSON.stringify(data[0], null, 2));
+    // console.log('update', JSON.stringify(data[1], null, 2));
 
     setTimeout(() => {
       setLoading(false);
@@ -873,11 +970,32 @@ const Seller = props => {
                 value={height.toString()}
                 onChangeText={e => setHeight(e)}
               />
-              <Input
-                title="Price *"
-                onChangeText={x => setPrice(x.replace(',', ''))}
-                value={price.toString()}
-              />
+
+              <View style={{
+                width: '100%',
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between'
+              }}>
+
+                <DropDown
+                  title="Currency *"
+                  value={currency}
+                  onPress={() => currencySheetRef.current.snapToIndex(0)}
+                  style={{
+                    width: '23%'
+                  }}
+                />
+                <Input
+                  title="Price *"
+                  onChangeText={x => setPrice(x.replace(',', ''))}
+                  value={price.toString()}
+                  style={{
+                    width: '75%'
+                  }}
+                />
+              </View>
+
               <DropDown
                 title="Discipline *"
                 value={discipline.discipline}
@@ -1013,6 +1131,7 @@ const Seller = props => {
                   /> */}
                 {/* </View> */}
               </View>
+
               <Text
                 style={{
                   fontSize: 12,
@@ -1022,6 +1141,7 @@ const Seller = props => {
                 }}>
                 Select your location *
               </Text>
+
               <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                 <MapView
                   // provider={PROVIDER_GOOGLE}
@@ -1060,8 +1180,8 @@ const Seller = props => {
                   <Marker
                     draggable={true}
                     coordinate={{
-                      latitude: source == 'edit' ? fromEditLat : markerLat,
-                      longitude: source == 'edit' ? fromEditLng : markerLng,
+                      latitude: source == 'edit' ? fromEditLat : props.route.params.myLat,
+                      longitude: source == 'edit' ? fromEditLng : props.route.params.myLong,
                     }}
                   // onDragEnd={e => {
                   //   setMarkerLat(e.nativeEvent.coordinate.latitude);
@@ -1090,6 +1210,7 @@ const Seller = props => {
                   </Text>
                 </>
               )}
+
               <RoundBtn
                 style={{ marginTop: 21 }}
                 onPress={sendDataToSerever}
@@ -1097,11 +1218,14 @@ const Seller = props => {
                 loading={loading}>
                 {source == 'edit' ? 'Save' : 'Create'}
               </RoundBtn>
+
             </ScrollView>
           </View>
         </KeyboardAvoidingView>
         <CustomTab navigation={props.navigation} />
       </SafeAreaView>
+
+
       <Sheet ref={mediaSheetRef} index={-1} pressBehavior={'close'}>
         <View style={{ alignItems: 'center', paddingBottom: 32, paddingTop: 18 }}>
           <ScreenTitle size={18}>Choose Media</ScreenTitle>
@@ -1259,6 +1383,7 @@ const Seller = props => {
         </BottomSheetView>
       </Sheet>
       {/* breeds */}
+
       <Sheet ref={breedSheetRef} index={-1} pressBehavior={'close'}>
         <BottomSheetView
           style={{
@@ -1292,6 +1417,43 @@ const Seller = props => {
           </BottomSheetView>
         </BottomSheetView>
       </Sheet>
+
+      {/* Currency */}
+
+      <Sheet ref={currencySheetRef} index={-1} pressBehavior={'close'}>
+        <BottomSheetView
+          style={{
+            alignItems: 'center',
+            paddingBottom: 32,
+            paddingTop: 18,
+            // height: '95%',
+          }}>
+          <ScreenTitle size={18}>Select Currency</ScreenTitle>
+
+          <BottomSheetView style={[styles.listContainer, { height: 200 }]}>
+            <FlatList
+              data={currencyList}
+              extraData={currencyList}
+              keyExtractor={(item, index) => index}
+              contentContainerStyle={{ paddingTop: 32 }}
+              renderItem={({ item, index }) => {
+                return (
+                  <TouchableOpacity
+                    key={index}
+                    style={styles.listItem}
+                    onPress={() => {
+                      setCurrency(item);
+                      currencySheetRef.current.close();
+                    }}>
+                    <Text style={[styles.textItem]}>{item}</Text>
+                  </TouchableOpacity>
+                );
+              }}
+            />
+          </BottomSheetView>
+        </BottomSheetView>
+      </Sheet>
+
       {/* discipline */}
       <Sheet ref={disciplineSheetRef} index={-1} pressBehavior={'close'}>
         <BottomSheetView

@@ -38,7 +38,7 @@ global.pag = 2;
 
 const ChatScreen = props => {
   const { userDetail } = useSelector(state => state.userDetail);
-  console.log('wwwwwwewqqqqq', userDetail);
+  // console.log('wwwwwwewqqqqq', userDetail);
   const pubnub = new PubNub({
     subscribeKey: PubNubKeys.PUBNUB_SUBSCRIBE_KEY,
     publishKey: PubNubKeys.PUBNUB_PUBLISH_KEY,
@@ -64,10 +64,9 @@ const ChatScreen = props => {
       async function fetchConv() {
         setLoading(true);
         const convs = await getAllConversations(1);
-        console.log('chatsssaaaaaaaass', convs);
+        // console.log('chatsssaaaaaaaass', convs);
 
         setMyConversations(convs);
-
         channelsArr = [];
         convs.map((item, index) => {
           channelsArr.push(item.channel);
