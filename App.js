@@ -19,6 +19,7 @@ const App = () => {
   const { isremember } = useSelector(state => state.isRemember)
   const [showSpalsh, setShowSplash] = useState(true)
 
+  
   useEffect(() => {
     RNBootSplash.hide({ fade: false, duration: 500 })
     if (Platform.OS == 'ios') {

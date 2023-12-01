@@ -16,6 +16,7 @@ import {
   ActivityIndicator,
   PermissionsAndroid,
   Button,
+  Linking,
 } from 'react-native';
 import {
   ScrollView,
@@ -93,7 +94,7 @@ const Seller = props => {
   const [zipCode, setZipCode] = useState('');
   const [state, setState] = useState('');
   const [breed, setBreed] = useState('');
-  const [currency, setCurrency] = useState('');
+  const [currency, setCurrency] = useState('USD');
   const [year, setYear] = useState('');
   const [height, setHeight] = useState('');
   const [price, setPrice] = useState('');
@@ -129,11 +130,9 @@ const Seller = props => {
 
   const [keywordIds, setKeywordIds] = useState([]);
 
-  const [markerLat, setMarkerLat] = useState(0);
-  const [markerLng, setMarkerLng] = useState(0);
+  const [markerLat, setMarkerLat] = useState(props.route.params.myLat ?? 0);
+  const [markerLng, setMarkerLng] = useState(props.route.params.myLong ?? 0);
 
-  const [fromEditLat, setFromEditLat] = useState(0);
-  const [fromEditLng, setFromEditLng] = useState(0);
   const openSheetToSelectMedia = () => {
     mediaSheetRef.current.snapToIndex(0);
   };
@@ -192,6 +191,14 @@ const Seller = props => {
       setUploadFeild(false);
     };
   }, [uploadFeild]);
+
+  useEffect(() => {
+    let arr = [];
+    keywords.map((item, id) => {
+      arr.push(item.id);
+    });
+    setKeywordIds(arr);
+  }, [keywords])
 
   const getAllCountries = async () => {
     // const data = await getAllLocations();
@@ -453,17 +460,14 @@ const Seller = props => {
     //   Alert.alert('Error', 'Please select your location on the map');
     //   return;
     // }
-    arr = [];
-    keywords.map((item, id) => {
-      arr.push(item.id);
-    });
-    setKeywordIds(arr);
+
+
     if (source == 'edit') {
-      console.log('updating...');
       updateData(horseID);
       return;
     }
-    console.log({ mediaListID });
+
+
     if (mediaListID.length == 0) {
       Alert.alert('Please add some pictures/videos of your horse')
       return
@@ -512,7 +516,7 @@ const Seller = props => {
       Alert.alert('Please add some details about your horse')
       return
     }
-    if (keywordIds.length==0) {
+    if (keywordIds.length == 0) {
       Alert.alert('Please add some keywords to better describe your horse')
       return
     }
@@ -521,37 +525,22 @@ const Seller = props => {
     const hasPermission = await hasLocationPermission();
     if (hasPermission) {
       Geolocation.getCurrentPosition(async position => {
-        // console.log(mediaListID,
-        //   title,
-        //   markerLat,
-        //   markerLng,
-        //   price.replace(',', ''),
-        //   description,
-        //   breed.id,
-        //   gender,
-        //   year,
-        //   color.id,
-        //   height,
-        //   temperament.id,
-        //   discipline.id,
-        //   keywordIds,
-        //   locationID,
-        //   year,
-        //   currency);
+
+        console.log('ooooo', markerLat, markerLng);
         const response = await sendHorseToServer(
           mediaListID,
           title,
           markerLat,
-          markerLng, 
-          price.replace(',', ''), 
-          description, 
-          breed.id, 
-          gender, 
+          markerLng,
+          price.replace(',', ''),
+          description,
+          breed.id,
+          gender,
           year,
           color.id,
-          height, 
-          temperament.id, 
-          discipline.id, 
+          height,
+          temperament.id,
+          discipline.id,
           keywordIds,
           location?.isoCode,
           statee?.isoCode,
@@ -559,7 +548,6 @@ const Seller = props => {
           year,
           currency
         );
-        // console.log('ooooo', markerLat, markerLng);
         console.log('save horse...', response);
         if (response[0].code == 201) {
           setLoading(false);
@@ -570,7 +558,8 @@ const Seller = props => {
         }
       });
     } else {
-      console.log(mediaListID,
+      const response = await sendHorseToServer(
+        mediaListID,
         title,
         markerLat,
         markerLng,
@@ -584,25 +573,6 @@ const Seller = props => {
         temperament.id,
         discipline.id,
         keywordIds,
-        locationID,
-        year,
-        currency);
-      return
-      const response = await sendHorseToServer(
-        mediaListID,
-        title, // ok
-        markerLat, // ok
-        markerLng, // ok
-        price.replace(',', ''), //ok
-        description, //ok
-        breed.id, //ok
-        gender, //ok
-        year, //ok
-        color.id, //ok
-        height, // ok
-        temperament.id, //ok
-        discipline.id, //ok
-        keywordIds, //ok
         locationID,
         year,
         currency
@@ -622,10 +592,11 @@ const Seller = props => {
   const getHorseDetail = async () => {
     setDataGetLoading(true);
     const data = await getHorseDetails(horseID);
-    setFromEditLat(data[1].lat);
-    setFromEditLng(data[1].lng);
-    setMarkerLat(data[1].lat);
-    setMarkerLng(data[1].lng);
+    console.log(`getHorseDetail ~ response`, data[1]?.lat, data[1]?.lng);
+    if (data[1]?.lat && data[1]?.lng) {
+      setMarkerLat(data[1].lat);
+      setMarkerLng(data[1].lng);
+    }
 
     setLocation({ name: data[1]?.country });
     setStatee({ name: data[1]?.state });
@@ -656,38 +627,33 @@ const Seller = props => {
   };
 
   const updateData = async horseID => {
-    // console.log('images', getMediaIdFromList());
+    // console.log(`POINT(${markerLat} ${markerLng})`);
     setLoading(true);
     const body = {
       images_id: getMediaIdFromList(),
-      title, // ok
+      title,
       country: location?.isoCode,
       state: statee?.isoCode,
       city: cityy?.name,
-      price, //ok
-      description, //ok
-      breed_id: breed.id, //ok
-      gender, //ok
-      year_of_birth: year, //ok
-      color_id: color.id, //ok
-      height, // ok
-      temperament_id: temperament.id, //ok
-      discipline_id: discipline.id, //ok
-      keywords_id: getKeywordsIdFromList(), //ok
-      // location_id: locationID,
+      price,
+      description,
+      breed_id: breed.id,
       gender,
-      user_location: `POINT(${fromEditLng} ${fromEditLat})`,
+      year_of_birth: year,
+      color_id: color.id,
+      height,
+      temperament_id: temperament.id,
+      discipline_id: discipline.id,
+      keywords_id: getKeywordsIdFromList(),
+      gender,
+      user_location: `POINT(${markerLng} ${markerLat})`,
       currency: currency
     };
 
     const data = await updateHorse(horseID, body);
 
-    // console.log('update', JSON.stringify(data[0], null, 2));
-    // console.log('update', JSON.stringify(data[1], null, 2));
-
     setTimeout(() => {
       setLoading(false);
-
     }, 1500);
     if (data[0].code == 200) {
       props.navigation.goBack();
@@ -1148,12 +1114,12 @@ const Seller = props => {
                   followsUserLocation={true}
                   userLocationCalloutEnabled={true}
                   showsMyLocationButton={true}
-                  onPress={e => {
-                    setFromEditLat(e.nativeEvent.coordinate.latitude);
-                    setFromEditLng(e.nativeEvent.coordinate.longitude);
-                    setMarkerLat(e.nativeEvent.coordinate.latitude);
-                    setMarkerLng(e.nativeEvent.coordinate.longitude);
-                  }}
+                  // onPress={e => {
+                  //   setFromEditLat(e.nativeEvent.coordinate.latitude);
+                  //   setFromEditLng(e.nativeEvent.coordinate.longitude);
+                  //   setMarkerLat(e.nativeEvent.coordinate.latitude);
+                  //   setMarkerLng(e.nativeEvent.coordinate.longitude);
+                  // }}
                   style={{
                     marginTop: 20,
                     borderRadius: 20,
@@ -1161,32 +1127,27 @@ const Seller = props => {
                     width: '97%',
                     alignSelf: 'center',
                   }}
+                  // onRegionChange={(data) => {
+                  //   // console.log({ onRegionChange: data });
+                  //   setMarkerLat(data.latitude)
+                  //   setMarkerLng(data.longitude)
+                  // }}
                   initialRegion={{
-                    latitude:
-                      source == 'edit'
-                        ? fromEditLat
-                        : props.route.params.myLat
-                          ? props.route.params.myLat
-                          : 37.78825,
-                    longitude:
-                      source == 'edit'
-                        ? fromEditLng
-                        : props.route.params.myLong
-                          ? props.route.params.myLong
-                          : -122.4324,
+                    latitude: markerLat ?? 37.78825,
+                    longitude: markerLng ?? -122.4324,
                     latitudeDelta: 0.0922,
                     longitudeDelta: 0.0421,
                   }}>
                   <Marker
                     draggable={true}
                     coordinate={{
-                      latitude: source == 'edit' ? fromEditLat : props.route.params.myLat,
-                      longitude: source == 'edit' ? fromEditLng : props.route.params.myLong,
+                      latitude: markerLat,
+                      longitude: markerLng,
                     }}
-                  // onDragEnd={e => {
-                  //   setMarkerLat(e.nativeEvent.coordinate.latitude);
-                  //   setMarkerLng(e.nativeEvent.coordinate.longitude);
-                  // }}
+                    onDragEnd={e => {
+                      setMarkerLat(e.nativeEvent.coordinate.latitude);
+                      setMarkerLng(e.nativeEvent.coordinate.longitude);
+                    }}
                   />
                 </MapView>
               </View>

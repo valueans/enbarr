@@ -173,7 +173,6 @@ const HomeScreen = props => {
 
       const notifCount = await getNmberOfNotifications();
       setNumberOfNotif(notifCount[1].count);
-      console.log('iouioiu', notifCount[1].count);
 
     }
 
