@@ -379,18 +379,18 @@ const Buyer = props => {
     const data = await userSaveSearchBuyer(
       location?.isoCode,
       statee?.isoCode,
-      cityy?.name,
-      breed?.id, //ok
-      minAge, //ok
-      maxAge, //ok
-      minHeight, //ok
-      maxHeight, //ok
-      minPrice, //ok
-      maxPrice, //ok
-      discipline?.id, //ok
-      gender, //ok
-      color?.id, //ok
-      temperament?.id, //ok
+      // cityy?.name,
+      breed?.id,
+      minAge,
+      maxAge,
+      minHeight,
+      maxHeight,
+      minPrice,
+      maxPrice,
+      discipline?.id,
+      gender,
+      color?.id,
+      temperament?.id,
       arr, //ok
       radius,
     );
@@ -565,7 +565,7 @@ const Buyer = props => {
                     stateSheetRef.current.snapToIndex(0);
                   }}
                 />
-                <DropDown
+                {/* <DropDown
                   title={'City'}
                   value={cityy?.name}
                   onPress={() => {
@@ -583,7 +583,7 @@ const Buyer = props => {
 
                     citySheetRef.current.snapToIndex(0);
                   }}
-                />
+                /> */}
                 <DropDown
                   title={'Radius'}
                   value={radius ? radius : 0}

@@ -818,7 +818,7 @@ export async function appleTransaction(purchase) {
 export async function userSaveSearchBuyer(
   location_name,
   state,
-  city,
+  // city,
   breed_id,
   min_age,
   max_age,
@@ -841,7 +841,7 @@ export async function userSaveSearchBuyer(
   var raw = JSON.stringify({
     country: location_name ? location_name : null,
     state: state ? state : null,
-    city: city ? city : null,
+    // city: city ? city : null,
     breed_id: breed_id !== '' && breed_id ? breed_id : null,
     min_age: min_age !== '' ? min_age : null,
     max_age: max_age !== '' ? max_age : null,

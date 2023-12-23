@@ -1166,9 +1166,9 @@ const Seller = props => {
                     color={COLORS.color10}>
                     Add other
                   </RoundBtn>
-                  <Text style={styles.description}>
+                  {/* <Text style={styles.description}>
                     Available for premium users (up to 10 horses)
-                  </Text>
+                  </Text> */}
                 </>
               )}
 
