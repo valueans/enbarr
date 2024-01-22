@@ -34,7 +34,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const DEFAULT_IMAGE = require('../../../assets/images/user.png');
 
-global.pag = 2;
+global.pag = 2; 
 
 const ChatScreen = props => {
   const { userDetail } = useSelector(state => state.userDetail);
@@ -46,26 +46,20 @@ const ChatScreen = props => {
   });
 
   const [myConversations, setMyConversations] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [myDetail, setMyDetail] = useState([]);
   const safeArea = useSafeAreaInsets();
   const [isLoadingPic, setIsLoadingPic] = useState(false);
 
   const [unreadNumList, setUnreadNumList] = useState({});
 
-  const [arrForAllChannels, setArrForAllChannels] = useState([]);
-
   const [isOnline, setIsOnline] = useState(false);
 
-  // const [pubnub, setpubnub] = useState([]);
 
   useFocusEffect(
     React.useCallback(() => {
       async function fetchConv() {
-        setLoading(true);
         const convs = await getAllConversations(1);
-        // console.log('chatsssaaaaaaaass', convs);
-
         setMyConversations(convs);
         channelsArr = [];
         convs.map((item, index) => {

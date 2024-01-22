@@ -39,7 +39,7 @@ const Message = ({
   // console.log(item.item.timetoken);
   useEffect(() => {
     if (item.message.file) {
-      // console.log('aaaaaa', item.item);
+      // console.log('aaaaaa',item);
     }
   }, []);
 
@@ -78,7 +78,6 @@ const Message = ({
   }
 
   const getFileURl = (fileID, fileName, fileType, url) => {
-    // console.log(fileID,fileName,fileType,url,'fileID,fileName,fileType,url')
     if (fileType == 'img') {
       const result = pubnub.getFileUrl({
         channel: chatChannel,
@@ -121,7 +120,7 @@ const Message = ({
         name: fileName,
       });
 
-      console.log(result, 'while video opening')
+      console.log(result, 'while video opening', result)
       createThumbnail({
         url: result,
         timeStamp: 1,
@@ -345,12 +344,14 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     color: mine_text_color,
     fontSize: 12,
+    marginRight:5
   },
   text_not_mine: {
     fontFamily: fonts.regular,
     fontWeight: '400',
     color: not_mine_text_color,
     fontSize: 12,
+    marginLeft:5
   },
   avatar: {
     width: 40,
