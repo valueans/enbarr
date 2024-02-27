@@ -40,6 +40,7 @@ const useIAPStore = () => {
       const appSubs = await RNIap.getSubscriptions({
         skus: _GET_SKUS()
       })
+      console.log({appSubs});
       setAppSubscriptions(appSubs)
       setFetchLoading(false)
     } catch (error) {

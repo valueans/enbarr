@@ -172,6 +172,7 @@ const Passcode = props => {
               <TouchableOpacity
                 style={[styles.btn]}
                 activeOpacity={0.8}
+                disabled={loading || otp.length < 4}
                 onPress={verifyOtpPress}>
                 {loading ? (
                   <BarIndicator size={20} color="white"></BarIndicator>

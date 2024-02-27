@@ -9,7 +9,9 @@
     "test": "jest",
     "lint": "eslint .",
     "js-bundle": " npx react-native bundle --entry-file index.js --platform ios --dev false --bundle-output ios/main.jsbundle --assets-dest ios",
-    "iphone14": "npx react-native run-ios --simulator='iPhone 14 Pro'"
+    "iphone14": "npx react-native run-ios --simulator='iPhone 14 Pro'",
+    "android-bundle": "npx react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res/"
+
   },
   "dependencies": {
     "@gorhom/bottom-sheet": "^4.4.5",

@@ -8,24 +8,24 @@ import {
   TouchableOpacity,
   View,
   Platform,
-  PermissionsAndroid,
-} from 'react-native';
-import MapView from 'react-native-map-clustering';
-import React, { useState, useRef, useEffect } from 'react';
-import { globalStyle } from '../../utils/GlobalStyle';
-import COLORS from '../../utils/colors';
-import CustomTab from '../../components/Layout/CustomTab';
-import logoWriting from '../../assets/images/logo_writing.png';
-import like from '../../assets/images/like.png';
-import dislike from '../../assets/images/dislike.png';
-import chev from '../../assets/images/chev_up.png';
-import fonts from '../../utils/fonts';
-import Swiper from 'react-native-deck-swiper';
-import MainItem from '../../components/ListItem/MainItem';
-import Geolocation from 'react-native-geolocation-service';
-import { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
-import horseImg from '../../assets/images/horseMap.png';
-import backIcon from '../../assets/images/arrowLeft.png';
+  PermissionsAndroid
+} from 'react-native'
+import MapView from 'react-native-map-clustering'
+import React, { useState, useRef, useEffect } from 'react'
+import { globalStyle } from '../../utils/GlobalStyle'
+import COLORS from '../../utils/colors'
+import CustomTab from '../../components/Layout/CustomTab'
+import logoWriting from '../../assets/images/logo_writing.png'
+import like from '../../assets/images/like.png'
+import dislike from '../../assets/images/dislike.png'
+import chev from '../../assets/images/chev_up.png'
+import fonts from '../../utils/fonts'
+import Swiper from 'react-native-deck-swiper'
+import MainItem from '../../components/ListItem/MainItem'
+import Geolocation from 'react-native-geolocation-service'
+import { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
+import horseImg from '../../assets/images/horseMap.png'
+import backIcon from '../../assets/images/arrowLeft.png'
 import {
   getAlhorses,
   likeAHorse,
@@ -33,163 +33,153 @@ import {
   getSavedSearchDetal,
   resultUserSearchBuyer,
   getAllHorseLatandLong,
-  getOrCreateNewChannel,
-} from '../../APIs/api';
-import PubNub from 'pubnub';
-import * as PubNubKeys from '../Tabs/Chat/PubNubKeys';
-const [allHorseLatandLon, setAllHorseLatandLon] = useState([]);
-import { BarIndicator } from 'react-native-indicators';
-import { useSelector } from 'react-redux';
-const { width, height } = Dimensions.get('screen');
-global.pag = 2;
+  getOrCreateNewChannel
+} from '../../APIs/api'
+import PubNub from 'pubnub'
+import * as PubNubKeys from '../Tabs/Chat/PubNubKeys'
+const [allHorseLatandLon, setAllHorseLatandLon] = useState([])
+import { BarIndicator } from 'react-native-indicators'
+import { useSelector } from 'react-redux'
+const { width, height } = Dimensions.get('screen')
+global.pag = 2
 
 const SwipingPage = props => {
-
-  const swiperRef = useRef(null);
-  const mapRef = useRef(null);
-  const [horsesList, setHorsesList] = useState([]);
-  const [cardIndex, setCardIndex] = useState(0);
-  const [loading, setLoading] = useState(false);
-  const [cardHeight, setCardHeight] = useState(0);
-  const [allHorseLatandLon, setAllHorseLatandLon] = useState([]);
+  const swiperRef = useRef(null)
+  const mapRef = useRef(null)
+  const [horsesList, setHorsesList] = useState([])
+  const [cardIndex, setCardIndex] = useState(0)
+  const [loading, setLoading] = useState(false)
+  const [cardHeight, setCardHeight] = useState(0)
+  const [allHorseLatandLon, setAllHorseLatandLon] = useState([])
   //swipper or map
-  const [whichPage, setWichPage] = useState('swipper');
+  const [whichPage, setWichPage] = useState('swipper')
 
-  const [detailLat, setDetailLat] = useState(props.route.params.myLat);
-  const [detailLng, setDetailLng] = useState(props.route.params.myLong);
+  const [detailLat, setDetailLat] = useState(props.route.params.myLat)
+  const [detailLng, setDetailLng] = useState(props.route.params.myLong)
 
-  console.log('%%%#### THIS IS LAT ', detailLat, detailLng)
-
-  const { userDetail } = useSelector(state => state.userDetail);
-
+  const { userDetail } = useSelector(state => state.userDetail)
 
   const pubnub = new PubNub({
     subscribeKey: PubNubKeys.PUBNUB_SUBSCRIBE_KEY,
     publishKey: PubNubKeys.PUBNUB_PUBLISH_KEY,
-    userId: `${userDetail?.user?.email}`,
-  });
+    userId: `${userDetail?.user?.email}`
+  })
 
   useEffect(() => {
-    pag = 2;
-    getDetail();
-    getHorses();
-    getAllHorseLatituteandLongitute();
-    console.log(
-      'ewerewrwer',
-      props.route.params.myLat,
-      props.route.params.myLong,
-      props.route.params.pubnub,
-    );
-
-    return () => { };
-  }, []);
+    pag = 2
+    getDetail()
+    getHorses()
+    getAllHorseLatituteandLongitute()
+    return () => {}
+  }, [])
   const hasPermissionIOS = async () => {
     const openSetting = () => {
       Linking.openSettings().catch(() => {
-        Alert.alert('Unable to open settings');
-      });
-    };
-    const status = await Geolocation.requestAuthorization('always');
+        Alert.alert('Unable to open settings')
+      })
+    }
+    const status = await Geolocation.requestAuthorization('always')
 
     if (status === 'granted') {
-      return true;
+      return true
     }
 
     if (status === 'denied') {
-      Alert.alert('We need your location');
+      Alert.alert('We need your location')
     }
 
     if (status === 'disabled') {
-      Alert.alert('We need your location');
+      Alert.alert('We need your location')
     }
 
-    return false;
-  };
+    return false
+  }
   const hasLocationPermission = async () => {
     if (Platform.OS === 'ios') {
-      const hasPermission = await hasPermissionIOS();
-      return hasPermission;
+      const hasPermission = await hasPermissionIOS()
+      return hasPermission
     }
 
     if (Platform.OS === 'android' && Platform.Version < 23) {
-      return true;
+      return true
     }
 
     const hasPermission = await PermissionsAndroid.check(
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-    );
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+    )
 
     if (hasPermission) {
-      return true;
+      return true
     }
 
     const status = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-    );
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+    )
 
     if (status === PermissionsAndroid.RESULTS.GRANTED) {
-      return true;
+      return true
     }
 
     if (status === PermissionsAndroid.RESULTS.DENIED) {
       ToastAndroid.show(
         'Location permission denied by user.',
-        ToastAndroid.LONG,
-      );
+        ToastAndroid.LONG
+      )
     } else if (status === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
       ToastAndroid.show(
         'Location permission revoked by user.',
-        ToastAndroid.LONG,
-      );
+        ToastAndroid.LONG
+      )
     }
 
-    return false;
-  };
+    return false
+  }
 
   const getAllHorseLatituteandLongitute = async () => {
-    const data = await getAllHorseLatandLong();
+    const data = await getAllHorseLatandLong()
 
     if (data[0].code == 200) {
-      setAllHorseLatandLon(data[1]);
+      setAllHorseLatandLon(data[1])
     } else {
-      setAllHorseLatandLon([]);
+      setAllHorseLatandLon([])
     }
-  };
+  }
 
   const getDetail = async () => {
-    const data = await getSavedSearchDetal();
+    const data = await getSavedSearchDetal()
 
     if (data[0].code == 200) {
       if (data[1][0].lat && data[1][0].lng) {
-        setDetailLat(data[1][0]?.lat);
-        setDetailLng(data[1][0]?.lng);
+        setDetailLat(data[1][0]?.lat)
+        setDetailLng(data[1][0]?.lng)
       }
     }
-  };
+  }
 
   const getHorses = async () => {
-    setLoading(true);
-    const hasPermission = await hasLocationPermission();
+    console.log('../././././../')
+    setLoading(true)
+    const hasPermission = await hasLocationPermission()
     if (hasPermission) {
       Geolocation.getCurrentPosition(async position => {
         const horses = await resultUserSearchBuyer(
           1,
           position.coords.latitude,
-          position.coords.longitude,
-        );
+          position.coords.longitude
+        )
 
-        setLoading(false);
-        setHorsesList(horses);
-      });
+        setLoading(false)
+        setHorsesList(horses)
+      })
     } else {
       Geolocation.getCurrentPosition(async position => {
-        const horses = await resultUserSearchBuyer(1, 0, 0);
+        const horses = await resultUserSearchBuyer(1, 0, 0)
 
-        setLoading(false);
-        setHorsesList(horses);
-      });
+        setLoading(false)
+        setHorsesList(horses)
+      })
     }
-  };
+  }
   const renderMarkers = () => {
     return allHorseLatandLon.map((item, index) => (
       <Marker
@@ -201,99 +191,99 @@ const SwipingPage = props => {
             item: {
               id: item.id,
               user_location: {
-                coordinates: [item.lng, item.lat],
-              },
+                coordinates: [item.lng, item.lat]
+              }
             },
-            pubnub: pubnub,
+            pubnub: pubnub
           })
         }
         coordinate={{
           latitude: item.lat + Math.random() * 0.0002 - 0.0001,
-          longitude: item.lng - Math.random() * 0.0002 - 0.0001,
-        }}>
+          longitude: item.lng - Math.random() * 0.0002 - 0.0001
+        }}
+      >
         <Image
           source={horseImg}
           resizeMode="contain"
-          style={{ width: 40, height: 40, borderRadius: 20 }}></Image>
+          style={{ width: 40, height: 40, borderRadius: 20 }}
+        ></Image>
       </Marker>
-    ));
-  };
+    ))
+  }
   const loadMoreHorse = async () => {
-    const hasPermission = await hasLocationPermission();
+    const hasPermission = await hasLocationPermission()
     if (hasPermission) {
       Geolocation.getCurrentPosition(async position => {
         const data = await resultUserSearchBuyer(
           pag,
           position.coords.latitude,
-          position.coords.longitude,
-        );
-        pag = pag + 1;
-        setHorsesList(p => [...p, ...data]);
-      });
+          position.coords.longitude
+        )
+        pag = pag + 1
+        setHorsesList(p => [...p, ...data])
+      })
     } else {
       Geolocation.getCurrentPosition(async position => {
         const data = await resultUserSearchBuyer(
           pag,
           position.coords.latitude,
-          position.coords.longitude,
-        );
-        pag = pag + 1;
-        setHorsesList(p => [...p, ...data]);
-      });
+          position.coords.longitude
+        )
+        pag = pag + 1
+        setHorsesList(p => [...p, ...data])
+      })
     }
-  };
+  }
 
   const pressDislike = async () => {
-    swiperRef?.current?.swipeLeft();
-    await disLikeAHorse(horsesList[cardIndex]?.id);
-  };
+    swiperRef?.current?.swipeLeft()
+    await disLikeAHorse(horsesList[cardIndex]?.id)
+  }
 
   const pressLike = async () => {
-    swiperRef?.current?.swipeRight();
-    await likeAHorse(horsesList[cardIndex]?.id);
-  };
+    swiperRef?.current?.swipeRight()
+    await likeAHorse(horsesList[cardIndex]?.id)
+  }
   const goToDetails = item => {
     if (item) {
       // props.navigation.navigate('Details', {
       //   item,
       //   pubnub: pubnub
       // });
-      props.navigation.navigate('Details', { item, pubnub: pubnub, myhorse: userDetail.user.id === item.userprofile.id ? true : false });
-
+      props.navigation.navigate('Details', {
+        item,
+        pubnub: pubnub,
+        myhorse: userDetail.user.id === item.userprofile.id ? true : false
+      })
     }
-  };
+  }
 
   const goToChat = async item => {
-    console.log(item);
-    const data = await getOrCreateNewChannel(item.userprofile.user.id);
+    console.log(item)
+    const data = await getOrCreateNewChannel(item.userprofile.user.id)
     if (data.data) {
-      console.log('THIS IS DATA FROM ', data);
       props.navigation.navigate('Chat', {
         item: data.data,
         myDetail: data.data.user_one_profile,
-        pubnub: pubnub,
-      });
+        pubnub: pubnub
+      })
     } else {
-      Alert.alert('Error', 'Please try again later.');
+      Alert.alert('Error', 'Please try again later.')
     }
-  };
+  }
 
   const onSwipeRight = async index => {
-    console.log('onSwipeRight', index, horsesList[index].id);
-    await likeAHorse(horsesList[index].id);
-  };
+    await likeAHorse(horsesList[index].id)
+  }
 
   const onSwipeLeft = async index => {
-    await disLikeAHorse(horsesList[index].id);
-  };
+    await disLikeAHorse(horsesList[index].id)
+  }
 
   const clickonMarkers = (cluster, markers) => {
     // setArrPeople([]);
-    var arr = [];
+    var arr = []
     markers.map((eachmarker, index) => {
-      console.log('tttttrrrr', eachmarker);
-      console.log(eachmarker.properties.index);
-      console.log(allHorseLatandLon[eachmarker.properties.index]);
       // obj = {
       //   username: eachmarker.properties.markerUsername,
       //   pic: eachmarker.properties.markerPicture,
@@ -301,16 +291,17 @@ const SwipingPage = props => {
       //   category: eachmarker.properties.category,
       // };
       // arr.push(obj);
-    });
+    })
 
     // setArrPeople(arr);
 
     // peopleRef.current.present();
-  };
+  }
 
   return (
     <SafeAreaView
-      style={[globalStyle.container, { backgroundColor: COLORS.white }]}>
+      style={[globalStyle.container, { backgroundColor: COLORS.white }]}
+    >
       <View style={globalStyle.innerContainer}>
         <View style={{ flex: 1 }}>
           <View style={styles.header}>
@@ -321,7 +312,8 @@ const SwipingPage = props => {
             />
             <TouchableOpacity
               style={{ position: 'absolute', top: 30, left: 8 }}
-              onPress={() => props.navigation.goBack()}>
+              onPress={() => props.navigation.goBack()}
+            >
               <Image
                 source={backIcon}
                 style={styles.backIcon}
@@ -333,8 +325,9 @@ const SwipingPage = props => {
             style={{
               flexDirection: 'row',
               justifyContent: 'space-around',
-              marginBottom: 10,
-            }}>
+              marginBottom: 10
+            }}
+          >
             <TouchableOpacity
               onPress={() => setWichPage('swipper')}
               style={{
@@ -343,8 +336,9 @@ const SwipingPage = props => {
                 height: 40,
                 width: 100,
                 alignItems: 'center',
-                justifyContent: 'center',
-              }}>
+                justifyContent: 'center'
+              }}
+            >
               <Text style={{ color: 'white' }}>Match</Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -355,8 +349,9 @@ const SwipingPage = props => {
                 height: 40,
                 width: 100,
                 alignItems: 'center',
-                justifyContent: 'center',
-              }}>
+                justifyContent: 'center'
+              }}
+            >
               <Text style={{ color: 'white' }}>See on Map</Text>
             </TouchableOpacity>
           </View>
@@ -365,7 +360,8 @@ const SwipingPage = props => {
               style={styles.content}
               onLayout={({ nativeEvent }) =>
                 setCardHeight(nativeEvent.layout.height - 10)
-              }>
+              }
+            >
               {loading ? (
                 <BarIndicator color={COLORS.color3} size={22}></BarIndicator>
               ) : horsesList.length == 0 ? (
@@ -379,7 +375,8 @@ const SwipingPage = props => {
                   renderCard={card =>
                     (card && (
                       <View
-                        style={{ width: width - 32, height: cardHeight - 10 }}>
+                        style={{ width: width - 32, height: cardHeight - 10 }}
+                      >
                         <MainItem
                           item={card}
                           onPressDetails={() => goToDetails(card)}
@@ -387,7 +384,11 @@ const SwipingPage = props => {
                             // console.log('GO TO CHAT ', card)
                             goToChat(card)
                           }}
-                          myhorse={userDetail.user.id === card?.userprofile?.id ? true : false}
+                          myhorse={
+                            userDetail.user.id === card?.userprofile?.id
+                              ? true
+                              : false
+                          }
                         />
                       </View>
                     )) ||
@@ -396,36 +397,36 @@ const SwipingPage = props => {
                   disableBottomSwipe={true}
                   animateCardOpacity={true}
                   onSwiped={index => {
-                    setCardIndex(index);
+                    setCardIndex(index)
                   }}
                   onSwipedRight={index => {
-                    console.log(index);
-                    onSwipeRight(index);
+                    onSwipeRight(index)
                   }}
                   onSwipedLeft={index => {
-                    onSwipeLeft(index);
+                    onSwipeLeft(index)
                   }}
                   onSwipedAll={() => {
                     //here we should load more horse cards
-                    loadMoreHorse();
+                    loadMoreHorse()
                   }}
                   onSwipedTop={cardIndex => {
                     props.navigation.navigate('Details', {
                       item: horsesList[cardIndex],
                       pubnub: pubnub
-                    });
-                    swiperRef.current.swipeBack();
+                    })
+                    swiperRef.current.swipeBack()
                   }}
                   cardIndex={0}
                   backgroundColor={'#ffffff'}
                   containerStyle={{
                     justifyContent: 'center',
-                    alignItems: 'center',
+                    alignItems: 'center'
                   }}
                   cardHorizontalMargin={0}
                   cardVerticalMargin={0}
                   stackSeparation={0}
-                  stackSize={3}></Swiper>
+                  stackSize={3}
+                ></Swiper>
               )}
             </View>
           ) : (
@@ -456,18 +457,21 @@ const SwipingPage = props => {
                 borderRadius: 20,
                 height: '65%',
                 width: '97%',
-                alignSelf: 'center',
+                alignSelf: 'center'
               }}
               initialRegion={{
                 latitude: detailLat ? detailLat : 71.6385898,
                 longitude: detailLng ? detailLng : 29.5456146,
                 latitudeDelta: 0.05,
-                longitudeDelta: 0.05,
-              }}>
-              <Marker coordinate={{
-                latitude: detailLat ? detailLat : 71.6385898,
-                longitude: detailLng ? detailLng : 29.5456146,
-              }} />
+                longitudeDelta: 0.05
+              }}
+            >
+              <Marker
+                coordinate={{
+                  latitude: detailLat ? detailLat : 71.6385898,
+                  longitude: detailLng ? detailLng : 29.5456146
+                }}
+              />
               {renderMarkers()}
 
               {/* <Marker coordinate={{latitude: 52.4, longitude: 18.7}} />
@@ -486,7 +490,8 @@ const SwipingPage = props => {
               <TouchableOpacity
                 activeOpacity={0.85}
                 style={styles.circleBtn}
-                onPress={pressDislike}>
+                onPress={pressDislike}
+              >
                 <Image
                   source={dislike}
                   resizeMode="contain"
@@ -497,14 +502,16 @@ const SwipingPage = props => {
                 <Image source={chev} resizeMode="contain" style={styles.chev} />
                 <Image source={chev} resizeMode="contain" style={styles.chev} />
                 <TouchableOpacity
-                  onPress={() => goToDetails(horsesList[cardIndex])}>
+                  onPress={() => goToDetails(horsesList[cardIndex])}
+                >
                   <Text style={styles.infoText}>Swipe up for details</Text>
                 </TouchableOpacity>
               </View>
               <TouchableOpacity
                 activeOpacity={0.85}
                 style={styles.circleBtn}
-                onPress={pressLike}>
+                onPress={pressLike}
+              >
                 <Image
                   source={like}
                   resizeMode="contain"
@@ -518,27 +525,27 @@ const SwipingPage = props => {
       </View>
       <CustomTab navigation={props.navigation} />
     </SafeAreaView>
-  );
-};
+  )
+}
 
-export default SwipingPage;
+export default SwipingPage
 
 const styles = StyleSheet.create({
   logo: {
     width: '50%',
-    alignSelf: 'center',
+    alignSelf: 'center'
   },
   header: {
     width: '100%',
     height: '17%',
     backgroundColor: COLORS.white,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   content: {
     width: '100%',
     height: '45%',
-    marginBottom: 5,
+    marginBottom: 5
   },
   footer: {
     position: 'absolute',
@@ -549,10 +556,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 32,
-    justifyContent: 'space-between',
+    justifyContent: 'space-between'
   },
   icon: {
-    width: 40,
+    width: 40
   },
   circleBtn: {
     width: 60,
@@ -560,18 +567,18 @@ const styles = StyleSheet.create({
     borderRadius: 35,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: COLORS.color19,
+    backgroundColor: COLORS.color19
   },
   chev: {
     width: 23,
-    height: 10,
+    height: 10
   },
   infoText: {
     fontSize: 12,
     fontFamily: fonts.medium,
     fontWeight: '600',
     color: COLORS.color3,
-    marginTop: 16,
+    marginTop: 16
   },
   card: {
     // flex: 1,
@@ -581,15 +588,15 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: '#E8E8E8',
     justifyContent: 'center',
-    backgroundColor: 'white',
+    backgroundColor: 'white'
   },
   text: {
     textAlign: 'center',
     fontSize: 50,
-    backgroundColor: 'transparent',
+    backgroundColor: 'transparent'
   },
   backIcon: {
     width: 18,
-    height: 18,
-  },
-});
+    height: 18
+  }
+})

@@ -21,7 +21,6 @@ const { width, height } = Dimensions.get('screen');
 const Tab = createMaterialTopTabNavigator();
 const HorsesScreen = props => {
   const safeArea = useSafeAreaInsets();
-  console.log('qqqqqq', props?.route?.params?.from);
   const [from, setFrom] = useState(props?.route?.params?.from);
   useEffect(() => {
     // setFrom(undefined);

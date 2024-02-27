@@ -64,7 +64,6 @@ const Notification = ({ navigation }) => {
       userId: `${item.user_profile.user.email}`,
     });
 
-    console.log('qqqqqqqqqvvv', item.type);
     if (item.type == 'MESSAGE') {
       // console.log(item.user_profile);
       navigation.push('Chat', {
@@ -91,7 +90,6 @@ const Notification = ({ navigation }) => {
   };
 
   const renderItem = ({ item, index }) => {
-    console.log('THIS IS ITEM ', item)
     return (
       <TouchableOpacity
         key={index}

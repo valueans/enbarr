@@ -68,6 +68,7 @@ const Chat = props => {
     // readAllMessages();
   }, [])
 
+
   useEffect(() => {
     pubnub.subscribe({
       channels: [roomDetails.channel]
@@ -80,10 +81,6 @@ const Chat = props => {
   }, [pubnub])
 
   useEffect(() => {
-    const showMessage = msg => {
-      setMessages(messages => [...messages, msg])
-    }
-
     const listener = {
       message: messageEvent => {
         // showMessage(messageEvent.message.description);
@@ -154,10 +151,10 @@ const Chat = props => {
             setLastMessageTimeToken('')
           }
 
-          console.log(
-            'messages...',
-            response.channels[roomDetails.channel][1].message
-          )
+          // console.log(
+          //   'messages...',
+          //   response.channels[roomDetails.channel][1].message
+          // )
           setMessages(response.channels[roomDetails.channel].reverse())
         }
       }

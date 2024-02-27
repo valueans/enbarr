@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import ChatScreen from '../Tabs/Chat/ChatScreen';
 import HorsesScreen from '../Tabs/Horses/HorsesScreen';
 import HomeScreen from '../Tabs/Home/HomeScreen';
 import TabBar from './Tabbar';
-import { Dimensions, Platform, StyleSheet, View } from 'react-native';
+import { Dimensions, Image, Platform, StyleSheet, View } from 'react-native';
 import COLORS from '../../utils/colors';
 import CustomTabButton from './CustomTabButton';
 import HomeIcon from './Icons/HomeIcon';
@@ -13,6 +13,7 @@ import MessageIcon from './Icons/MessageIcon';
 import HorsesIcon from './Icons/HorsesIcon';
 import { getMyDetail } from '../../APIs/api';
 import PubNub from 'pubnub';
+import HomeStack from './HomeStack';
 const Tab = createBottomTabNavigator();
 
 const BottomTab = props => {
@@ -39,24 +40,24 @@ const BottomTab = props => {
       }}
       tabBar={props => <TabBar {...props} />}>
       <Tab.Screen
-        name="Home"
-        component={HomeScreen}
+        name="HomeStack"
+        component={HomeStack}
         options={{
-          tabBarIcon: props => <HomeIcon {...props} />,
+          tabBarIcon: props => useMemo(() => <HomeIcon {...props} />, []),
         }}
       />
       <Tab.Screen
         name="Messages"
         component={ChatScreen}
         options={{
-          tabBarIcon: props => <MessageIcon {...props} />,
+          tabBarIcon: props => useMemo(() => <MessageIcon {...props} />, [])
         }}
       />
       <Tab.Screen
         name="Horses"
         component={HorsesScreen}
         options={{
-          tabBarIcon: props => <HorsesIcon {...props} />,
+          tabBarIcon: props => useMemo(() => <HorsesIcon {...props} />, [])
         }}
       />
     </Tab.Navigator>

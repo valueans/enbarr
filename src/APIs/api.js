@@ -759,7 +759,6 @@ export async function applyPromoCode(code) {
   }
 }
 
-
 export async function changeSubcriptionPlan(plan_id) {
   var myHeaders = new Headers()
   acc = await AsyncStorage.getItem('acc')
@@ -793,7 +792,10 @@ export async function appleTransaction(purchase) {
   myHeaders.append('Authorization', `Token ${acc}`)
 
   var formdata = new FormData()
-  formdata.append('original_transaction_id', purchase?.originalTransactionIdentifierIOS)
+  formdata.append(
+    'original_transaction_id',
+    purchase?.originalTransactionIdentifierIOS
+  )
   formdata.append('transaction_id', purchase?.transactionId)
 
   var requestOptions = {
@@ -838,43 +840,51 @@ export async function userSaveSearchBuyer(
   myHeaders.append('Content-Type', 'application/json')
   myHeaders.append('Authorization', `Token ${acc}`)
 
-  var raw = JSON.stringify({
-    country: location_name ? location_name : null,
-    state: state ? state : null,
-    // city: city ? city : null,
-    breed_id: breed_id !== '' && breed_id ? breed_id : null,
-    min_age: min_age !== '' ? min_age : null,
-    max_age: max_age !== '' ? max_age : null,
-    min_height: min_height !== '' ? parseFloat(min_height) : null,
-    max_height: max_height !== '' ? parseFloat(max_height) : null,
-    min_price: min_price !== '' ? parseFloat(min_price) : null,
-    max_price: max_price !== '' ? parseFloat(max_price) : null,
-    discipline_id: discipline_id !== '' && discipline_id ? discipline_id : null,
-    // gender_list: gender !== '' ? gender : [],
-    gender: gender.length == 0 ? null : gender.toString(),
-    color_id: color_id !== '' && color_id ? color_id : null,
-    temperament_id:
-      temperament_id !== '' && temperament_id ? temperament_id : null,
-    keywords_id: keywords_id.length !== 0 ? keywords_id : [],
-    radius
-  })
+  try {
+    const raw = JSON.stringify({
+      country: location_name ? location_name : null,
+      state: state ? state : null,
+      // city: city ? city : null,
+      breed_id: breed_id !== '' && breed_id ? breed_id : null,
+      min_age: min_age !== '' ? min_age : null,
+      max_age: max_age !== '' ? max_age : null,
+      min_height: min_height !== '' ? parseFloat(min_height) : null,
+      max_height: max_height !== '' ? parseFloat(max_height) : null,
+      min_price: min_price !== '' ? parseFloat(min_price) : null,
+      max_price: max_price !== '' ? parseFloat(max_price) : null,
+      discipline_id:
+        discipline_id !== '' && discipline_id ? discipline_id : null,
+      // gender_list: gender !== '' ? gender : [],
+      gender: gender ? (gender.length == 0 ? null : gender.toString()) : '',
+      color_id: color_id !== '' && color_id ? color_id : null,
+      temperament_id:
+        temperament_id !== '' && temperament_id ? temperament_id : null,
+      keywords_id: keywords_id
+        ? keywords_id.length !== 0
+          ? keywords_id
+          : []
+        : [],
+      radius
+    })
 
-  var requestOptions = {
-    method: 'POST',
-    headers: myHeaders,
-    body: raw,
-    redirect: 'follow'
-  }
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow'
+    }
 
-  const data = await fetchWithTimeout(
-    `/api/v1/user-saved-search/`,
-    requestOptions
-  )
-
-  if (data[0].code == 200) {
-    return data
-  } else {
-    return []
+    const data = await fetchWithTimeout(
+      `/api/v1/user-saved-search/`,
+      requestOptions
+    )
+    if (data[0].code == 200) {
+      return data
+    } else {
+      return data
+    }
+  } catch (error) {
+    console.log('userSaveSearchBuyer-error', error)
   }
 }
 

@@ -27,7 +27,7 @@ import { forgetPasswordEmailCheck } from '../../../APIs/api';
 import { BarIndicator } from 'react-native-indicators';
 const { width, height } = Dimensions.get('screen');
 
-var emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+var emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*.com$/;
 
 const ForgotPassword = props => {
   const safeArea = useSafeAreaInsets();
@@ -125,7 +125,7 @@ const ForgotPassword = props => {
                 style={styles.btn}
                 activeOpacity={0.8}
                 onPress={checkEmail}
-                disabled={!emailRegex.test(email)}>
+                disabled={loading || !emailRegex.test(email)}>
                 {loading ? (
                   <BarIndicator size={20} color={COLORS.white}></BarIndicator>
                 ) : (
