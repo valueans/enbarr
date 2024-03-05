@@ -69,7 +69,7 @@ const Subscriptions = ({ navigation }) => {
           ]}
         >
           <ScreenTitle style={{ color: COLORS.white }}>
-            {Platform.OS === 'ios' ? `${item.localizedPrice}` : `$${item.price}`}
+            {Platform.OS === 'ios' ? `${item.localizedPrice}/month` : `$${item.price}/month`}
           </ScreenTitle>
           <Text style={[styles.textItem, { color: COLORS.white }]}>
             {`${item.title} membership allows users to ${item.description}`}

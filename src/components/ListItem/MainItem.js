@@ -1,38 +1,27 @@
+import { BlurView } from '@react-native-community/blur';
+import React, { useState } from 'react';
 import {
   Dimensions,
+  Image,
+  Platform,
   StyleSheet,
   Text,
-  View,
-  Image,
   TouchableOpacity,
-  Platform,
+  View,
 } from 'react-native';
-import React, { useState } from 'react';
-import COLORS, { ColorShade } from '../../utils/colors';
-import { BlurView } from '@react-native-community/blur';
-import fonts from '../../utils/fonts';
-import SpecialButton from '../Button/SpecialButton';
-import { globalStyle } from '../../utils/GlobalStyle';
+import FastImage from 'react-native-fast-image';
+import { addHorseToFav, deleteHorseToFav } from '../../APIs/api';
 import message from '../../assets/images/envelope.png';
 import heart from '../../assets/images/heart.png';
 import heartFill from '../../assets/images/heart_fill.png';
-import FastImage from 'react-native-fast-image'
-import { addHorseToFav, deleteHorseToFav } from '../../APIs/api';
+import { globalStyle } from '../../utils/GlobalStyle';
+import COLORS, { ColorShade } from '../../utils/colors';
+import fonts from '../../utils/fonts';
+import SpecialButton from '../Button/SpecialButton';
 const { width, height } = Dimensions.get('screen');
 
 const DEFAULT_IMAGE = require('../../assets/images/user.png');
 
-import {
-  BallIndicator,
-  BarIndicator,
-  DotIndicator,
-  MaterialIndicator,
-  PacmanIndicator,
-  PulseIndicator,
-  SkypeIndicator,
-  UIActivityIndicator,
-  WaveIndicator,
-} from 'react-native-indicators';
 import Video from 'react-native-video';
 import playIcon from '../../assets/images/play.png';
 const MainItem = ({

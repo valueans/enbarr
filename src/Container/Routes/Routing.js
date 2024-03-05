@@ -1,7 +1,7 @@
-import {StyleSheet, Text, View} from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 
 import BottomTab from '../bottomTab/BottomTab';
 import {
@@ -33,7 +33,7 @@ const Routing = props => {
       <Stack.Screen
         name="Root"
         component={BottomTab}
-        options={{headerShown: false, title: 'Home'}}
+        options={{ headerShown: false, title: 'Home' }}
       />
       <Stack.Screen name="Buyer" component={Buyer} />
       <Stack.Screen name="Seller" component={Seller} />

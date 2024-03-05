@@ -496,7 +496,6 @@ const Welcome = props => {
               `${RNFS.DocumentDirectoryPath}/react-native${'tiny'}.png`,
               'base64',
             ).then(res => {
-              console.log('qqqqq', res);
               AsyncStorage.setItem('myProfilePicture', res);
             });
           });
@@ -658,7 +657,6 @@ const Welcome = props => {
                 `${RNFS.DocumentDirectoryPath}/react-native${'tiny'}.png`,
                 'base64',
               ).then(res => {
-                console.log('qqqqq', res);
                 AsyncStorage.setItem('myProfilePicture', res);
               });
             });

@@ -10,6 +10,7 @@ export async function fetchWithTimeout(url, options = {}) {
   const controller = new AbortController()
   const id = setTimeout(() => controller.abort(), timeout)
 
+  console.log(`${baseUrl}${url}`);
   return await fetch(`${baseUrl}${url}`, {
     ...options,
     signal: controller.signal

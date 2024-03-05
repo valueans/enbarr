@@ -40,10 +40,10 @@ const MultipleInput = forwardRef(
     const addToList = async () => {
       if (input && input != ' ') {
         const data = await addKeyword(input);
-        console.log('asdfasdfasdfsf', data);
+        console.log('addToList-keywords', data);
         if (data[0].code == 201) {
           setInput('');
-          console.log('asdfasdf', data[1]);
+          // console.log('asdfasdf', data[1]);
           setKeywords(prev => [...prev, data[1]]);
           // console.log(data[1]);
           onChange([...keywords, data[1]]);

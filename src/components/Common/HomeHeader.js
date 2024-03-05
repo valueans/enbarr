@@ -7,7 +7,9 @@ import {
   TextInput,
   Pressable,
   Platform,
-  PermissionsAndroid
+  PermissionsAndroid,
+  Alert,
+  Linking
 } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Geolocation from 'react-native-geolocation-service'
@@ -42,6 +44,7 @@ const HomeHeader = ({
   const [visible, setVisible] = useState(false)
   const [selcetedIndex, setSelcetedIndex] = useState(0)
   const [isImageLoading, setIsImageLoading] = useState(false)
+  const [isBtnPress, setIsBtnPress] = useState(false)
   const [myLat, setMyLat] = useState(0)
   const [myLong, setMyLong] = useState(0)
 
@@ -52,6 +55,12 @@ const HomeHeader = ({
   useEffect(() => {
     getUserLocation()
   }, [])
+
+  useEffect(() => {
+    if (myLat != 0 && myLong != 0 && isBtnPress) {
+      goToPage('Seller', { myLat: myLat, myLong: myLong })
+    }
+  }, [myLat, myLong])
   // const getNotif = async () => {
 
   // };
@@ -60,21 +69,6 @@ const HomeHeader = ({
   const hideMenu = () => setVisible(false)
 
   const showMenu = () => setVisible(true)
-
-  const aSellerPress = async () => {
-    console.log('aSellerPress')
-    // const data = await getMyDetail();
-    // if (data.promotion_adds > 0) {
-    //should go to post page
-    goToPage('Seller', { myLat: myLat, myLong: myLong })
-    // // for testing purposes:
-    //  // goToPage('RequestSubscribe');
-    // } else if (data.promotion_adds <= 0) {
-    //  //should go to sub page
-    // goToPage('RequestSubscribe');
-    // // goToPage('Seller');
-    // }
-  }
 
   const hasPermissionIOS = async () => {
     const openSetting = () => {
@@ -89,11 +83,11 @@ const HomeHeader = ({
     }
 
     if (status === 'denied') {
-      Alert.alert('We need your location')
+      return false
     }
 
     if (status === 'disabled') {
-      Alert.alert('We need your location')
+      return false
     }
 
     return false
@@ -146,9 +140,49 @@ const HomeHeader = ({
         setMyLat(position.coords.latitude)
         setMyLong(position.coords.longitude)
       })
-    } else {
-      setDistance(0)
     }
+  }
+
+  const aSellerPress = async () => {
+    const hasPermission = await hasLocationPermission()
+    if (!hasPermission) {
+      Alert.alert(
+        'Location Permission!',
+        'Please allow location permission first',
+        [
+          {
+            text: 'Cancel',
+          },
+          {
+            text: 'Ok',
+            onPress: () => {
+              Linking.openSettings().catch(() => {
+                Alert.alert('Unable to open settings');
+              });
+            },
+          },
+        ],
+        { cancelable: false }
+      );
+      return
+    } else {
+      if (myLat != 0 && myLong != 0) {
+        goToPage('Seller', { myLat: myLat, myLong: myLong })
+      } else {
+        Geolocation.getCurrentPosition(async position => {
+          setMyLat(position.coords.latitude)
+          setMyLong(position.coords.longitude)
+        })
+      }
+    }
+
+    // // for testing purposes:
+    //  // goToPage('RequestSubscribe');
+    // } else if (data.promotion_adds <= 0) {
+    //  //should go to sub page
+    // goToPage('RequestSubscribe');
+    // // goToPage('Seller');
+    // }
   }
 
   return (

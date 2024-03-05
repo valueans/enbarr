@@ -1,59 +1,41 @@
+import { useIsFocused } from '@react-navigation/native'
+import React, { useCallback, useState } from 'react'
 import {
-  ImageBackground,
+  Alert,
+  FlatList,
+  RefreshControl,
   SafeAreaView,
   StyleSheet,
   Text,
-  View,
-  Image,
-  Touchable,
-  TouchableOpacity,
-  TextInput,
-  FlatList,
-  Alert,
-  Platform
+  View
 } from 'react-native'
-import React, { useState, useCallback } from 'react'
+import OneSignal from 'react-native-onesignal'
+import { useSelector } from 'react-redux'
+import HomeHeader from '../../../components/Common/HomeHeader'
 import Background from '../../../components/Layout/Background'
+import MainItem from '../../../components/ListItem/MainItem'
 import COLORS from '../../../utils/colors'
 import fonts from '../../../utils/fonts'
-import { globalStyle } from '../../../utils/GlobalStyle'
-import { useSelector } from 'react-redux'
-import MainItem from '../../../components/ListItem/MainItem'
-import OneSignal from 'react-native-onesignal'
-import { list, profile_img } from '../../../utils/data'
-import { useFocusEffect } from '@react-navigation/native'
-import HomeHeader from '../../../components/Common/HomeHeader'
-import {
-  AppOpenAd,
-  InterstitialAd,
-  RewardedAd,
-  BannerAd,
-  TestIds,
-  BannerAdSize
-} from 'react-native-google-mobile-ads'
 
-import {
-  getAlhorses,
-  updateMyDetail,
-  getMyDetail,
-  searchHorses,
-  getOrCreateNewChannel,
-  sendPlayerIDToServer,
-  getNmberOfNotifications,
-  appleTransaction
-} from '../../../APIs/api'
-import { BarIndicator } from 'react-native-indicators'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { TimeFromNow } from '../../../utils/Time'
-import { useEffect } from 'react'
 import PubNub from 'pubnub'
-import * as PubNubKeys from '../Chat/PubNubKeys'
+import { useEffect } from 'react'
 import * as RNIap from 'react-native-iap'
+import { BarIndicator } from 'react-native-indicators'
+import {
+  appleTransaction,
+  getAlhorses,
+  getNmberOfNotifications,
+  getOrCreateNewChannel,
+  searchHorses,
+  sendPlayerIDToServer
+} from '../../../APIs/api'
+import { TimeFromNow } from '../../../utils/Time'
+import * as PubNubKeys from '../Chat/PubNubKeys'
 
 // global.pag = 2;
 
 const HomeScreen = props => {
-
+  const isFocused = useIsFocused()
 
   const { userDetail } = useSelector(state => state.userDetail)
 
@@ -73,6 +55,7 @@ const HomeScreen = props => {
   const [filterItem, setFilterItem] = useState('All')
   const [myDetail, setMydetail] = useState([])
   const [numberOfNotif, setNumberOfNotif] = useState(0)
+  const [refreshing, setRefreshing] = useState(false);
 
   const [page, setPage] = useState(1)
 
@@ -83,6 +66,12 @@ const HomeScreen = props => {
       myhorse: userDetail.user.id === item.userprofile.id ? true : false
     })
   }
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
 
   // useFocusEffect(
   //   React.useCallback(() => {
@@ -145,7 +134,7 @@ const HomeScreen = props => {
 
     async function fetchHorses() {
       setIsSeraching(false)
-      setIsLoading(true)
+      if(listOfHorses.length==0) setIsLoading(true); 
       const horses = await getAlhorses(1)
 
       setIsLoading(false)
@@ -173,13 +162,12 @@ const HomeScreen = props => {
 
       const notifCount = await getNmberOfNotifications();
       setNumberOfNotif(notifCount[1].count);
-      console.log('iouioiu', notifCount[1].count);
 
     }
 
     fetchHorses()
     getPurchaseHistory()
-  }, [filterItem])
+  }, [filterItem, isFocused])
 
   const getPurchaseHistory = async () => {
     try {
@@ -336,6 +324,9 @@ const HomeScreen = props => {
                     </>
                   )
                 }}
+                refreshControl={
+                  <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                }
                 ListEmptyComponent={() => (
                   <View style={styles.nothingWrapper}>
                     <Text style={styles.nothingText}>

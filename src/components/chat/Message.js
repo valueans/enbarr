@@ -1,4 +1,4 @@
-import { Dimensions, StyleSheet, Text, View, Image,Platform } from 'react-native';
+import { Dimensions, StyleSheet, Text, View, Image, Platform } from 'react-native';
 import React, { useEffect, useState, useRef } from 'react';
 import COLORS from '../../utils/colors';
 import fonts from '../../utils/fonts';
@@ -22,13 +22,24 @@ import moment from 'moment';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Video from 'react-native-video';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
+import AnimatedLoader from '../AnimatedLoader';
+import { SkypeIndicator } from 'react-native-indicators';
 
-const Message = ({ mine, avatar, item, pubnub, chatChannel,onPressVideo}) => {
+const Message = ({
+  length,
+  index,
+  isFileSent,
+  mine,
+  avatar,
+  item,
+  pubnub,
+  chatChannel,
+  onPressVideo }) => {
   // console.log(convertTimestamp(item.item.timetoken / 10000000));
   // console.log(item.item.timetoken);
   useEffect(() => {
-    if (item.item.message.file) {
-      console.log('aaaaaa', item.item);
+    if (item.message.file) {
+      // console.log('aaaaaa',item);
     }
   }, []);
 
@@ -67,14 +78,13 @@ const Message = ({ mine, avatar, item, pubnub, chatChannel,onPressVideo}) => {
   }
 
   const getFileURl = (fileID, fileName, fileType, url) => {
-    console.log(fileID,fileName,fileType,url,'fileID,fileName,fileType,url')
     if (fileType == 'img') {
       const result = pubnub.getFileUrl({
         channel: chatChannel,
         id: fileID,
         name: fileName,
       });
-      console.log('result of urls ',result)
+      // console.log('result of urls ',result)
       return result;
     } else if (fileType == 'vid') {
       var result = '';
@@ -87,50 +97,54 @@ const Message = ({ mine, avatar, item, pubnub, chatChannel,onPressVideo}) => {
       } else {
         result = url;
       }
-      console.log(result,'result of video ')
+      // console.log(result, 'result of video ')
       // if(Platform.OS ==)
       createThumbnail({
         url: result,
         timeStamp: 1,
       })
-        .then(response =>{console.log(response.path,'response.path'), Platform.OS =='ios' ? setThumbVideo(response.path) : setThumbVideo(result)})
-        .catch(err => console.log({ err },'error response.path'));
+        .then(response => {
+          // console.log(response.path, 'response.path')
+          Platform.OS == 'ios' ? setThumbVideo(response.path) : setThumbVideo(result)
+        })
+        .catch(err => console.log({ err }, 'error response.path'));
     }
   };
 
-  const openVideoPress = (fileID, fileName,thumbVideo) => {
-    console.log(fileID,fileName,'on Video Press')
-    if(fileID && fileName)
-    {
-   let result = pubnub.getFileUrl({
-      channel: chatChannel,
-      id: fileID,
-      name: fileName,
-    });
+  const openVideoPress = (fileID, fileName, thumbVideo) => {
+    console.log(fileID, fileName, 'on Video Press')
+    if (fileID && fileName) {
+      let result = pubnub.getFileUrl({
+        channel: chatChannel,
+        id: fileID,
+        name: fileName,
+      });
 
-    console.log(result,'while video opening')
-    createThumbnail({
-      url: result,
-      timeStamp: 1,
-    })
-      .then(response => setVidThumb(response.path))
-      .catch(err => console.log({ err }));
-    setVideoOpenUrl(result);
-    dialogeRefVideo.current.open();
-  }
-  else if(thumbVideo){
-    setVideoOpenUrl(thumbVideo)
-    dialogeRefVideo.current.open();
+      console.log(result, 'while video opening', result)
+      createThumbnail({
+        url: result,
+        timeStamp: 1,
+      })
+        .then(response => setVidThumb(response.path))
+        .catch(err => console.log({ err }));
+      setVideoOpenUrl(result);
+      dialogeRefVideo.current.open();
+    }
+    else if (thumbVideo) {
+      setVideoOpenUrl(thumbVideo)
+      dialogeRefVideo.current.open();
 
-    // onPressVideo()
-  }
+      // onPressVideo()
+    }
   };
 
-  const renderImageAndVideo = item => {
-    console.log(item,'item name in msgs')
-    if (item.name.endsWith('.jpg') || item.name.endsWith('.JPG') || item.name.endsWith('.png') || item.name.endsWith('.PNG') ||item.name.endsWith('.jpeg') || item.name.endsWith('.JPEG')) {
-      //imager
+  const renderImageAndVideo = (item, index) => {
+    // console.log(item,'item name in msgs')
+    // console.log('.length.........', length);
+    // console.log('.index.........', index);
+    // console.log('..........',index == length - 1);
 
+    if (item.name.endsWith('.jpg') || item.name.endsWith('.JPG') || item.name.endsWith('.png') || item.name.endsWith('.PNG') || item.name.endsWith('.jpeg') || item.name.endsWith('.JPEG')) {
       return (
         <TouchableOpacity
           onPress={() => {
@@ -139,6 +153,20 @@ const Message = ({ mine, avatar, item, pubnub, chatChannel,onPressVideo}) => {
               item.id ? getFileURl(item.id, item.name, 'img') : item.url,
             );
           }}>
+          {
+            (isFileSent && index == 0) &&
+            <View style={{
+              position: 'absolute',
+              zIndex: 999999,
+              height: 170,
+              width: 170,
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}>
+              {/* <AnimatedLoader isLoading={isFileSent} /> */}
+              <SkypeIndicator size={30} color={'#4f5c8c'} />
+            </View>
+          }
           <Image
             style={styles.ttesst}
             source={{
@@ -148,37 +176,59 @@ const Message = ({ mine, avatar, item, pubnub, chatChannel,onPressVideo}) => {
       );
     } else {
       getFileURl(item.id, item.name, 'vid', item.url);
-      console.log(thumbVideo,'thumbVideo')
+      // console.log(thumbVideo,'thumbVideo')
       return (
-        <TouchableOpacity 
-        onPress={() => openVideoPress(item?.id, item?.name,thumbVideo)}>
-        
-         {Platform.OS =='ios' ? <Image
-            style={styles.ttesst}
-            source={{
-              uri: thumbVideo,
-            }}></Image>:<Video
-            style={styles.ttesst}
-            // paused={true}
-            muted={true}
-            onLoadStart={()=> setTimeout(() => {
-              
-            }, 1500)}
-            resizeMode={'cover'}
-            source={{
-              uri: thumbVideo,
-            }}>
-              </Video>}
+        <TouchableOpacity
+          onPress={() => openVideoPress(item?.id, item?.name, thumbVideo)}>
+
+          {
+            Platform.OS == 'ios' ?
+              <Image
+                style={styles.ttesst}
+                source={{
+                  uri: thumbVideo,
+                }} />
+              :
+              <Video
+                style={styles.ttesst}
+                // paused={true}
+                muted={true}
+                onLoadStart={() => setTimeout(() => {
+
+                }, 1500)}
+                resizeMode={'cover'}
+                source={{
+                  uri: thumbVideo,
+                }}>
+              </Video>
+          }
+          {
+            (isFileSent && index == 0) ?
+              <View style={{
+                position: 'absolute',
+                zIndex: 999999,
+                height: 170,
+                width: 170,
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}>
+                {/* <AnimatedLoader isLoading={true} /> */}
+                <SkypeIndicator size={30} color={'#4f5c8c'} />
+              </View>
+              :
               <Pressable
                 style={styles.playBtn}
                 onPress={() => openVideoPress(item.id, item.name)}
-                >
+              >
                 <Image
                   source={playIcon}
                   resizeMode="cover"
                   style={{ width: 50, height: 50 }}
                 />
               </Pressable>
+          }
+
+
         </TouchableOpacity>
       );
     }
@@ -211,13 +261,13 @@ const Message = ({ mine, avatar, item, pubnub, chatChannel,onPressVideo}) => {
               styles.cloud,
               mine ? styles.cloud_mine : styles.cloud_not_mine,
             ]}>
-            {item.item.message.file ? (
-              renderImageAndVideo(item.item.message.file)
+            {item.message.file ? (
+              renderImageAndVideo(item.message.file, index)
             ) : (
               <Text
                 style={[mine ? styles.text_mine : styles.text_not_mine]}
                 numberOfLines={Math.random() * 5}>
-                {item.item.message.text}
+                {item.message.text}
               </Text>
             )}
 
@@ -236,7 +286,7 @@ const Message = ({ mine, avatar, item, pubnub, chatChannel,onPressVideo}) => {
               { flexDirection: mine ? 'row-reverse' : 'row' },
             ]}>
             <Text style={styles.time}>
-              {convertTimestamp(item.item.timetoken / 10000000)}
+              {convertTimestamp(item.timetoken / 10000000)}
             </Text>
             {/* <Text style={[styles.time, {display: mine ? 'flex' : 'none'}]}>
               seen
@@ -294,12 +344,14 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     color: mine_text_color,
     fontSize: 12,
+    marginRight:5
   },
   text_not_mine: {
     fontFamily: fonts.regular,
     fontWeight: '400',
     color: not_mine_text_color,
     fontSize: 12,
+    marginLeft:5
   },
   avatar: {
     width: 40,

@@ -45,6 +45,8 @@ const ReportUserModal = ({ visible, navigation, setVisible, userID }) => {
       onBackdropPress={() => setIsOpen(false)}
       animationIn={'slideInUp'}
       animationOut={'slideOutDown'}
+      animationInTiming={350}
+      animationOutTiming={350}
       onDismiss={() => {
         // setVisible(false);
       }}

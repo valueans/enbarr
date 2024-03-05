@@ -59,11 +59,13 @@ const Details = props => {
   const [item, setItem] = useState(props?.route?.params?.item);
   // const {item} = props.route.params;
   // console.log('qqweweqweqwe', item.id);
+
   const getFromMapDetail = async () => {
-    console.log('pppppppp', props?.route?.params.item.user_location);
-    // get horse detail by ID
+
+    // console.log('pppppppp', props?.route?.params.item.user_location);
     var obj = [];
     const data = await getHorseDetails(props?.route?.params?.id);
+    console.log('`horse-details...', data);
     setItem(data[1]);
 
     data[1].images?.map((item, index) => {
@@ -93,16 +95,15 @@ const Details = props => {
   };
 
   useEffect(() => {
+    console.log('details.....',props?.route?.params.item);
     if (props?.route?.params?.from == 'map') {
       getFromMapDetail();
     }
 
-    console.log('asdfasdfwwwww', props?.route?.params?.item?.lat);
-
     getDistance();
     getMyImage();
     var obj = [];
-    console.log(JSON.stringify(item, null, 2));
+    // console.log(JSON.stringify(item, null, 2));
     if (props?.route?.params?.from !== 'map') {
       item?.images?.map((item, index) => {
         obj.push(item);
@@ -184,7 +185,7 @@ const Details = props => {
           position.coords.latitude,
           position.coords.longitude,
         );
-        console.log('fffffff', data[1].distance);
+        // console.log('fffffff', data[1].distance);
         setDistance(data[1].distance);
       });
     } else {
@@ -197,7 +198,7 @@ const Details = props => {
   const onSharePressed = async () => {
     try {
       const result = await Share.share({
-        message: `${baseUrl}home/horse?id=${props?.route?.params?.item?.id}`,
+        message: `${baseUrl}/home/horse?id=${props?.route?.params?.item?.id}`,
       });
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
@@ -218,7 +219,6 @@ const Details = props => {
   const favPressed = async () => {
     if (isLiked) {
       setIsLiked(x => !x);
-      console.log('should dis');
       const data = await deleteHorseToFav(item.id);
     } else {
       setIsLiked(x => !x);
@@ -352,10 +352,7 @@ const Details = props => {
               <Text style={styles.distance}>{distance.toFixed(1)} miles</Text>
             </View>
             <ScreenTitle size={20} marginVertical={0} style={{ marginTop: 4 }}>
-              $
-              {item?.price
-                ?.toString()
-                ?.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,')}
+              {`${item?.currency_symbol} ${item?.price?.toString()}`}
             </ScreenTitle>
           </View>
           <Text style={styles.description}>{item?.description}</Text>
@@ -408,9 +405,7 @@ const Details = props => {
               <Feature
                 style={styles.feature}
                 title={'Price'}
-                value={`$${item?.price
-                  ?.toString()
-                  ?.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,')}`}
+                value={`${item?.currency_symbol} ${item?.price?.toString()}`}
               />
             </View>
           </View>

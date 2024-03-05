@@ -1,48 +1,44 @@
+import React, { useCallback, useEffect, useState } from 'react'
 import {
-  Button,
-  SafeAreaView,
+  Dimensions,
+  FlatList,
+  Image,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
-  View,
-  Image,
-  FlatList,
-  TouchableWithoutFeedback,
-  Keyboard,
-} from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { clockRunning } from 'react-native-reanimated';
-import { globalStyle } from '../../utils/GlobalStyle';
-import COLORS from '../../utils/colors';
+  View
+} from 'react-native'
+import { useRef } from 'react'
+import { BarIndicator } from 'react-native-indicators'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
-import arrowLeft from '../../assets/images/arrowLeft.png';
-import option from '../../assets/images/option.png';
-import fonts from '../../utils/fonts';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { profile_img } from '../../utils/data';
-import Message from '../../components/chat/Message';
-import ChatInput from '../../components/chat/ChatInput';
-import Sheet from '../../components/Common/Sheet';
+import { globalStyle } from '../../utils/GlobalStyle'
+import COLORS from '../../utils/colors'
+import arrowLeft from '../../assets/images/arrowLeft.png'
+import sendIcon from '../../assets/images/send.png'
+import attach from '../../assets/images/paper_clip.png'
+import ChatInput from '../../components/chat/ChatInput'
+import Message from '../../components/chat/Message'
+import fonts from '../../utils/fonts'
+import { getMyDetail } from '../../APIs/api'
+import ReportUserModal from '../../components/Common/ReportUserModal'
+import { SvgXml } from 'react-native-svg'
+import ImageCropPicker from 'react-native-image-crop-picker'
+import { useNavigation } from '@react-navigation/native'
 
-import { useRef } from 'react';
+const DEFAULT_IMAGE = require('../../assets/images/user.png')
 
-import { getMyDetail } from '../../APIs/api';
-
-import * as PubNubKeys from '../Tabs/Chat/PubNubKeys';
-import DeviceInfo from 'react-native-device-info';
-import { BarIndicator } from 'react-native-indicators';
-// import PubNub from 'pubnub';
-import { PubNubProvider } from 'pubnub-react';
-import ReportUserModal from '../../components/Common/ReportUserModal';
-
-// const groupChatChannel = 'group_chat';
-// var deviceId = 'ChangeMe';
-const DEFAULT_IMAGE = require('../../assets/images/user.png');
 const Chat = props => {
-  const currentChannel = props.route.params.item.channel;
-  const theme = 'light';
-
-  console.log('asdfasdffff', props.route.params.item.channel);
+  const roomDetails = props.route.params.item
+  const navigation = useNavigation()
+  const theme = 'light'
+  const insets = useSafeAreaInsets()
+  const windowWidth = Dimensions.get('window').width
 
   // const pubnub = new PubNub({
   //   subscribeKey: PubNubKeys.PUBNUB_SUBSCRIBE_KEY,
@@ -50,194 +46,226 @@ const Chat = props => {
   //   userId: `${props.route.params.myDetail.user.email}`,
   // });
 
-  const { pubnub } = props.route.params;
+  const { pubnub } = props.route.params
 
-  const safeArea = useSafeAreaInsets();
-  const reportSheetRef = useRef();
+  const reportSheetRef = useRef()
 
-  const [messages, setMessages] = useState([]);
-  const [text, onChangeText] = useState([]);
-  const [myUUId, setMyUUId] = useState('');
-  const [lastMessageTimeToken, setLastMessageTimeToken] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
-
-  const [reportModal, setReportModal] = useState(false);
+  const [messages, setMessages] = useState([])
+  const [lastMessageTimeToken, setLastMessageTimeToken] = useState('')
+  const [msg, setMsg] = useState('')
+  const [isLoading, setIsLoading] = useState(true)
+  const [isSendingFile, setIsSendingFile] = useState(false)
+  const [reportModal, setReportModal] = useState(false)
 
   const onReportPress = async () => {
-    setReportModal(true);
-  };
+    setReportModal(true)
+  }
 
   useEffect(() => {
-    // async function getDeviceId() {
-    //   deviceId = await DeviceInfo.getUniqueId();
-    //   pubnub.setUUID(deviceId);
-
-    //   pubnub.objects.setMemberships({
-    //     channels: [groupChatChannel],
-    //   });
-
-    //   pubnub.subscribe({channels: [groupChatChannel], withPresence: true});
-    // }
-    setIsLoading(true);
-    setLastMessageTimeToken('');
-    getMyDet();
-    getMessages();
-    setIsLoading(false);
+    getMessages()
+    setIsLoading(false)
     // // getDeviceId();
     // readAllMessages();
-  }, []);
+  }, [])
+
 
   useEffect(() => {
-    // subscribe to a channel
     pubnub.subscribe({
-      channels: [props.route.params.item.channel],
-    });
-    // cleanup subscription
+      channels: [roomDetails.channel]
+    })
     return () => {
       pubnub.unsubscribe({
-        channels: [props.route.params.item.channel],
-      });
-    };
-  }, [pubnub]);
+        channels: [roomDetails.channel]
+      })
+    }
+  }, [pubnub])
 
   useEffect(() => {
-    const showMessage = msg => {
-      setMessages(messages => [...messages, msg]);
-    };
-
-    // add listener
     const listener = {
       message: messageEvent => {
         // showMessage(messageEvent.message.description);
         console.log(
-          'qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq',
+          'messageEvent',
           messageEvent.publisher,
-          props.route.params.myDetail.user.email,
-        );
+          props.route.params.myDetail.user.email
+        )
         if (
           messageEvent.publisher != props.route.params.myDetail.user.email &&
           messageEvent.publisher != 'undefined'
         ) {
-          console.log('qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq', messageEvent);
           setMessages(p => [
             {
-              uuid: props.route.params.item.user_two_profile.user.id,
+              uuid: roomDetails.user_two_profile.user.id,
               message: {
-                text: messageEvent.message.text,
-              },
+                text: messageEvent.message.text
+              }
             },
-            ...p,
-          ]);
+            ...p
+          ])
         }
       },
       presence: presenceEvent => {
         // handle presence
-      },
-    };
-    pubnub.addListener(listener);
+      }
+    }
+    pubnub.addListener(listener)
     // cleanup listener
     return () => {
-      pubnub.removeListener(listener);
-    };
-  }, [pubnub, setMessages]);
+      pubnub.removeListener(listener)
+    }
+  }, [pubnub, setMessages])
 
   const readAllMessages = async () => {
     pubnub.setAllMessagesAsRead(
       {
-        channel: [props.route.params.item.channel],
+        channel: [roomDetails.channel],
         messageAction: 'mark_seen',
-        uuid: `${props.route.params.myDetail.user.email}`,
+        uuid: `${props.route.params.myDetail.user.email}`
         // userId: `${props.route.params.myDetail.user.email}`,
       },
       function (status, response) {
         if (status.error) {
-          console.error(status);
-          return;
+          console.error(status)
+          return
         }
-      },
-    );
-  };
-
-  const getMyDet = async () => {
-    const data = await getMyDetail();
-    // console.log('aaaaab', data.user.id);
-    setMyUUId(data.user.id);
-  };
+      }
+    )
+  }
 
   const getMessages = async () => {
     pubnub.fetchMessages(
       {
-        channels: [props.route.params.item.channel],
+        channels: [roomDetails.channel],
         // start: '16750646336112645',
         // end: '15343325004275466',
         reverse: false,
-        count: 10,
+        count: 10
       },
       (status, response) => {
         if (response) {
-          if (
-            response?.channels[props.route.params.item.channel][0]?.timetoken
-          ) {
+          if (response?.channels[roomDetails.channel][0]?.timetoken) {
             setLastMessageTimeToken(
-              response?.channels[props.route.params.item.channel][0]?.timetoken,
-            );
+              response?.channels[roomDetails.channel][0]?.timetoken
+            )
           } else {
-            setLastMessageTimeToken('');
+            setLastMessageTimeToken('')
           }
 
-          console.log(
-            'fucking Time',
-            response.channels[props.route.params.item.channel],
-          );
-          setMessages(
-            response.channels[props.route.params.item.channel].reverse(),
-          );
+          // console.log(
+          //   'messages...',
+          //   response.channels[roomDetails.channel][1].message
+          // )
+          setMessages(response.channels[roomDetails.channel].reverse())
         }
-      },
-    );
-  };
+      }
+    )
+  }
 
   const loadMoreChats = async () => {
     pubnub.fetchMessages(
       {
-        channels: [props.route.params.item.channel],
+        channels: [roomDetails.channel],
         start: lastMessageTimeToken,
-        reverse: false,
+        reverse: false
       },
       (status, response) => {
         if (response) {
-          if (
-            response?.channels[props.route.params.item.channel][0]?.timetoken
-          ) {
+          if (response?.channels[roomDetails.channel][0]?.timetoken) {
             setLastMessageTimeToken(
-              response?.channels[props.route.params.item.channel][0]?.timetoken,
-            );
+              response?.channels[roomDetails.channel][0]?.timetoken
+            )
           } else {
-            setLastMessageTimeToken('');
+            setLastMessageTimeToken('')
           }
-          // setMessages(
-          //   response.channels[props.route.params.item.channel].reverse(),
-          // );
-          // console.log('asdfasdfasdf', response);
           if (response.channels) {
             setMessages(p => [
               ...p,
-              ...response.channels[props.route.params.item.channel].reverse(),
-            ]);
+              ...response.channels[roomDetails.channel].reverse()
+            ])
           }
         }
+      }
+    )
+  }
+
+  const onSendMessage = useCallback(async () => {
+    await pubnub.publish({
+      channel: roomDetails.channel,
+      message: {
+        text: msg
+      }
+    })
+
+    setMessages(p => [
+      {
+        uuid: roomDetails.user_one_profile.user.email,
+        timetoken: Date.now() * 10000,
+        message: {
+          text: msg
+        }
       },
-    );
-  };
+      ...p
+    ])
+
+    setMsg('')
+  }, [messages, msg, navigation])
+
+  const onSendFile = useCallback(async () => {
+    ImageCropPicker.openPicker({
+      width: 300,
+      height: 400,
+      mediaType: 'any'
+      // forceJpg: true,
+    }).then(async image => {
+      // console.log(image);
+      if (
+        Platform.OS === 'ios' &&
+        (image.filename.endsWith('.heic') || image.filename.endsWith('.HEIC'))
+      ) {
+        image.filename = `${image.filename.split('.')[0]}.JPG`
+      }
+
+      // if(image.filename && !image.filename.includes('video') && !image?.mime.includes('video'))
+      // {
+      setIsSendingFile(true)
+      setMessages(p => [
+        {
+          uuid: roomDetails.user_one_profile.user.email,
+          timetoken: Date.now() * 10000,
+          message: {
+            message: {},
+            file: {
+              text: 'file',
+              id: null,
+              url: image?.path,
+              name: image?.filename
+                ? image.filename
+                : image?.mime.replace('/', '.')
+            }
+          }
+        },
+        ...p
+      ])
+      // }
+
+      const result = await pubnub.sendFile({
+        channel: roomDetails.channel,
+        message: {
+          text: 'file'
+        },
+        file: {
+          uri: image.path,
+          name: image?.filename ?? image?.mime.replace('/', '.'),
+          mimeType: image.mime
+        }
+      })
+      setIsSendingFile(false)
+    })
+  }, [isSendingFile, messages, navigation])
 
   const back = () => {
-    props.navigation.goBack();
-  };
-  const optionBtn = () => {
-    reportSheetRef.current.snapToIndex(0);
-  };
-
-
+    props.navigation.goBack()
+  }
 
   return (
     <View style={{ flex: 1 }} onPress={() => Keyboard.dismiss()}>
@@ -246,19 +274,22 @@ const Chat = props => {
           globalStyle.innerContainer,
           {
             paddingHorizontal: 0,
-            backgroundColor: 'white',
-          },
-        ]}>
-        {/* header */}
+            backgroundColor: 'white'
+          }
+        ]}
+      >
+        {/* ............header.......... */}
         <View
           style={[
             styles.header,
-            { paddingTop: safeArea.top, height: 60 + safeArea.top },
-          ]}>
+            { paddingTop: insets.top, height: 60 + insets.top }
+          ]}
+        >
           <TouchableOpacity
             style={styles.btn}
             onPress={back}
-            activeOpacity={0.85}>
+            activeOpacity={0.85}
+          >
             <Image
               source={arrowLeft}
               style={styles.backIcon}
@@ -266,8 +297,8 @@ const Chat = props => {
             />
           </TouchableOpacity>
           <View style={styles.userWrapper}>
-            {props.route.params.item.user_two_profile.profile_photo ? (
-              <View >
+            {roomDetails.user_two_profile.profile_photo ? (
+              <View>
                 <Image
                   // onLoad={() => setIsLoadingPic(false)}
                   // onLoadStart={() => setIsLoadingPic(true)}
@@ -275,7 +306,7 @@ const Chat = props => {
                   style={styles.avatar}
                   resizeMode={'cover'}
                   source={{
-                    uri: props.route.params.item.user_two_profile.profile_photo,
+                    uri: roomDetails.user_two_profile.profile_photo
                   }}
                 />
 
@@ -292,7 +323,6 @@ const Chat = props => {
                   <BarIndicator size={20} color={COLORS.color14}></BarIndicator>
                 </View>
               ) : null} */}
-
               </View>
             ) : (
               <Image
@@ -302,21 +332,17 @@ const Chat = props => {
               />
             )}
 
-            {/* <Image
-              style={styles.avatar}
-              resizeMode={'cover'}
-              source={{
-                uri: props.route.params.item.user_two_profile.profile_photo,
-              }}
-            /> */}
             <Text style={styles.username}>
-              {props.route.params.item?.user_two_profile?.first_name
-                ? props.route.params.item?.user_two_profile.first_name
-                :
-                props.route.params.item?.user_two_profile.user.username}
+              {roomDetails?.user_two_profile?.first_name
+                ? roomDetails?.user_two_profile.first_name
+                : roomDetails?.user_two_profile.user.username}
             </Text>
             <TouchableOpacity onPress={onReportPress}>
-              <Image style={{ height: 20, width: 40 }} resizeMode='contain' source={require('../../assets/images/more.png')} />
+              <Image
+                style={{ height: 20, width: 40 }}
+                resizeMode="contain"
+                source={require('../../assets/images/more.png')}
+              />
             </TouchableOpacity>
           </View>
           {/* <TouchableOpacity
@@ -330,63 +356,225 @@ const Chat = props => {
             />
           </TouchableOpacity> */}
         </View>
+
         {isLoading ? (
           <BarIndicator color={COLORS.color3} size={22}></BarIndicator>
         ) : null}
-        <View style={{ flex: 1 }}>
-          <FlatList
-            inverted={true}
-            data={messages}
-            extraData={messages}
-            keyExtractor={(item, index) => index}
-            contentContainerStyle={{
-              paddingTop: 36,
-              paddingBottom: 20,
-            }}
-            onEndReached={loadMoreChats}
-            onEndReachedThreshold={0}
-            showsVerticalScrollIndicator={false}
-            renderItem={(itemm, index) => {
-              return (
-                <Message
-                onPressVideo={()=> getMessages()}
-                  chatChannel={props.route.params.item.channel}
-                  pubnub={pubnub}
-                  mine={
-                    itemm.item.uuid == props.route.params.myDetail.user.email
-                  }
-                  item={itemm}></Message>
-              );
-            }}
-          />
-        </View>
 
-        <ChatInput
-          userBlock={props.route.params.item.user_one_block || props.route.params.item.user_two_block}
+        {/* <ChatInput
+          userBlock={
+            roomDetails.user_one_block ||
+            roomDetails.user_two_block
+          }
           setMessages={setMessages}
           messages={messages}
-          user_two_detail={props.route.params.item.user_two_profile.user}
-          user_one_detail={props.route.params.item.user_one_profile.user}
-          chatChannel={props.route.params.item.channel}
+          user_two_detail={roomDetails.user_two_profile.user}
+          user_one_detail={roomDetails.user_one_profile.user}
+          chatChannel={roomDetails.channel}
           pubnub={pubnub}
-        />
-        <Sheet ref={reportSheetRef} index={-1} pressBehavior="close">
-          <Text style={{ margin: 100 }}>HI</Text>
-        </Sheet>
+          isFileSent={val => {
+            setIsSendingFile(val)
+          }}
+        /> */}
+
+        <KeyboardAvoidingView
+          style={styles.mainContainer}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? -13 : 0}
+        >
+          <View style={styles.content}>
+            <FlatList
+              style={{ flex: 1, zIndex: 2 }}
+              contentContainerStyle={{
+                paddingHorizontal: '2%',
+                zIndex: 3,
+                // paddingBottom: 20,
+                paddingTop: 32
+              }}
+              data={messages}
+              extraData={messages}
+              keyExtractor={(i, _i) => 'message' + _i}
+              inverted={true}
+              renderItem={({ item, index }) => {
+                // console.log({ index });
+                return (
+                  <Message
+                    length={messages.length}
+                    index={index}
+                    isFileSent={isSendingFile}
+                    onPressVideo={() => getMessages()}
+                    chatChannel={roomDetails.channel}
+                    pubnub={pubnub}
+                    mine={item.uuid == props.route.params.myDetail.user.email}
+                    item={item}
+                  ></Message>
+                )
+              }}
+              showsVerticalScrollIndicator={false}
+              onEndReached={loadMoreChats}
+              onEndReachedThreshold={0}
+            />
+          </View>
+
+          <View
+            style={{
+              width: '100%',
+              backgroundColor: 'white',
+              paddingBottom:
+                Platform.OS == 'ios'
+                  ? insets.bottom - (windowWidth * 3) / 100
+                  : 9,
+              paddingVertical: 9,
+              paddingHorizontal: 13
+            }}
+          >
+            <View
+              style={{
+                width: '100%',
+                justifyContent: 'space-between',
+                flexDirection: 'row'
+              }}
+            >
+              <View
+                style={{
+                  width: '88%'
+                }}
+              >
+                {/* --------------------------------- */}
+                <View
+                  style={{
+                    width: '100%',
+                    flexDirection: 'row',
+                    borderRadius: Platform.OS === 'ios' ? 20 : 20,
+                    backgroundColor: '#e9e9e9',
+                    paddingHorizontal: 12,
+                    paddingVertical: Platform.OS == 'ios' ? 10 : 0,
+                    justifyContent: 'space-between',
+                    maxHeight: (windowWidth * 35) / 100
+                  }}
+                >
+                  <View
+                    style={{
+                      width: '88%',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    <TextInput
+                      placeholder={'write your msg here...'}
+                      placeholderTextColor={'#515C6F'}
+                      style={{
+                        width: '100%',
+                        color: COLORS.black,
+                        fontSize: 13,
+                        fontFamily: fonts.medium
+                      }}
+                      multiline
+                      value={msg}
+                      returnKeyType="next"
+                      onChangeText={val => setMsg(val)}
+                    />
+                  </View>
+
+                  <TouchableOpacity
+                    activeOpacity={1}
+                    onPress={() => {
+                      Keyboard.dismiss()
+                      setTimeout(() => {
+                        onSendFile()
+                      }, 350)
+                    }}
+                    style={{
+                      width: '10%',
+                      paddingBottom: Platform.OS == 'ios' ? 2 : 10,
+                      justifyContent: 'flex-end',
+                      alignItems: 'flex-end'
+                    }}
+                  >
+                    <View
+                      style={{
+                        width: '100%',
+                        height: windowWidth / 20,
+                        borderRadius: (windowWidth * 20) / 100,
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                      }}
+                    >
+                      <Image
+                        resizeMode="contain"
+                        source={attach}
+                        style={{
+                          width: (windowWidth * 4.4) / 100,
+                          height: (windowWidth * 4.4) / 100
+                        }}
+                      />
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              </View>
+
+              <View
+                style={{
+                  justifyContent: 'flex-end',
+                  width: '12%',
+                  alignItems: 'flex-end',
+                  paddingBottom: 4
+                }}
+              >
+                <Pressable
+                  style={{
+                    backgroundColor: COLORS.color3,
+                    height: windowWidth * 0.09,
+                    marginBottom: Platform.OS === 'ios' ? 0.5 : 4,
+                    width: '80%',
+                    borderRadius: windowWidth * 0.1,
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                  }}
+                  // disabled={
+                  //   messageInput.trim().length <= 0 && attachment.length == 0
+                  //     ? true
+                  //     : messageInput.trim().length <= 0 && attachment.length > 0
+                  //     ? false
+                  //     : messageInput.trim().length > 0 || attachment.length > 0
+                  //     ? false
+                  //     : false
+                  // }
+                  onPress={() => {
+                    onSendMessage()
+                  }}
+                >
+                  <Image
+                    source={sendIcon}
+                    resizeMode="contain"
+                    style={styles.sendbtnIcon}
+                  />
+                </Pressable>
+              </View>
+            </View>
+          </View>
+        </KeyboardAvoidingView>
       </View>
       <ReportUserModal
         visible={reportModal}
         setVisible={setReportModal}
-        userID={props.route.params.item.id}
+        userID={roomDetails.id}
         navigation={props.navigation}
       />
     </View>
-  );
-};
+  )
+}
 
-export default Chat;
+export default Chat
 
 const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+    backgroundColor: COLORS.white
+  },
+  content: {
+    flex: 1,
+    paddingHorizontal: 2
+  },
   header: {
     flexDirection: 'row',
     // height: 50,
@@ -400,25 +588,25 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     shadowOffset: {
       width: 0,
-      height: 2,
-    },
+      height: 2
+    }
   },
   backIcon: {
-    width: 20,
+    width: 20
   },
   btn: {
     width: 50,
     height: 50,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center'
   },
-  userWrapper: { flex: 1, flexDirection: 'row', alignItems: 'center', },
+  userWrapper: { flex: 1, flexDirection: 'row', alignItems: 'center' },
   avatar: {
     width: 40,
     height: 40,
     borderRadius: 20,
     backgroundColor: COLORS.color11,
-    marginRight: 12,
+    marginRight: 12
   },
   username: {
     fontFamily: fonts.medium,
@@ -426,4 +614,24 @@ const styles = StyleSheet.create({
     color: COLORS.color3,
     width: '70%'
   },
-});
+  inputContainer: {
+    borderRadius: 30,
+    height: 45,
+    flex: 1,
+    backgroundColor: '#e9e9e9',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 8
+  },
+  sendBtn: {
+    width: 60,
+    height: 45,
+    backgroundColor: COLORS.color3,
+    borderRadius: 25,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  sendbtnIcon: {
+    width: 17
+  }
+})
