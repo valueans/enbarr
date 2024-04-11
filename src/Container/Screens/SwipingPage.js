@@ -8,7 +8,8 @@ import {
   TouchableOpacity,
   View,
   Platform,
-  PermissionsAndroid
+  PermissionsAndroid,
+  ActivityIndicator
 } from 'react-native'
 import MapView from 'react-native-map-clustering'
 import React, { useState, useRef, useEffect } from 'react'
@@ -27,7 +28,6 @@ import { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import horseImg from '../../assets/images/horseMap.png'
 import backIcon from '../../assets/images/arrowLeft.png'
 import {
-  getAlhorses,
   likeAHorse,
   disLikeAHorse,
   getSavedSearchDetal,
@@ -40,6 +40,8 @@ import * as PubNubKeys from '../Tabs/Chat/PubNubKeys'
 const [allHorseLatandLon, setAllHorseLatandLon] = useState([])
 import { BarIndicator } from 'react-native-indicators'
 import { useSelector } from 'react-redux'
+import { FlatList } from 'react-native-gesture-handler'
+import SwipeableCard from '../../components/ListItem/SwipeableCard'
 const { width, height } = Dimensions.get('screen')
 global.pag = 2
 
@@ -56,6 +58,7 @@ const SwipingPage = props => {
 
   const [detailLat, setDetailLat] = useState(props.route.params.myLat)
   const [detailLng, setDetailLng] = useState(props.route.params.myLong)
+  const [totalHorseCount, setTotalHorseCount] = useState(0);
 
   const { userDetail } = useSelector(state => state.userDetail)
 
@@ -64,6 +67,8 @@ const SwipingPage = props => {
     publishKey: PubNubKeys.PUBNUB_PUBLISH_KEY,
     userId: `${userDetail?.user?.email}`
   })
+
+  const flatlistRef = useRef(null)
 
   useEffect(() => {
     pag = 2
@@ -157,24 +162,25 @@ const SwipingPage = props => {
   }
 
   const getHorses = async () => {
-    console.log('../././././../')
     setLoading(true)
     const hasPermission = await hasLocationPermission()
     if (hasPermission) {
       Geolocation.getCurrentPosition(async position => {
-        const horses = await resultUserSearchBuyer(
+        const res = await resultUserSearchBuyer(
           1,
           position.coords.latitude,
           position.coords.longitude
         )
-
+        const horses = res.results
+        setTotalHorseCount(res.count)
         setLoading(false)
         setHorsesList(horses)
       })
     } else {
       Geolocation.getCurrentPosition(async position => {
-        const horses = await resultUserSearchBuyer(1, 0, 0)
-
+        const res = await resultUserSearchBuyer(1, 0, 0)
+        const horses = res.results
+        setTotalHorseCount(res.count)
         setLoading(false)
         setHorsesList(horses)
       })
@@ -211,25 +217,28 @@ const SwipingPage = props => {
     ))
   }
   const loadMoreHorse = async () => {
+    if(totalHorseCount===horsesList.length) return
     const hasPermission = await hasLocationPermission()
     if (hasPermission) {
       Geolocation.getCurrentPosition(async position => {
-        const data = await resultUserSearchBuyer(
+        const res = await resultUserSearchBuyer(
           pag,
           position.coords.latitude,
           position.coords.longitude
         )
         pag = pag + 1
+        const data = res.results
         setHorsesList(p => [...p, ...data])
       })
     } else {
       Geolocation.getCurrentPosition(async position => {
-        const data = await resultUserSearchBuyer(
+        const res = await resultUserSearchBuyer(
           pag,
           position.coords.latitude,
           position.coords.longitude
         )
         pag = pag + 1
+        const data = res.results
         setHorsesList(p => [...p, ...data])
       })
     }
@@ -250,17 +259,19 @@ const SwipingPage = props => {
       //   item,
       //   pubnub: pubnub
       // });
+      
       props.navigation.navigate('Details', {
+        id:item.id,
         item,
         pubnub: pubnub,
         myhorse: userDetail.user.id === item.userprofile.id ? true : false
       })
     }
   }
-
+  
   const goToChat = async item => {
-    console.log(item)
-    const data = await getOrCreateNewChannel(item.userprofile.user.id)
+    
+    const data = await getOrCreateNewChannel(item.userprofile.user.id,item.id)
     if (data.data) {
       props.navigation.navigate('Chat', {
         item: data.data,
@@ -272,30 +283,55 @@ const SwipingPage = props => {
     }
   }
 
-  const onSwipeRight = async index => {
-    await likeAHorse(horsesList[index].id)
+  const onSwipeRight = async (item, index) => {
+    likeAHorse(horsesList[index].id)
+    removeCard(item, index)
   }
 
-  const onSwipeLeft = async index => {
-    await disLikeAHorse(horsesList[index].id)
+  const onSwipeLeft = async (item, index) => {
+    disLikeAHorse(horsesList[index].id)
+    removeCard(item, index)
+  }
+  const removeCard = (item, index) => {
+    const newHorseList = horsesList.filter(i => i.id !== item.id)
+    setHorsesList(newHorseList)
   }
 
-  const clickonMarkers = (cluster, markers) => {
-    // setArrPeople([]);
-    var arr = []
-    markers.map((eachmarker, index) => {
-      // obj = {
-      //   username: eachmarker.properties.markerUsername,
-      //   pic: eachmarker.properties.markerPicture,
-      //   index,
-      //   category: eachmarker.properties.category,
-      // };
-      // arr.push(obj);
-    })
-
-    // setArrPeople(arr);
-
-    // peopleRef.current.present();
+  const renderItem = ({ item: card, index }) => {
+    return (
+      <View style={{ width: width - 32 }}>
+        <SwipeableCard
+          swipedDirection={swipeDirection =>
+            swipeDirection === 'Left'
+              ? onSwipeLeft(card, index)
+              : swipeDirection === 'Right' && onSwipeRight(card, index)
+          }
+          swipeEnd={() =>
+            flatlistRef?.current?.setNativeProps({
+              scrollEnabled: true
+            })
+          }
+          swipeStart={() =>
+            flatlistRef?.current?.setNativeProps({
+              scrollEnabled: false
+            })
+          }
+          item={() => (
+            <MainItem
+              item={card}
+              onPressDetails={() => goToDetails(card)}
+              onPressMessage={() => {
+                // console.log('GO TO CHAT ', card)
+                goToChat(card)
+              }}
+              myhorse={
+                userDetail.user.id === card?.userprofile?.id ? true : false
+              }
+            />
+          )}
+        />
+      </View>
+    )
   }
 
   return (
@@ -369,64 +405,17 @@ const SwipingPage = props => {
                   There is not any horse.
                 </Text>
               ) : (
-                <Swiper
-                  ref={swiperRef}
-                  cards={horsesList}
-                  renderCard={card =>
-                    (card && (
-                      <View
-                        style={{ width: width - 32, height: cardHeight - 10 }}
-                      >
-                        <MainItem
-                          item={card}
-                          onPressDetails={() => goToDetails(card)}
-                          onPressMessage={() => {
-                            // console.log('GO TO CHAT ', card)
-                            goToChat(card)
-                          }}
-                          myhorse={
-                            userDetail.user.id === card?.userprofile?.id
-                              ? true
-                              : false
-                          }
-                        />
-                      </View>
-                    )) ||
-                    null
-                  }
-                  disableBottomSwipe={true}
-                  animateCardOpacity={true}
-                  onSwiped={index => {
-                    setCardIndex(index)
-                  }}
-                  onSwipedRight={index => {
-                    onSwipeRight(index)
-                  }}
-                  onSwipedLeft={index => {
-                    onSwipeLeft(index)
-                  }}
-                  onSwipedAll={() => {
-                    //here we should load more horse cards
-                    loadMoreHorse()
-                  }}
-                  onSwipedTop={cardIndex => {
-                    props.navigation.navigate('Details', {
-                      item: horsesList[cardIndex],
-                      pubnub: pubnub
-                    })
-                    swiperRef.current.swipeBack()
-                  }}
-                  cardIndex={0}
-                  backgroundColor={'#ffffff'}
-                  containerStyle={{
-                    justifyContent: 'center',
-                    alignItems: 'center'
-                  }}
-                  cardHorizontalMargin={0}
-                  cardVerticalMargin={0}
-                  stackSeparation={0}
-                  stackSize={3}
-                ></Swiper>
+                <FlatList
+                  ref={flatlistRef}
+                  style={{ flex: 1 }}
+                  data={horsesList}
+                  keyExtractor={(item, index) => index}
+                  renderItem={renderItem}
+                  onEndReached={loadMoreHorse}
+                  onEndReachedThreshold={0.7}
+                  showsVerticalScrollIndicator={false}
+                  ListFooterComponent={() => !!totalHorseCount && totalHorseCount>horsesList.length &&<ActivityIndicator  size="large" />}
+                />
               )}
             </View>
           ) : (
@@ -487,7 +476,7 @@ const SwipingPage = props => {
           )}
           {whichPage == 'swipper' ? (
             <View style={styles.footer}>
-              <TouchableOpacity
+              <View
                 activeOpacity={0.85}
                 style={styles.circleBtn}
                 onPress={pressDislike}
@@ -497,8 +486,8 @@ const SwipingPage = props => {
                   resizeMode="contain"
                   style={[styles.icon, { marginTop: 6 }]}
                 />
-              </TouchableOpacity>
-              <View style={{ alignItems: 'center', paddingTop: 12 }}>
+              </View>
+              {/* <View style={{ alignItems: 'center', paddingTop: 12 }}>
                 <Image source={chev} resizeMode="contain" style={styles.chev} />
                 <Image source={chev} resizeMode="contain" style={styles.chev} />
                 <TouchableOpacity
@@ -506,8 +495,8 @@ const SwipingPage = props => {
                 >
                   <Text style={styles.infoText}>Swipe up for details</Text>
                 </TouchableOpacity>
-              </View>
-              <TouchableOpacity
+              </View> */}
+              <View
                 activeOpacity={0.85}
                 style={styles.circleBtn}
                 onPress={pressLike}
@@ -517,7 +506,7 @@ const SwipingPage = props => {
                   resizeMode="contain"
                   style={[styles.icon, { marginBottom: 0 }]}
                 />
-              </TouchableOpacity>
+              </View>
             </View>
           ) : null}
         </View>
@@ -543,8 +532,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   content: {
-    width: '100%',
-    height: '45%',
+    flex: 1,
     marginBottom: 5
   },
   footer: {
@@ -600,3 +588,4 @@ const styles = StyleSheet.create({
     height: 18
   }
 })
+25

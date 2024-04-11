@@ -66,6 +66,7 @@ import Geolocation from 'react-native-geolocation-service';
 import CustomTab from '../../components/Layout/CustomTab';
 import { DragSortableView } from 'react-native-drag-sort';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 const { width, height } = Dimensions.get('screen');
 
 const Seller = props => {
@@ -133,6 +134,7 @@ const Seller = props => {
   const [markerLat, setMarkerLat] = useState(props.route.params.myLat ?? 0);
   const [markerLng, setMarkerLng] = useState(props.route.params.myLong ?? 0);
 
+  const modalBottomPadding=useSafeAreaInsets().bottom+90
   const openSheetToSelectMedia = () => {
     mediaSheetRef.current.snapToIndex(0);
   };
@@ -827,11 +829,11 @@ const Seller = props => {
   return (
     <Background>
       <SafeAreaView style={globalStyle.container}>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={{ marginLeft: 15, marginBottom: 15 }}
           onPress={() => props.navigation.goBack()}>
           <Image source={arrowLeft} style={{ height: 20, width: 20 }} />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         <KeyboardAvoidingView
           style={{ flex: 1, marginBottom: 50 }}
@@ -1114,12 +1116,14 @@ const Seller = props => {
                   followsUserLocation={true}
                   userLocationCalloutEnabled={true}
                   showsMyLocationButton={true}
-                  // onPress={e => {
-                  //   setFromEditLat(e.nativeEvent.coordinate.latitude);
-                  //   setFromEditLng(e.nativeEvent.coordinate.longitude);
-                  //   setMarkerLat(e.nativeEvent.coordinate.latitude);
-                  //   setMarkerLng(e.nativeEvent.coordinate.longitude);
-                  // }}
+                  onPress={e => {
+                    setMarkerLat(e.nativeEvent.coordinate.latitude);
+                    setMarkerLng(e.nativeEvent.coordinate.longitude);
+                    // setFromEditLat(e.nativeEvent.coordinate.latitude);
+                    // setFromEditLng(e.nativeEvent.coordinate.longitude);
+                    // setMarkerLat(e.nativeEvent.coordinate.latitude);
+                    // setMarkerLng(e.nativeEvent.coordinate.longitude);
+                  }}
                   style={{
                     marginTop: 20,
                     borderRadius: 20,
@@ -1144,10 +1148,10 @@ const Seller = props => {
                       latitude: markerLat,
                       longitude: markerLng,
                     }}
-                    onDragEnd={e => {
-                      setMarkerLat(e.nativeEvent.coordinate.latitude);
-                      setMarkerLng(e.nativeEvent.coordinate.longitude);
-                    }}
+                    // onDragEnd={e => {
+                    //   setMarkerLat(e.nativeEvent.coordinate.latitude);
+                    //   setMarkerLng(e.nativeEvent.coordinate.longitude);
+                    // }}
                   />
                 </MapView>
               </View>
@@ -1188,7 +1192,7 @@ const Seller = props => {
 
 
       <Sheet ref={mediaSheetRef} index={-1} pressBehavior={'close'}>
-        <View style={{ alignItems: 'center', paddingBottom: 32, paddingTop: 18 }}>
+        <View style={{ alignItems: 'center', paddingBottom: modalBottomPadding, paddingTop: 18 }}>
           <ScreenTitle size={18}>Choose Media</ScreenTitle>
 
           <TextButton onPress={() => openPicker('photo')}>Image</TextButton>
@@ -1200,7 +1204,7 @@ const Seller = props => {
         <BottomSheetView
           style={{
             alignItems: 'center',
-            paddingBottom: 32,
+            paddingBottom: modalBottomPadding,
             paddingTop: 18,
             height: '95%',
           }}>
@@ -1249,7 +1253,7 @@ const Seller = props => {
         <BottomSheetView
           style={{
             alignItems: 'center',
-            paddingBottom: 32,
+            paddingBottom: modalBottomPadding,
             paddingTop: 18,
             height: '95%',
           }}>
@@ -1299,7 +1303,7 @@ const Seller = props => {
         <BottomSheetView
           style={{
             alignItems: 'center',
-            paddingBottom: 32,
+            paddingBottom: modalBottomPadding,
             paddingTop: 18,
             height: '95%',
           }}>
@@ -1349,9 +1353,9 @@ const Seller = props => {
         <BottomSheetView
           style={{
             alignItems: 'center',
-            paddingBottom: 32,
+            paddingBottom: modalBottomPadding,
             paddingTop: 18,
-            // height: '95%',
+            height: Platform.OS == 'android' ? 600 : 600,
           }}>
           <ScreenTitle size={18}>Select breed</ScreenTitle>
           <BottomSheetView style={[styles.listContainer, { height: 200 }]}>
@@ -1385,9 +1389,9 @@ const Seller = props => {
         <BottomSheetView
           style={{
             alignItems: 'center',
-            paddingBottom: 32,
+            paddingBottom: modalBottomPadding,
             paddingTop: 18,
-            // height: '95%',
+            height: Platform.OS == 'android' ? 600 : 600,
           }}>
           <ScreenTitle size={18}>Select Currency</ScreenTitle>
 
@@ -1420,7 +1424,7 @@ const Seller = props => {
         <BottomSheetView
           style={{
             alignItems: 'center',
-            paddingBottom: 32,
+            paddingBottom: modalBottomPadding,
             paddingTop: 18,
             height: Platform.OS == 'android' ? 600 : 600,
           }}>
@@ -1453,7 +1457,7 @@ const Seller = props => {
         <BottomSheetView
           style={{
             alignItems: 'center',
-            paddingBottom: 32,
+            paddingBottom: modalBottomPadding,
             paddingTop: 18,
             // height: height * 0.8,
             height: Platform.OS == 'android' ? 600 : 600,
@@ -1487,7 +1491,7 @@ const Seller = props => {
         <BottomSheetView
           style={{
             alignItems: 'center',
-            paddingBottom: 32,
+            paddingBottom: modalBottomPadding,
             paddingTop: 18,
             // height: height * 0.8,
             height: Platform.OS == 'android' ? 600 : 600,

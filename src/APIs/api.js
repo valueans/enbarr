@@ -19,7 +19,8 @@ export async function getAlhorses(pageNumber) {
   )
 
   if (data[0].code == 200) {
-    return data[1].results
+   
+    return data[1]
   } else {
     return []
   }
@@ -127,7 +128,7 @@ export async function getFavHorses(pageNumber) {
     requestOptions
   )
   if (data[0].code == 200) {
-    return data[1].results
+    return data[1]
   } else {
     return []
   }
@@ -149,7 +150,7 @@ export async function getMyHorses(pageNumber) {
   )
 
   if (data[0].code == 200) {
-    return data[1].results
+    return data[1]
   } else {
     return []
   }
@@ -598,7 +599,7 @@ export async function searchHorses(title, keywords) {
     requestOptions
   )
   if (data[0].code == 200) {
-    return data[1].results
+    return data[1]
   } else {
     return []
   }
@@ -926,7 +927,7 @@ export async function resultUserSearchBuyer(pageNumber, lat, lon) {
     requestOptions
   )
   if (data[0].code == 200) {
-    return data[1].results
+    return data[1]
   } else {
     return []
   }
@@ -956,7 +957,6 @@ export async function getAllConversations(pageNumber) {
   acc = await AsyncStorage.getItem('acc')
   var myHeaders = new Headers()
   myHeaders.append('Authorization', `Token ${acc}`)
-
   var requestOptions = {
     method: 'GET',
     redirect: 'follow',
@@ -1015,7 +1015,7 @@ export async function deletAccount() {
   return data
 }
 
-export async function getOrCreateNewChannel(reciver_id) {
+export async function getOrCreateNewChannel(reciver_id,horse_id) {
   acc = await AsyncStorage.getItem('acc')
   var myHeaders = new Headers()
   myHeaders.append('Authorization', `Token ${acc}`)
@@ -1027,7 +1027,7 @@ export async function getOrCreateNewChannel(reciver_id) {
   }
 
   const data = await fetchWithTimeout(
-    `/api/v1/chat/conversation/?receiver-id=${reciver_id}`,
+    `/api/v1/chat/conversation/?receiver-id=${reciver_id}&horse-id=${horse_id}`,
     requestOptions
   )
   if (data[0].code == 200) {

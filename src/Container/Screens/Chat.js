@@ -63,7 +63,7 @@ const Chat = props => {
 
   useEffect(() => {
     getMessages()
-    setIsLoading(false)
+
     // // getDeviceId();
     // readAllMessages();
   }, [])
@@ -84,15 +84,12 @@ const Chat = props => {
     const listener = {
       message: messageEvent => {
         // showMessage(messageEvent.message.description);
-        console.log(
-          'messageEvent',
-          messageEvent.publisher,
-          props.route.params.myDetail.user.email
-        )
+       
         if (
           messageEvent.publisher != props.route.params.myDetail.user.email &&
           messageEvent.publisher != 'undefined'
         ) {
+         
           setMessages(p => [
             {
               uuid: roomDetails.user_two_profile.user.id,
@@ -142,6 +139,7 @@ const Chat = props => {
         count: 10
       },
       (status, response) => {
+        setIsLoading(false)
         if (response) {
           if (response?.channels[roomDetails.channel][0]?.timetoken) {
             setLastMessageTimeToken(
@@ -151,11 +149,9 @@ const Chat = props => {
             setLastMessageTimeToken('')
           }
 
-          // console.log(
-          //   'messages...',
-          //   response.channels[roomDetails.channel][1].message
-          // )
+          
           setMessages(response.channels[roomDetails.channel].reverse())
+          
         }
       }
     )
@@ -169,6 +165,7 @@ const Chat = props => {
         reverse: false
       },
       (status, response) => {
+        let timeToken=lastMessageTimeToken
         if (response) {
           if (response?.channels[roomDetails.channel][0]?.timetoken) {
             setLastMessageTimeToken(
@@ -178,10 +175,10 @@ const Chat = props => {
             setLastMessageTimeToken('')
           }
           if (response.channels) {
-            setMessages(p => [
+            setMessages(p => timeToken?[
               ...p,
               ...response.channels[roomDetails.channel].reverse()
-            ])
+            ]:response.channels[roomDetails.channel].reverse())
           }
         }
       }
@@ -217,7 +214,6 @@ const Chat = props => {
       mediaType: 'any'
       // forceJpg: true,
     }).then(async image => {
-      // console.log(image);
       if (
         Platform.OS === 'ios' &&
         (image.filename.endsWith('.heic') || image.filename.endsWith('.HEIC'))
@@ -266,7 +262,6 @@ const Chat = props => {
   const back = () => {
     props.navigation.goBack()
   }
-
   return (
     <View style={{ flex: 1 }} onPress={() => Keyboard.dismiss()}>
       <View
@@ -396,7 +391,6 @@ const Chat = props => {
               keyExtractor={(i, _i) => 'message' + _i}
               inverted={true}
               renderItem={({ item, index }) => {
-                // console.log({ index });
                 return (
                   <Message
                     length={messages.length}
@@ -412,7 +406,7 @@ const Chat = props => {
               }}
               showsVerticalScrollIndicator={false}
               onEndReached={loadMoreChats}
-              onEndReachedThreshold={0}
+              onEndReachedThreshold={0.5}
             />
           </View>
 

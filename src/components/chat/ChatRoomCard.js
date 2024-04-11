@@ -19,6 +19,8 @@ import fonts from '../../utils/fonts'
 import { useNavigation } from '@react-navigation/native'
 import { BarIndicator } from 'react-native-indicators'
 import { globalStyle } from '../../utils/GlobalStyle'
+import FastImage from 'react-native-fast-image';
+import { useSelector } from 'react-redux'
 
 const DEFAULT_IMAGE = require('../../assets/images/user.png')
 
@@ -27,7 +29,7 @@ const ChatRoomCard = ({ pubnub, myDetail, item, index }) => {
   const [isLoadingPic, setIsLoadingPic] = useState(false)
 
   const navigation = useNavigation()
-
+  const { userDetail } = useSelector(state => state.userDetail)
   useEffect(() => {
     checkOnlineStatus()
   }, [])
@@ -84,6 +86,12 @@ const ChatRoomCard = ({ pubnub, myDetail, item, index }) => {
         fontSize: 10,
         color: COLORS.white,
         fontWeight: '600'
+      },
+      horseImage:{
+        width: 50,
+        height: 50,
+        borderRadius: 5,
+        resizeMode: 'cover',
       }
     })
   }, [])
@@ -100,6 +108,20 @@ const ChatRoomCard = ({ pubnub, myDetail, item, index }) => {
       setIsOnline(true)
     }
   }, [])
+  const onHorsePhotoPress=()=>
+  navigation.navigate('Details', {
+    from: 'map',
+    id: item?.horse_add?.id,
+    item: {
+      id: item?.horse_add?.id,
+      user_location: {
+        coordinates: ["", ""]
+      }
+    },
+    pubnub: pubnub
+  })
+   
+  
 
   return (
     <TouchableHighlight
@@ -143,7 +165,7 @@ const ChatRoomCard = ({ pubnub, myDetail, item, index }) => {
         ) : (
           <Image style={styles.avatar} source={DEFAULT_IMAGE} />
         )}
-
+ 
         <View style={styles.contentContainer}>
           <Text style={styles.username}>
             {item?.user_two_profile?.first_name
@@ -155,8 +177,18 @@ const ChatRoomCard = ({ pubnub, myDetail, item, index }) => {
               {item?.last_message?.Messages}
             </Text>
           )}
+         
         </View>
-        <View style={styles.infoContainer}>
+        {item?.horse_add?.images &&<TouchableOpacity onPress={onHorsePhotoPress}>
+        <FastImage
+              style={styles.horseImage}
+              source={{
+                uri: item?.horse_add?.images,
+              }}
+              resizeMode={FastImage.resizeMode.cover}
+            />
+        </TouchableOpacity>}
+        {/* <View style={styles.infoContainer}> */}
           {/* <Text style={styles.time}>11:02pm</Text> */}
           {/* {unreadNumList?.channels?.[item?.channel] > 0 ? (
             <View style={styles.badge}>
@@ -165,7 +197,7 @@ const ChatRoomCard = ({ pubnub, myDetail, item, index }) => {
               </Text>
             </View>
           ) : null} */}
-        </View>
+        {/* </View> */}
       </View>
     </TouchableHighlight>
   )

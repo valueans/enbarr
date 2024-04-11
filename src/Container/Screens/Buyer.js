@@ -38,7 +38,6 @@ import {
   getAllLocations,
   userSaveSearchBuyer,
   getSavedSearchDetal,
-  resultUserSearchBuyer,
   getMyDetail,
   getAllHorseLatandLong
 } from '../../APIs/api'
@@ -50,6 +49,7 @@ import { BottomSheetFlatList, BottomSheetView } from '@gorhom/bottom-sheet'
 const { width, height } = Dimensions.get('screen')
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Country, State, City } from 'country-state-city'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 global.firstTime = true
 
@@ -122,7 +122,7 @@ const Buyer = props => {
     { value: 250 },
     { value: 300 }
   ])
-
+  const modalBottomPadding=useSafeAreaInsets().bottom+90
   useEffect(() => {
     // getAllCountries();
     // getColors();
@@ -626,7 +626,7 @@ const Buyer = props => {
         <BottomSheetView
           style={{
             alignItems: 'center',
-            paddingBottom: 32,
+            paddingBottom: modalBottomPadding,
             paddingTop: 18,
             height: height * 0.8
           }}
@@ -682,7 +682,7 @@ const Buyer = props => {
         <BottomSheetView
           style={{
             alignItems: 'center',
-            paddingBottom: 32,
+            paddingBottom: modalBottomPadding,
             paddingTop: 18,
             height: height * 0.8
           }}
@@ -735,7 +735,7 @@ const Buyer = props => {
         <BottomSheetView
           style={{
             alignItems: 'center',
-            paddingBottom: 32,
+            paddingBottom: modalBottomPadding,
             paddingTop: 18,
             height: height * 0.8
           }}
@@ -777,7 +777,7 @@ const Buyer = props => {
         <BottomSheetView
           style={{
             alignItems: 'center',
-            paddingBottom: 32,
+            paddingBottom: modalBottomPadding,
             paddingTop: 18,
             height: height * 0.8
           }}
@@ -832,7 +832,7 @@ const Buyer = props => {
           enableOverDrag={false}
           style={{
             alignItems: 'center',
-            paddingBottom: 32,
+            paddingBottom: modalBottomPadding,
             paddingTop: 18,
             height: height * 0.8
           }}
@@ -867,7 +867,7 @@ const Buyer = props => {
         <BottomSheetView
           style={{
             alignItems: 'center',
-            paddingBottom: 32,
+            paddingBottom: modalBottomPadding,
             paddingTop: 18,
             height: height * 0.8
           }}
@@ -901,7 +901,7 @@ const Buyer = props => {
         <BottomSheetView
           style={{
             alignItems: 'center',
-            paddingBottom: 32,
+            paddingBottom: modalBottomPadding,
             paddingTop: 18,
             height: height * 0.8
           }}
@@ -935,7 +935,7 @@ const Buyer = props => {
         <BottomSheetView
           style={{
             alignItems: 'center',
-            paddingBottom: 32,
+            paddingBottom: modalBottomPadding,
             paddingTop: 18,
             height: height * 0.8
           }}

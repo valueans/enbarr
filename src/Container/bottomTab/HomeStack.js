@@ -31,7 +31,7 @@ const HomeStack = props => {
       screenOptions={{
         headerShown: false,
       }}>
-      <Stack.Screen name="HomeScreen" component={HomeScreen} />
+      <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="Buyer" component={Buyer} />
       <Stack.Screen name="Seller" component={Seller} />
     </Stack.Navigator>

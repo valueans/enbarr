@@ -3,12 +3,11 @@
  */
 
 import { AppRegistry } from 'react-native'
+import 'react-native-gesture-handler'
 import App from './App'
 import { name as appName } from './app.json'
-import 'react-native-gesture-handler'
 import { useEffect } from 'react'
 import { Provider } from 'react-redux'
-import 'react-native-gesture-handler'
 import store, { persistor } from './src/redux/store'
 import OneSignal from 'react-native-onesignal'
 import { PersistGate } from 'redux-persist/integration/react'

@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { FlatList, StyleSheet, Text, View,ActivityIndicator } from 'react-native';
 import React, { useState } from 'react';
 import COLORS from '../../../../utils/colors';
 import { list } from '../../../../utils/data';
@@ -12,11 +12,15 @@ global.pag = 2;
 const MyHorses = props => {
   const [myHorses, setMyHorses] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [totalHorseCount, setTotalHorseCount] = useState(0);
+
   useFocusEffect(
     React.useCallback(() => {
       async function fetchHorses() {
         setLoading(true);
-        const horses = await getMyHorses(1);
+        const res = await getMyHorses(1);
+        const horses=res.results
+        setTotalHorseCount(res.count)
         // console.log(horses);
         setLoading(false);
         setMyHorses(horses);
@@ -28,15 +32,19 @@ const MyHorses = props => {
 
   const fetchHorseInAdsPage = async () => {
     setLoading(true);
-    const horses = await getMyHorses(1);
+    setTotalHorseCount(0)
+    const res = await getMyHorses(1);
+    const horses=res.results
+    setTotalHorseCount(res.count)
     // console.log(horses);
     setLoading(false);
     setMyHorses(horses);
   };
 
   const loadMoreMyHorses = async () => {
-    const data = await getMyHorses(pag);
-
+    if(totalHorseCount===myHorses.length) return
+    const res = await getMyHorses(pag);
+    const data=res.results
     setMyHorses(p => [...p, ...data]);
     pag = pag + 1;
   };
@@ -66,6 +74,7 @@ const MyHorses = props => {
               navigation={props.navigation}
             />
           )}
+          ListFooterComponent={() => !!totalHorseCount && totalHorseCount>myHorses.length &&<ActivityIndicator  size="large" />}
           ListEmptyComponent={() => (
             <View style={styles.nothingWrapper}>
               <Text style={styles.nothingText}>There is nothing to show</Text>

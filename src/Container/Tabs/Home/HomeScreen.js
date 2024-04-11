@@ -1,5 +1,4 @@
-import { useIsFocused } from '@react-navigation/native'
-import React, { useCallback, useState } from 'react'
+import React, { PureComponent } from 'react'
 import {
   Alert,
   FlatList,
@@ -7,10 +6,10 @@ import {
   SafeAreaView,
   StyleSheet,
   Text,
-  View
+  View,
+  ActivityIndicator
 } from 'react-native'
-import OneSignal from 'react-native-onesignal'
-import { useSelector } from 'react-redux'
+import { connect } from 'react-redux'
 import HomeHeader from '../../../components/Common/HomeHeader'
 import Background from '../../../components/Layout/Background'
 import MainItem from '../../../components/ListItem/MainItem'
@@ -18,7 +17,6 @@ import COLORS from '../../../utils/colors'
 import fonts from '../../../utils/fonts'
 
 import PubNub from 'pubnub'
-import { useEffect } from 'react'
 import * as RNIap from 'react-native-iap'
 import { BarIndicator } from 'react-native-indicators'
 import {
@@ -26,150 +24,88 @@ import {
   getAlhorses,
   getNmberOfNotifications,
   getOrCreateNewChannel,
-  searchHorses,
-  sendPlayerIDToServer
+  searchHorses
 } from '../../../APIs/api'
 import { TimeFromNow } from '../../../utils/Time'
 import * as PubNubKeys from '../Chat/PubNubKeys'
 
-// global.pag = 2;
+class HomeScreen extends PureComponent {
+  constructor(props) {
+    super(props)
+    this.pubnub = new PubNub({
+      subscribeKey: PubNubKeys.PUBNUB_SUBSCRIBE_KEY,
+      publishKey: PubNubKeys.PUBNUB_PUBLISH_KEY,
+      userId: `${props.userDetail?.user?.email}`
+      // uuid: `${myDetail?.user?.email}`,
+    })
+    this.state = {
+      listOfHorses: [],
+      listOfSerachHorses: [],
+      loading: false,
+      myImage: '',
+      isSeraching: false,
+      filterItem: 'All',
+      numberOfNotif: 0,
+      refreshing: false,
+      totalHorseCount: 0,
+      page: 1
+    }
+  }
 
-const HomeScreen = props => {
-  const isFocused = useIsFocused()
+  goToDetails = item => {
+    const { navigation } = this.props
+    const { userDetail } = this.props
 
-  const { userDetail } = useSelector(state => state.userDetail)
-
-  const pubnub = new PubNub({
-    subscribeKey: PubNubKeys.PUBNUB_SUBSCRIBE_KEY,
-    publishKey: PubNubKeys.PUBNUB_PUBLISH_KEY,
-    userId: `${userDetail?.user?.email}`
-    // uuid: `${myDetail?.user?.email}`,
-  })
-
-  const { navigation } = props
-  const [listOfHorses, setListOfHorses] = useState([])
-  const [listOfSerachHorses, setListOfSearchHorses] = useState([])
-  const [loading, setIsLoading] = useState(false)
-  const [myImage, setMyImage] = useState('')
-  const [isSeraching, setIsSeraching] = useState(false)
-  const [filterItem, setFilterItem] = useState('All')
-  const [myDetail, setMydetail] = useState([])
-  const [numberOfNotif, setNumberOfNotif] = useState(0)
-  const [refreshing, setRefreshing] = useState(false);
-
-  const [page, setPage] = useState(1)
-
-  const goToDetails = item => {
     navigation.navigate('Details', {
       item,
-      pubnub,
-      myhorse: userDetail.user.id === item.userprofile.id ? true : false
+      pubnub:this.pubnub,
+      myhorse: userDetail.user.id === item.userprofile.id
     })
   }
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
+
+  onRefresh = () => {
+    this.setState({ refreshing: true })
     setTimeout(() => {
-      setRefreshing(false);
-    }, 2000);
-  }, []);
+      this.setState({ refreshing: false })
+    }, 2000)}
+  
 
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     console.log('CALL BACK IN FOCUS EFFECT ')
-  //     async function fetchHorses() {
-  //       setIsSeraching(false);
-  //       setIsLoading(true);
-  //       const horses = await getAlhorses(1);
+ 
+  async fetchHorses() {
+    const { listOfHorses, filterItem } = this.state
+    this.setState({ isSeraching: false,loading: true })
+    
 
-  //       setIsLoading(false);
-  //       if (filterItem == 'All') {
-  //         setListOfHorses(horses);
-  //       } else if (filterItem == 'Last Day') {
-  //         x = horses.filter(
-  //           (item, index) => TimeFromNow(item.created_at) == 'D',
-  //         );
-  //         setListOfHorses(x);
-  //       } else if (filterItem == 'Week') {
-  //         x = horses.filter(
-  //           (item, index) =>
-  //             TimeFromNow(item.created_at) == 'W' ||
-  //             TimeFromNow(item.created_at) == 'D',
-  //         );
-  //         setListOfHorses(x);
-  //       } else if (filterItem == 'Month') {
-  //         x = horses.filter(
-  //           (item, index) =>
-  //             TimeFromNow(item.created_at) == 'M' ||
-  //             TimeFromNow(item.created_at) == 'W' ||
-  //             TimeFromNow(item.created_at) == 'D',
-  //         );
-  //         setListOfHorses(x);
-  //       }
-  //       const myData = await getMyDetail();
-  //       console.log('PROFILE DATA ', myData);
-  //       console.log('qqqqww', myData?.user?.email);
-  //       setMydetail(myData);
-  //       // const myBase64ProfileImage = await AsyncStorage.getItem(
-  //       //   'myProfilePicture',
-  //       // );
-  //       // console.log('fuck', myBase64ProfileImage);
-  //       setMyImage(myData?.profile_photo);
-  //       await getId();
+    const res = await getAlhorses(1)
+    const horses = res.results
+    this.setState({ loading: false,totalHorseCount:res?.count })
 
-  //       const notifCount = await getNmberOfNotifications();
-  //       setNumberOfNotif(notifCount[1].count);
-  //       console.log('iouioiu', notifCount[1].count);
-  //     }
-  //     fetchHorses();
-  //   }, []),
-  // );
-
-  const getId = async () => {
-    const data = await OneSignal.getDeviceState()
-    console.log('aaa', data)
-    const serverResponse = await sendPlayerIDToServer(data?.userId)
-  }
-
-  useEffect(() => {
-
-    async function fetchHorses() {
-      setIsSeraching(false)
-      if(listOfHorses.length==0) setIsLoading(true); 
-      const horses = await getAlhorses(1)
-
-      setIsLoading(false)
-      if (filterItem == 'All') {
-        setListOfHorses(horses)
-      } else if (filterItem == 'Last Day') {
-        x = horses.filter((item, index) => TimeFromNow(item.created_at) == 'D')
-        setListOfHorses(x)
-      } else if (filterItem == 'Week') {
-        x = horses.filter(
-          (item, index) =>
-            TimeFromNow(item.created_at) == 'W' ||
-            TimeFromNow(item.created_at) == 'D'
-        )
-        setListOfHorses(x)
-      } else if (filterItem == 'Month') {
-        x = horses.filter(
-          (item, index) =>
-            TimeFromNow(item.created_at) == 'M' ||
-            TimeFromNow(item.created_at) == 'W' ||
-            TimeFromNow(item.created_at) == 'D'
-        )
-        setListOfHorses(x)
-      }
-
-      const notifCount = await getNmberOfNotifications();
-      setNumberOfNotif(notifCount[1].count);
-
+    if (filterItem == 'All') {
+      this.setState({ listOfHorses: horses })
+    } else if (filterItem == 'Last Day') {
+      x = horses.filter((item, index) => TimeFromNow(item.created_at) == 'D')
+      this.setState({ listOfHorses: x })
+    } else if (filterItem == 'Week') {
+      x = horses.filter(
+        (item, index) =>
+          TimeFromNow(item.created_at) == 'W' ||
+          TimeFromNow(item.created_at) == 'D'
+      )
+      this.setState({ listOfHorses: x })
+    } else if (filterItem == 'Month') {
+      x = horses.filter(
+        (item, index) =>
+          TimeFromNow(item.created_at) == 'M' ||
+          TimeFromNow(item.created_at) == 'W' ||
+          TimeFromNow(item.created_at) == 'D'
+      )
+      this.setState({ listOfHorses: x })
     }
 
-    fetchHorses()
-    getPurchaseHistory()
-  }, [filterItem, isFocused])
-
-  const getPurchaseHistory = async () => {
+    const notifCount = await getNmberOfNotifications()
+    this.setState({ numberOfNotif: notifCount[1].count })
+  }
+   getPurchaseHistory = async () => {
     try {
       const purchaseHistory = await RNIap.getPurchaseHistory();
       console.log('PURCHASE HISRTORY ', purchaseHistory)
@@ -181,50 +117,65 @@ const HomeScreen = props => {
     }
   }
 
-  const loadMoreHorses = async () => {
-    const data = await getAlhorses(page + 1)
+
+  componentDidMount(){
+    this.fetchHorses()
+    this.getPurchaseHistory()
+  }
+
+
+   loadMoreHorses = async () => {
+    const {page}=this.state
+   
+    const res = await getAlhorses(page + 1)
+    
+    const data=res?.results
+   
+    const {  filterItem } = this.state
     if (data != '') {
-      setPage(page + 1)
-      // setListOfHorses(p => [...p, ...data]);
+      this.setState({page:page+1})
       if (filterItem == 'All') {
-        setListOfHorses(p => [...p, ...data])
+        this.setState(prevState=>({listOfHorses: [...prevState.listOfHorses, ...data]}))
+     
       } else if (filterItem == 'Last Day') {
-        x = horses.filter((item, index) => TimeFromNow(item.created_at) == 'D')
-        setListOfHorses(p => [...p, ...x])
+        x = data.filter((item, index) => TimeFromNow(item.created_at) == 'D')
+        this.setState(prevState=>({listOfHorses: [...prevState.listOfHorses, ...x]}))
+      
+        
       } else if (filterItem == 'Week') {
-        x = horses.filter(
+        x = data.filter(
           (item, index) =>
             TimeFromNow(item.created_at) == 'W' ||
             TimeFromNow(item.created_at) == 'D'
         )
-        setListOfHorses(p => [...p, ...x])
+        this.setState(prevState=>({listOfHorses: [...prevState.listOfHorses, ...x]}))
       } else if (filterItem == 'Month') {
-        x = horses.filter(
+        x = data.filter(
           (item, index) =>
             TimeFromNow(item.created_at) == 'M' ||
             TimeFromNow(item.created_at) == 'W' ||
             TimeFromNow(item.created_at) == 'D'
         )
-        setListOfHorses(p => [...p, ...x])
+        this.setState(prevState=>({listOfHorses: [...prevState.listOfHorses, ...x]}))
       }
     }
   }
 
-  const goToChat = async item => {
-    console.log('goToChat', item.userprofile.user.id)
-    const data = await getOrCreateNewChannel(item.userprofile.user.id)
+   goToChat = async item => {
+    const { navigation } = this.props
+    const data = await getOrCreateNewChannel(item.userprofile.user.id,item.id)
     if (data.data) {
       navigation.navigate('Chat', {
         item: data.data,
         myDetail: data.data.user_one_profile,
-        pubnub: pubnub
+        pubnub: this.pubnub
       })
     } else {
       Alert.alert('Error', 'Please try again later.')
     }
   }
 
-  const debounce = func => {
+   debounce = func => {
     let timer
     return function (...args) {
       const context = this
@@ -236,42 +187,43 @@ const HomeScreen = props => {
     }
   }
 
-  const onChnageTextFunc = async e => {
-    console.log(e)
+  onChnageTextFunc = async e => {
     if (e == '') {
-      setIsSeraching(false)
-      setIsLoading(true)
-      const horses = await getAlhorses(1)
-      // console.log(horses);
-      setIsLoading(false)
-      setListOfHorses(horses)
+      this.setState({isSeraching:false,loading:true})
+   
+      const res = await getAlhorses(1)
+      const horses=res.results
+      this.setState({isSeraching:false,totalHorseCount:res.count, loading:false ,listOfHorses:horses})
+     
     } else {
-      setIsSeraching(true)
-      //let call search api
-      setIsLoading(true)
-      const seachHorse = await searchHorses(e, e)
-      console.log('SEARCH RESULTS ', seachHorse)
-      setListOfSearchHorses(seachHorse)
-      setIsLoading(false)
+      this.setState({isSeraching:true,loading:true ,totalHorseCount:0})
+   
+   
+      const res = await searchHorses(e, e)
+     
+      const seachHorse=res.results
+      this.setState({totalHorseCount:res.count,listOfHorses:seachHorse ,loading:false})
+  
     }
   }
 
-  const testFunc = () => {
-    x = TimeFromNow('2022-12-18T12:50:47.582511Z', false)
-    console.log(x)
-  }
+  optimizedSerachUsernamefunc = (this.debounce(this.onChnageTextFunc))
 
-  const optimizedSerachUsernamefunc = useCallback(debounce(onChnageTextFunc))
 
-  return (
-    <Background>
+  render() {
+    const {numberOfNotif,myImage,loading,isSeraching,listOfHorses ,refreshing,totalHorseCount,listOfSerachHorses}=this.state
+    const {pubnub}=this
+    const {navigation,userDetail}=this.props
+    return (
+      <Background>
       <SafeAreaView style={styles.container}>
         <View style={[styles.container, styles.wrapper]}>
           <HomeHeader
+            showBackButton={false}
             numberOfNotif={numberOfNotif}
             pubnub={pubnub}
-            setFilterItem={setFilterItem}
-            onChnageTextFunc={optimizedSerachUsernamefunc}
+            setFilterItem={item => this.setState({filterItem:item,listOfHorses:[]},()=>this.fetchHorses())}
+            onChnageTextFunc={this.optimizedSerachUsernamefunc}
             avatar={myImage}
             navigation={navigation}
           />
@@ -296,37 +248,39 @@ const HomeScreen = props => {
             {!isSeraching ? (
               <FlatList
                 initialNumToRender={20}
-                onEndReached={loadMoreHorses}
+                onEndReached={()=>{ this.loadMoreHorses()}}
                 onEndReachedThreshold={0.7}
                 contentContainerStyle={{ paddingBottom: 90 }}
                 keyExtractor={index =>
                   (index + 1 + Math.random() * 100).toString()
                 }
+                removeClippedSubviews
+                maxToRenderPerBatch={20}
                 data={listOfHorses}
                 extraData={listOfHorses}
                 showsVerticalScrollIndicator={false}
                 renderItem={({ item, index }) => {
+                
                   return (
                     <>
                       <MainItem
                         item={item}
                         pubnub={pubnub}
                         index={index}
-                        onPressDetails={() => goToDetails(item)}
-                        onPressMessage={() => goToChat(item)}
-                        onPressImage={() => goToDetails(item)}
+                        onPressDetails={() => this.goToDetails(item)}
+                        onPressMessage={() => this.goToChat(item)}
+                        onPressImage={() => this.goToDetails(item)}
                         myhorse={
-                          userDetail.user.id === item.userprofile.id
-                            ? true
-                            : false
+                          userDetail.user.id === item?.userprofile?.id
                         }
                       />
                     </>
                   )
                 }}
                 refreshControl={
-                  <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                  <RefreshControl refreshing={refreshing} onRefresh={this.onRefresh} />
                 }
+                ListFooterComponent={() => !!totalHorseCount && totalHorseCount>listOfHorses.length &&<ActivityIndicator  size="large" />}
                 ListEmptyComponent={() => (
                   <View style={styles.nothingWrapper}>
                     <Text style={styles.nothingText}>
@@ -338,7 +292,7 @@ const HomeScreen = props => {
             ) : (
               <FlatList
                 initialNumToRender={20}
-                onEndReached={loadMoreHorses}
+                onEndReached={this.loadMoreHorses}
                 onEndReachedThreshold={0.7}
                 contentContainerStyle={{ paddingBottom: 90 }}
                 keyExtractor={index =>
@@ -352,14 +306,15 @@ const HomeScreen = props => {
                     pubnub={pubnub}
                     item={item}
                     index={index}
-                    onPressDetails={() => goToDetails(item)}
-                    onPressMessage={() => goToChat(item)}
-                    onPressImage={() => goToDetails(item)}
+                    onPressDetails={() => this.goToDetails(item)}
+                    onPressMessage={() => this.goToChat(item)}
+                    onPressImage={() => this.goToDetails(item)}
                     myhorse={
                       userDetail.user.id === item.userprofile.id ? true : false
                     }
                   />
                 )}
+                ListFooterComponent={() => !!totalHorseCount && totalHorseCount>listOfHorses?.length &&<ActivityIndicator  size="large" />}
                 ListEmptyComponent={() => (
                   <View style={styles.nothingWrapper}>
                     <Text style={styles.nothingText}>
@@ -367,17 +322,16 @@ const HomeScreen = props => {
                     </Text>
                   </View>
                 )}
+               
               />
             )}
           </View>
         </View>
       </SafeAreaView>
     </Background>
-  )
+    )
+  }
 }
-
-export default HomeScreen
-
 const styles = StyleSheet.create({
   container: {
     flex: 1
@@ -405,3 +359,12 @@ const styles = StyleSheet.create({
     height: 120
   }
 })
+
+
+const mapStateToProps = state => {
+  return {
+    userDetail: state.userDetail.userDetail
+  }
+}
+
+export default connect(mapStateToProps)(HomeScreen)

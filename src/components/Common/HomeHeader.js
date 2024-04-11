@@ -22,6 +22,8 @@ import notif from '../../assets/images/bell.png'
 import settings from '../../assets/images/settings.png'
 import filter from '../../assets/images/filter.png'
 import search from '../../assets/images/search.png'
+import backIcon from '../../assets/images/arrowLeft.png';
+
 import ScreenTitle from '../Text/ScreenTitle'
 import { getMyDetail } from '../../APIs/api'
 import { BarIndicator } from 'react-native-indicators'
@@ -39,7 +41,8 @@ const HomeHeader = ({
   isSeller = false,
   setFilterItem,
   pubnub,
-  numberOfNotif = 0
+  numberOfNotif = 0,
+  showBackButton=true
 }) => {
   const [visible, setVisible] = useState(false)
   const [selcetedIndex, setSelcetedIndex] = useState(0)
@@ -189,8 +192,23 @@ const HomeHeader = ({
     <>
       {showLine1 ? (
         <View style={styles.headerContainer}>
+          <View style={styles.flexRow}>
+       {showBackButton&&    <TouchableOpacity
+              activeOpacity={0.8}
+              style={[styles.headerBtn,{marginRight:16}]}
+              onPress={() => navigation.goBack()}
+            >
+              <Image
+                style={styles.btnIcon}
+                source={backIcon}
+                resizeMode="contain"
+              />
+            
+            </TouchableOpacity>}
           <Pressable onPress={() => goToPage('MyProfile')}>
+            
             <View style={styles.avatarContainer}>
+              
               {avatar ? (
                 <>
                   <Image
@@ -223,6 +241,7 @@ const HomeHeader = ({
               )}
             </View>
           </Pressable>
+          </View>
           <View style={styles.row}>
             <TouchableOpacity
               activeOpacity={0.8}
@@ -516,5 +535,6 @@ const styles = StyleSheet.create({
     height: 13,
     backgroundColor: COLORS.color10,
     borderRadius: 20
-  }
+  },
+  flexRow:{flexDirection:"row"}
 })
