@@ -228,12 +228,12 @@ const ImageModal = forwardRef((props, ref) => {
                   }}
                   playWhenInactive
                   // controls={false}
-                  bufferConfig={{
-                    minBufferMs: 100,
-                    maxBufferMs: 1000,
-                    bufferForPlaybackMs: 100,
-                    bufferForPlaybackAfterRebufferMs: 150,
-                  }}
+                  // bufferConfig={{
+                  //   minBufferMs: 100,
+                  //   maxBufferMs: 1000,
+                  //   bufferForPlaybackMs: 100,
+                  //   bufferForPlaybackAfterRebufferMs: 150,
+                  // }}
                   poster={vid_thumbnail}
                   posterResizeMode={'contain'}
                   resizeMode={'contain'}

@@ -33,9 +33,14 @@ const ReportUserModal = ({ visible, navigation, setVisible, userID }) => {
   ];
 
   const pressItem = async (item, index) => {
+    console.log("data");
     const data = await reportUser(userID);
-    console.log('USER CONVERSATION BLOACK ', userID, data);
     closeModal();
+    const res=data[0]
+   
+    if(res.code==200) alert(data[1]?.message)
+    
+   
     navigation.goBack()
   };
 

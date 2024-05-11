@@ -139,8 +139,8 @@ android {
         applicationId "com.tiny_bird_36835"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 32
-        versionName "3.5"
+        versionCode 37
+        versionName "4.0"
         buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
 
         missingDimensionStrategy "store", "play"

@@ -273,11 +273,7 @@ const Details = props => {
       <View
         style={[styles.headerContainer, { top: safeArea.top - 5, zIndex: 10 }]}
       >
-        {/* <TouchableOpacity
-          style={{ marginLeft: 10, marginBottom: 10 }}
-          onPress={() => props.navigation.goBack()}>
-          <Image source={arrowLeft} style={{ height: 20, width: 20 }} />
-        </TouchableOpacity> */}
+       
         <HomeHeader
           avatar={myImage}
           showLine2={false}
@@ -314,7 +310,7 @@ const Details = props => {
               </Carousel>
             </View>
             <View style={styles.contentContainer}>
-              {/* buttons */}
+              
               <View style={[styles.row, styles.circleBtnContainer]}>
                 <TouchableOpacity
                   activeOpacity={0.9}
@@ -416,7 +412,6 @@ const Details = props => {
                   <Seprator left={false} />
                 </View>
               </View>
-              {/* features */}
               <View style={styles.row}>
                 <View style={{ flex: 2 }}>
                   <Feature
@@ -466,13 +461,9 @@ const Details = props => {
                 </View>
               </View>
             </View>
-            {location?.latitude && location?.longitude && (
+            {!!location?.latitude && !!location?.longitude && (
               <MapView
-                // provider={Platform.OS == "android"? PROVIDER_GOOGLE:}
-                // provider={PROVIDER_GOOGLE}
-                // followsUserLocation={true}
-                // userLocationCalloutEnabled={true}
-                // showsMyLocationButton={true}
+               
                 style={{
                   marginTop: 20,
                   borderRadius: 20,

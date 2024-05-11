@@ -3,7 +3,6 @@ import {
   Text,
   View,
   TouchableOpacity,
-  Image,
   TextInput,
   Pressable,
   Platform,
@@ -23,9 +22,8 @@ import settings from '../../assets/images/settings.png'
 import filter from '../../assets/images/filter.png'
 import search from '../../assets/images/search.png'
 import backIcon from '../../assets/images/arrowLeft.png';
-
+import Image from 'react-native-fast-image';
 import ScreenTitle from '../Text/ScreenTitle'
-import { getMyDetail } from '../../APIs/api'
 import { BarIndicator } from 'react-native-indicators'
 
 const DEFAULT_IMAGE = require('../../assets/images/user.png')

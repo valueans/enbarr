@@ -220,12 +220,15 @@ const Chat = props => {
       ) {
         image.filename = `${image.filename.split('.')[0]}.JPG`
       }
-
+    
       // if(image.filename && !image.filename.includes('video') && !image?.mime.includes('video'))
       // {
       setIsSendingFile(true)
+      let tempMessage = [...messages]
+
       setMessages(p => [
         {
+          localUrl: image.path,
           uuid: roomDetails.user_one_profile.user.email,
           timetoken: Date.now() * 10000,
           message: {
@@ -255,6 +258,22 @@ const Chat = props => {
           mimeType: image.mime
         }
       })
+      const newMessage = {
+        localUrl: image.path,
+        uuid: roomDetails.user_one_profile.user.email,
+        timetoken: result.timetoken,
+        message: {
+          message: {},
+          file: {
+            text: 'file',
+            id: result.id,
+            // url: image?.path,
+            name: result.name
+          }
+        }
+      }
+
+      setMessages([newMessage, ...tempMessage])
       setIsSendingFile(false)
     })
   }, [isSendingFile, messages, navigation])
@@ -262,6 +281,7 @@ const Chat = props => {
   const back = () => {
     props.navigation.goBack()
   }
+  
   return (
     <View style={{ flex: 1 }} onPress={() => Keyboard.dismiss()}>
       <View
@@ -391,6 +411,7 @@ const Chat = props => {
               keyExtractor={(i, _i) => 'message' + _i}
               inverted={true}
               renderItem={({ item, index }) => {
+                
                 return (
                   <Message
                     length={messages.length}
@@ -466,6 +487,7 @@ const Chat = props => {
                       value={msg}
                       returnKeyType="next"
                       onChangeText={val => setMsg(val)}
+                      
                     />
                   </View>
 
@@ -524,15 +546,16 @@ const Chat = props => {
                     justifyContent: 'center',
                     alignItems: 'center'
                   }}
-                  // disabled={
-                  //   messageInput.trim().length <= 0 && attachment.length == 0
-                  //     ? true
-                  //     : messageInput.trim().length <= 0 && attachment.length > 0
-                  //     ? false
-                  //     : messageInput.trim().length > 0 || attachment.length > 0
-                  //     ? false
-                  //     : false
-                  // }
+
+                  disabled={!msg.trim().length
+                    // messageInput.trim().length <= 0 && attachment.length == 0
+                    //   ? true
+                    //   : messageInput.trim().length <= 0 && attachment.length > 0
+                    //   ? false
+                    //   : messageInput.trim().length > 0 || attachment.length > 0
+                    //   ? false
+                    //   : false
+                  }
                   onPress={() => {
                     onSendMessage()
                   }}

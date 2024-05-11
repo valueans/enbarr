@@ -22,12 +22,14 @@ import { BarIndicator } from 'react-native-indicators'
 import {
   appleTransaction,
   getAlhorses,
+  getMyDetail,
   getNmberOfNotifications,
   getOrCreateNewChannel,
   searchHorses
 } from '../../../APIs/api'
 import { TimeFromNow } from '../../../utils/Time'
 import * as PubNubKeys from '../Chat/PubNubKeys'
+import { setNotificationCount } from '../../../redux/numberOfNotifications'
 
 class HomeScreen extends PureComponent {
   constructor(props) {
@@ -40,16 +42,16 @@ class HomeScreen extends PureComponent {
     })
     this.state = {
       listOfHorses: [],
-      listOfSerachHorses: [],
       loading: false,
       myImage: '',
-      isSeraching: false,
+      isSearching: false,
       filterItem: 'All',
-      numberOfNotif: 0,
       refreshing: false,
       totalHorseCount: 0,
-      page: 1
+      page: 1,
+      searchText: ''
     }
+    this.menuItems = ['All', 'Last Day', 'Week', 'Month']
   }
 
   goToDetails = item => {
@@ -58,7 +60,7 @@ class HomeScreen extends PureComponent {
 
     navigation.navigate('Details', {
       item,
-      pubnub:this.pubnub,
+      pubnub: this.pubnub,
       myhorse: userDetail.user.id === item.userprofile.id
     })
   }
@@ -67,103 +69,91 @@ class HomeScreen extends PureComponent {
     this.setState({ refreshing: true })
     setTimeout(() => {
       this.setState({ refreshing: false })
-    }, 2000)}
-  
+    }, 2000)
+  }
 
- 
   async fetchHorses() {
-    const { listOfHorses, filterItem } = this.state
-    this.setState({ isSeraching: false,loading: true })
-    
+    const { filterItem, page } = this.state
+    const { setNotificationCount } = this.props
+    let filterParam =
+      filterItem === this.menuItems[1]
+        ? 'last_day'
+        : filterItem === this.menuItems[2]
+        ? 'week'
+        : filterItem === this.menuItems[3]
+        ? 'month'
+        : 'all'
 
-    const res = await getAlhorses(1)
+    this.setState({ isSearching: false, loading: true })
+
+    const res = await getAlhorses(page, filterParam)
     const horses = res.results
-    this.setState({ loading: false,totalHorseCount:res?.count })
-
-    if (filterItem == 'All') {
-      this.setState({ listOfHorses: horses })
-    } else if (filterItem == 'Last Day') {
-      x = horses.filter((item, index) => TimeFromNow(item.created_at) == 'D')
-      this.setState({ listOfHorses: x })
-    } else if (filterItem == 'Week') {
-      x = horses.filter(
-        (item, index) =>
-          TimeFromNow(item.created_at) == 'W' ||
-          TimeFromNow(item.created_at) == 'D'
-      )
-      this.setState({ listOfHorses: x })
-    } else if (filterItem == 'Month') {
-      x = horses.filter(
-        (item, index) =>
-          TimeFromNow(item.created_at) == 'M' ||
-          TimeFromNow(item.created_at) == 'W' ||
-          TimeFromNow(item.created_at) == 'D'
-      )
-      this.setState({ listOfHorses: x })
-    }
+    this.setState({
+      loading: false,
+      totalHorseCount: res?.count,
+      listOfHorses: horses,
+      page: page + 1
+    })
 
     const notifCount = await getNmberOfNotifications()
-    this.setState({ numberOfNotif: notifCount[1].count })
+    setNotificationCount(notifCount[1]?.count)
   }
-   getPurchaseHistory = async () => {
+  getPurchaseHistory = async () => {
     try {
-      const purchaseHistory = await RNIap.getPurchaseHistory();
+      const purchaseHistory = await RNIap.getPurchaseHistory()
       console.log('PURCHASE HISRTORY ', purchaseHistory)
       const data = await appleTransaction(purchaseHistory[0])
       console.log('SUCCESS OF API CALL ', data)
-
     } catch (error) {
       console.log('error ', error)
     }
   }
 
-
-  componentDidMount(){
+  componentDidMount() {
     this.fetchHorses()
-    this.getPurchaseHistory()
   }
 
-
-   loadMoreHorses = async () => {
-    const {page}=this.state
-   
-    const res = await getAlhorses(page + 1)
-    
-    const data=res?.results
-   
-    const {  filterItem } = this.state
-    if (data != '') {
-      this.setState({page:page+1})
-      if (filterItem == 'All') {
-        this.setState(prevState=>({listOfHorses: [...prevState.listOfHorses, ...data]}))
-     
-      } else if (filterItem == 'Last Day') {
-        x = data.filter((item, index) => TimeFromNow(item.created_at) == 'D')
-        this.setState(prevState=>({listOfHorses: [...prevState.listOfHorses, ...x]}))
-      
-        
-      } else if (filterItem == 'Week') {
-        x = data.filter(
-          (item, index) =>
-            TimeFromNow(item.created_at) == 'W' ||
-            TimeFromNow(item.created_at) == 'D'
-        )
-        this.setState(prevState=>({listOfHorses: [...prevState.listOfHorses, ...x]}))
-      } else if (filterItem == 'Month') {
-        x = data.filter(
-          (item, index) =>
-            TimeFromNow(item.created_at) == 'M' ||
-            TimeFromNow(item.created_at) == 'W' ||
-            TimeFromNow(item.created_at) == 'D'
-        )
-        this.setState(prevState=>({listOfHorses: [...prevState.listOfHorses, ...x]}))
-      }
+  loadMoreHorses = async () => {
+    const {
+      page,
+      filterItem,
+      totalHorseCount,
+      listOfHorses,
+      loading,
+      isSearching,
+      searchText
+    } = this.state
+    if (
+      (totalHorseCount && !(totalHorseCount > listOfHorses?.length)) ||
+      loading ||
+      isSearching
+    )
+      return
+    let filterParam =
+      filterItem === this.menuItems[1]
+        ? 'last_day'
+        : filterItem === this.menuItems[2]
+        ? 'week'
+        : filterItem === this.menuItems[3]
+        ? 'month'
+        : 'all'
+    let res = {}
+    if (searchText) {
+      res = await searchHorses(e, page)
+    } else {
+      res = await getAlhorses(page, filterParam)
     }
+    const horses = res?.results
+
+    this.setState(prevState => ({
+      listOfHorses: [...prevState.listOfHorses, ...horses],
+      page: page + 1
+    }))
   }
 
-   goToChat = async item => {
+  goToChat = async item => {
     const { navigation } = this.props
-    const data = await getOrCreateNewChannel(item.userprofile.user.id,item.id)
+    const data = await getOrCreateNewChannel(item.userprofile.user.id, item.id)
     if (data.data) {
       navigation.navigate('Chat', {
         item: data.data,
@@ -175,7 +165,7 @@ class HomeScreen extends PureComponent {
     }
   }
 
-   debounce = func => {
+  debounce = func => {
     let timer
     return function (...args) {
       const context = this
@@ -188,118 +178,90 @@ class HomeScreen extends PureComponent {
   }
 
   onChnageTextFunc = async e => {
-    if (e == '') {
-      this.setState({isSeraching:false,loading:true})
-   
-      const res = await getAlhorses(1)
-      const horses=res.results
-      this.setState({isSeraching:false,totalHorseCount:res.count, loading:false ,listOfHorses:horses})
-     
-    } else {
-      this.setState({isSeraching:true,loading:true ,totalHorseCount:0})
-   
-   
-      const res = await searchHorses(e, e)
-     
-      const seachHorse=res.results
-      this.setState({totalHorseCount:res.count,listOfHorses:seachHorse ,loading:false})
+    this.setState({ listOfHorses: [], totalHorseCount: 0, searchText: e ,page:1},async()=>{
+      if (e == '') {
+        this.fetchHorses()
+      } else {
+        this.setState({ isSearching: true, loading: true, totalHorseCount: 0 })
   
-    }
+        const res = await searchHorses(e, 1)
+  
+        const seachHorse = res.results
+        this.setState({
+          totalHorseCount: res.count,
+          listOfHorses: seachHorse,
+          loading: false,
+          page: 2
+        })
+      }
+    })
+  
   }
 
-  optimizedSerachUsernamefunc = (this.debounce(this.onChnageTextFunc))
+  optimizedSerachUsernamefunc = this.debounce(this.onChnageTextFunc)
 
+  getUniqueHorses = () => [
+    ...new Map(this.state.listOfHorses.map(item => [item['id'], item])).values()
+  ]
 
   render() {
-    const {numberOfNotif,myImage,loading,isSeraching,listOfHorses ,refreshing,totalHorseCount,listOfSerachHorses}=this.state
-    const {pubnub}=this
-    const {navigation,userDetail}=this.props
+    const { loading, isSearching, listOfHorses, refreshing, totalHorseCount } =
+      this.state
+    const { pubnub } = this
+    const { navigation, userDetail, numberOfNotifications } = this.props
+
     return (
       <Background>
-      <SafeAreaView style={styles.container}>
-        <View style={[styles.container, styles.wrapper]}>
-          <HomeHeader
-            showBackButton={false}
-            numberOfNotif={numberOfNotif}
-            pubnub={pubnub}
-            setFilterItem={item => this.setState({filterItem:item,listOfHorses:[]},()=>this.fetchHorses())}
-            onChnageTextFunc={this.optimizedSerachUsernamefunc}
-            avatar={myImage}
-            navigation={navigation}
-          />
+        <SafeAreaView style={styles.container}>
+          <View style={[styles.container, styles.wrapper]}>
+            <HomeHeader
+              showBackButton={false}
+              numberOfNotif={numberOfNotifications}
+              pubnub={pubnub}
+              setFilterItem={item =>
+                this.setState(
+                  {
+                    filterItem: item,
+                    totalHorseCount: 0,
+                    listOfHorses: [],
+                    page: 1
+                  },
+                  () => this.fetchHorses()
+                )
+              }
+              onChnageTextFunc={this.optimizedSerachUsernamefunc}
+              avatar={userDetail?.['user-profile']?.profile_photo}
+              navigation={navigation}
+            />
 
-          <View style={{ flex: 1 }}>
-            <Text
-              style={{
-                // alignSelf: 'center',
-                color: COLORS.color10,
-                fontSize: 11,
-                fontFamily: fonts.light,
-                fontWeight: '100',
-                marginBottom: 12
-              }}
-            >
-              Search for exact title of horse
-            </Text>
-            <Text style={styles.listTitle}>Recently added</Text>
-            {loading && (
-              <BarIndicator color={COLORS.color3} size={22}></BarIndicator>
-            )}
-            {!isSeraching ? (
+            <View style={{ flex: 1 }}>
+              <Text
+                style={{
+                  // alignSelf: 'center',
+                  color: COLORS.color10,
+                  fontSize: 11,
+                  fontFamily: fonts.light,
+                  fontWeight: '100',
+                  marginBottom: 12
+                }}
+              >
+                Search for exact title of horse
+              </Text>
+              <Text style={styles.listTitle}>Recently added</Text>
+              {loading && (
+                <BarIndicator color={COLORS.color3} size={22}></BarIndicator>
+              )}
+
               <FlatList
                 initialNumToRender={20}
-                onEndReached={()=>{ this.loadMoreHorses()}}
-                onEndReachedThreshold={0.7}
+                onEndReached={() => this.loadMoreHorses()}
+                // onEndReachedThreshold={0.7}
                 contentContainerStyle={{ paddingBottom: 90 }}
                 keyExtractor={index =>
                   (index + 1 + Math.random() * 100).toString()
                 }
-                removeClippedSubviews
-                maxToRenderPerBatch={20}
                 data={listOfHorses}
                 extraData={listOfHorses}
-                showsVerticalScrollIndicator={false}
-                renderItem={({ item, index }) => {
-                
-                  return (
-                    <>
-                      <MainItem
-                        item={item}
-                        pubnub={pubnub}
-                        index={index}
-                        onPressDetails={() => this.goToDetails(item)}
-                        onPressMessage={() => this.goToChat(item)}
-                        onPressImage={() => this.goToDetails(item)}
-                        myhorse={
-                          userDetail.user.id === item?.userprofile?.id
-                        }
-                      />
-                    </>
-                  )
-                }}
-                refreshControl={
-                  <RefreshControl refreshing={refreshing} onRefresh={this.onRefresh} />
-                }
-                ListFooterComponent={() => !!totalHorseCount && totalHorseCount>listOfHorses.length &&<ActivityIndicator  size="large" />}
-                ListEmptyComponent={() => (
-                  <View style={styles.nothingWrapper}>
-                    <Text style={styles.nothingText}>
-                      There is nothing to show
-                    </Text>
-                  </View>
-                )}
-              />
-            ) : (
-              <FlatList
-                initialNumToRender={20}
-                onEndReached={this.loadMoreHorses}
-                onEndReachedThreshold={0.7}
-                contentContainerStyle={{ paddingBottom: 90 }}
-                keyExtractor={index =>
-                  (index + 1 + Math.random() * 100).toString()
-                }
-                data={listOfSerachHorses}
-                extraData={listOfSerachHorses}
                 showsVerticalScrollIndicator={false}
                 renderItem={({ item, index }) => (
                   <MainItem
@@ -314,21 +276,27 @@ class HomeScreen extends PureComponent {
                     }
                   />
                 )}
-                ListFooterComponent={() => !!totalHorseCount && totalHorseCount>listOfHorses?.length &&<ActivityIndicator  size="large" />}
-                ListEmptyComponent={() => (
-                  <View style={styles.nothingWrapper}>
-                    <Text style={styles.nothingText}>
-                      There is nothing to show
-                    </Text>
-                  </View>
-                )}
-               
+                ListFooterComponent={() =>
+                  !!totalHorseCount &&
+                  !isSearching &&
+                  totalHorseCount > listOfHorses?.length && (
+                    <ActivityIndicator size="large" />
+                  )
+                }
+                ListEmptyComponent={() =>
+                  !loading && (
+                    <View style={styles.nothingWrapper}>
+                      <Text style={styles.nothingText}>
+                        There is nothing to show
+                      </Text>
+                    </View>
+                  )
+                }
               />
-            )}
+            </View>
           </View>
-        </View>
-      </SafeAreaView>
-    </Background>
+        </SafeAreaView>
+      </Background>
     )
   }
 }
@@ -360,11 +328,17 @@ const styles = StyleSheet.create({
   }
 })
 
-
 const mapStateToProps = state => {
   return {
-    userDetail: state.userDetail.userDetail
+    userDetail: state.userDetail.userDetail,
+    numberOfNotifications: state.numberOfNotifications.numberOfNotifications
   }
 }
 
-export default connect(mapStateToProps)(HomeScreen)
+const mapDispatchToProps = dispatch => {
+  return {
+    setNotificationCount: count => dispatch(setNotificationCount(count))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen)

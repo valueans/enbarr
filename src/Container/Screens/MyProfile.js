@@ -3,7 +3,6 @@ import {
   StatusBar,
   StyleSheet,
   Text,
-  Image,
   TouchableOpacity,
   View,
   ScrollView,
@@ -25,9 +24,12 @@ import TextField from '../../components/Input/TextField';
 import RoundBtn from '../../components/Button/RoundBtn';
 import { getMyDetail, updateMyDetail } from '../../APIs/api';
 import ImagePicker from 'react-native-image-crop-picker';
+import Image from 'react-native-fast-image';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BarIndicator } from 'react-native-indicators';
 import { userProfileUrl } from '../../Constants/urls';
+import { setUserDetail } from '../../redux/userDetail';
+import { useDispatch, useSelector } from 'react-redux';
 
 const { width, height } = Dimensions.get('screen');
 
@@ -35,42 +37,22 @@ const DEFAULT_IMAGE = require('../../assets/images/user.png');
 
 const MyProfile = ({ navigation }) => {
   // const [fullName, setFullName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [email, setEmail] = useState('');
-  const [bio, setBio] = useState('');
-  const [address, setAddress] = useState('');
-  const [city, setCity] = useState('');
-  const [zipCode, setZipCode] = useState('');
-  const [state, setState] = useState('');
-  const [country, setCountry] = useState('');
-  const [myImage, setMyImage] = useState('');
+  const { userDetail } = useSelector(state => state.userDetail)
+  const userProfile=userDetail['user-profile']
+  const [lastName, setLastName] = useState(userProfile?.last_name||'');
+  const [firstName, setFirstName] = useState(userProfile?.first_name||'');
+  const [email, setEmail] = useState();
+  const [bio, setBio] = useState(userProfile?.bio||'');
+  const [address, setAddress] = useState(userProfile?.address||'');
+  const [city, setCity] = useState(userProfile?.city||'');
+  const [zipCode, setZipCode] = useState(userProfile?.zipcode||'');
+  const [state, setState] = useState(userProfile?.state||'');
+  const [country, setCountry] = useState(userProfile?.country||'');
   const [isUploading, setIsUploading] = useState(false);
   const [isLoadingDetail, setIsLoadingDetail] = useState(false);
-
+  const dispatch = useDispatch();
+ 
   const safeArea = useSafeAreaInsets();
-
-  useEffect(() => {
-    getDetail();
-  }, []);
-
-  const getDetail = async () => {
-    const data = await getMyDetail();
-    setIsLoadingDetail(true);
-    // console.log('my Detail', data);
-    //so let set Our states
-    setFirstName(data.first_name);
-    setLastName(data.last_name);
-    setAddress(data.address);
-    setCity(data.city);
-    setCountry(data.country);
-    setState(data.state);
-    setZipCode(data.zipcode);
-    setBio(data.bio);
-    setEmail(data.user.email);
-    setMyImage(data.profile_photo);
-    setIsLoadingDetail(false);
-  };
 
   const sendDataToServer = async () => {
     const data = await updateMyDetail(
@@ -86,6 +68,9 @@ const MyProfile = ({ navigation }) => {
     );
 
     if (data) {
+      let tempUserDetail={...userDetail}
+      tempUserDetail['user-profile']=data
+      dispatch(setUserDetail(tempUserDetail));
       Alert.alert('Updated Successfully.');
     } else {
       Alert.alert('Please try again.');
@@ -102,16 +87,13 @@ const MyProfile = ({ navigation }) => {
       cropping: true
     })
       .then(async file => {
-        // console.log(file.data);
         if (type == 'video') {
 
         } else {
 
-          console.log(file);
           setIsUploading(true);
           //so lets upload profile image
           var url = userProfileUrl;
-          // console.log('qwqwqw', file.sourceURL);
           var photo = {
             uri:
               Platform.OS === 'android' ? file.path
@@ -129,13 +111,12 @@ const MyProfile = ({ navigation }) => {
           var xhr = new XMLHttpRequest();
           xhr.withCredentials = true;
 
-          console.log('OPENED', xhr.status);
 
           xhr.upload.addEventListener('progress', event => {
-            console.log('progress', event);
+           
           });
           xhr.addEventListener('load', event => {
-            console.log('finish', event);
+            
             setIsUploading(false);
           });
 
@@ -144,21 +125,22 @@ const MyProfile = ({ navigation }) => {
           xhr.send(formData);
 
           xhr.addEventListener('readystatechange', async e => {
-            console.log('fffffff', xhr, xhr.readyState, xhr.DONE);
 
             if (xhr.readyState === xhr.DONE) {
-              console.log('fiiiiii', xhr.response);
               res = JSON.parse(xhr.response);
               AsyncStorage.setItem('myProfilePicture', file.data);
-              setMyImage(res?.profile_photo);
+             
+              let tempUserDetail={...userDetail}
+              tempUserDetail['user-profile']=res
+              dispatch(setUserDetail(tempUserDetail));
+
               setIsUploading(false);
-            }
+            } 
           });
         }
       })
       .catch(e => console.log(e));
   };
-
   return (
     <View style={[globalStyle.container, { backgroundColor: 'white' }]}>
       <StatusBar barStyle={'light-content'} />
@@ -188,10 +170,10 @@ const MyProfile = ({ navigation }) => {
                 <View style={styles.imgContainer}>
                   <View style={{ position: 'relative' }}>
                     <View style={styles.avatar}>
-                      {myImage ? (
+                      {userProfile?.profile_photo ? (
                         <>
                           <Image
-                            source={{ uri: myImage }}
+                            source={{ uri: userProfile?.profile_photo }}
                             resizeMode="cover"
                             style={styles.avatarImg}
                             onLoad={() => setIsUploading(true)}
@@ -243,10 +225,10 @@ const MyProfile = ({ navigation }) => {
                   onChangeText={e => setLastName(e)}
                 />
                 <Input
-                  value={email}
+                  value={userProfile?.user?.email||''}
                   title="Email"
                   backgroundColor={COLORS.color11}
-                  onChangeText={e => setEmail(e)}
+                  editable={false}
                 />
                 <TextField
                   value={bio}

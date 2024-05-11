@@ -3,7 +3,7 @@ import { Alert } from 'react-native'
 
 import { fetchWithTimeout } from '../Shared/fetchData'
 
-export async function getAlhorses(pageNumber) {
+export async function getAlhorses(pageNumber,filter) {
   var myHeaders = new Headers()
   acc = await AsyncStorage.getItem('acc')
 
@@ -14,7 +14,7 @@ export async function getAlhorses(pageNumber) {
     headers: myHeaders
   }
   const data = await fetchWithTimeout(
-    `/api/v1/horses/?page=${pageNumber}`,
+    `/api/v1/horses/?page=${pageNumber}&filter_param=${filter||'all'}`,
     requestOptions
   )
 
@@ -451,7 +451,7 @@ export async function updateMyDetail(
   )
 
   if (data[0].code == 201) {
-    return true
+    return data[1]
   } else {
     return false
   }
@@ -579,7 +579,7 @@ export async function uploadMedia(file, filePath) {
   return data
 }
 
-export async function searchHorses(title, keywords) {
+export async function searchHorses(title,pageNumber=1) {
   var myHeaders = new Headers()
   acc = await AsyncStorage.getItem('acc')
   myHeaders.append('Authorization', `Token ${acc}`)
@@ -595,7 +595,7 @@ export async function searchHorses(title, keywords) {
   //   requestOptions,
   // );
   const data = await fetchWithTimeout(
-    `/api/v1/user-search-by-name/?search_param=${title}`,
+    `/api/v1/user-search-by-name/?page=${pageNumber}&&search_param=${title}`,
     requestOptions
   )
   if (data[0].code == 200) {
@@ -953,7 +953,7 @@ export async function getAllLocations() {
   }
 }
 
-export async function getAllConversations(pageNumber) {
+export async function getAllConversations(pageNumber,search) {
   acc = await AsyncStorage.getItem('acc')
   var myHeaders = new Headers()
   myHeaders.append('Authorization', `Token ${acc}`)
@@ -964,12 +964,11 @@ export async function getAllConversations(pageNumber) {
   }
 
   const data = await fetchWithTimeout(
-    `/api/v1/chat/conversation/?page=${pageNumber}`,
+    `/api/v1/chat/conversation/?page=${pageNumber}&receiver-name=${search||''}`,
     requestOptions
   )
-
   if (data[0].code == 200) {
-    return data[1].results
+    return data[1]
   } else {
     return []
   }
@@ -1161,10 +1160,9 @@ export const reportHorse = async (id, reason) => {
 }
 
 export const reportUser = async id => {
-  acc = await AsyncStorage.getItem('acc')
+
 
   var myHeaders = new Headers()
-  myHeaders.append('Content-Type', 'application/json')
   myHeaders.append('Authorization', `Token ${acc}`)
 
   var formdata = new FormData()

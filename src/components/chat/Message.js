@@ -35,11 +35,9 @@ const Message = ({
   pubnub,
   chatChannel,
   onPressVideo }) => {
-  // console.log(convertTimestamp(item.item.timetoken / 10000000));
-  // console.log(item.item.timetoken);
+
   useEffect(() => {
     if (item.message.file) {
-      // console.log('aaaaaa',item);
     }
   }, []);
 
@@ -84,7 +82,6 @@ const Message = ({
         id: fileID,
         name: fileName,
       });
-      // console.log('result of urls ',result)
       return result;
     } else if (fileType == 'vid') {
       var result = '';
@@ -97,22 +94,26 @@ const Message = ({
       } else {
         result = url;
       }
-      // console.log(result, 'result of video ')
-      // if(Platform.OS ==)
+   
       createThumbnail({
         url: result,
         timeStamp: 1,
       })
         .then(response => {
-          // console.log(response.path, 'response.path')
           Platform.OS == 'ios' ? setThumbVideo(response.path) : setThumbVideo(result)
         })
         .catch(err => console.log({ err }, 'error response.path'));
     }
   };
 
-  const openVideoPress = (fileID, fileName, thumbVideo) => {
-    console.log(fileID, fileName, 'on Video Press')
+  const openVideoPress = (fileID, fileName, thumbVideo,localUrl) => {
+    console.log(localUrl)
+    if(localUrl) {
+      setVideoOpenUrl(localUrl);
+      dialogeRefVideo.current.open();
+      return
+    }
+    // if*
     if (fileID && fileName) {
       let result = pubnub.getFileUrl({
         channel: chatChannel,
@@ -120,7 +121,6 @@ const Message = ({
         name: fileName,
       });
 
-      console.log(result, 'while video opening', result)
       createThumbnail({
         url: result,
         timeStamp: 1,
@@ -138,11 +138,8 @@ const Message = ({
     }
   };
 
-  const renderImageAndVideo = (item, index) => {
-    // console.log(item,'item name in msgs')
-    // console.log('.length.........', length);
-    // console.log('.index.........', index);
-    // console.log('..........',index == length - 1);
+  const renderImageAndVideo = (item, index,localUrl) => {
+  
 
     if (item.name.endsWith('.jpg') || item.name.endsWith('.JPG') || item.name.endsWith('.png') || item.name.endsWith('.PNG') || item.name.endsWith('.jpeg') || item.name.endsWith('.JPEG')) {
       return (
@@ -176,10 +173,10 @@ const Message = ({
       );
     } else {
       getFileURl(item.id, item.name, 'vid', item.url);
-      // console.log(thumbVideo,'thumbVideo')
+   
       return (
         <TouchableOpacity
-          onPress={() => openVideoPress(item?.id, item?.name, thumbVideo)}>
+          onPress={() => openVideoPress(item?.id, item?.name, thumbVideo,localUrl)}>
 
           {
             Platform.OS == 'ios' ?
@@ -262,7 +259,7 @@ const Message = ({
               mine ? styles.cloud_mine : styles.cloud_not_mine,
             ]}>
             {item.message.file ? (
-              renderImageAndVideo(item.message.file, index)
+              renderImageAndVideo(item.message.file, index,item?.localUrl)
             ) : (
               <Text
                 style={[mine ? styles.text_mine : styles.text_not_mine]}

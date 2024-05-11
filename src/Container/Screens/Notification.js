@@ -7,6 +7,7 @@ import {
   Image,
   Alert,
 } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import React, { useState, useEffect } from 'react';
 import SimpleLayout from '../../components/Layout/SimpleLayout';
 import { globalStyle } from '../../utils/GlobalStyle';
@@ -19,12 +20,15 @@ import { BarIndicator } from 'react-native-indicators';
 const DEFAULT_IMAGE = require('../../assets/images/img_default_pic.png');
 import PubNub from 'pubnub';
 import * as PubNubKeys from '../Tabs/Chat/PubNubKeys';
+import { setNotificationCount } from '../../redux/numberOfNotifications';
+import { useDispatch } from 'react-redux';
 
 global.pag = 2;
 
 const Notification = ({ navigation }) => {
   const [notification, setNotifications] = useState([]);
   const [loading, setLoading] = useState(false);
+  const dispatch=useDispatch()
 
   useEffect(() => {
     pag = 2;
@@ -50,6 +54,7 @@ const Notification = ({ navigation }) => {
   const readAllPress = async () => {
     const data = await realAllnotifications();
     if (data) {
+      dispatch(setNotificationCount(0))
     } else {
       Alert.alert('Error', 'Please try again later.');
     }
@@ -90,14 +95,15 @@ const Notification = ({ navigation }) => {
   };
 
   const renderItem = ({ item, index }) => {
+    console.log(item)
     return (
       <TouchableOpacity
         key={index}
         style={styles.item}
         onPress={() => onPressNotification(item)}>
         {item.user_two_profile?.profile_photo ? (
-          <Image
-            source={{ uri: item.user_profile.profile_photo }}
+          <FastImage
+            source={{ uri: item.user_two_profile.profile_photo }}
             resizeMode="cover"
             style={styles.avatar}
           />

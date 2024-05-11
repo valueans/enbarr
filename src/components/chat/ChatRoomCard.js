@@ -152,7 +152,7 @@ const ChatRoomCard = ({ pubnub, myDetail, item, index }) => {
 
         {item?.user_two_profile?.profile_photo ? (
           <View>
-            <Image
+            <FastImage
               onLoad={() => setIsLoadingPic(false)}
               onLoadStart={() => setIsLoadingPic(true)}
               onLoadEnd={() => setIsLoadingPic(false)}
