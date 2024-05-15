@@ -49,6 +49,7 @@ const SwipingPage = props => {
   const swiperRef = useRef(null)
   const mapRef = useRef(null)
   const [horsesList, setHorsesList] = useState([])
+  const [list, setList] = useState([])
   const [cardIndex, setCardIndex] = useState(0)
   const [loading, setLoading] = useState(false)
   const [cardHeight, setCardHeight] = useState(0)
@@ -174,6 +175,7 @@ const SwipingPage = props => {
         const horses = res.results
         setTotalHorseCount(res.count)
         setLoading(false)
+        setList(horses)
         setHorsesList(horses)
       })
     } else {
@@ -182,6 +184,7 @@ const SwipingPage = props => {
         const horses = res.results
         setTotalHorseCount(res.count)
         setLoading(false)
+        setList(horses)
         setHorsesList(horses)
       })
     }
@@ -217,7 +220,7 @@ const SwipingPage = props => {
     ))
   }
   const loadMoreHorse = async () => {
-    if(totalHorseCount===horsesList.length) return
+    if(totalHorseCount===list.length) return
     const hasPermission = await hasLocationPermission()
     if (hasPermission) {
       Geolocation.getCurrentPosition(async position => {
@@ -228,6 +231,7 @@ const SwipingPage = props => {
         )
         pag = pag + 1
         const data = res.results
+        setList(p => [...p, ...data])
         setHorsesList(p => [...p, ...data])
       })
     } else {
@@ -239,6 +243,7 @@ const SwipingPage = props => {
         )
         pag = pag + 1
         const data = res.results
+        setList(p => [...p, ...data])
         setHorsesList(p => [...p, ...data])
       })
     }
@@ -414,7 +419,7 @@ const SwipingPage = props => {
                   onEndReached={loadMoreHorse}
                   onEndReachedThreshold={0.7}
                   showsVerticalScrollIndicator={false}
-                  ListFooterComponent={() => !!totalHorseCount && totalHorseCount>horsesList.length &&<ActivityIndicator  size="large" />}
+                  ListFooterComponent={() => !!totalHorseCount && totalHorseCount>list.length &&<ActivityIndicator  size="large" />}
                 />
               )}
             </View>
