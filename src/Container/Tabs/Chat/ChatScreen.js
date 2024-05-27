@@ -10,7 +10,8 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View
+  View,
+  ActivityIndicator
 } from 'react-native'
 import { BarIndicator } from 'react-native-indicators'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -21,13 +22,15 @@ import search from '../../../assets/images/search.png'
 import ScreenTitle from '../../../components/Text/ScreenTitle'
 import COLORS from '../../../utils/colors'
 import fonts from '../../../utils/fonts'
+import arrowLeft from '../../../assets/images/arrowLeft.png';
+
 const { width, height } = Dimensions.get('screen')
 
 import PubNub from 'pubnub'
 import ChatRoomCard from '../../../components/chat/ChatRoomCard'
 import * as PubNubKeys from './PubNubKeys'
 
-global.pag = 2
+global.pag = 1
 
 const ChatScreen = props => {
   const { userDetail } = useSelector(state => state.userDetail)
@@ -42,38 +45,29 @@ const ChatScreen = props => {
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
   const [myDetail, setMyDetail] = useState([])
+  const [totalChat, setTotalChat] = useState(0)
+  const [searchText, setSearchText] = useState('')
   const safeArea = useSafeAreaInsets()
   const isFocused = useIsFocused()
 
   useFocusEffect(
     React.useCallback(() => {
-      pag = 2;
+      pag = 1;
       fetchConv();
       fetchMyDetails();
     }, []),
   );
 
-  const fetchConv = useCallback(async () => {
-    console.log('why....');
-    const convs = await getAllConversations(1)
-    setMyConversations(convs)
-    channelsArr = []
-    convs.map((item, index) => {
-      channelsArr.push(item.channel)
-    })
-    // //channel-chat-15-13-3
-    // pubnub.messageCounts(
-    //   {
-    //     channels: ['channel-chat-15-13-3'],
-    //     timetoken: pubnub.getLastMessageTimestamp('channel-chat-15-13-3'),
-    //   },
-    //   (status, res) => {
-    //     console.log('chatssss', status);
-    //     console.log('fffffchats', res);
-    //   },
-    // );
+  const fetchConv = useCallback(async (search) => {
+    setLoading(true)
+    const response = await getAllConversations(pag,search)
 
-    setLoading(false)
+    const conversation=response.results||[]
+   
+    setMyConversations(conversation)
+    setTotalChat(response.count||0)
+    pag = pag + 1
+      setLoading(false)
     setRefreshing(false)
   }, [myConversations, loading, refreshing])
 
@@ -82,59 +76,41 @@ const ChatScreen = props => {
     setMyDetail(data)
   }
 
-  const fetchOnlines = async () => {
-    pubnub.hereNow(
-      {
-        channels: ['chats.room1', 'chats.room2'],
-        includeState: true
-      },
-      function (status, response) {
-        console.log(status, response)
-      }
-    )
-  }
 
   const getMoreConversations = async () => {
-    const convs = await getAllConversations(pag)
-
-    setMyConversations(p => [...p, ...convs])
+    if((totalChat && !(totalChat > myConversations?.length)) ||
+    loading)
+  
+    return
+    const response = await getAllConversations(pag)
+    const conversation=response.results||[]
+    setMyConversations(p => [...p, ...conversation])
     pag = pag + 1
   }
 
-  const getUnreadCount = async item => {
-    const response = await pubnub.messageCounts({
-      channels: [item.channel],
-      timetoken: [Math.floor(Date.now() / 1000)],
-      includeUUIDs: true
-    })
+ 
+
+ const debounce = func => {
+    let timer
+    return function (...args) {
+      const context = this
+      if (timer) clearTimeout(timer)
+      timer = setTimeout(() => {
+        timer = null
+        func.apply(context, args)
+      }, 500)
+    }
   }
 
-  const onPressTest = async () => {
-    // console.log('asdf');
-    // NativeModules.ReadImageData.readImage(
-    //   'https://ahrefs.com/blog/wp-content/uploads/2021/05/backlinks.png',
-    //   base64Image => {
-    //     // Do something here.
-    //     console.log(base64Image);
-    //   },
-    // );
-
-    // var x = await AsyncStorage.getItem('myProfilePicture');
-    // console.log(x);
-
-    const x = await pubnub.messageCounts(
-      myConversations[0]?.user_two_profile.user.email
-    )
-    console.log(x)
-
-    // RNFS.readFile(
-    //   'https://ahrefs.com/blog/wp-content/uploads/2021/05/backlinks.png',
-    //   'base64',
-    // ).then(res => {
-    //   console.log(res);
-    // });
+  const onChnageTextFunc = async e => {
+    setSearchText(e)
+    pag = 1
+    fetchConv(e)
   }
 
+
+  optimizedSerachUsernamefunc = debounce(onChnageTextFunc)
+ 
   return (
     <SafeAreaView
       style={{
@@ -148,9 +124,19 @@ const ChatScreen = props => {
         translucent
         backgroundColor={'transparent'}
       />
+      
       <View style={styles.container}>
         <View style={styles.headerSection}>
+          <View style={{flexDirection:"row",alignItems:"center"}}>
+        <TouchableOpacity
+        style={{ marginHorizontal: 10 }}
+        onPress={() => {
+          props.navigation.navigate("Home");
+        }}>
+        <Image source={arrowLeft} style={{ height: 20, width: 20 }} />
+      </TouchableOpacity>
           <ScreenTitle marginVertical={0}>Message</ScreenTitle>
+          </View>
           <Image source={logo} style={styles.logo} resizeMode="contain" />
         </View>
         <View style={styles.inputContainer}>
@@ -159,7 +145,7 @@ const ChatScreen = props => {
             style={styles.searchIcon}
             resizeMode="contain"
           />
-          <TextInput style={styles.input} />
+          <TextInput style={styles.input} onChangeText={optimizedSerachUsernamefunc}/>
         </View>
 
         <View style={{ flex: 1 }}>
@@ -184,11 +170,19 @@ const ChatScreen = props => {
                   />
                 )
               }}
+              
               contentContainerStyle={{
                 // paddingHorizontal: 21,
                 paddingBottom: 100
               }}
+              ListFooterComponent={() =>
+                !!totalChat &&             
+                totalChat > myConversations?.length && (
+                  <ActivityIndicator size="large" />
+                )
+              }
               ListEmptyComponent={() => (
+                
                 <View style={styles.nothingWrapper}>
                   <Text style={styles.nothingText}>No recent chats!</Text>
                 </View>
@@ -196,7 +190,8 @@ const ChatScreen = props => {
               onRefresh={() => {
                 if (!loading) {
                   setRefreshing(true)
-                  fetchConv()
+                  pag = 1
+                  fetchConv(searchText)
                 }
               }}
               refreshing={refreshing}

@@ -62,6 +62,8 @@ const MainItem = ({
     );
   };
 
+    
+
   return (
     <TouchableOpacity activeOpacity={0.9} onPress={onPressDetails}>
       <View style={styles.container}>
@@ -92,7 +94,7 @@ const MainItem = ({
               <TouchableOpacity
                 style={styles.playBtn}
                 onPress={() => setPlay(!play)}>
-                <Image
+                <FastImage
                   source={playIcon}
                   resizeMode="contain"
                   style={{ width: '100%', height: '100%' }}
@@ -127,6 +129,8 @@ const MainItem = ({
         ) : null} */}
 
         <View style={styles.overlay}>
+          
+          <View style={styles.footer}>
           <View style={styles.topContent}>
             {/* avatar & name */}
             <View style={styles.row}>
@@ -142,7 +146,7 @@ const MainItem = ({
                 {/* {false ? (
                   <Image style={styles.avatar} source={{ uri: '' }} />
                 ) : ( */}
-                <Image
+                <FastImage
                   source={DEFAULT_IMAGE}
                   style={[styles.noAvatar]}
                   resizeMode="contain"
@@ -164,7 +168,7 @@ const MainItem = ({
                 disabled={myhorse ? true : false}
                 style={[styles.circleBtn, { marginRight: 12, opacity: myhorse ? 0.5 : 1 }]}
                 onPress={goToChat}>
-                <Image
+                <FastImage
                   source={message}
                   resizeMode="contain"
                   style={[styles.icon]}
@@ -175,7 +179,7 @@ const MainItem = ({
                 style={[styles.circleBtn, { opacity: myhorse ? 0.5 : 1 }]}
                 disabled={myhorse ? true : false}
                 onPress={() => favouriteIconPress()}>
-                <Image
+                <FastImage
                   source={isLiked ? heartFill : heart}
                   resizeMode="contain"
                   style={styles.icon}
@@ -183,14 +187,12 @@ const MainItem = ({
               </TouchableOpacity>
             </View>
           </View>
-          <View style={styles.footer}>
             <FooterWrapper>
               <View>
                 <Text style={styles.horseName}>{title}</Text>
 
-                <Text style={styles.description}>
+                <Text style={styles.description} numberOfLines={2}>
                   {description}
-                  {/* <Text style={styles.btnText}>Read More</Text> */}
                 </Text>
               </View>
               <View style={styles.btnContainer}>
@@ -228,7 +230,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
   },
   topContent: {
-    height: '64%',
+    // height: '64%',
     flexDirection: 'row',
     alignItems: 'flex-end',
     justifyContent: 'space-between',
@@ -237,13 +239,13 @@ const styles = StyleSheet.create({
     width: '100%',
     position: 'absolute',
     left: 0,
-    top: 0,
+    top: -50,
     right: 0,
     zIndex: 2,
     elevation: 2,
   },
   footer: {
-    height: '36%',
+    // height: '36%',
     width: '100%',
     position: 'absolute',
     left: 0,
@@ -279,7 +281,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     paddingRight: 10,
     alignItems: 'baseline',
-    height: 37,
+    // maxHeight: 37,
   },
   row: {
     flexDirection: 'row',

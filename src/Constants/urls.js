@@ -1,5 +1,5 @@
-export const baseUrl = "https://enbarrapp.com";
-// export const baseUrl = 'https://staging.enbarrapp.com'
+// export const baseUrl = "https://enbarrapp.com";
+export const baseUrl = 'https://staging.enbarrapp.com'
 
 
 export const api = `${baseUrl}/api/v1/`

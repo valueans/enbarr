@@ -29,7 +29,8 @@ const Routing = props => {
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
-      }}>
+      }}
+      initialRouteName="Root">
       <Stack.Screen
         name="Root"
         component={BottomTab}

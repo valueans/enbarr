@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { FlatList, StyleSheet, Text, View,ActivityIndicator } from 'react-native';
 import React, { useState } from 'react';
 import COLORS from '../../../../utils/colors';
 import { list } from '../../../../utils/data';
@@ -15,7 +15,7 @@ global.pag = 2;
 const Favorite = props => {
   const [favHorses, setFavHorses] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  const [totalHorseCount, setTotalHorseCount] = useState(0);
   const { userDetail } = useSelector(state => state.userDetail);
 
   const pubnub = new PubNub({
@@ -29,8 +29,9 @@ const Favorite = props => {
     React.useCallback(() => {
       async function fetchHorses() {
         setLoading(true);
-        const horses = await getFavHorses(1);
-        console.log('wwwww', horses);
+        const res = await getFavHorses(1);
+        const horses=res.results
+        setTotalHorseCount(res.count)
         setLoading(false);
         setFavHorses(horses);
       }
@@ -39,16 +40,17 @@ const Favorite = props => {
       fetchHorses();
     }, []),
   );
-
   const loadMoreFav = async () => {
-    const horses = await getFavHorses(pag);
+    if(totalHorseCount===favHorses.length) return
+    
+    const res = await getFavHorses(pag);
+    const horses=res.results
     pag = pag + 1;
     setFavHorses(p => [...p, ...horses]);
   };
 
   const goToChat = async item => {
-    // console.log(item.horses.userprofile.user.id);
-    const data = await getOrCreateNewChannel(item.horses.userprofile.user.id);
+    const data = await getOrCreateNewChannel(item.horses.userprofile.user.id,item?.horses?.id);
     if (data.data) {
       props.navigation.navigate('Chat', {
         item: data.data,
@@ -59,7 +61,6 @@ const Favorite = props => {
       Alert.alert('Error', 'Please try again later.');
     }
   };
-
   return (
     <View style={styles.container}>
       {loading ? (
@@ -76,10 +77,9 @@ const Favorite = props => {
             paddingTop: 16,
             paddingBottom: 130,
           }}
+          ListFooterComponent={() => !!totalHorseCount && totalHorseCount>favHorses.length &&<ActivityIndicator  size="large" />}
           renderItem={({ item, index }) => (
-            <>{
-              console.log(userDetail.user.id, item.horses.userprofile.id)
-            }
+            <>
               <MainItem
                 item={item.horses}
                 index={index}

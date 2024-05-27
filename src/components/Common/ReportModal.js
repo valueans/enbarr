@@ -34,10 +34,11 @@ const ReportModal = ({ visible, setVisible, horseID, navigation }) => {
   ];
   const pressItem = async (item, index) => {
 
-    console.log(item, index);
     const data = await reportHorse(horseID, item);
-    console.log(data);
     closeModal();
+    const res=data[0]
+    if(res.code==200) alert(data[1]?.message)
+    console.log(data);
     navigation.navigate('Home')
   };
   return (

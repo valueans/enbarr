@@ -1,6 +1,7 @@
 import loginReducer from '../redux/login'
 import isRememberReducer from '../redux/isRemember'
 import userDetailReducer from './userDetail'
+import numberOfNotificationsReducer from './numberOfNotifications'
 import iapStoreReducer from './iapStore'
 import { configureStore } from '@reduxjs/toolkit'
 import { combineReducers, legacy_createStore as createStore } from 'redux'
@@ -12,6 +13,7 @@ const reducers = combineReducers({
   login: loginReducer,
   userDetail: userDetailReducer,
   isRemember: isRememberReducer,
+  numberOfNotifications: numberOfNotificationsReducer,
   iapStore: iapStoreReducer
 })
 
@@ -19,7 +21,7 @@ const persistConfig = {
   key: 'root',
   version: 1,
   storage: AsyncStorage,
-  whitelist: ['login', 'userDetail', 'isRemember']
+  whitelist: ['login', 'userDetail', 'isRemember','numberOfNotifications']
 }
 
 const persistedReducer = persistReducer(persistConfig, reducers)

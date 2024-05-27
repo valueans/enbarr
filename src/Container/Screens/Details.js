@@ -9,32 +9,31 @@ import {
   TouchableOpacity,
   Share,
   Platform,
-  PermissionsAndroid,
-} from 'react-native';
-import React, { useState, useEffect } from 'react';
-import { globalStyle } from '../../utils/GlobalStyle';
-import COLORS, { ColorShade } from '../../utils/colors';
-import fonts from '../../utils/fonts';
-import HomeHeader from '../../components/Common/HomeHeader';
-import message from '../../assets/images/envelope.png';
-import heart from '../../assets/images/heart.png';
-import heartFill from '../../assets/images/heart_fill.png';
-import locationIcon from '../../assets/images/location.png';
-const { width, height } = Dimensions.get('screen');
-import profileImage from '../../assets/images/user.png';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { BlurView } from '@react-native-community/blur';
-import ScreenTitle from '../../components/Text/ScreenTitle';
-import Seprator from '../../components/Layout/Seprator';
-import Feature from '../../components/Text/Feature';
-import Carousel from '../../components/Common/Carousel';
-import shareIcon from '../../assets/images/share.png';
-import blockIcon from '../../assets/images/block.png';
-import CustomTab from '../../components/Layout/CustomTab';
-import Geolocation from 'react-native-geolocation-service';
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
-import arrowLeft from '../../assets/images/arrowLeft.png';
+  PermissionsAndroid
+} from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { globalStyle } from '../../utils/GlobalStyle'
+import COLORS, { ColorShade } from '../../utils/colors'
+import fonts from '../../utils/fonts'
+import HomeHeader from '../../components/Common/HomeHeader'
+import message from '../../assets/images/envelope.png'
+import heart from '../../assets/images/heart.png'
+import heartFill from '../../assets/images/heart_fill.png'
+import locationIcon from '../../assets/images/location.png'
+const { width, height } = Dimensions.get('screen')
+import profileImage from '../../assets/images/user.png'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { BlurView } from '@react-native-community/blur'
+import ScreenTitle from '../../components/Text/ScreenTitle'
+import Seprator from '../../components/Layout/Seprator'
+import Feature from '../../components/Text/Feature'
+import Carousel from '../../components/Common/Carousel'
+import shareIcon from '../../assets/images/share.png'
+import blockIcon from '../../assets/images/block.png'
+import CustomTab from '../../components/Layout/CustomTab'
+import Geolocation from 'react-native-geolocation-service'
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 
 import {
   getHorseDetails,
@@ -42,37 +41,51 @@ import {
   addHorseToFav,
   getOrCreateNewChannel,
   getSpecialHorseDistance,
-  getMyDetail,
-} from '../../APIs/api';
-import PubNub from 'pubnub';
-import * as PubNubKeys from '../Tabs/Chat/PubNubKeys';
-global.item2 = {};
-import ReportModal from '../../components/Common/ReportModal';
-import { baseUrl } from '../../Constants/urls';
+  getMyDetail
+} from '../../APIs/api'
+import PubNub from 'pubnub'
+import * as PubNubKeys from '../Tabs/Chat/PubNubKeys'
+global.item2 = {}
+import ReportModal from '../../components/Common/ReportModal'
+import { baseUrl } from '../../Constants/urls'
+import { BarIndicator } from 'react-native-indicators'
 
 const Details = props => {
-  const [isLiked, setIsLiked] = useState(props?.route?.params?.item?.isfav);
-  const [horseImages, setHorseImages] = useState([]);
-  const [myImage, setMyImage] = useState('');
-  const [reportModal, setReportModal] = useState(false);
-  const [distance, setDistance] = useState(0);
-  const [item, setItem] = useState(props?.route?.params?.item);
-  // const {item} = props.route.params;
-  // console.log('qqweweqweqwe', item.id);
+  const [isLiked, setIsLiked] = useState(props?.route?.params?.item?.isfav)
+  const [horseImages, setHorseImages] = useState([])
+  const [myImage, setMyImage] = useState('')
+  const [reportModal, setReportModal] = useState(false)
+  const [distance, setDistance] = useState(0)
+  const [item, setItem] = useState(props?.route?.params?.item)
+  const [loading, setLoading] = useState(false)
+  const [location, setLocation] = useState({
+    latitude: props?.route?.params?.item.lat
+      ? props?.route?.params?.item?.lat
+      : props?.route?.params?.item?.user_location.coordinates[1],
+    longitude: props?.route?.params?.item.lng
+      ? props?.route?.params?.item.lng
+      : props?.route?.params?.item?.user_location.coordinates[0]
+  })
+  const horseId = props?.route?.params?.item?.id || props?.route?.params?.id
 
   const getFromMapDetail = async () => {
+    setLoading(true)
+    var obj = []
+    const data = await getHorseDetails(props?.route?.params?.item?.id)
 
-    // console.log('pppppppp', props?.route?.params.item.user_location);
-    var obj = [];
-    const data = await getHorseDetails(props?.route?.params?.id);
-    console.log('`horse-details...', data);
-    setItem(data[1]);
+    setItem(data[1])
 
     data[1].images?.map((item, index) => {
-      obj.push(item);
-    });
-    setHorseImages(obj);
-  };
+      obj.push(item)
+    })
+    setLocation({
+      latitude: data[1]?.user_location?.coordinates[1],
+      longitude: data[1]?.user_location?.coordinates[0]
+    })
+    setHorseImages(obj)
+    setIsLiked(data[1]?.isfav)
+    setLoading(false)
+  }
 
   // const {userprofile} = item;
   // const pubnub = new PubNub({
@@ -82,124 +95,128 @@ const Details = props => {
   // });
 
   const gotoChat = async () => {
-    const data = await getOrCreateNewChannel(item?.userprofile?.user?.id);
+    const data = await getOrCreateNewChannel(
+      item?.userprofile?.user?.id,
+      horseId
+    )
     if (data.data) {
       props.navigation.navigate('Chat', {
         item: data.data,
         myDetail: data.data.user_one_profile,
-        pubnub: props?.route?.params?.pubnub,
+        pubnub: props?.route?.params?.pubnub
       })
     } else {
-      Alert.alert('Error', 'Please try again later.');
+      Alert.alert('Error', 'Please try again later.')
     }
-  };
+  }
 
   useEffect(() => {
-    console.log('details.....',props?.route?.params.item);
+    // console.log('details.....',props?.route?.params.item);
     if (props?.route?.params?.from == 'map') {
-      getFromMapDetail();
+      getFromMapDetail()
     }
 
-    getDistance();
-    getMyImage();
-    var obj = [];
+    getDistance()
+    getMyImage()
+    var obj = []
     // console.log(JSON.stringify(item, null, 2));
     if (props?.route?.params?.from !== 'map') {
+      console.log(item?.id)
       item?.images?.map((item, index) => {
-        obj.push(item);
-      });
-      setHorseImages(obj);
+        obj.push(item)
+      })
+      setHorseImages(obj)
     }
-  }, []);
+  }, [])
 
   const hasPermissionIOS = async () => {
     const openSetting = () => {
       Linking.openSettings().catch(() => {
-        Alert.alert('Unable to open settings');
-      });
-    };
-    const status = await Geolocation.requestAuthorization('always');
+        Alert.alert('Unable to open settings')
+      })
+    }
+    const status = await Geolocation.requestAuthorization('always')
 
     if (status === 'granted') {
-      return true;
+      return true
     }
 
     if (status === 'denied') {
-      Alert.alert('We need your location');
+      Alert.alert('We need your location')
     }
 
     if (status === 'disabled') {
-      Alert.alert('We need your location');
+      Alert.alert('We need your location')
     }
 
-    return false;
-  };
+    return false
+  }
   const hasLocationPermission = async () => {
     if (Platform.OS === 'ios') {
-      const hasPermission = await hasPermissionIOS();
-      return hasPermission;
+      const hasPermission = await hasPermissionIOS()
+      return hasPermission
     }
 
     if (Platform.OS === 'android' && Platform.Version < 23) {
-      return true;
+      return true
     }
 
     const hasPermission = await PermissionsAndroid.check(
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-    );
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+    )
 
     if (hasPermission) {
-      return true;
+      return true
     }
 
     const status = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-    );
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+    )
 
     if (status === PermissionsAndroid.RESULTS.GRANTED) {
-      return true;
+      return true
     }
 
     if (status === PermissionsAndroid.RESULTS.DENIED) {
       ToastAndroid.show(
         'Location permission denied by user.',
-        ToastAndroid.LONG,
-      );
+        ToastAndroid.LONG
+      )
     } else if (status === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
       ToastAndroid.show(
         'Location permission revoked by user.',
-        ToastAndroid.LONG,
-      );
+        ToastAndroid.LONG
+      )
     }
 
-    return false;
-  };
+    return false
+  }
 
   const getDistance = async () => {
     //item.id
-    const hasPermission = await hasLocationPermission();
+    const hasPermission = await hasLocationPermission()
     if (hasPermission) {
       Geolocation.getCurrentPosition(async position => {
         const data = await getSpecialHorseDistance(
           item?.id,
           position.coords.latitude,
-          position.coords.longitude,
-        );
+          position.coords.longitude
+        )
         // console.log('fffffff', data[1].distance);
-        setDistance(data[1].distance);
-      });
+        setDistance(data[1].distance)
+      })
     } else {
-      setDistance(0);
+      setDistance(0)
     }
-  };
+  }
 
-  const safeArea = useSafeAreaInsets();
+  const safeArea = useSafeAreaInsets()
 
   const onSharePressed = async () => {
     try {
       const result = await Share.share({
-        message: `${baseUrl}/home/horse?id=${props?.route?.params?.item?.id}`,
-      });
+        message: `${baseUrl}/home/horse?id=${props?.route?.params?.item?.id}`
+      })
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
         } else {
@@ -208,32 +225,32 @@ const Details = props => {
         // dismissed
       }
     } catch (error) {
-      alert(error.message);
+      alert(error.message)
     }
-  };
+  }
 
   const onReportPress = async () => {
-    setReportModal(true);
-  };
+    setReportModal(true)
+  }
 
   const favPressed = async () => {
     if (isLiked) {
-      setIsLiked(x => !x);
-      const data = await deleteHorseToFav(item.id);
+      setIsLiked(x => !x)
+      const data = await deleteHorseToFav(item.id)
     } else {
-      setIsLiked(x => !x);
-      console.log('should like');
-      const data = await addHorseToFav(item.id);
-      console.log(data);
+      setIsLiked(x => !x)
+      console.log('should like')
+      const data = await addHorseToFav(item.id)
+      console.log(data)
     }
-  };
+  }
 
   const getMyImage = async () => {
-    const myData = await getMyDetail();
-    setMyImage(myData?.profile_photo);
+    const myData = await getMyDetail()
+    setMyImage(myData?.profile_photo)
     // const myBase64ProfileImage = await AsyncStorage.getItem('myProfilePicture');
     // setMyImage(myBase64ProfileImage);
-  };
+  }
 
   const FooterWrapper = ({ children }) => {
     return Platform.OS == 'android' ? (
@@ -242,12 +259,11 @@ const Details = props => {
       <BlurView style={styles.blury} blurType="dark" blurAmount={10}>
         {children}
       </BlurView>
-    );
-  };
+    )
+  }
   return (
     <View style={[globalStyle.container, { backgroundColor: COLORS.white }]}>
       <StatusBar barStyle={'dark-content'} />
-
       <ReportModal
         visible={reportModal}
         setVisible={setReportModal}
@@ -255,12 +271,9 @@ const Details = props => {
         navigation={props.navigation}
       />
       <View
-        style={[styles.headerContainer, { top: safeArea.top - 5, zIndex: 10 }]}>
-        {/* <TouchableOpacity
-          style={{ marginLeft: 10, marginBottom: 10 }}
-          onPress={() => props.navigation.goBack()}>
-          <Image source={arrowLeft} style={{ height: 20, width: 20 }} />
-        </TouchableOpacity> */}
+        style={[styles.headerContainer, { top: safeArea.top - 5, zIndex: 10 }]}
+      >
+       
         <HomeHeader
           avatar={myImage}
           showLine2={false}
@@ -268,202 +281,233 @@ const Details = props => {
           navigation={props.navigation}
         />
       </View>
-
-      <ScrollView
-        contentContainerStyle={{ paddingBottom: 120 }}
-        showsVerticalScrollIndicator={false}>
-        <View style={styles.albumContainer}>
-          <Carousel items={horseImages}>
-            <FooterWrapper>
-              <View style={styles.row}>
-                <Image
-                  style={styles.avatar}
-                  source={profileImage}
-                  resizeMode="contain"
-                />
-                <View style={styles.nameContainer}>
-                  <Text style={styles.username}>
-                    {item?.userprofile?.first_name
-                      ? item?.userprofile?.first_name
-                      : item?.userprofile?.user?.username}
+      {loading ? (
+        <BarIndicator color={COLORS.color3} size={22} />
+      ) : (
+        <>
+          <ScrollView
+            contentContainerStyle={{ paddingBottom: 120 }}
+            showsVerticalScrollIndicator={false}
+          >
+            <View style={styles.albumContainer}>
+              <Carousel items={horseImages}>
+                <FooterWrapper>
+                  <View style={styles.row}>
+                    <Image
+                      style={styles.avatar}
+                      source={profileImage}
+                      resizeMode="contain"
+                    />
+                    <View style={styles.nameContainer}>
+                      <Text style={styles.username}>
+                        {item?.userprofile?.first_name
+                          ? item?.userprofile?.first_name
+                          : item?.userprofile?.user?.username}
+                      </Text>
+                    </View>
+                  </View>
+                </FooterWrapper>
+              </Carousel>
+            </View>
+            <View style={styles.contentContainer}>
+              
+              <View style={[styles.row, styles.circleBtnContainer]}>
+                <TouchableOpacity
+                  activeOpacity={0.9}
+                  disabled={props?.route?.params?.myhorse ? true : false}
+                  style={[
+                    styles.circleBtn,
+                    {
+                      opacity: props?.route?.params?.myhorse ? 0.5 : 1,
+                      marginRight: 12
+                    }
+                  ]}
+                  onPress={() => onReportPress()}
+                >
+                  <Image
+                    source={blockIcon}
+                    resizeMode="contain"
+                    style={[styles.icon]}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  activeOpacity={0.9}
+                  style={[styles.circleBtn, { marginRight: 12 }]}
+                  onPress={() => onSharePressed()}
+                >
+                  <Image
+                    source={shareIcon}
+                    resizeMode="contain"
+                    style={[styles.icon]}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => gotoChat()}
+                  disabled={props?.route?.params?.myhorse ? true : false}
+                  activeOpacity={0.9}
+                  style={[
+                    styles.circleBtn,
+                    {
+                      opacity: props?.route?.params?.myhorse ? 0.5 : 1,
+                      marginRight: 12
+                    }
+                  ]}
+                >
+                  <Image
+                    source={message}
+                    resizeMode="contain"
+                    style={[styles.icon]}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  activeOpacity={0.9}
+                  disabled={props?.route?.params?.myhorse ? true : false}
+                  style={[
+                    styles.circleBtn,
+                    { opacity: props?.route?.params?.myhorse ? 0.5 : 1 }
+                  ]}
+                  onPress={() => favPressed()}
+                >
+                  <Image
+                    source={isLiked ? heartFill : heart}
+                    resizeMode="contain"
+                    style={styles.icon}
+                  />
+                </TouchableOpacity>
+              </View>
+              <ScreenTitle
+                size={20}
+                style={{ marginVertical: 12, marginBottom: 6 }}
+              >
+                {item?.title}
+              </ScreenTitle>
+              <View style={[styles.row, { justifyContent: 'space-between' }]}>
+                <View style={styles.row}>
+                  <Image
+                    source={locationIcon}
+                    style={styles.locationIcon}
+                    resizeMode="contain"
+                  />
+                  <Text style={styles.distance}>
+                    {distance.toFixed(1)} miles
                   </Text>
                 </View>
+                <ScreenTitle
+                  size={20}
+                  marginVertical={0}
+                  style={{ marginTop: 4 }}
+                >
+                  {`${item?.currency_symbol} ${item?.price?.toString()}`}
+                </ScreenTitle>
               </View>
-            </FooterWrapper>
-          </Carousel>
-        </View>
-        <View style={styles.contentContainer}>
-          {/* buttons */}
-          <View style={[styles.row, styles.circleBtnContainer]}>
-            <TouchableOpacity
-              activeOpacity={0.9}
-              disabled={props?.route?.params?.myhorse ? true : false}
-              style={[styles.circleBtn, { opacity: props?.route?.params?.myhorse ? 0.5 : 1, marginRight: 12 }]}
-              onPress={() => onReportPress()}>
-              <Image
-                source={blockIcon}
-                resizeMode="contain"
-                style={[styles.icon]}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              activeOpacity={0.9}
-              style={[styles.circleBtn, { marginRight: 12 }]}
-              onPress={() => onSharePressed()}>
-              <Image
-                source={shareIcon}
-                resizeMode="contain"
-                style={[styles.icon]}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => gotoChat()}
-              disabled={props?.route?.params?.myhorse ? true : false}
-              activeOpacity={0.9}
-              style={[styles.circleBtn, { opacity: props?.route?.params?.myhorse ? 0.5 : 1, marginRight: 12 }]}>
-              <Image
-                source={message}
-                resizeMode="contain"
-                style={[styles.icon]}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              activeOpacity={0.9}
-              disabled={props?.route?.params?.myhorse ? true : false}
-              style={[styles.circleBtn, { opacity: props?.route?.params?.myhorse ? 0.5 : 1 }]}
-              onPress={() => favPressed()}>
-              <Image
-                source={isLiked ? heartFill : heart}
-                resizeMode="contain"
-                style={styles.icon}
-              />
-            </TouchableOpacity>
-          </View>
-          <ScreenTitle size={20} style={{ marginVertical: 12, marginBottom: 6 }}>
-            {item?.title}
-          </ScreenTitle>
-          <View style={[styles.row, { justifyContent: 'space-between' }]}>
-            <View style={styles.row}>
-              <Image
-                source={locationIcon}
-                style={styles.locationIcon}
-                resizeMode="contain"
-              />
-              <Text style={styles.distance}>{distance.toFixed(1)} miles</Text>
+              <Text style={styles.description}>{item?.description}</Text>
+              <View
+                style={[
+                  styles.row,
+                  { marginTop: 6, marginBottom: 12, alignItems: 'baseline' }
+                ]}
+              >
+                <ScreenTitle size={12}>Characteristics</ScreenTitle>
+                <View style={{ flex: 1, marginLeft: 8 }}>
+                  <Seprator left={false} />
+                </View>
+              </View>
+              <View style={styles.row}>
+                <View style={{ flex: 2 }}>
+                  <Feature
+                    style={styles.feature}
+                    title={'Breed'}
+                    value={item?.breed?.breed}
+                  />
+                  <Feature
+                    style={styles.feature}
+                    title={'Age'}
+                    value={item?.age}
+                  />
+                  <Feature
+                    style={styles.feature}
+                    title={'Height (hands)'}
+                    value={item?.height}
+                  />
+                  <Feature
+                    style={styles.feature}
+                    title={'Discipline'}
+                    value={item?.discipline?.discipline}
+                  />
+                </View>
+                <View style={{ flex: 3 }}>
+                  <Feature
+                    style={styles.feature}
+                    title={'Gender'}
+                    value={item?.gender}
+                  />
+                  <Feature
+                    style={styles.feature}
+                    title={'Color'}
+                    value={item?.color?.color}
+                  />
+                  <Feature
+                    style={styles.feature}
+                    title={'Temperament'}
+                    value={item?.temperament?.temperament}
+                  />
+                  <Feature
+                    style={styles.feature}
+                    title={'Price'}
+                    value={`${
+                      item?.currency_symbol
+                    } ${item?.price?.toString()}`}
+                  />
+                </View>
+              </View>
             </View>
-            <ScreenTitle size={20} marginVertical={0} style={{ marginTop: 4 }}>
-              {`${item?.currency_symbol} ${item?.price?.toString()}`}
-            </ScreenTitle>
-          </View>
-          <Text style={styles.description}>{item?.description}</Text>
-          <View
-            style={[
-              styles.row,
-              { marginTop: 6, marginBottom: 12, alignItems: 'baseline' },
-            ]}>
-            <ScreenTitle size={12}>Characteristics</ScreenTitle>
-            <View style={{ flex: 1, marginLeft: 8 }}>
-              <Seprator left={false} />
-            </View>
-          </View>
-          {/* features */}
-          <View style={styles.row}>
-            <View style={{ flex: 2 }}>
-              <Feature
-                style={styles.feature}
-                title={'Breed'}
-                value={item?.breed?.breed}
-              />
-              <Feature style={styles.feature} title={'Age'} value={item?.age} />
-              <Feature
-                style={styles.feature}
-                title={'Height (hands)'}
-                value={item?.height}
-              />
-              <Feature
-                style={styles.feature}
-                title={'Discipline'}
-                value={item?.discipline?.discipline}
-              />
-            </View>
-            <View style={{ flex: 3 }}>
-              <Feature
-                style={styles.feature}
-                title={'Gender'}
-                value={item?.gender}
-              />
-              <Feature
-                style={styles.feature}
-                title={'Color'}
-                value={item?.color?.color}
-              />
-              <Feature
-                style={styles.feature}
-                title={'Temperament'}
-                value={item?.temperament?.temperament}
-              />
-              <Feature
-                style={styles.feature}
-                title={'Price'}
-                value={`${item?.currency_symbol} ${item?.price?.toString()}`}
-              />
-            </View>
-          </View>
-        </View>
-        <MapView
-          // provider={Platform.OS == "android"? PROVIDER_GOOGLE:}
-          // provider={PROVIDER_GOOGLE}
-          // followsUserLocation={true}
-          // userLocationCalloutEnabled={true}
-          // showsMyLocationButton={true}
-          style={{
-            marginTop: 20,
-            borderRadius: 20,
-            height: 180,
-            width: '97%',
-            alignSelf: 'center',
-          }}
-          initialRegion={{
-            latitude: props?.route?.params?.item?.lat
-              ? props?.route?.params?.item?.lat
-              : props?.route?.params?.item?.user_location.coordinates[1],
-            longitude: props?.route?.params?.item?.lng
-              ? props?.route?.params?.item?.lng
-              : props?.route?.params?.item?.user_location.coordinates[0],
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          }}>
-          <Marker
-            draggable={false}
-            coordinate={{
-              latitude: props?.route?.params?.item.lat
-                ? props?.route?.params?.item?.lat
-                : props?.route?.params?.item?.user_location.coordinates[1],
-              longitude: props?.route?.params?.item.lng
-                ? props?.route?.params?.item.lng
-                : props?.route?.params?.item?.user_location.coordinates[0],
-            }}
-          />
-        </MapView>
-      </ScrollView>
+            {!!location?.latitude && !!location?.longitude && (
+              <MapView
+               
+                style={{
+                  marginTop: 20,
+                  borderRadius: 20,
+                  height: 180,
+                  width: '97%',
+                  alignSelf: 'center'
+                }}
+                initialRegion={{
+                  latitude: location?.latitude,
+                  longitude: location?.longitude,
+                  latitudeDelta: 0.0922,
+                  longitudeDelta: 0.0421
+                }}
+              >
+                <Marker
+                  draggable={false}
+                  coordinate={{
+                    latitude: location?.latitude,
+                    longitude: location?.longitude
+                  }}
+                />
+              </MapView>
+            )}
+          </ScrollView>
+        </>
+      )}
       <CustomTab navigation={props.navigation} />
     </View>
-  );
-};
+  )
+}
 
-export default Details;
+export default Details
 
 const styles = StyleSheet.create({
   albumContainer: {
     width,
     height: height * 0.55,
-    backgroundColor: 'rgba(0,0,0,0.2)',
+    backgroundColor: 'rgba(0,0,0,0.2)'
   },
   headerContainer: {
     paddingHorizontal: 20,
     position: 'absolute',
     top: 0,
-    width: '100%',
+    width: '100%'
   },
   blury: {
     position: 'absolute',
@@ -474,7 +518,7 @@ const styles = StyleSheet.create({
     height: 61,
     paddingHorizontal: 16,
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   ViewAndroid: {
     position: 'absolute',
@@ -486,7 +530,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.7)',
+    backgroundColor: 'rgba(0,0,0,0.7)'
   },
   avatar: {
     width: 40,
@@ -494,7 +538,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 2,
     borderColor: COLORS.white,
-    backgroundColor: 'white',
+    backgroundColor: 'white'
   },
   nameContainer: {
     paddingHorizontal: 10,
@@ -503,17 +547,17 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 10,
     backgroundColor: ColorShade(COLORS.black, 50),
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   username: {
     color: COLORS.white,
     fontFamily: fonts.medium,
     fontWeight: '600',
-    fontSize: 12,
+    fontSize: 12
   },
   row: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   circleBtn: {
     ...globalStyle.shadowBtn,
@@ -522,31 +566,31 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 25,
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.white
   },
   circleBtnContainer: {
     position: 'absolute',
     right: 10,
     top: -25,
-    zIndex: 10,
+    zIndex: 10
   },
   icon: {
     width: 25,
-    height: 25,
+    height: 25
   },
   contentContainer: {
     paddingHorizontal: 20,
-    position: 'relative',
+    position: 'relative'
   },
   locationIcon: {
     width: 15,
-    height: 15,
+    height: 15
   },
   distance: {
     marginLeft: 4,
     fontFamily: fonts.regular,
     color: COLORS.color10,
-    fontSize: 12,
+    fontSize: 12
   },
   description: {
     marginTop: 12,
@@ -554,9 +598,9 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     color: COLORS.color10,
     fontSize: 11,
-    lineHeight: 18,
+    lineHeight: 18
   },
   feature: {
-    marginBottom: 18,
-  },
-});
+    marginBottom: 18
+  }
+})
